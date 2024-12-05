@@ -1,8 +1,8 @@
 FROM node:20
 WORKDIR /usr/server/app
 
-COPY ./package.json ./
-COPY ./../yarn.lock ./
+COPY ./frontend/package.json ./frontend/
+COPY ./yarn.lock ./frontend/
 # RUN yarn install --pure-lockfile
 # COPY ./ .
 # ENV NODE_ENV=production
