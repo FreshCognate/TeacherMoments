@@ -2,11 +2,11 @@ FROM node:20
 WORKDIR /usr/server/app
 
 COPY ./assets ./public/static/assets/
-COPY ./frontend/package.json ./frontend/
-COPY ./yarn.lock ./frontend/
-WORKDIR /usr/server/app/frontend
+COPY ./frontend/package.json ./
+COPY ./yarn.lock ./
+WORKDIR /usr/server/app
 RUN yarn install --pure-lockfile
-COPY ./ .
+#COPY ./ .
 ENV NODE_ENV=production
 RUN yarn build
 CMD ["yarn", "start"]
