@@ -14,7 +14,7 @@
 .pnp.js
 
 # production
-/.react-router/
+/frontend/.react-router/
 /build/
 
 # misc
