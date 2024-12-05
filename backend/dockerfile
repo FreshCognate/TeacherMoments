@@ -1,6 +1,6 @@
 FROM node:20
 WORKDIR /usr/server
-COPY ./app/config .
+COPY ./app/config ./
 WORKDIR /usr/server/app
 COPY ./backend/package.json ./
 COPY ./yarn.lock ./
