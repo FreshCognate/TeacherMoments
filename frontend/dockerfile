@@ -4,7 +4,6 @@ WORKDIR /usr/server/app
 COPY ./assets ./public/static/assets/
 COPY ./frontend/package.json ./
 COPY ./yarn.lock ./
-WORKDIR /usr/server/app
 RUN yarn install --pure-lockfile
 COPY ./frontend .
 ENV NODE_ENV=production
