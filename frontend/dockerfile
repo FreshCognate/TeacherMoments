@@ -6,7 +6,7 @@ COPY ./frontend/package.json ./
 COPY ./yarn.lock ./
 WORKDIR /usr/server/app
 RUN yarn install --pure-lockfile
-#COPY ./ .
+COPY ./frontend .
 ENV NODE_ENV=production
 RUN yarn build
 CMD ["yarn", "start"]
