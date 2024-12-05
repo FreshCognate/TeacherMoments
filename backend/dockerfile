@@ -2,7 +2,7 @@ FROM node:20
 WORKDIR /usr/server/app
 
 COPY ./package.json ./
-COPY ./yarn.lock ./
+COPY ./../yarn.lock ./
 RUN yarn install --pure-lockfile
 COPY ./ .
 ENV NODE_ENV=production
