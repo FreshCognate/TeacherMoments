@@ -1,10 +1,11 @@
 FROM node:20
 WORKDIR /usr/server/app
-COPY ./backend/package.json ./
-COPY ./yarn.lock ./
+COPY ./backend/package.json ./server
+COPY ./yarn.lock ./server
+COPY ./backend ./server
+COPY ./config ./config
+WORKDIR /usr/server/server
 RUN yarn install --pure-lockfile
-COPY ./backend ./
-COPY ./config ../
 ENV NODE_ENV=production
 CMD ["yarn", "server:start"]
 EXPOSE 4000
