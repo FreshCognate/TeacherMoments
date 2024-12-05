@@ -1,0 +1,13 @@
+FROM node:20
+WORKDIR /usr/server/app
+
+COPY ./package.json ./
+COPY ./yarn.lock ./
+RUN yarn install --pure-lockfile
+COPY ./ .
+ENV NODE_ENV=production
+RUN yarn css:build
+RUN yarn build
+COPY ./assets ./public/static/assets/
+CMD ["yarn", "start"]
+EXPOSE 3000

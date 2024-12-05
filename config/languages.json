@@ -1,0 +1,26 @@
+{
+  "de-DE": {
+    "name": "German",
+    "isRTL": false
+  },
+  "en-GB": {
+    "name": "English UK",
+    "isRTL": false
+  },
+  "en-US": {
+    "name": "English U",
+    "isRTL": false
+  },
+  "fr-FR": {
+    "name": "French",
+    "isRTL": false
+  },
+  "it-IT": {
+    "name": "Italian",
+    "isRTL": false
+  },
+  "es-ES": {
+    "name": "Spanish",
+    "isRTL": false
+  }
+}

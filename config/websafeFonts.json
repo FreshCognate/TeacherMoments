@@ -1,0 +1,44 @@
+{
+  "items": [
+    {
+      "family": "Arial",
+      "category": "sans-serif"
+    },
+    {
+      "family": "Verdana",
+      "category": "sans-serif"
+    },
+    {
+      "family": "Helvetica",
+      "category": "sans-serif"
+    },
+    {
+      "family": "Tahoma",
+      "category": "sans-serif"
+    },
+    {
+      "family": "Trebuchet MS",
+      "category": "sans-serif"
+    },
+    {
+      "family": "Times New Roman",
+      "category": "serif"
+    },
+    {
+      "family": "Georgia",
+      "category": "serif"
+    },
+    {
+      "family": "Garamond",
+      "category": "serif"
+    },
+    {
+      "family": "Courier New",
+      "category": "monospace"
+    },
+    {
+      "family": "Brush Script MT",
+      "category": "cursive"
+    }
+  ]
+}
