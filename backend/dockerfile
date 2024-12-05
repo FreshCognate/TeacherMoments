@@ -4,6 +4,7 @@ COPY ./backend/package.json ./
 COPY ./yarn.lock ./
 RUN yarn install --pure-lockfile
 COPY ./backend .
+COPY ./config .
 ENV NODE_ENV=production
 CMD ["yarn", "server:start"]
 EXPOSE 4000
