@@ -1,0 +1,66 @@
+{
+  "name": "tm",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "20.x"
+  },
+  "type": "module",
+  "scripts": {
+    "server": "nodemon --watch ./ ./core/index.js -p 4000",
+    "server:start": "node --max-old-space-size=4096 ./core/index.js -p 4000"
+  },
+  "imports": {
+    "#core/*": "./core/*/index.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.288.0",
+    "@aws-sdk/lib-storage": "^3.433.0",
+    "@aws-sdk/s3-request-presigner": "^3.540.0",
+    "@socket.io/redis-adapter": "^8.1.0",
+    "@socket.io/redis-emitter": "^5.1.0",
+    "archiver": "^7.0.1",
+    "args": "^5.0.1",
+    "axios": "^1.3.4",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "bullmq": "^5.7.8",
+    "compression": "^1.7.4",
+    "connect-mongo": "^5.1.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.1.1",
+    "csv-write-stream": "^2.0.0",
+    "dayjs": "^1.11.7",
+    "debounce-promise": "^3.1.2",
+    "dotenv": "^16.0.3",
+    "errorhandler": "^1.5.1",
+    "express": "^4.18.2",
+    "express-query-boolean": "^2.0.0",
+    "express-session": "^1.17.2",
+    "fs-extra": "^11.1.0",
+    "gm": "^1.23.1",
+    "isbot": "^5.1.6",
+    "joi": "^17.8.3",
+    "lodash": "^4.17.21",
+    "method-override": "^3.0.0",
+    "minivents": "^2.2.0",
+    "mongoose": "^8.3.4",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "node-uuid": "^1.4.8",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "passport.socketio": "^3.7.0",
+    "password-validator": "^5.3.0",
+    "redis": "^4.6.5",
+    "slugify": "^1.6.0",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1",
+    "validator": "^13.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "yargs": "^17.7.2"
+  }
+}

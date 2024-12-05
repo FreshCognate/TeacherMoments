@@ -1,0 +1,23 @@
+{
+  "name": "tm",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "20.x"
+  },
+  "type": "module",
+  "scripts": {
+    "workers": "nodemon --trace-warnings --watch ./ --watch ./ ./index.js -p 5000",
+    "workers:start": "node --max-old-space-size=4096 ./index.js -p 5000"
+  },
+  "imports": {
+    "#core/*": "../backend/core/*/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "yargs": "^17.7.2"
+  }
+}

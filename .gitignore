@@ -7,11 +7,14 @@
 
 # dependencies
 /node_modules
+/backend/node_modules
+/workers/node_modules
 /.pnp
 .pnp.js
 
 # production
-/build
+/.react-router/
+/build/
 
 # misc
 .DS_Store
