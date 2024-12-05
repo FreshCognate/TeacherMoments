@@ -13,18 +13,18 @@ export default [{
       currentPage: Joi.number().default(1),
       isDeleted: Joi.boolean()
     },
-    middleware: [isAuthenticated, hasPermissions(['superAdmin', 'admin', 'owner'])]
+    middleware: [isAuthenticated, hasPermissions(['superAdmin', 'admin'])]
   },
   create: {
     body: {
       emails: Joi.array().items(Joi.string().email({ minDomainSegments: 2 })).min(1).required(),
-      role: Joi.string().allow('admin', 'editor', 'owner', 'reviewer', 'user').default('user').required(),
+      role: Joi.string().allow('admin', 'editor', 'reviewer', 'user').default('user').required(),
     },
-    middleware: [isAuthenticated, hasPermissions(['superAdmin', 'admin', 'owner'])],
+    middleware: [isAuthenticated, hasPermissions(['superAdmin', 'admin'])],
   },
   read: {
     param: 'id',
-    middleware: [isAuthenticated, hasPermissions(['superAdmin', 'admin', 'owner'])],
+    middleware: [isAuthenticated, hasPermissions(['superAdmin', 'admin'])],
   },
   update: {
     param: 'id',
@@ -32,14 +32,14 @@ export default [{
       firstName: Joi.string(),
       lastName: Joi.string(),
       externalReference: Joi.string(),
-      role: Joi.string().allow('admin', 'editor', 'owner', 'reviewer', 'user').default('user'),
+      role: Joi.string().allow('admin', 'editor', 'reviewer', 'user').default('user'),
       selectedLanguage: Joi.string().allow(...Object.keys(languages)),
       isDeleted: Joi.boolean().invalid(true),
     },
-    middleware: [isAuthenticated, hasPermissions(['superAdmin', 'admin', 'owner'])],
+    middleware: [isAuthenticated, hasPermissions(['superAdmin', 'admin'])],
   },
   delete: {
     param: 'id',
-    middleware: [isAuthenticated, hasPermissions(['superAdmin', 'admin', 'owner'])],
+    middleware: [isAuthenticated, hasPermissions(['superAdmin', 'admin'])],
   }
 }];
