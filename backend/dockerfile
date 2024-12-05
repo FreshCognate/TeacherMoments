@@ -6,6 +6,6 @@ RUN yarn install --pure-lockfile
 COPY ./backend ./backend
 COPY ./config ./config
 ENV NODE_ENV=production
-WORKDIR /usr/server/backend
+WORKDIR /usr/server/app/backend
 CMD ["yarn", "server:start"]
 EXPOSE 4000
