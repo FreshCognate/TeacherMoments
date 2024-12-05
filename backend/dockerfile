@@ -3,7 +3,7 @@ WORKDIR /usr/server/app
 COPY ./backend/package.json ./backend/
 COPY ./yarn.lock ./backend/
 
-WORKDIR /usr/server/app/frontend
+WORKDIR /usr/server/app/backend
 RUN yarn install --pure-lockfile
 COPY ./ .
 ENV NODE_ENV=production
