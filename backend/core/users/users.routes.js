@@ -13,7 +13,8 @@ export default [{
       currentPage: Joi.number().default(1),
       isDeleted: Joi.boolean()
     },
-    middleware: [isAuthenticated, hasPermissions(['superAdmin', 'admin'])]
+    //middleware: [isAuthenticated, hasPermissions(['superAdmin', 'admin'])],
+    middleware: []
   },
   create: {
     body: {

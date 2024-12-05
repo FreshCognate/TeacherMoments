@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 export function meta({ }) {
   return [
@@ -7,6 +8,13 @@ export function meta({ }) {
   ];
 }
 
-export default function Home() {
+export async function loader() {
+  console.log('loading');
+  const users = await axios.get('http://localhost:4000/api/users');
+  return users;
+}
+
+export default function Home({ loaderData }) {
+  console.log(loaderData);
   return <div>Home</div>;
 }

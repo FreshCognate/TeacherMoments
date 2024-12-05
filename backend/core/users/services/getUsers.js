@@ -12,11 +12,11 @@ export default async ({ options: { searchValue = '', currentPage = 1, isDeleted 
   };
   const options = {};
 
-  const isSuperAdmin = hasUserGotPermissions(user, ['superAdmin']);
+  // const isSuperAdmin = hasUserGotPermissions(user, ['superAdmin']);
 
-  if (!isSuperAdmin) {
-    search.role = { $ne: 'superAdmin' };
-  }
+  // if (!isSuperAdmin) {
+  //   search.role = { $ne: 'superAdmin' };
+  // }
 
   if (searchValue.length) {
     getSearchFromSearchValue(searchValue, ['firstName', 'lastName', 'email'], search);
