@@ -9,6 +9,8 @@
   "scripts": {
     "build": "yarn workspace frontend run build",
     "dev": "yarn workspace frontend run dev",
-    "start": "yarn workspace frontend run start"
+    "start": "yarn workspace frontend run start",
+    "server": "yarn workspace backend run server",
+    "server:start": "yarn workspace backend run server:start"
   }
 }
