@@ -18,6 +18,9 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export async function loader(props) {
+  if (process.env.API_BASE_URL) {
+    axios.defaults.baseURL = process.env.API_BASE_URL || '';
+  }
   return {
     NODE_ENV: process.env.NODE_ENV,
     API_BASE_URL: process.env.API_BASE_URL
@@ -43,7 +46,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App(props) {
-  axios.defaults.baseURL = props.loaderData.API_BASE_URL || '';
+  if (props.loaderData.API_BASE_URL) {
+    axios.defaults.baseURL = props.loaderData.API_BASE_URL || '';
+  }
   return <Outlet />;
 }
 
