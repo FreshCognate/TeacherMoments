@@ -16,5 +16,5 @@ export async function loader({ request }) {
 }
 
 export default function Home({ loaderData }) {
-  return <div>Home</div>;
+  return <div>Welcome to TM</div>;
 }
