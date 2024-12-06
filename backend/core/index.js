@@ -2,6 +2,8 @@ import events from 'events';
 events.EventEmitter.prototype._maxListeners = 100;
 import './events/index.js';
 import './users/index.js';
+import './authentication/index.js';
+import '../modules/index.js';
 // Must be imported last
 import './server.js';
 

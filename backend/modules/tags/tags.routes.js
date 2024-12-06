@@ -1,26 +1,28 @@
 import Joi from 'joi';
-import controller from './users.controller.js';
-import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
-import languages from '../../../config/languages.json' with { type: "json" };
+import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
+import controller from './tags.controller.js';
 
-console.log(Object.keys(languages));
-
-export default [{
-  route: '/users',
+export default {
+  route: '/tags',
   controller,
   all: {
     query: {
       searchValue: Joi.string().allow('').default(''),
       currentPage: Joi.number().default(1),
+      tagType: Joi.string(),
+      editorTeam: Joi.string(),
+      tags: Joi.array().items(Joi.string().allow('')),
+      shouldGetAll: Joi.boolean(),
       isDeleted: Joi.boolean()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
   create: {
     body: {
-      emails: Joi.array().items(Joi.string().email({ minDomainSegments: 2 })).min(1).required(),
-      role: Joi.string().allow('ADMIN', 'RESEARCHER', 'FACILITATOR', 'PARTICIPANT').default('user').required(),
+      name: Joi.string().required(),
+      tagType: Joi.string().required(),
+      editorTeam: Joi.string().required(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
@@ -31,10 +33,8 @@ export default [{
   update: {
     param: 'id',
     body: {
-      firstName: Joi.string(),
-      lastName: Joi.string(),
-      role: Joi.string().allow('ADMIN', 'RESEARCHER', 'FACILITATOR', 'PARTICIPANT').default('user'),
-      selectedLanguage: Joi.string().allow(...Object.keys(languages)),
+      name: Joi.string(),
+      priority: Joi.number().max(99).min(0),
       isDeleted: Joi.boolean().invalid(true),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
@@ -43,4 +43,4 @@ export default [{
     param: 'id',
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   }
-}];
+};
