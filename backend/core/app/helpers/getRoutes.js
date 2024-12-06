@@ -44,6 +44,8 @@ export default function (app) {
           app.options(`${process.env.API_PREFIX}${route.route}${routeItemParam}`, cors());
         }
 
+        console.log(`${process.env.API_PREFIX}${route.route}${routeItemParam}`);
+
         app[method](
           `${process.env.API_PREFIX}${route.route}${routeItemParam}`,
           cors(routeItem.hasCors),
