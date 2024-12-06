@@ -1,4 +1,6 @@
-export default async ({ userId }, context) => {
+export default async (props, options, context) => {
+
+  const { userId } = props;
 
   const { user, models } = context;
   const deletedUser = await models.User.findByIdAndUpdate(userId, {

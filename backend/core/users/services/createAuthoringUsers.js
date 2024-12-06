@@ -1,6 +1,8 @@
 import registerAuthoringUser from './registerAuthoringUser.js';
 
-export default async ({ emails, role }, context) => {
+export default async (props, options, context) => {
+
+  const { emails, role } = props;
 
   const { user } = context;
 

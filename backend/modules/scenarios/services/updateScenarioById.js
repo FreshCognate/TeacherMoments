@@ -1,7 +1,8 @@
 import getScenarioCollaboratorsPopulate from '../helpers/getScenarioCollaboratorsPopulate.js';
 
-export default async ({ scenarioId, update }, context) => {
+export default async (props, options, context) => {
 
+  const { scenarioId, update } = props;
   const { models } = context;
 
   const { path, select } = getScenarioCollaboratorsPopulate();

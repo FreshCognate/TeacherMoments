@@ -2,17 +2,21 @@ import getTotalPages from '#core/app/helpers/getTotalPages.js';
 import getSearchFromSearchValue from '#core/app/helpers/getSearchFromSearchValue.js';
 import getModelPaginationByCurrentPage from '#core/app/helpers/getModelPaginationByCurrentPage.js';
 
-export default async ({
-  searchValue = '',
-  currentPage = 1,
-  tagType = null,
-  isDeleted = false,
-}, context) => {
+export default async (props, options, context) => {
 
+  const {
+    tagType = null
+  } = props;
+
+  let {
+    searchValue = '',
+    currentPage = 1,
+    isDeleted = false,
+  } = options;
   const { models } = context;
 
   const search = { isDeleted };
-  const options = {};
+  const searchOptions = {};
 
   if (searchValue.length) {
     getSearchFromSearchValue(searchValue, ['name'], search);
@@ -20,7 +24,7 @@ export default async ({
 
   if (currentPage) {
     currentPage = parseInt(currentPage);
-    getModelPaginationByCurrentPage(currentPage, options);
+    getModelPaginationByCurrentPage(currentPage, searchOptions);
   }
 
   if (tagType) {
@@ -31,7 +35,7 @@ export default async ({
 
   const totalPages = getTotalPages(count);
 
-  const tags = await models.Tag.find(search, null, options).sort('name');
+  const tags = await models.Tag.find(search, null, searchOptions).sort('name');
 
   return {
     tags,

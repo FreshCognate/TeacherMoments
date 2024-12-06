@@ -9,9 +9,9 @@ import has from 'lodash/has.js';
 export default {
   all: async function ({ query }, context) {
 
-    const { searchValue, currentPage, isDeleted } = query;
+    const { searchValue, currentPage, accessType, isDeleted } = query;
 
-    return await getScenarios({ options: { searchValue, currentPage, isDeleted } }, context);
+    return await getScenarios({ accessType }, { searchValue, currentPage, isDeleted }, context);
 
   },
 
@@ -19,12 +19,14 @@ export default {
 
     const { name, scenarioType } = body;
 
-    return await createScenario({ name, scenarioType }, context);
+    const scenario = await createScenario({ name, scenarioType }, {}, context);
+
+    return { scenario }
 
   },
   read: async function ({ param }, context) {
 
-    const scenario = await getScenarioById({ scenarioId: param }, context);
+    const scenario = await getScenarioById({ scenarioId: param }, {}, context);
     return { scenario };
 
   },
@@ -32,17 +34,17 @@ export default {
   update: async function ({ param, body }, context) {
 
     if (has(body, 'isDeleted')) {
-      const scenario = await restoreScenarioById({ scenarioId: param }, context);
+      const scenario = await restoreScenarioById({ scenarioId: param }, {}, context);
       return { scenario };
     }
 
-    const scenario = await updateScenarioById({ scenarioId: param, update: body }, context);
+    const scenario = await updateScenarioById({ scenarioId: param, update: body }, {}, context);
 
     return { scenario };
 
   },
   delete: async function ({ param }, context) {
-    const scenario = await deleteScenarioById({ scenarioId: param }, context);
+    const scenario = await deleteScenarioById({ scenarioId: param }, {}, context);
 
     return { scenario };
   }

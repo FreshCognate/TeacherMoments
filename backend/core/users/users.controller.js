@@ -11,7 +11,7 @@ export default {
 
     const { searchValue, currentPage, isDeleted } = query;
 
-    return await getUsers({ options: { searchValue, currentPage, isDeleted } }, context);
+    return await getUsers({}, { searchValue, currentPage, isDeleted }, context);
 
   },
 
@@ -19,13 +19,13 @@ export default {
 
     const { emails, role = 'user' } = body;
 
-    return await createAuthoringUsers({ emails, role }, context);
+    return await createAuthoringUsers({ emails, role }, {}, context);
 
   },
 
   read: async function ({ param }, context) {
 
-    const user = await getUserById({ userId: param }, context);
+    const user = await getUserById({ userId: param }, {}, context);
     return { user };
 
   },
@@ -33,18 +33,18 @@ export default {
   update: async function ({ param, body }, context) {
 
     if (has(body, 'isDeleted')) {
-      const user = await restoreUserById({ userId: param }, context);
+      const user = await restoreUserById({ userId: param }, {}, context);
 
       return { user };
     }
 
-    const user = await updateUserById({ userId: param, update: body }, context);
+    const user = await updateUserById({ userId: param, update: body }, {}, context);
 
     return { user };
 
   },
   delete: async function ({ param }, context) {
-    const user = await deleteUserById({ userId: param }, context);
+    const user = await deleteUserById({ userId: param }, {}, context);
 
     return { user };
   }

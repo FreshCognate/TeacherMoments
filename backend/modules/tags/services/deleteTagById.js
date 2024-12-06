@@ -1,5 +1,6 @@
-export default async ({ tagId }, context) => {
+export default async (props, options, context) => {
 
+  const { tagId } = props;
   const { models, user } = context;
 
   const tag = await models.Tag.findByIdAndUpdate(tagId, {

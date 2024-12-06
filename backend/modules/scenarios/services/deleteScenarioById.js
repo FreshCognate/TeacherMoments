@@ -1,5 +1,6 @@
-export default async ({ scenarioId }, context) => {
+export default async (props, options, context) => {
 
+  const { scenarioId } = props;
   const { models, user } = context;
 
   const scenario = await models.Scenario.findByIdAndUpdate(scenarioId, {

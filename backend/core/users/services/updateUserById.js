@@ -1,7 +1,9 @@
 import has from 'lodash/has.js';
 import hasUserGotPermissions from '#core/authentication/helpers/hasUserGotPermissions.js';
 
-export default async ({ userId, update }, context) => {
+export default async (props, options, context) => {
+
+  const { userId, update } = props;
 
   const { models, user } = context;
 
