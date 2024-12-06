@@ -7,7 +7,7 @@ export default async ({ userId, update }, context) => {
 
   const updateObject = update;
   // TODO - need to probably have a separate method that registers users rather than checking if user exists
-  if (user && !hasUserGotPermissions(user, ['superAdmin', 'admin'])) {
+  if (user && !hasUserGotPermissions(user, ['SUPER_ADMIN', 'ADMIN'])) {
     if (userId !== user._id) {
       throw { message: "User doesn't have correct permissions", statusCode: 401 };
     }
