@@ -8,7 +8,7 @@ import {
   ScrollRestoration,
 } from "react-router";
 
-import type { Route } from "./+types/root";
+import type { Route } from "./.react-router/types/+types/root";
 import stylesheet from "./app.css?url";
 import axios from 'axios';
 
@@ -49,6 +49,12 @@ export default function App(props) {
   if (props.loaderData.API_BASE_URL) {
     axios.defaults.baseURL = props.loaderData.API_BASE_URL || '';
   }
+
+  if (typeof window !== 'undefined') {
+    window.NODE_ENV = props.loaderData.NODE_ENV;
+    window.API_BASE_URL = props.loaderData.API_BASE_URL;
+  }
+
   return <Outlet />;
 }
 
