@@ -11,7 +11,7 @@ export function meta({ }) {
 export async function loader({ request }) {
   const url = new URL(request.url);
   let axiosBaseUrl = process.env.API_BASE_URL || url.origin;
-  const users = await axios.get(`${axiosBaseUrl}/api/users`);
+  const users = []
   return { users };
 }
 
