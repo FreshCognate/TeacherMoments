@@ -21,7 +21,7 @@ on('core:server:started', async function () {
   const User = connection.models.User;
 
   try {
-    const user = await User.findOne({ role: 'superAdmin' });
+    const user = await User.findOne({ role: 'SUPER_ADMIN' });
     if (!user) {
 
       console.log("ADDING USER");
@@ -31,7 +31,7 @@ on('core:server:started', async function () {
         lastName: 'Hedley',
         email: process.env.SUPER_ADMIN_EMAIL,
         password: process.env.SUPER_ADMIN_PASSWORD,
-        role: 'superAdmin',
+        role: 'SUPER_ADMIN',
         isRegistered: true,
         registeredAt: new Date()
       };
