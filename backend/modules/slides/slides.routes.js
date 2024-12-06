@@ -1,15 +1,17 @@
 import Joi from 'joi';
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
-import controller from './scenarios.controller.js';
+import controller from './slides.controller.js';
 
 export default {
-  route: '/scenarios',
+  route: '/slides',
   controller,
   all: {
     query: {
       searchValue: Joi.string().allow('').default(''),
       currentPage: Joi.number().default(1),
+      slideType: Joi.string(),
+      scenario: Joi.string(),
       isDeleted: Joi.boolean()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
@@ -17,8 +19,7 @@ export default {
   create: {
     body: {
       name: Joi.string().required(),
-      accessType: Joi.string().required().valid("PUBLIC", "PRIVATE"),
-      tags: Joi.array().items(Joi.string())
+      scenario: Joi.string().required()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
@@ -30,12 +31,9 @@ export default {
     param: 'id',
     body: {
       name: Joi.string(),
-      accessType: Joi.string().valid("PUBLIC", "PRIVATE"),
+      slideType: Joi.string().valid('STEP', 'SUMMARY'),
       tags: Joi.array().items(Joi.string()),
-      collaborators: Joi.array().items({
-        user: Joi.string().required(),
-        role: Joi.string().required().valid('AUTHOR', 'OWNER')
-      }),
+      isLocked: Joi.boolean(),
       isDeleted: Joi.boolean().invalid(true),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],

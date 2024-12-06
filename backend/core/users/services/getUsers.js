@@ -3,14 +3,16 @@ import getModelPaginationByCurrentPage from '#core/app/helpers/getModelPaginatio
 import getTotalPages from '#core/app/helpers/getTotalPages.js';
 import hasUserGotPermissions from '#core/authentication/helpers/hasUserGotPermissions.js';
 
-export default async ({ options: { searchValue = '', currentPage = 1, isDeleted = false } = {} }, context) => {
+export default async (props, options, context) => {
+
+  let { searchValue = '', currentPage = 1, isDeleted = false } = options;
 
   const { models, user } = context;
 
   const search = {
     isDeleted
   };
-  const options = {};
+  const searchOptions = {};
 
   const isSuperAdmin = hasUserGotPermissions(user, ['SUPER_ADMIN']);
 
@@ -24,14 +26,14 @@ export default async ({ options: { searchValue = '', currentPage = 1, isDeleted 
 
   if (currentPage) {
     currentPage = parseInt(currentPage);
-    getModelPaginationByCurrentPage(currentPage, options);
+    getModelPaginationByCurrentPage(currentPage, searchOptions);
   }
 
   const count = await models.User.countDocuments(search);
 
   const totalPages = getTotalPages(count);
 
-  const users = await models.User.find(search, null, options).sort('lastName');
+  const users = await models.User.find(search, null, searchOptions).sort('lastName');
 
   return {
     users,

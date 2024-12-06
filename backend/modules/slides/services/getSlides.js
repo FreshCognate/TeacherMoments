@@ -5,7 +5,7 @@ import getModelPaginationByCurrentPage from '#core/app/helpers/getModelPaginatio
 export default async (props, options, context) => {
 
   const {
-    accessType = null
+    scenario = null,
   } = props;
 
   let {
@@ -16,8 +16,8 @@ export default async (props, options, context) => {
 
   const { models } = context;
 
-  let search = { isDeleted };
-  let searchOptions = {};
+  const search = { isDeleted };
+  const searchOptions = {};
 
   if (searchValue.length) {
     getSearchFromSearchValue(searchValue, ['name'], search);
@@ -28,18 +28,18 @@ export default async (props, options, context) => {
     getModelPaginationByCurrentPage(currentPage, searchOptions);
   }
 
-  if (accessType) {
-    search.accessType = accessType;
+  if (scenario) {
+    search.scenario = scenario;
   }
 
-  const count = await models.Scenario.countDocuments(search);
+  const count = await models.Slide.countDocuments(search);
 
   const totalPages = getTotalPages(count);
 
-  const scenarios = await models.Scenario.find(search, null, searchOptions).sort('name');
+  const slides = await models.Slide.find(search, null, searchOptions).sort('name');
 
   return {
-    scenarios,
+    slides,
     count,
     currentPage,
     totalPages

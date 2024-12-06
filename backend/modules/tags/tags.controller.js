@@ -11,7 +11,7 @@ export default {
 
     const { searchValue, currentPage, isDeleted } = query;
 
-    return await getTags({ options: { searchValue, currentPage, isDeleted } }, context);
+    return await getTags({}, { searchValue, currentPage, isDeleted }, context);
 
   },
 
@@ -19,12 +19,14 @@ export default {
 
     const { name, tagType } = body;
 
-    return await createTag({ name, tagType }, context);
+    const tag = await createTag({ name, tagType }, {}, context);
+
+    return { tag };
 
   },
   read: async function ({ param }, context) {
 
-    const tag = await getTagById({ tagId: param }, context);
+    const tag = await getTagById({ tagId: param }, {}, context);
     return { tag };
 
   },
@@ -32,17 +34,17 @@ export default {
   update: async function ({ param, body }, context) {
 
     if (has(body, 'isDeleted')) {
-      const tag = await restoreTagById({ tagId: param }, context);
+      const tag = await restoreTagById({ tagId: param }, {}, context);
       return { tag };
     }
 
-    const tag = await updateTagById({ tagId: param, update: body }, context);
+    const tag = await updateTagById({ tagId: param, update: body }, {}, context);
 
     return { tag };
 
   },
   delete: async function ({ param }, context) {
-    const tag = await deleteTagById({ tagId: param }, context);
+    const tag = await deleteTagById({ tagId: param }, {}, context);
 
     return { tag };
   }

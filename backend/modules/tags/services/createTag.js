@@ -1,4 +1,6 @@
-export default async ({ name, tagType, editorTeam }, context) => {
+export default async (props, options, context) => {
+
+  const { name, tagType } = props;
 
   const { models, user } = context;
 

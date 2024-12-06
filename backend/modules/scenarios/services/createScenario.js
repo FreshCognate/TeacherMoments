@@ -1,5 +1,6 @@
-export default async ({ name, scenarioType, editorTeam }, context) => {
+export default async (props, options, context) => {
 
+  const { name, scenarioType } = props;
   const { models, user } = context;
 
   if (!name) throw { message: "A scenario must have a name", statusCode: 400 };

@@ -1,4 +1,4 @@
-export default async ({ tagId, update }, context) => {
+export default async ({ tagId, update }, options, context) => {
 
   const { models } = context;
 

@@ -1,9 +1,11 @@
 import uuid from 'node-uuid';
 
-export default async ({
-  email,
-  role
-}, context) => {
+export default async (props, options, context) => {
+
+  const {
+    email,
+    role
+  } = props;
   const { req, models } = context;
 
   const lowerCaseEmail = email.toLowerCase();
