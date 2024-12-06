@@ -10,10 +10,19 @@ import {
 
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
+import axios from 'axios';
+
 
 export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
+
+export async function loader(props) {
+  return {
+    NODE_ENV: process.env.NODE_ENV,
+    API_BASE_URL: process.env.API_BASE_URL
+  }
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -33,7 +42,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
+export default function App(props) {
+  axios.defaults.baseURL = props.loaderData.API_BASE_URL;
   return <Outlet />;
 }
 

@@ -18,8 +18,6 @@ on('core:server:started', async function () {
 
   const connection = getConnection();
 
-  console.log(connection.models);
-
   const User = connection.models.User;
 
   try {

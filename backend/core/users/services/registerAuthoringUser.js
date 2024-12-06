@@ -26,8 +26,6 @@ export default async ({
 
   const user = await models.User.create(createObject);
 
-  console.log(user);
-
   return user;
 
 };

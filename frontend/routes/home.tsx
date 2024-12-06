@@ -9,12 +9,10 @@ export function meta({ }) {
 }
 
 export async function loader() {
-  console.log('loading');
-  const users = await axios.get('http://localhost:4000/api/users');
+  const users = await axios.get('/api/users');
   return users;
 }
 
 export default function Home({ loaderData }) {
-  console.log(loaderData);
   return <div>Home</div>;
 }
