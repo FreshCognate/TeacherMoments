@@ -43,7 +43,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App(props) {
-  axios.defaults.baseURL = props.loaderData.API_BASE_URL;
+  axios.defaults.baseURL = props.loaderData.API_BASE_URL || '';
   return <Outlet />;
 }
 
