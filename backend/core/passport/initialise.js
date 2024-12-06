@@ -15,9 +15,7 @@ export default function (passport) {
       const { models } = await getModelsAndTenant(req);
 
       try {
-        let user = await models.User
-          .findById(id)
-          .exec();
+        let user = await models.User.findById(id);
 
         if (!user) return done('No user');
         user = omit(user.toObject(), ['hash']);

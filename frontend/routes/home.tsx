@@ -16,6 +16,5 @@ export async function loader({ request }) {
 }
 
 export default function Home({ loaderData }) {
-  console.log(loaderData);
   return <div>Home</div>;
 }
