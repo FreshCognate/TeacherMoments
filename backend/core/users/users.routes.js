@@ -4,8 +4,6 @@ import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js'
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 import languages from '../../../config/languages.json' with { type: "json" };
 
-console.log(Object.keys(languages));
-
 export default [{
   route: '/users',
   controller,

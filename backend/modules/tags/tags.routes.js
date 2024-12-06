@@ -11,9 +11,6 @@ export default {
       searchValue: Joi.string().allow('').default(''),
       currentPage: Joi.number().default(1),
       tagType: Joi.string(),
-      editorTeam: Joi.string(),
-      tags: Joi.array().items(Joi.string().allow('')),
-      shouldGetAll: Joi.boolean(),
       isDeleted: Joi.boolean()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
@@ -21,8 +18,7 @@ export default {
   create: {
     body: {
       name: Joi.string().required(),
-      tagType: Joi.string().required(),
-      editorTeam: Joi.string().required(),
+      tagType: Joi.string().required().valid("CATEGORY", "TOPIC", "LABEL")
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },

@@ -1,8 +1,10 @@
 import getTags from './services/getTags.js';
 import getTagById from './services/getTagById.js';
+import restoreTagById from './services/restoreTagById.js';
 import updateTagById from './services/updateTagById.js';
 import deleteTagById from './services/deleteTagById.js';
 import createTag from './services/createTag.js';
+import has from 'lodash/has.js';
 
 export default {
   all: async function ({ query }, context) {
@@ -22,12 +24,17 @@ export default {
   },
   read: async function ({ param }, context) {
 
-    const tag = await getTagById({ userId: param }, context);
+    const tag = await getTagById({ tagId: param }, context);
     return { tag };
 
   },
 
   update: async function ({ param, body }, context) {
+
+    if (has(body, 'isDeleted')) {
+      const tag = await restoreTagById({ tagId: param }, context);
+      return { tag };
+    }
 
     const tag = await updateTagById({ tagId: param, update: body }, context);
 
