@@ -3,6 +3,7 @@ import axios from 'axios';
 import Title from '~/uikit/content/components/title';
 import Body from '~/uikit/content/components/body';
 import Icon from '~/uikit/icons/components/icon';
+import ScenariosContainer from '~/modules/scenarios/containers/scenariosContainer';
 
 export function meta({ }) {
   return [
@@ -11,10 +12,8 @@ export function meta({ }) {
   ];
 }
 
-export default function Home({ loaderData }) {
+export default function Scenarios({ loaderData }) {
   return (
-    <div>
-      Dashboard
-    </div>
+    <ScenariosContainer />
   );
 }

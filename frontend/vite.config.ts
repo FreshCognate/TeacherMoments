@@ -6,6 +6,10 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
+  server: {
+    port: 3000,
+    hmr: { port: 3001 }
+  },
   css: {
     postcss: {
       plugins: [tailwindcss, autoprefixer],

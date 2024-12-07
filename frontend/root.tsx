@@ -11,19 +11,40 @@ import {
 import type { Route } from "./.react-router/types/+types/root";
 import stylesheet from "./app.css?url";
 import axios from 'axios';
-
+import '~/modules/index';
+import NavigationContainer from './modules/app/containers/navigationContainer';
+import DialogsContainer from './core/dialogs/containers/dialogsContainer';
 
 export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
-export async function loader(props) {
-  if (process.env.API_BASE_URL) {
-    axios.defaults.baseURL = process.env.API_BASE_URL || '';
+export const shouldRevalidate = () => false;
+
+export async function loader({ request }) {
+  const url = new URL(request.url);
+  let isAuthenticated;
+  let authentication;
+  const headers = {};
+
+  for (const pair of request.headers.entries()) {
+    headers[pair[0]] = pair[1];
   }
+
+  try {
+    const authenticationRequest = await axios.get(`${url.origin}/api/authentication`, {
+      headers
+    });
+    authentication = authenticationRequest.data.authentication;
+    isAuthenticated = true;
+  } catch (error) {
+    isAuthenticated = false;
+  }
+
   return {
-    NODE_ENV: process.env.NODE_ENV,
-    API_BASE_URL: process.env.API_BASE_URL
+    isAuthenticated,
+    authentication,
+    NODE_ENV: process.env.NODE_ENV
   }
 }
 
@@ -46,16 +67,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App(props) {
-  if (props.loaderData.API_BASE_URL) {
-    axios.defaults.baseURL = props.loaderData.API_BASE_URL || '';
-  }
-
   if (typeof window !== 'undefined') {
     window.NODE_ENV = props.loaderData.NODE_ENV;
-    window.API_BASE_URL = props.loaderData.API_BASE_URL;
   }
 
-  return <Outlet />;
+  return (
+    <>
+      <DialogsContainer />
+      <NavigationContainer authentication={props.loaderData.authentication} />
+      <Outlet />
+    </>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

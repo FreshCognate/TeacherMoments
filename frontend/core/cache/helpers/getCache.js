@@ -1,0 +1,19 @@
+import { getCache as getCacheByKey } from "./cacheManager";
+
+export default function getCache(key) {
+  const cache = getCacheByKey(key);
+
+  if (!cache) return {};
+
+  return {
+    data: cache.data,
+    status: cache.status,
+    set: cache.set,
+    fetch: () => cache.fetch({ props: cache.container.props }),
+    mutate: (update, options, callback) => cache.mutate({ update, options, props: cache.container.props }, callback),
+    listen: cache.listen,
+    ignore: cache.ignore,
+    reset: cache.reset,
+    query: cache.query
+  };
+}
