@@ -1,5 +1,11 @@
 export default {
-  content: ['./**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}'],
+  content: [
+    './root.tsx',
+    './core/**/*.{js,jsx,ts,tsx}',
+    './modules/**/*.{js,jsx,ts,tsx}',
+    './routes/**/*.{js,jsx,ts,tsx}',
+    './uikit/**/*.{js,jsx,ts,tsx}'
+  ],
   theme: {
     extend: {
       colors: {

@@ -15,7 +15,7 @@
 
 # production
 /frontend/.react-router/
-/build/
+/frontend/build
 
 # misc
 .DS_Store
@@ -28,6 +28,3 @@ yarn-error.log*
 
 # local env files
 .env
-
-# tailwind
-/frontend/styles
