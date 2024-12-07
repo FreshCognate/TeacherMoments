@@ -15,7 +15,7 @@ const Scenarios = ({
         {map(scenarios, (scenario) => {
           return (
             <div key={scenario._id}>
-              {scenario.name}
+              {scenario.name} - {scenario.accessType}
             </div>
           );
         })}

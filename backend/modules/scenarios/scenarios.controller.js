@@ -17,9 +17,9 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { name, scenarioType } = body;
+    const { name, accessType } = body;
 
-    const scenario = await createScenario({ name, scenarioType }, {}, context);
+    const scenario = await createScenario({ name, accessType }, {}, context);
 
     return { scenario }
 

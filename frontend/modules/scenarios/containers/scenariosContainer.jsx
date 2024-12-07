@@ -15,6 +15,17 @@ class ScenariosContainer extends Component {
         name: {
           type: 'Text',
           label: 'Scenario name'
+        },
+        accessType: {
+          type: 'Toggle',
+          label: 'Access type',
+          options: [{
+            value: 'PRIVATE',
+            text: 'Private'
+          }, {
+            value: 'PUBLIC',
+            text: 'Public'
+          }]
         }
       },
       model: {
