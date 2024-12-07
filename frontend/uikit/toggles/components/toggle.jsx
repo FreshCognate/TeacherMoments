@@ -19,7 +19,7 @@ const Toggle = ({
 
         let className = classnames('p-2', {
           'opacity-40': !isSelected,
-          'opacity-100 dark:bg-white bg-opacity-10': isSelected,
+          'opacity-100 dark:bg-white dark:bg-opacity-10': isSelected,
         });
 
         let selectedColor = isSelected ? color : null;
