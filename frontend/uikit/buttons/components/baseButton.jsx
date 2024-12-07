@@ -49,9 +49,9 @@ const BaseButton = ({
     <button
       id={id}
       className={classnames(className, ``, {
-        '': isFullWidth,
-        '': isCircular,
-        '': !text && !html
+        // '': isFullWidth,
+        // '': isCircular,
+        // '': !text && !html
       })}
       aria-label={ariaLabel}
       aria-controls={ariaControls}

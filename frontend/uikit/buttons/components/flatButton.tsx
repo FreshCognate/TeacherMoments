@@ -45,9 +45,9 @@ export default function FlatButton({
 }: Props) {
 
   const classNames = classnames('', {
-    '': (color === 'primary'),
-    '': (color === 'secondary'),
-    '': (color === 'warning')
+    // '': (color === 'primary'),
+    // '': (color === 'secondary'),
+    // '': (color === 'warning')
   }, className)
 
   if (isCircular && size != 'sm') {
