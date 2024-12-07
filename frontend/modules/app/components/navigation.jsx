@@ -14,9 +14,11 @@ const Navigation = ({
           Scenarios
         </NavLink>
       </nav>
-      <div>
-        {`Logged in as ${authentication.firstName} ${authentication.lastName}`}
-      </div>
+      {authentication && (
+        <div>
+          {`Logged in as ${authentication.firstName} ${authentication.lastName}`}
+        </div>
+      )}
     </div>
   );
 };
