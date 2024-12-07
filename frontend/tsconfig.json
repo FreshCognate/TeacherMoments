@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "baseUrl": "./",
+    "paths": {
+      "~/modules/*": [
+        "./modules/*"
+      ],
+      "~/core/*": [
+        "./core/*"
+      ],
+      "~/uikit/*": [
+        "./uikit/*"
+      ]
+    },
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2019"
+    ],
+    "strict": true,
+    "target": "ES2019",
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "node_modules",
+    "./.react-router"
+  ],
+  "include": [
+    "env.d.ts",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.ts",
+    "**/*.tsx",
+    "./entry.client.tsx",
+    "./entry.server.tsx"
+  ]
+}
