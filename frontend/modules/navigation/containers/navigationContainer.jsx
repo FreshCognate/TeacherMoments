@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Navigation from '../components/navigation';
+import WithCache from '~/core/cache/containers/withCache';
 
 class NavigationContainer extends Component {
   render() {
@@ -11,4 +12,10 @@ class NavigationContainer extends Component {
   }
 };
 
-export default NavigationContainer;
+export default WithCache(NavigationContainer, {
+  app: {
+    getInitialData: () => ({
+      language: 'en-US'
+    })
+  }
+});

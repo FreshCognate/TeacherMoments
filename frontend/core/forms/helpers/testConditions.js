@@ -8,7 +8,7 @@ export default function testConditions(fieldKey, schema, model) {
 
   each(schema.conditions, (conditionItem) => {
     // This makes sure we display the first condition
-    if (hasCondition) return;
+    if (hasFieldCondition) return;
     if (!Conditions[conditionItem.type]) return console.warn(`Condition: ${conditionItem.type} has not been registered`);
     if (!model) return;
     const testedCondition = Conditions[conditionItem.type]({
