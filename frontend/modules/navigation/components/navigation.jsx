@@ -5,7 +5,7 @@ const Navigation = ({
   authentication
 }) => {
   return (
-    <div className="flex items-center justify-between h-10 px-4 border-b border-b-lm-2 dark:border-b-transparent">
+    <div className="flex items-center justify-between h-10 px-4 border-b border-b-lm-2 dark:border-b-dm-2">
       <div>
 
         <nav>

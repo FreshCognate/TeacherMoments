@@ -7,7 +7,7 @@ import editScenarioSchema from '../schemas/editScenarioSchema';
 class ScenarioSettingsContainer extends Component {
 
   onUpdateScenario = ({ update }) => {
-    return this.props.scenario.mutate(update, { method: 'put', setType: 'extend' });
+    return this.props.scenario.mutate(update, { method: 'put' });
   }
 
   render() {

@@ -18,8 +18,8 @@ export default function Button({
   onClick
 }) {
 
-  const classes = classnames('rounded-md px-4 py-1 border-2', {
-    'border border-primary-regular bg-lm-primary-regular dark:border-primary-dark dark:bg-primary-dark': (color === 'primary')
+  const classes = classnames('rounded-md px-4 py-1', {
+    'bg-primary-regular text-white dark:text-black hover:bg-primary-dark dark:bg-primary-light hover:dark:bg-primary-regular transition-colors': (color === 'primary')
   }, className);
 
   return (
