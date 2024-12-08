@@ -47,7 +47,7 @@ const DialogModal = ({
           className={classnames(
             'relative z-50 bg-lm-0 flex flex-col rounded-md dark:bg-dm-0',
             {
-              'w-100 h-full max-w-screen-lg mx-auto': modal.isFullScreen,
+              'w-full h-full max-w-screen-lg mx-auto': modal.isFullScreen,
             }
           )}
           animate={animation.animate}

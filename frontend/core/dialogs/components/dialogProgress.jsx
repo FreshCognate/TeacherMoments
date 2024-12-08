@@ -52,8 +52,8 @@ const DialogProgress = ({
                 </div>
               )}
               {(item.progress) && (
-                <div className="relative w-100">
-                  <div className="absolute w-100 text-center">
+                <div className="relative w-full">
+                  <div className="absolute w-full text-center">
                     <Body size='xs' body={item.progress} />
                   </div>
                 </div>

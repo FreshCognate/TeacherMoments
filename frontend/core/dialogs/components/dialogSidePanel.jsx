@@ -36,12 +36,12 @@ const DialogSidePanel = ({
     animation.transition = { ease: [0.8, 0, 0.3, 1], duration: 0.6, delay: 0 };
   }
 
-  const elementClassName = classnames("relative w-100 h-100 p-4 flex", {
+  const elementClassName = classnames("relative w-full h-100 p-4 flex", {
     "justify-end": sidePanel.position === 'right',
     "justify-start": sidePanel.position === 'left'
   });
 
-  const className = classnames("flex flex-col relative w-100 bg-lm-0 rounded-lg border border-lm-1 dark:border-dm-1 dark:bg-dm-0", {
+  const className = classnames("flex flex-col relative w-full bg-lm-0 rounded-lg border border-lm-1 dark:border-dm-1 dark:bg-dm-0", {
     "max-w-md": sidePanel.size !== 'md' && sidePanel.size !== 'lg',
     "max-w-xl": sidePanel.size === 'md',
     "max-w-auto": sidePanel.size === 'lg'
