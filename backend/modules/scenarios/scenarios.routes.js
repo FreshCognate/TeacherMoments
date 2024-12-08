@@ -2,6 +2,7 @@ import Joi from 'joi';
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
 import controller from './scenarios.controller.js';
+import buildLanguageValidation from '#core/app/helpers/buildLanguageValidation.js';
 
 export default {
   route: '/scenarios',
@@ -30,6 +31,8 @@ export default {
     param: 'id',
     body: {
       name: Joi.string(),
+      ...buildLanguageValidation('title', Joi.string().allow('')),
+      ...buildLanguageValidation('description', Joi.array()),
       accessType: Joi.string().valid("PUBLIC", "PRIVATE"),
       tags: Joi.array().items(Joi.string()),
       collaborators: Joi.array().items({

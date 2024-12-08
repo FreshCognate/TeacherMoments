@@ -74,7 +74,7 @@ class SlateEditorContainer extends Component {
     return (
       <SlateEditor
         editor={this.editor}
-        value={this.state.value}
+        value={this.props.value}
         renderElement={this.renderElement}
         renderLeaf={this.renderLeaf}
         placeholder={this.props.placeholder}

@@ -111,13 +111,13 @@ const SlateEditor = ({
   const hasFeatures = (features && features.length > 0);
 
   const editableClassName = classnames(
-    "py-1 px-2 rounded-b-4 focus:outline-none focus:border-primary-regular focus:dark:border-primary-light bg-lm-1 border border-lm-1 transition-colors duration-300 dark:bg-dm-1 dark:border-dm-1",
+    "py-1 px-2 rounded-b focus:outline-2 focus:outline-primary-regular  focus:dark:border-primary-light border border-lm-3 transition-colors duration-300",
     INPUT_BACKGROUND_COLORS[inputBackground],
     { 'rounded-t-4': !hasFeatures }
   );
 
   return (
-    <Slate editor={editor} value={value} onChange={onChange}>
+    <Slate editor={editor} initialValue={value} onChange={onChange}>
       {(hasFeatures) && (
         <SlateToolbar>
           {map(features, (feature) => {

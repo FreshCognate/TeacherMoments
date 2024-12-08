@@ -12,11 +12,9 @@ const SlateMarkButton = ({
 
   const isButtonActive = isMarkActive(editor, format);
 
-  const className = classnames('p-1 mr-1 rounded-md border border-lm-2 bg-lm-2',
-    'dark:border-dm-2 dark:bg-dm-2 dark:fill-white',
-    'hover:bg-lm-3 hover:border-lm-3 hover:dark:bg-dm-3 hover:dark:border-dm-3', {
-    'border-primary-regular fill-primary-regular dark:border-primary-dark dark:fill-primary-light': isButtonActive,
-    'hover:border-primary-dark hover:fill-primary-regular hover:dark:border-primary-light hover:dark:fill-primary-light': isButtonActive
+  const className = classnames('p-1 mr-1 rounded-md opacity-70 hover:opacity-100', {
+    'text-primary-regular dark:text-primary-light': isButtonActive,
+    '': isButtonActive
   });
 
   return (

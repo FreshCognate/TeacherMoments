@@ -7,6 +7,7 @@ const TextFormField = ({ value, schema, updateField }) => {
       value={value}
       autoFocus={schema.shouldAutoFocus}
       disabled={schema.isDisabled}
+      className="border border-lm-3 py-1 px-2 rounded w-full focus:outline-2 outline-primary-regular outline-offset-1"
       onChange={(event) => updateField(event.target.value)}
     />
   );

@@ -2,7 +2,7 @@ import map from 'lodash/map';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import classnames from 'classnames';
 
-const Toggle = ({
+const NavigationToggle = ({
   value,
   options,
   color = "primary",
@@ -11,17 +11,17 @@ const Toggle = ({
   isDisabled,
   onClick
 }) => {
-  const classNames = classnames('border border-lm-0 inline-flex items-center rounded-lg overflow-hidden border-lm-3 dark:border-dm-3', className);
+  const classNames = classnames('inline-flex items-center', className);
   return (
     <div className={classNames}>
       {map(options, (option) => {
         const isSelected = value === option.value;
 
-        let className = classnames({
+        let className = classnames('border-b', {
           'p-2': size !== 'sm',
-          'py-1 px-2 text-xs': size === 'sm',
-          'opacity-40': !isSelected,
-          'opacity-100 dark:bg-white dark:bg-opacity-10': isSelected,
+          'py-1 mx-2 text-xs': size === 'sm',
+          'border-b-primary-regular': isSelected,
+          'border-b-transparent': !isSelected
         });
 
         let selectedColor = isSelected ? color : null;
@@ -36,4 +36,4 @@ const Toggle = ({
   );
 };
 
-export default Toggle;
+export default NavigationToggle;
