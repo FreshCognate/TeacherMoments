@@ -12,7 +12,7 @@ import type { Route } from "./.react-router/types/+types/root";
 import stylesheet from "./app.css?url";
 import axios from 'axios';
 import '~/modules/index';
-import NavigationContainer from './modules/app/containers/navigationContainer';
+import NavigationContainer from './modules/navigation/containers/navigationContainer';
 import DialogsContainer from './core/dialogs/containers/dialogsContainer';
 
 export const links: Route.LinksFunction = () => [

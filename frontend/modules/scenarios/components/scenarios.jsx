@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '~/uikit/buttons/components/button';
 import map from 'lodash/map';
+import { Link } from 'react-router';
 
 const Scenarios = ({
   scenarios,
@@ -16,6 +17,9 @@ const Scenarios = ({
           return (
             <div key={scenario._id}>
               {scenario.name} - {scenario.accessType}
+              <Link to={`/scenarios/${scenario._id}/edit`}>
+                Edit
+              </Link>
             </div>
           );
         })}

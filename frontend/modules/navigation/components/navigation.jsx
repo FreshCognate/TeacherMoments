@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router';
+import { Link, NavLink } from 'react-router';
 
 const Navigation = ({
   authentication
@@ -18,6 +18,11 @@ const Navigation = ({
         <div>
           {`Logged in as ${authentication.firstName} ${authentication.lastName}`}
         </div>
+      )}
+      {(!authentication) && (
+        <Link to="/login">
+          Login
+        </Link>
       )}
     </div>
   );

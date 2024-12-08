@@ -3,7 +3,7 @@ import Scenarios from '../components/scenarios';
 import addModal from '~/core/dialogs/helpers/addModal';
 import axios from 'axios';
 import WithCache from '~/core/cache/containers/withCache';
-import handleRequestError from '~/modules/app/helpers/handleRequestError';
+import handleRequestError from '~/core/app/helpers/handleRequestError';
 
 class ScenariosContainer extends Component {
 
@@ -52,7 +52,6 @@ class ScenariosContainer extends Component {
   }
 
   render() {
-    console.log(this.props.scenarios);
     return (
       <Scenarios
         scenarios={this.props.scenarios.data}
