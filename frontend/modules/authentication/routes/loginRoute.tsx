@@ -9,7 +9,7 @@ export function meta({ }) {
   ];
 }
 
-export default function Login({ loaderData }) {
+export default function LoginRoute() {
   return (
     <LoginContainer />
   )

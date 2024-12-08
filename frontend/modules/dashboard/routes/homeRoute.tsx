@@ -11,7 +11,7 @@ export function meta({ }) {
   ];
 }
 
-export default function Home({ loaderData }) {
+export default function HomeRoute() {
   return (
     <div>
       Dashboard

@@ -17,7 +17,7 @@ const Scenarios = ({
           return (
             <div key={scenario._id}>
               {scenario.name} - {scenario.accessType}
-              <Link to={`/scenarios/${scenario._id}/edit`}>
+              <Link to={`/scenarios/${scenario._id}/create`}>
                 Edit
               </Link>
             </div>

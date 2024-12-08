@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import ScenarioEditor from '../components/scenarioEditor';
 import WithRouter from '~/core/app/components/withRouter';
+import WithCache from '~/core/cache/containers/withCache';
 
 class ScenarioEditorContainer extends Component {
 
   onToggleClicked = (value) => {
     const { navigate, params } = this.props.router;
-    navigate(`/scenarios/${params.id}/${value}`, { viewTransition: true });
+    navigate(`/scenarios/${params.id}/${value}`, { viewTransition: true, replace: true });
   }
 
   render() {
@@ -17,6 +18,7 @@ class ScenarioEditorContainer extends Component {
 
     return (
       <ScenarioEditor
+        scenario={this.props.scenario.data}
         pathValue={pathValue}
         onToggleClicked={this.onToggleClicked}
       />
@@ -24,4 +26,13 @@ class ScenarioEditorContainer extends Component {
   }
 };
 
-export default WithRouter(ScenarioEditorContainer);
+export default WithRouter(WithCache(ScenarioEditorContainer, {
+  scenario: {
+    url: '/api/scenarios/:id',
+    getInitialData: () => ({}),
+    transform: ({ data }) => data.scenario,
+    getParams: ({ props }) => {
+      return { id: props.router.params.id };
+    }
+  }
+}));
