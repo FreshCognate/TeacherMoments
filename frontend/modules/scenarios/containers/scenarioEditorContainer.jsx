@@ -34,5 +34,16 @@ export default WithRouter(WithCache(ScenarioEditorContainer, {
     getParams: ({ props }) => {
       return { id: props.router.params.id };
     }
+  },
+  slides: {
+    url: '/api/slides',
+    getInitialData: () => ([]),
+    transform: ({ data }) => data.slides,
+    getParams: ({ props }) => {
+      return { id: props.router.params.id };
+    },
+    getQuery: ({ props }) => {
+      return { scenario: props.router.params.id };
+    }
   }
 }));

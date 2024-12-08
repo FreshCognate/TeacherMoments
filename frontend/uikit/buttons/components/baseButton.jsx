@@ -30,7 +30,7 @@ const BaseButton = ({
     return (
       <>
         {(icon && iconPosition === 'left') && (
-          <Icon className="" icon={icon} size={iconSize} />
+          <Icon className="mr-1" icon={icon} size={iconSize} />
         )}
         {(html) && (
           <span dangerouslySetInnerHTML={{ __html: html }} className="inline-block" />
@@ -39,7 +39,7 @@ const BaseButton = ({
           text
         )}
         {(icon && iconPosition === 'right') && (
-          <Icon className="" icon={icon} size={iconSize} />
+          <Icon className="ml-1" icon={icon} size={iconSize} />
         )}
       </>
     );
@@ -48,7 +48,7 @@ const BaseButton = ({
   return (
     <button
       id={id}
-      className={classnames(className, ``, {
+      className={classnames(className, `flex items-center`, {
         // '': isFullWidth,
         // '': isCircular,
         // '': !text && !html
