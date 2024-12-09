@@ -6,6 +6,7 @@ import axios from 'axios';
 import get from 'lodash/get';
 import each from 'lodash/each';
 import cloneDeep from 'lodash/cloneDeep';
+import handleRequestError from '~/core/app/helpers/handleRequestError';
 
 class SlidesPanelContainer extends Component {
 
@@ -37,7 +38,7 @@ class SlidesPanelContainer extends Component {
 
     axios.put(`/api/slides/${removed._id}`, { sourceIndex, destinationIndex }).then(() => {
       this.props.slides.fetch();
-    })
+    }).catch(handleRequestError);
   }
 
   onAddSlideClicked = () => {
@@ -50,7 +51,7 @@ class SlidesPanelContainer extends Component {
           this.onSlideClicked(slideId);
         }
       });
-    })
+    }).catch(handleRequestError);
   }
 
   onSlideClicked = (slideId) => {
@@ -64,7 +65,7 @@ class SlidesPanelContainer extends Component {
     router.navigate(`/scenarios/${router.params.id}/create`, { replace: true })
     axios.delete(`/api/slides/${slideId}`).then(() => {
       slides.fetch();
-    })
+    }).catch(handleRequestError);
   }
 
   onSortUpClicked = (sortOrder) => {

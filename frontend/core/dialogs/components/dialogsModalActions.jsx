@@ -11,7 +11,7 @@ const DialogsModalActions = ({
 
   if (actions && actions.length > 0) {
     return (
-      <div className="border-t border-lm-1 flex justify-end items-center p-4 dark:border-dm-0">
+      <div className="border-t border-lm-1 flex justify-end items-center px-3 py-2 dark:border-dm-1">
         {map(actions, (action, index) => {
           let isDisabled = false;
           if (action.getIsDisabled) {
@@ -20,7 +20,7 @@ const DialogsModalActions = ({
           const Component = (index === 0 && actions.length > 1) ? FlatButton : Button;
           return (
             <Component
-              className="mr-4"
+              className="ml-4"
               key={action.type}
               {...action}
               isDisabled={isDisabled}

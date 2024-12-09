@@ -30,6 +30,12 @@ class ScenarioEditorContainer extends Component {
 };
 
 export default WithRouter(WithCache(ScenarioEditorContainer, {
+  editor: {
+    getInitialData: () => ({
+      displayMode: 'EDITING'
+    }),
+    lifeTime: 0
+  },
   scenario: {
     url: '/api/scenarios/:id',
     getInitialData: () => ({}),
