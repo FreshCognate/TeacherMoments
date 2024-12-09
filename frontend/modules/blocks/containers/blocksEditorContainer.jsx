@@ -6,6 +6,7 @@ import WithCache from '~/core/cache/containers/withCache';
 import axios from 'axios';
 import cloneDeep from 'lodash/cloneDeep';
 import each from 'lodash/each';
+import sortBy from 'lodash/sortBy';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 
 class BlocksEditorContainer extends Component {
@@ -13,11 +14,24 @@ class BlocksEditorContainer extends Component {
   getBlocksBySlide = () => {
     const searchParams = new URLSearchParams(this.props.router.location.search);
     const slideId = searchParams.get('slide');
-    return filter(this.props.blocks.data, (block) => {
+    return sortBy(filter(this.props.blocks.data, (block) => {
       if (block.slide === slideId) {
         return block;
       }
-    })
+    }), 'sortOrder')
+  }
+
+  getSelectedBlockId = () => {
+    const searchParams = new URLSearchParams(this.props.router.location.search);
+    return searchParams.get('block');
+  }
+
+  getIsEditingBlock = () => {
+    const searchParams = new URLSearchParams(this.props.router.location.search);
+    const slideId = searchParams.get('slide');
+    const blockId = searchParams.get('block');
+    const isEditing = searchParams.get('isEditing');
+    return (slideId && isEditing && blockId);
   }
 
   onDeleteBlockClicked = (blockId) => {
@@ -28,7 +42,7 @@ class BlocksEditorContainer extends Component {
   }
 
   sortBlocks = ({ sourceIndex, destinationIndex, blocks }) => {
-    const clonedBlocks = cloneDeep(blocks.data);
+    const clonedBlocks = cloneDeep(this.getBlocksBySlide());
     const [removed] = clonedBlocks.splice(sourceIndex, 1);
     clonedBlocks.splice(destinationIndex, 0, removed);
 
@@ -59,13 +73,39 @@ class BlocksEditorContainer extends Component {
 
   }
 
+  onBlockClicked = (blockId) => {
+    const { router } = this.props;
+    const searchParams = new URLSearchParams(router.location.search);
+    const slideId = searchParams.get('slide');
+    router.navigate(`/scenarios/${router.params.id}/create?slide=${slideId}&block=${blockId}`, { replace: true })
+  }
+
+  onCancelEditBlockClicked = (blockId) => {
+    const { router } = this.props;
+    const searchParams = new URLSearchParams(router.location.search);
+    const slideId = searchParams.get('slide');
+    router.navigate(`/scenarios/${router.params.id}/create?slide=${slideId}&block=${blockId}`, { replace: true })
+  }
+
+  onEditBlockClicked = (blockId) => {
+    const { router } = this.props;
+    const searchParams = new URLSearchParams(router.location.search);
+    const slideId = searchParams.get('slide');
+    router.navigate(`/scenarios/${router.params.id}/create?slide=${slideId}&block=${blockId}&isEditing=true`, { replace: true })
+  }
+
   render() {
     return (
       <BlocksEditor
         blocks={this.getBlocksBySlide()}
+        selectedBlockId={this.getSelectedBlockId()}
+        isEditingBlock={this.getIsEditingBlock()}
         onDeleteBlockClicked={this.onDeleteBlockClicked}
         onSortUpClicked={this.onSortUpClicked}
         onSortDownClicked={this.onSortDownClicked}
+        onBlockClicked={this.onBlockClicked}
+        onCancelEditBlockClicked={this.onCancelEditBlockClicked}
+        onEditBlockClicked={this.onEditBlockClicked}
       />
     );
   }

@@ -46,9 +46,7 @@ const SlidesPanelItem = ({
         </div>
       </div>
       {(isEditing) && (
-        <div>
-          <EditSlideContainer slideId={slide._id} />
-        </div>
+        <EditSlideContainer slideId={slide._id} />
       )}
 
       {(!isEditing) && (

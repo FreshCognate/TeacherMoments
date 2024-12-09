@@ -33,7 +33,7 @@ export default {
     param: 'id',
     body: {
       name: Joi.string(),
-      blockType: Joi.string().valid('TEXT'),
+      blockType: Joi.string().valid('TEXT', 'INPUT', 'ACTIONS'),
       sourceIndex: Joi.number(),
       destinationIndex: Joi.number(),
       tags: Joi.array().items(Joi.string()),
