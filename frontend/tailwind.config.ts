@@ -14,6 +14,11 @@ export default {
           'regular': '#41BCBF',
           'dark': '#2D8484'
         },
+        warning: {
+          'light': '#fca5a5',
+          'regular': '#ef4444',
+          'dark': '#b91c1c'
+        },
         'lm-0': '#fff',
         'lm-1': '#fafafa',
         'lm-2': '#f4f4f5',

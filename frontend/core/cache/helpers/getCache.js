@@ -9,6 +9,7 @@ export default function getCache(key) {
     data: cache.data,
     status: cache.status,
     set: cache.set,
+    setStatus: cache.setStatus,
     fetch: () => cache.fetch({ props: cache.container.props }),
     mutate: (update, options, callback) => cache.mutate({ update, options, props: cache.container.props }, callback),
     listen: cache.listen,

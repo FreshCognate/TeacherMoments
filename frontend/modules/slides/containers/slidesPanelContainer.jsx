@@ -25,6 +25,14 @@ class SlidesPanelContainer extends Component {
     return searchParams.get('slide');
   }
 
+  getIsEditingSection = () => {
+    const searchParams = new URLSearchParams(this.props.router.location.search);
+    const slideId = searchParams.get('slide');
+    const blockId = searchParams.get('block');
+    const isEditing = searchParams.get('isEditing');
+    return (slideId && isEditing && !blockId);
+  }
+
   sortSlides = ({ sourceIndex, destinationIndex, slides }) => {
     const clonedSlides = cloneDeep(slides.data);
     const [removed] = clonedSlides.splice(sourceIndex, 1);
@@ -39,6 +47,11 @@ class SlidesPanelContainer extends Component {
     axios.put(`/api/slides/${removed._id}`, { sourceIndex, destinationIndex }).then(() => {
       this.props.slides.fetch();
     }).catch(handleRequestError);
+  }
+
+  onEditSlideClicked = (slideId) => {
+    const { router } = this.props;
+    router.navigate(`/scenarios/${router.params.id}/create?slide=${slideId}&isEditing=true`, { replace: true })
   }
 
   onAddSlideClicked = () => {
@@ -84,16 +97,24 @@ class SlidesPanelContainer extends Component {
 
   }
 
+  onCancelEditSlideClicked = (slideId) => {
+    const { router } = this.props;
+    router.navigate(`/scenarios/${router.params.id}/create?slide=${slideId}`, { replace: true })
+  }
+
   render() {
     return (
       <SlidesPanel
         slides={this.props.slides.data}
         selectedSlideId={this.getSelectedSlideId()}
+        isEditingSection={this.getIsEditingSection()}
         onAddSlideClicked={this.onAddSlideClicked}
+        onEditSlideClicked={this.onEditSlideClicked}
         onSlideClicked={this.onSlideClicked}
         onDeleteSlideClicked={this.onDeleteSlideClicked}
         onSortUpClicked={this.onSortUpClicked}
         onSortDownClicked={this.onSortDownClicked}
+        onCancelEditSlideClicked={this.onCancelEditSlideClicked}
       />
     );
   }

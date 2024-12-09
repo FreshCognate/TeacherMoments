@@ -44,14 +44,19 @@ export default function FlatButton({
   onClick
 }: Props) {
 
-  const classNames = classnames('text-sm text-black text-opacity-60 hover:text-opacity-100 disabled:hover:text-opacity-60 dark:text-white dark:text-opacity-60 hover:dark:text-opacity-100 disabled:hover:dark:text-opacity-60', {
-    'hover:text-primary-regular': (color === 'primary'),
-    // '': (color === 'secondary'),
-    // '': (color === 'warning')
+  const classNames = classnames('text-black text-opacity-60 hover:text-opacity-100 disabled:hover:text-opacity-60 dark:text-white dark:text-opacity-60 hover:dark:text-opacity-100 disabled:hover:dark:text-opacity-60', {
+    'hover:text-primary-regular dark:hover:text-primary-light': (color === 'primary'),
+    'hover:text-warning-regular dark:hover:text-warning-light': (color === 'warning'),
+    'text-xs': size === 'sm',
+    'text-sm': size !== 'sm'
   }, className)
 
   if (isCircular && size != 'sm') {
     iconSize = 24;
+  }
+
+  if (size === 'sm') {
+    iconSize = 12;
   }
 
   return (
