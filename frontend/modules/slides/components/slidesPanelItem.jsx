@@ -13,8 +13,9 @@ const SlidesPanelItem = ({
   onSortDownClicked
 }) => {
   return (
-    <div className={classnames("bg-lm-2 dark:bg-dm-2 my-2 rounded-md p-2 cursor-pointer", {
-      "outline outline-primary-regular dark:outline-primary-light": isSelected
+    <div className={classnames("bg-lm-2 dark:bg-dm-2 my-2 rounded-md p-2 cursor-pointer ", {
+      "outline outline-primary-regular dark:outline-primary-light": isSelected,
+      "hover:outline hover:outline-lm-3 hover:dark:outline-dm-3": !isSelected
     })} onClick={() => onSlideClicked(slide._id)}>
       <Body body={slide.name ? slide.name : `Slide ${slide.sortOrder + 1}`} className="mb-2" />
       <div className="flex items-center justify-between">
