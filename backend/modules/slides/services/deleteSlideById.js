@@ -10,6 +10,15 @@ export default async (props, options, context) => {
     deletedBy: user._id
   }, { new: true });
 
+  const scenarioSlides = await models.Slide.find({ scenario: slide.scenario, isDeleted: false }).sort('sortOrder');
+
+  let sortOrder = 0;
+  for (const scenarioSlide of scenarioSlides) {
+    scenarioSlide.sortOrder = sortOrder;
+    sortOrder++;
+    await scenarioSlide.save();
+  }
+
   if (!slide) throw { message: 'This slide does not exist', statusCode: 404 };
 
   return slide;

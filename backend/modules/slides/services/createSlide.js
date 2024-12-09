@@ -4,12 +4,19 @@ export default async (props, options, context) => {
 
   const { models, user } = context;
 
-  if (!name) throw { message: "A slide must have a name", statusCode: 400 };
+  const scenarioModel = await models.Scenario.findById(scenario);
+
+  if (!scenarioModel) throw { message: "This scenario does not exist", statusCode: 400 };
+
+  const scenarioSlides = await models.Slide.find({ scenario: scenario, isDeleted: false });
+
+  const sortOrder = scenarioSlides.length;
 
   const newSlideObject = {
     name,
     scenario,
     createdBy: user._id,
+    sortOrder,
   };
 
   const slide = await models.Slide.create(newSlideObject);

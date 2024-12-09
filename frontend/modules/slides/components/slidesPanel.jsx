@@ -6,6 +6,7 @@ import map from 'lodash/map';
 const SlidesPanel = ({
   slides,
   onAddSlideClicked,
+  onSlideClicked,
   onDeleteSlideClicked,
 }) => {
   return (
@@ -19,6 +20,7 @@ const SlidesPanel = ({
             <SlidesPanelItem
               key={slide._id}
               slide={slide}
+              onSlideClicked={onSlideClicked}
               onDeleteSlideClicked={onDeleteSlideClicked}
             />
           );

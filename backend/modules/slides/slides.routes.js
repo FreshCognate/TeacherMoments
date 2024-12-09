@@ -18,7 +18,7 @@ export default {
   },
   create: {
     body: {
-      name: Joi.string().required(),
+      name: Joi.string().valid(''),
       scenario: Joi.string().required()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
@@ -30,7 +30,7 @@ export default {
   update: {
     param: 'id',
     body: {
-      name: Joi.string(),
+      name: Joi.string().valid(''),
       slideType: Joi.string().valid('STEP', 'SUMMARY'),
       tags: Joi.array().items(Joi.string()),
       isLocked: Joi.boolean(),
