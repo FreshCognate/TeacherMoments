@@ -1,21 +1,20 @@
 import React from 'react';
 import FormContainer from '~/core/forms/containers/formContainer';
 
-const EditSlide = ({
+const EditBlock = ({
   schema,
-  slide,
-  isLoading,
-  onSlideFormUpdate
+  block,
+  onEditBlockUpdate
 }) => {
   return (
-    <div className="p-3">
+    <div className="p-4">
       <FormContainer
         schema={schema}
-        model={slide}
-        onUpdate={onSlideFormUpdate}
+        model={block}
+        onUpdate={onEditBlockUpdate}
       />
     </div>
   );
 };
 
-export default EditSlide;
+export default EditBlock;

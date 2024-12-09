@@ -8,7 +8,7 @@ const ScenarioEditorToolbar = ({
   onAddBlockClicked
 }) => {
   return (
-    <div className="flex items-center justify-between bg-lm-1 dark:bg-dm-1 rounded-lg text-xs mx-2 border border-lm-2 dark:border-dm-2 mb-4">
+    <div className="flex items-center justify-between bg-lm-1 dark:bg-dm-1 rounded-lg text-xs mx-2 border border-lm-2 dark:border-dm-2 ">
       <div>
         <FlatButton icon="addBlock" text="Add block" className="px-4 py-1" size="sm" onClick={onAddBlockClicked} />
       </div>

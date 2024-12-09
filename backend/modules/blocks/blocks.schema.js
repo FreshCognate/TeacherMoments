@@ -4,7 +4,7 @@ const schema = {
   type: { type: String, default: 'block' },
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
   slide: { type: mongoose.Schema.Types.ObjectId, ref: 'Slide', required: true },
-  blockType: { type: String, enum: ['TEXT'], default: 'TEXT' },
+  blockType: { type: String, enum: ['TEXT', 'INPUT', 'ACTIONS'], default: 'TEXT' },
   sortOrder: { type: Number },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
   createdAt: { type: Date, default: Date.now },
