@@ -58,5 +58,18 @@ export default WithRouter(WithCache(ScenarioEditorContainer, {
     },
     lifeTime: 0,
     staleTime: 0
+  },
+  blocks: {
+    url: '/api/blocks',
+    getInitialData: () => ([]),
+    transform: ({ data }) => data.blocks,
+    getParams: ({ props }) => {
+      return { id: props.router.params.id };
+    },
+    getQuery: ({ props }) => {
+      return { scenario: props.router.params.id };
+    },
+    lifeTime: 0,
+    staleTime: 0
   }
 }));
