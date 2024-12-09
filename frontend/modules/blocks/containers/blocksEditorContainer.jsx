@@ -38,7 +38,7 @@ class BlocksEditorContainer extends Component {
     this.props.blocks.setStatus('syncing');
     axios.delete(`/api/blocks/${blockId}`).then(() => {
       this.props.blocks.fetch();
-    })
+    }).catch(handleRequestError);
   }
 
   sortBlocks = ({ sourceIndex, destinationIndex, blocks }) => {

@@ -37,7 +37,6 @@ export default WithCache(EditSlideContainer, {
     getInitialData: ({ props }) => {
       const slides = getCache('slides');
       const currentSlide = find(slides.data, { _id: props.slideId });
-      console.log(currentSlide);
       return currentSlide;
     },
     transform: ({ data }) => data.slide,

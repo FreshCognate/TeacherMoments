@@ -43,7 +43,6 @@ export default WithCache(EditBlockContainer, {
     getInitialData: ({ props }) => {
       const blocks = getCache('blocks');
       const currentBlock = find(blocks.data, { _id: props.blockId });
-      console.log(currentBlock);
       return currentBlock;
     }
   }
