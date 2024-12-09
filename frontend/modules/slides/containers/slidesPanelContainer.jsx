@@ -7,9 +7,13 @@ import axios from 'axios';
 class SlidesPanelContainer extends Component {
 
   onAddSlideClicked = () => {
-    axios.post(`/api/slides`, { name: 'slide 1', scenario: this.props.router.params.id }).then(() => {
+    axios.post(`/api/slides`, { scenario: this.props.router.params.id }).then(() => {
       this.props.slides.fetch();
     })
+  }
+
+  onSlideClicked = (slideId) => {
+    this.props.router.navigate(`/scenarios/${this.props.router.params.id}/create?slide=${slideId}`, { replace: true })
   }
 
   onDeleteSlideClicked = (slideId) => {
@@ -23,6 +27,7 @@ class SlidesPanelContainer extends Component {
       <SlidesPanel
         slides={this.props.slides.data}
         onAddSlideClicked={this.onAddSlideClicked}
+        onSlideClicked={this.onSlideClicked}
         onDeleteSlideClicked={this.onDeleteSlideClicked}
       />
     );

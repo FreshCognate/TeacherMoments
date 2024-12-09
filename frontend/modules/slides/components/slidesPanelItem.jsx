@@ -3,11 +3,12 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 
 const SlidesPanelItem = ({
   slide,
-  onDeleteSlideClicked
+  onDeleteSlideClicked,
+  onSlideClicked
 }) => {
   return (
-    <div className="bg-lm-2 mb-1 rounded-md p-2">
-      {slide.name}
+    <div className="bg-lm-2 dark:bg-dm-2 my-2 rounded-md p-2" onClick={() => onSlideClicked(slide._id)}>
+      {slide.name ? slide.name : `Slide ${slide.sortOrder + 1}`}
       <div className="flex items-center">
         <FlatButton icon="edit" />
         <FlatButton icon="delete" onClick={() => onDeleteSlideClicked(slide._id)} />

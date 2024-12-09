@@ -11,7 +11,7 @@ const ScenarioEditor = ({
 }) => {
   return (
     <div>
-      <div className="flex items-center justify-stretch px-4 border-b border-b-lm-2 dark:border-b-dm-2 bg-lm-1 dark:bg-dm-1">
+      <div className="flex items-center justify-stretch px-4 h-7 border-b border-b-lm-2 dark:border-b-dm-2 bg-lm-1 dark:bg-dm-1">
         <div className="w-1/3 flex items-center">
           <div className="text-xs">
             <Link to="/scenarios">

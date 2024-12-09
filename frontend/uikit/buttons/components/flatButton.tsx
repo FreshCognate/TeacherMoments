@@ -44,7 +44,7 @@ export default function FlatButton({
   onClick
 }: Props) {
 
-  const classNames = classnames('', {
+  const classNames = classnames('text-sm', {
     // '': (color === 'primary'),
     // '': (color === 'secondary'),
     // '': (color === 'warning')
