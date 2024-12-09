@@ -30,7 +30,7 @@ export default {
   update: {
     param: 'id',
     body: {
-      name: Joi.string().valid(''),
+      name: Joi.string().allow(''),
       slideType: Joi.string().valid('STEP', 'SUMMARY'),
       tags: Joi.array().items(Joi.string()),
       sourceIndex: Joi.number(),
