@@ -11,7 +11,7 @@ const Toggle = ({
   isDisabled,
   onClick
 }) => {
-  const classNames = classnames('border border-lm-0 inline-flex items-center rounded-lg overflow-hidden border-lm-3 dark:border-dm-3', className);
+  const classNames = classnames('border border-lm-0 inline-flex items-center rounded overflow-hidden border-lm-3 dark:border-dm-3', className);
   return (
     <div className={classNames}>
       {map(options, (option) => {
