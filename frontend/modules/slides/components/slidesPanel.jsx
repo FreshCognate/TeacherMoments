@@ -5,9 +5,12 @@ import map from 'lodash/map';
 
 const SlidesPanel = ({
   slides,
+  selectedSlideId,
   onAddSlideClicked,
   onSlideClicked,
   onDeleteSlideClicked,
+  onSortUpClicked,
+  onSortDownClicked
 }) => {
   return (
     <div className="p-1">
@@ -16,12 +19,19 @@ const SlidesPanel = ({
       </div>
       <div>
         {map(slides, (slide) => {
+
+          let isSelected = (slide._id === selectedSlideId);
+
           return (
             <SlidesPanelItem
               key={slide._id}
               slide={slide}
+              isSelected={isSelected}
+              isLastSlide={slide.sortOrder === slides.length - 1}
               onSlideClicked={onSlideClicked}
               onDeleteSlideClicked={onDeleteSlideClicked}
+              onSortUpClicked={onSortUpClicked}
+              onSortDownClicked={onSortDownClicked}
             />
           );
         })}

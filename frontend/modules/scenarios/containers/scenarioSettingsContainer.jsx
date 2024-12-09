@@ -11,11 +11,12 @@ class ScenarioSettingsContainer extends Component {
   }
 
   render() {
+    const { data, status } = this.props.scenario;
     return (
       <ScenarioSettings
         schema={editScenarioSchema}
-        scenario={this.props.scenario.data}
-        isLoading={this.props.scenario.status === 'loading'}
+        scenario={data}
+        isLoading={status === 'loading' || status === 'unresolved'}
         onUpdateScenario={this.onUpdateScenario}
       />
     );

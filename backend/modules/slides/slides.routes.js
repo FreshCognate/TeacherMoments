@@ -33,6 +33,8 @@ export default {
       name: Joi.string().valid(''),
       slideType: Joi.string().valid('STEP', 'SUMMARY'),
       tags: Joi.array().items(Joi.string()),
+      sourceIndex: Joi.number(),
+      destinationIndex: Joi.number(),
       isLocked: Joi.boolean(),
       isDeleted: Joi.boolean().invalid(true),
     },

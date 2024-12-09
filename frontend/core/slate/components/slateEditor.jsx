@@ -111,7 +111,7 @@ const SlateEditor = ({
   const hasFeatures = (features && features.length > 0);
 
   const editableClassName = classnames(
-    "py-1 px-2 rounded-b bg-lm-1 dark:bg-dm-1 focus:outline-2 focus:outline-primary-regular focus:dark:outline-primary-dark border border-lm-3 dark:border-dm-3 transition-colors duration-300",
+    "py-1 px-2 rounded-b bg-lm-1 dark:bg-dm-1 focus:outline-2 focus:outline-primary-regular focus:dark:outline-primary-light border border-lm-3 dark:border-dm-3 transition-colors duration-300",
     INPUT_BACKGROUND_COLORS[inputBackground],
     { 'rounded-t-4': !hasFeatures }
   );
