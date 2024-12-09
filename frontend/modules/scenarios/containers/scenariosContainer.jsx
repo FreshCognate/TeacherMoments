@@ -83,7 +83,7 @@ class ScenariosContainer extends Component {
     const { searchValue, currentPage } = query;
     const totalPages = get(this.props, 'scenarios.response.totalPages', 1);
     const isSyncing = status === 'syncing';
-    const isLoading = status === 'loading';
+    const isLoading = status === 'loading' || status === 'unresolved';
 
     return (
       <Scenarios

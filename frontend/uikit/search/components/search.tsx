@@ -24,7 +24,7 @@ const Search = ({
   onBlur,
   onKeyDown
 }: Props) => {
-  const classes = classnames('border border-lm-3 py-1 text-sm px-2 dark:border-dm-3 rounded focus:outline-2 outline-primary-regular dark:outline-primary-dark outline-offset-1', className);
+  const classes = classnames('border border-lm-3 py-1 text-sm px-2 dark:border-dm-3 rounded focus:outline-2 outline-primary-regular dark:outline-primary-light outline-offset-1', className);
   return (
     <div>
       <input

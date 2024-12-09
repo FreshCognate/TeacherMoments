@@ -3,12 +3,15 @@ import { Link, Outlet } from 'react-router';
 import NavigationToggle from '~/uikit/toggles/components/navigationToggle';
 import Toggle from '~/uikit/toggles/components/toggle';
 import ScenarioSyncStatusContainer from '../containers/scenarioSyncStatusContainer';
+import Loading from '~/uikit/loaders/components/loading';
 
 const ScenarioEditor = ({
   scenario,
   pathValue,
+  isLoading,
   onToggleClicked
 }) => {
+  if (isLoading) return <Loading />
   return (
     <div>
       <div className="flex items-center justify-stretch px-4 h-7 border-b border-b-lm-2 dark:border-b-dm-2 bg-lm-1 dark:bg-dm-1">

@@ -78,7 +78,7 @@ if (typeof window !== "undefined") {
 const config = {};
 
 const mutateDebounced = ({ debounceTime }) => debounce(({
-  update, cache, props, options = { setType: 'extend' }
+  update, cache, props, options
 }) => {
 
   cache.setPreviousState();
@@ -99,10 +99,10 @@ const mutateDebounced = ({ debounceTime }) => debounce(({
 
       cache.resetStale();
 
-      let updatedData = transformedData;
+      let updatedData = { ...cache.data, ...transformedData };
 
-      if (options.setType === 'extend') {
-        updatedData = { ...cache.data, ...updatedData };
+      if (options.setType === 'replace') {
+        updatedData = transformedData;
       }
 
       cache.data = updatedData;
@@ -239,14 +239,14 @@ export function createCache({ key, cache, container }) {
     cacheObject.trigger('SET');
   };
 
-  cacheObject.set = (update, options = { setType: 'extend' }) => {
+  cacheObject.set = (update, options = {}) => {
 
     let updatedData;
 
     cacheObject.setPreviousState();
 
-    if (options.setType === 'extend') {
-      updatedData = { ...cacheObject.data, ...update };
+    if (options.setType === 'replace') {
+      updatedData = update;
     } else if (options.setType === 'item') {
       const index = findIndex(cacheObject.data, options.setFind);
       cacheObject.data.splice(index, 1, update);
@@ -261,7 +261,7 @@ export function createCache({ key, cache, container }) {
       });
       updatedData = cloneDeep(cacheObject.data);
     } else {
-      updatedData = update;
+      updatedData = { ...cacheObject.data, ...update };
     }
 
     cacheObject.data = updatedData;
@@ -327,7 +327,6 @@ export function createCache({ key, cache, container }) {
 
     const payload = update || cacheObject.data;
 
-
     if (cacheObject.isMutating) {
       // Need to store the mutations
       cacheObject.mutations = { ...cacheObject.mutations || {}, ...payload };
@@ -365,10 +364,10 @@ export function createCache({ key, cache, container }) {
 
           cacheObject.resetStale();
 
-          let updatedData = transformedData;
+          let updatedData = { ...cacheObject.data, ...transformedData };
 
-          if (options.setType === 'extend') {
-            updatedData = { ...cacheObject.data, ...updatedData };
+          if (options.setType === 'replace') {
+            updatedData = transformedData;
           }
 
           cacheObject.data = updatedData;
@@ -484,12 +483,12 @@ export function createCache({ key, cache, container }) {
     }
   };
 
-  cacheObject.setQuery = (update, options = { setType: 'extend' }) => {
+  cacheObject.setQuery = (update, options = {}) => {
 
-    if (options.setType === 'extend') {
-      cacheObject.query = { ...cacheObject.query, ...update };
-    } else {
+    if (options.setType === 'replace') {
       cacheObject.query = update;
+    } else {
+      cacheObject.query = { ...cacheObject.query, ...update };
     }
 
     return new Promise((resolve) => {

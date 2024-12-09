@@ -48,7 +48,7 @@ const BaseButton = ({
   return (
     <button
       id={id}
-      className={classnames(className, `flex items-center`, {
+      className={classnames(className, `flex items-center disabled:opacity-50`, {
         'w-full justify-center': isFullWidth,
         // '': isCircular,
         // '': !text && !html

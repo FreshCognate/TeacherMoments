@@ -12,7 +12,9 @@ class ScenarioEditorContainer extends Component {
 
   render() {
 
-    const pathnameSplit = this.props.router.location.pathname.split('/');
+    const { slides, router } = this.props;
+
+    const pathnameSplit = router.location.pathname.split('/');
 
     const pathValue = pathnameSplit[pathnameSplit.length - 1];
 
@@ -20,6 +22,7 @@ class ScenarioEditorContainer extends Component {
       <ScenarioEditor
         scenario={this.props.scenario.data}
         pathValue={pathValue}
+        isLoading={slides.status === 'loading' || slides.status === 'unresolved'}
         onToggleClicked={this.onToggleClicked}
       />
     );
@@ -33,7 +36,9 @@ export default WithRouter(WithCache(ScenarioEditorContainer, {
     transform: ({ data }) => data.scenario,
     getParams: ({ props }) => {
       return { id: props.router.params.id };
-    }
+    },
+    lifeTime: 0,
+    staleTime: 0
   },
   slides: {
     url: '/api/slides',
@@ -44,6 +49,8 @@ export default WithRouter(WithCache(ScenarioEditorContainer, {
     },
     getQuery: ({ props }) => {
       return { scenario: props.router.params.id };
-    }
+    },
+    lifeTime: 0,
+    staleTime: 0
   }
 }));
