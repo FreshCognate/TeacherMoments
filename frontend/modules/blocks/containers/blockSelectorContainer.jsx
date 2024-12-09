@@ -14,7 +14,8 @@ class BlockSelectorContainer extends Component {
     const scenario = getCache('scenario')
     const scenarioId = scenario.data._id;
     axios.post(`/api/blocks`, { blockType, slide: slideId, scenario: scenarioId }).then(() => {
-
+      const blocks = getCache('blocks');
+      blocks.fetch();
     }).catch(handleRequestError);
   }
 
