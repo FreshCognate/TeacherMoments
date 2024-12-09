@@ -6,6 +6,7 @@ import restoreBlockById from './services/restoreBlockById.js';
 import updateBlockById from './services/updateBlockById.js';
 import deleteBlockById from './services/deleteBlockById.js';
 import createBlock from './services/createBlock.js';
+import reorderBlock from './services/reorderBlock.js';
 import has from 'lodash/has.js';
 
 export default {
@@ -45,6 +46,12 @@ export default {
 
     if (has(body, 'isDeleted')) {
       const block = await restoreBlockById({ blockId: param }, {}, context);
+      return { block };
+    }
+
+    if (has(body, 'sourceIndex') || has(body, 'destinationIndex')) {
+      const { sourceIndex, destinationIndex } = body;
+      const block = await reorderBlock({ sourceIndex, destinationIndex, blockId: param }, {}, context);
       return { block };
     }
 

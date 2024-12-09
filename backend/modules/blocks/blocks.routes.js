@@ -34,6 +34,8 @@ export default {
     body: {
       name: Joi.string(),
       blockType: Joi.string().valid('TEXT'),
+      sourceIndex: Joi.number(),
+      destinationIndex: Joi.number(),
       tags: Joi.array().items(Joi.string()),
       isDeleted: Joi.boolean().invalid(true),
     },
