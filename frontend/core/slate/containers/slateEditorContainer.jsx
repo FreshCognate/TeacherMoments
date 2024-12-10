@@ -62,7 +62,7 @@ class SlateEditorContainer extends Component {
   };
 
   onChange = (value) => {
-    this.setState({ value });
+    // this.setState({ value });
     // This line stops the state editor saving on focus
     if (value === this.state.value) return;
     if (this.props.onChange) {
@@ -74,7 +74,7 @@ class SlateEditorContainer extends Component {
     return (
       <SlateEditor
         editor={this.editor}
-        value={this.props.value}
+        value={this.state.value}
         renderElement={this.renderElement}
         renderLeaf={this.renderLeaf}
         placeholder={this.props.placeholder}

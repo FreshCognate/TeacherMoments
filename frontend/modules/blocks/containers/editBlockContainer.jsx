@@ -4,8 +4,28 @@ import find from 'lodash/find';
 import WithCache from '~/core/cache/containers/withCache';
 import getCache from '~/core/cache/helpers/getCache';
 import editBlockSchema from '../schemas/editBlockSchema';
+import editTextBlockSchema from '../schemas/editTextBlockSchema';
+
+const SCHEMA_MAPPINGS = {
+  TEXT: editTextBlockSchema
+}
 
 class EditBlockContainer extends Component {
+
+  getSchema = () => {
+    let currentBlockSchema = {};
+
+    const { data } = this.props.block;
+
+    if (data && SCHEMA_MAPPINGS[data.blockType]) {
+      currentBlockSchema = SCHEMA_MAPPINGS[data.blockType];
+    }
+
+    return {
+      ...editBlockSchema,
+      ...currentBlockSchema
+    }
+  }
 
   onEditBlockUpdate = ({ update }) => {
     const blocks = getCache('blocks');
@@ -24,7 +44,7 @@ class EditBlockContainer extends Component {
     return (
       <EditBlock
         block={block.data}
-        schema={editBlockSchema}
+        schema={this.getSchema()}
         onEditBlockUpdate={this.onEditBlockUpdate}
       />
     );
