@@ -2,6 +2,7 @@ import Joi from 'joi';
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
 import controller from './blocks.controller.js';
+import buildLanguageValidation from '#core/app/helpers/buildLanguageValidation.js';
 
 export default {
   route: '/blocks',
@@ -36,6 +37,7 @@ export default {
       blockType: Joi.string().valid('TEXT', 'INPUT', 'ACTIONS'),
       sourceIndex: Joi.number(),
       destinationIndex: Joi.number(),
+      ...buildLanguageValidation('body', Joi.array()),
       tags: Joi.array().items(Joi.string()),
       isDeleted: Joi.boolean().invalid(true),
     },
