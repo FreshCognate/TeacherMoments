@@ -7,12 +7,9 @@ class DialogPanelContainer extends Component {
     return (
       <DialogPanel
         panel={this.props.panel}
-        page={this.props.page.data}
-        section={this.props.section.data}
-        interaction={this.props.interaction.data}
       />
     );
   }
 };
 
-export default WithCache(DialogPanelContainer, {}, ['editor', 'page', 'section', 'interaction']);
+export default WithCache(DialogPanelContainer, {}, []);

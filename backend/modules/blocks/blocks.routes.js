@@ -37,6 +37,7 @@ export default {
       blockType: Joi.string().valid('TEXT', 'INPUT', 'ACTIONS'),
       sourceIndex: Joi.number(),
       destinationIndex: Joi.number(),
+      ...buildLanguageValidation('title', Joi.array()),
       ...buildLanguageValidation('body', Joi.array()),
       tags: Joi.array().items(Joi.string()),
       isDeleted: Joi.boolean().invalid(true),

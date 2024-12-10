@@ -1,7 +1,3 @@
-// *****************************
-// IF EDITING THIS FILE. REMEMBER THERE IS ANOTHER REPLICA OF THIS IN THE FRONTEND AND BACKEND;
-// *****************************
-
 import has from 'lodash/has';
 import each from 'lodash/each';
 import escapeHtml from 'escape-html';
