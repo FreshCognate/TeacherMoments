@@ -11,6 +11,7 @@ import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import set from 'lodash/set';
 import has from 'lodash/has';
+import handleRequestError from '~/core/app/helpers/handleRequestError';
 
 const CACHE = {};
 
@@ -290,7 +291,7 @@ export function createCache({ key, cache, container }) {
       method: cacheObject.method,
       url: getUrl({ url: cacheObject.url, params: cacheObject.getParams({ props }) }),
       params: cacheObject.query,
-    });
+    }).catch(handleRequestError);
 
     return fetchPromise.then((response) => {
       const { data } = response;
@@ -400,6 +401,7 @@ export function createCache({ key, cache, container }) {
             }
           }, 0);
         }
+        handleRequestError(error);
         console.error(error);
       });
 

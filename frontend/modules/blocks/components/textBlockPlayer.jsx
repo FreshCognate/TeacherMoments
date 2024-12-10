@@ -9,7 +9,7 @@ const TextBlockPlayer = ({
   return (
     <div>
       <Title title={getString({ model: block, field: 'title' })} className="text-xl mb-2" />
-      <Body body={getString({ model: block, field: 'body' })} className="text-black text-opacity-60 dark:text-white dark:text-opacity-60" />
+      <Body body={getString({ model: block, field: 'body' })} className="text-sm text-black text-opacity-60 dark:text-white dark:text-opacity-60" />
     </div>
   );
 };

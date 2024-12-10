@@ -39,6 +39,7 @@ export default {
       destinationIndex: Joi.number(),
       ...buildLanguageValidation('title', Joi.array()),
       ...buildLanguageValidation('body', Joi.array()),
+      ...buildLanguageValidation('placeholder', Joi.string()),
       tags: Joi.array().items(Joi.string()),
       isDeleted: Joi.boolean().invalid(true),
     },

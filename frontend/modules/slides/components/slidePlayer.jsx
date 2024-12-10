@@ -2,8 +2,10 @@ import React from 'react';
 import TextBlockPlayerContainer from '~/modules/blocks/containers/textBlockPlayerContainer';
 import Loading from '~/uikit/loaders/components/loading';
 import map from 'lodash/map';
+import InputBlockPlayerContainer from '~/modules/blocks/containers/inputBlockPlayerContainer';
 const BLOCK_MAPPINGS = {
-  "TEXT": TextBlockPlayerContainer
+  "TEXT": TextBlockPlayerContainer,
+  "INPUT": InputBlockPlayerContainer
 }
 
 const SlidePlayer = ({

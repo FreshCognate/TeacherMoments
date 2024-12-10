@@ -5,9 +5,11 @@ import WithCache from '~/core/cache/containers/withCache';
 import getCache from '~/core/cache/helpers/getCache';
 import editBlockSchema from '../schemas/editBlockSchema';
 import editTextBlockSchema from '../schemas/editTextBlockSchema';
+import editInputBlockSchema from '../schemas/editInputBlockSchema';
 
 const SCHEMA_MAPPINGS = {
-  TEXT: editTextBlockSchema
+  TEXT: editTextBlockSchema,
+  INPUT: editInputBlockSchema
 }
 
 class EditBlockContainer extends Component {
