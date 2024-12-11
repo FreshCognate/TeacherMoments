@@ -13,7 +13,7 @@ export default {
       currentPage: Joi.number().default(1),
       blockType: Joi.string(),
       scenario: Joi.string(),
-      slide: Joi.string(),
+      slideRef: Joi.string(),
       isDeleted: Joi.boolean()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
@@ -21,7 +21,7 @@ export default {
   create: {
     body: {
       scenario: Joi.string().required(),
-      slide: Joi.string().required(),
+      slideRef: Joi.string().required(),
       blockType: Joi.string().required().valid('TEXT')
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],

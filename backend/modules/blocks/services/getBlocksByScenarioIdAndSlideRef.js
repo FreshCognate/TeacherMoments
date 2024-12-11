@@ -2,7 +2,7 @@ export default async (props, options, context) => {
 
   const {
     scenarioId,
-    slideId,
+    slideRef,
   } = props;
 
   let {
@@ -11,7 +11,7 @@ export default async (props, options, context) => {
 
   const { models } = context;
 
-  const search = { scenario: scenarioId, slide: slideId, isDeleted };
+  const search = { scenario: scenarioId, slideRef: slideRef, isDeleted };
 
   const blocks = await models.Block.find(search).sort('sortOrder');
 

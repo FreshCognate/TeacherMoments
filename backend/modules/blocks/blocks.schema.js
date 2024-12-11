@@ -8,8 +8,9 @@ const text = buildLanguageSchema('text', { type: String, default: '' });
 
 const schema = {
   type: { type: String, default: 'block' },
+  ref: mongoose.Schema.Types.ObjectId,
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
-  slide: { type: mongoose.Schema.Types.ObjectId, ref: 'Slide', required: true },
+  slideRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Slide', required: true },
   blockType: { type: String, enum: ['TEXT', 'PROMPT', 'ACTIONS'], default: 'TEXT' },
   promptType: { type: String, enum: ['TEXT', 'ANSWERS'], default: 'TEXT' },
   sortOrder: { type: Number },

@@ -1,6 +1,6 @@
 import getBlocks from './services/getBlocks.js';
-import getBlocksByScenarioIdAndSlideId from './services/getBlocksByScenarioIdAndSlideId.js';
-import getBlocksBySlideId from './services/getBlocksBySlideId.js';
+import getBlocksByScenarioIdAndSlideRef from './services/getBlocksByScenarioIdAndSlideRef.js';
+import getBlocksByScenarioId from './services/getBlocksByScenarioId.js';
 import getBlockById from './services/getBlockById.js';
 import restoreBlockById from './services/restoreBlockById.js';
 import updateBlockById from './services/updateBlockById.js';
@@ -12,13 +12,13 @@ import has from 'lodash/has.js';
 export default {
   all: async function ({ query }, context) {
 
-    const { searchValue, currentPage, scenario, slide, isDeleted } = query;
+    const { searchValue, currentPage, scenario, slideRef, isDeleted } = query;
 
     if (scenario) {
-      if (slide) {
-        return await getBlocksByScenarioIdAndSlideId({ scenarioId: scenario, slideId: slide }, { isDeleted }, context);
+      if (slideRef) {
+        return await getBlocksByScenarioIdAndSlideRef({ scenarioId: scenario, slideRef }, { isDeleted }, context);
       } else {
-        return await getBlocksBySlideId({ scenarioId: scenario }, { isDeleted }, context);
+        return await getBlocksByScenarioId({ scenarioId: scenario }, { isDeleted }, context);
       }
     }
 
@@ -28,9 +28,9 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { scenario, slide, blockType } = body;
+    const { scenario, slideRef, blockType } = body;
 
-    const block = await createBlock({ scenario, slide, blockType }, {}, context);
+    const block = await createBlock({ scenario, slideRef, blockType }, {}, context);
 
     return { block };
 
