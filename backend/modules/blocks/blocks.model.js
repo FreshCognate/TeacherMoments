@@ -7,4 +7,16 @@ ModelSchema.index({
   "name": "text"
 }, { background: true });
 
+ModelSchema.pre('save', function (next) {
+  this.wasNew = this.isNew;
+  next();
+});
+
+ModelSchema.post('save', async function (doc) {
+  if (this.wasNew && !doc.ref) {
+    doc.ref = doc._id;
+    await doc.save();
+  }
+});
+
 export default ModelSchema;

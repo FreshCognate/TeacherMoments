@@ -7,18 +7,27 @@ import axios from 'axios';
 import cloneDeep from 'lodash/cloneDeep';
 import each from 'lodash/each';
 import sortBy from 'lodash/sortBy';
+import find from 'lodash/find';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
+import getCache from '~/core/cache/helpers/getCache';
 
 class BlocksEditorContainer extends Component {
 
   getBlocksBySlide = () => {
-    const searchParams = new URLSearchParams(this.props.router.location.search);
-    const slideId = searchParams.get('slide');
-    return sortBy(filter(this.props.blocks.data, (block) => {
-      if (block.slide === slideId) {
-        return block;
-      }
-    }), 'sortOrder')
+    const slides = getCache('slides');
+    if (slides.data) {
+      const searchParams = new URLSearchParams(this.props.router.location.search);
+      const slideId = searchParams.get('slide');
+
+      const slide = find(slides.data, { _id: slideId })
+      const slideRef = slide.ref;
+
+      return sortBy(filter(this.props.blocks.data, (block) => {
+        if (block.slideRef === slideRef) {
+          return block;
+        }
+      }), 'sortOrder')
+    }
   }
 
   getSelectedBlockId = () => {

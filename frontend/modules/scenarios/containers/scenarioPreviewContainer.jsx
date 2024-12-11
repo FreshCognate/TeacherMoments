@@ -30,7 +30,7 @@ class ScenarioPreviewContainer extends Component {
   getActiveBlocks = (activeSlide) => {
     let activeBlocks = [];
     if (activeSlide) {
-      activeBlocks = filter(this.props.blocks.data, { slide: activeSlide._id });
+      activeBlocks = filter(this.props.blocks.data, { slideRef: activeSlide.ref });
     }
 
     return activeBlocks;
