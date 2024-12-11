@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "workers": "nodemon --trace-warnings --watch ./ --watch ./ ./index.js -p 5000",
-    "workers:start": "node --max-old-space-size=4096 ./index.js -p 5000"
+    "workers:start": "node --max-old-space-size=2048 ./index.js -p 5000"
   },
   "imports": {
     "#core/*": "../backend/core/*/index.js"
