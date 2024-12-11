@@ -7,8 +7,8 @@ export default {
       value: 'TEXT',
       text: 'Text'
     }, {
-      value: 'INPUT',
-      text: 'Input'
+      value: 'PROMPT',
+      text: 'Prompt'
     }, {
       value: 'ACTIONS',
       text: 'Actions'

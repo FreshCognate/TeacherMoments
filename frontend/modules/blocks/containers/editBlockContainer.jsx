@@ -5,12 +5,12 @@ import WithCache from '~/core/cache/containers/withCache';
 import getCache from '~/core/cache/helpers/getCache';
 import editBlockSchema from '../schemas/editBlockSchema';
 import editTextBlockSchema from '../schemas/editTextBlockSchema';
-import editInputBlockSchema from '../schemas/editInputBlockSchema';
+import editPromptBlockSchema from '../schemas/editPromptBlockSchema';
 import editActionsBlockSchema from '../schemas/editActionsBlockSchema';
 
 const SCHEMA_MAPPINGS = {
   TEXT: editTextBlockSchema,
-  INPUT: editInputBlockSchema,
+  PROMPT: editPromptBlockSchema,
   ACTIONS: editActionsBlockSchema
 }
 

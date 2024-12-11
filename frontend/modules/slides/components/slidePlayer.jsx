@@ -2,11 +2,11 @@ import React from 'react';
 import TextBlockPlayerContainer from '~/modules/blocks/containers/textBlockPlayerContainer';
 import Loading from '~/uikit/loaders/components/loading';
 import map from 'lodash/map';
-import InputBlockPlayerContainer from '~/modules/blocks/containers/inputBlockPlayerContainer';
+import PromptBlockPlayerContainer from '~/modules/blocks/containers/promptBlockPlayerContainer';
 import ActionsBlockPlayerContainer from '~/modules/blocks/containers/actionsBlockPlayerContainer';
 const BLOCK_MAPPINGS = {
   "TEXT": TextBlockPlayerContainer,
-  "INPUT": InputBlockPlayerContainer,
+  "PROMPT": PromptBlockPlayerContainer,
   "ACTIONS": ActionsBlockPlayerContainer
 }
 
