@@ -40,6 +40,10 @@ export default {
       ...buildLanguageValidation('title', Joi.array()),
       ...buildLanguageValidation('body', Joi.array()),
       ...buildLanguageValidation('placeholder', Joi.string()),
+      actions: Joi.array().items({
+        _id: Joi.string(),
+        ...buildLanguageValidation('text', Joi.string().allow(''))
+      }),
       tags: Joi.array().items(Joi.string()),
       isDeleted: Joi.boolean().invalid(true),
     },

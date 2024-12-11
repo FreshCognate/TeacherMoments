@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 const title = buildLanguageSchema('title', textAreaSchema);
 const body = buildLanguageSchema('body', textAreaSchema);
 const placeholder = buildLanguageSchema('placeholder', { type: String, default: '' });
+const text = buildLanguageSchema('text', { type: String, default: '' });
 
 const schema = {
   type: { type: String, default: 'block' },
@@ -15,6 +16,11 @@ const schema = {
   ...title,
   ...body,
   ...placeholder,
+  actions: {
+    type: [{
+      ...text
+    }], default: [{ "en-US-text": "Next" }]
+  },
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   updatedAt: { type: Date },
