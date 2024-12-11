@@ -3,9 +3,11 @@ import TextBlockPlayerContainer from '~/modules/blocks/containers/textBlockPlaye
 import Loading from '~/uikit/loaders/components/loading';
 import map from 'lodash/map';
 import InputBlockPlayerContainer from '~/modules/blocks/containers/inputBlockPlayerContainer';
+import ActionsBlockPlayerContainer from '~/modules/blocks/containers/actionsBlockPlayerContainer';
 const BLOCK_MAPPINGS = {
   "TEXT": TextBlockPlayerContainer,
-  "INPUT": InputBlockPlayerContainer
+  "INPUT": InputBlockPlayerContainer,
+  "ACTIONS": ActionsBlockPlayerContainer
 }
 
 const SlidePlayer = ({
