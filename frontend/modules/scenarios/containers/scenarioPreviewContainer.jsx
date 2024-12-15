@@ -14,15 +14,21 @@ class ScenarioPreviewContainer extends Component {
   }
 
   startScenario = () => {
-    const firstSlideId = get(this.props, 'slides.data.0._id', null);
-    this.props.tracking.set({ activeSlideId: firstSlideId })
+    const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
+    this.props.tracking.set({
+      activeSlideRef: firstSlideRef,
+      stages: [{
+        slideRef: firstSlideRef,
+        blocksByRef: {}
+      }]
+    })
   }
 
   getActiveSlide = () => {
     let activeSlide = null;
     const { tracking, slides } = this.props;
-    if (tracking.data.activeSlideId) {
-      activeSlide = find(slides.data, { _id: tracking.data.activeSlideId });
+    if (tracking.data.activeSlideRef) {
+      activeSlide = find(slides.data, { ref: tracking.data.activeSlideRef });
     }
     return activeSlide;
   }
@@ -52,7 +58,7 @@ export default WithCache(ScenarioPreviewContainer, {
   tracking: {
     getInitialData: () => {
       return {
-        activeSlideId: null,
+        activeSlideRef: null,
       }
     }
   }
