@@ -20,13 +20,17 @@ class BlocksEditorContainer extends Component {
       const slideId = searchParams.get('slide');
 
       const slide = find(slides.data, { _id: slideId })
-      const slideRef = slide.ref;
+      if (slide) {
+        const slideRef = slide.ref;
+        return sortBy(filter(this.props.blocks.data, (block) => {
+          if (block.slideRef === slideRef) {
+            return block;
+          }
+        }), 'sortOrder');
+      }
 
-      return sortBy(filter(this.props.blocks.data, (block) => {
-        if (block.slideRef === slideRef) {
-          return block;
-        }
-      }), 'sortOrder')
+      return [];
+
     }
   }
 

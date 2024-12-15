@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "server": "nodemon --watch ./ ./core/index.js -p 4000",
-    "server:start": "node --max-old-space-size=4096 ./core/index.js -p 4000"
+    "server:start": "node --max-old-space-size=2048 ./core/index.js -p 4000"
   },
   "imports": {
     "#core/*": "./core/*"
