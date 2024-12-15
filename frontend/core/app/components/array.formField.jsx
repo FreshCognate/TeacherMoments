@@ -2,7 +2,7 @@ import FormContainer from "~/core/forms/containers/formContainer";
 import FlatButton from "~/uikit/buttons/components/flatButton";
 import map from 'lodash/map';
 
-const ActionsFormField = ({
+const ArrayFormField = ({
   value,
   schema,
   onUpdateAction,
@@ -49,4 +49,4 @@ const ActionsFormField = ({
   );
 };
 
-export default ActionsFormField;
+export default ArrayFormField;

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import registerField from '~/core/forms/helpers/registerField';
-import ActionsFormField from '../components/actions.formField';
+import ArrayFormField from '../components/array.formField';
 import remove from 'lodash/remove';
 import find from 'lodash/find';
 import extend from 'lodash/extend';
 
-class ActionsFormFieldContainer extends Component {
+class ArrayFormFieldContainer extends Component {
 
-  sortActions = ({ sourceIndex, destinationIndex }) => {
+  sortArray = ({ sourceIndex, destinationIndex }) => {
     const [removed] = this.props.value.splice(sourceIndex, 1);
     this.props.value.splice(destinationIndex, 0, removed);
     this.props.updateField(this.props.value);
@@ -32,19 +32,19 @@ class ActionsFormFieldContainer extends Component {
   onSortActionUpClicked = (sortOrder) => {
     const sourceIndex = sortOrder;
     const destinationIndex = sortOrder - 1;
-    this.sortActions({ sourceIndex, destinationIndex });
+    this.sortArray({ sourceIndex, destinationIndex });
   }
 
   onSortActionDownClicked = (sortOrder) => {
     const sourceIndex = sortOrder;
     const destinationIndex = sortOrder + 1;
-    this.sortActions({ sourceIndex, destinationIndex });
+    this.sortArray({ sourceIndex, destinationIndex });
   }
 
   render() {
     const { value, schema } = this.props;
     return (
-      <ActionsFormField
+      <ArrayFormField
         schema={schema}
         value={value}
         onUpdateAction={this.onUpdateAction}
@@ -57,4 +57,4 @@ class ActionsFormFieldContainer extends Component {
   }
 };
 
-registerField('Actions', ActionsFormFieldContainer);
+registerField('Array', ArrayFormFieldContainer);

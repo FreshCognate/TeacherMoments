@@ -18,6 +18,12 @@ const schema = {
   ...title,
   ...body,
   ...placeholder,
+  items: {
+    type: [{
+      ...text,
+      value: { type: String },
+    }], default: [{ "en-US-text": "" }]
+  },
   actions: {
     type: [{
       ...text
