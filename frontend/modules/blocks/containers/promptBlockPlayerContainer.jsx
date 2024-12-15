@@ -12,11 +12,16 @@ class PromptBlockPlayerContainer extends Component {
 
   onAnswerClicked = (value) => {
     const { answerValues } = this.props.tracking;
+    const { isMultiSelect } = this.props.block;
     let clonedAnswerValues = this.props.tracking.answerValues ? cloneDeep(answerValues) : [];
-    if (includes(clonedAnswerValues, value)) {
-      pull(clonedAnswerValues, value);
+    if (isMultiSelect) {
+      if (includes(clonedAnswerValues, value)) {
+        pull(clonedAnswerValues, value);
+      } else {
+        clonedAnswerValues.push(value);
+      }
     } else {
-      clonedAnswerValues.push(value);
+      clonedAnswerValues = [value];
     }
     this.props.onUpdateTracking({ answerValues: clonedAnswerValues });
   }

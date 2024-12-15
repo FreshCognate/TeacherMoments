@@ -3,7 +3,7 @@ import getString from '~/modules/ls/helpers/getString'; import Button from '~/ui
 import Body from '~/uikit/content/components/body';
 import map from 'lodash/map';
 import includes from 'lodash/includes';
-import classnames from 'classnames';
+import PromptBlockAnswer from './promptBlockAnswer';
 
 const PromptBlockPlayer = ({
   block,
@@ -22,19 +22,13 @@ const PromptBlockPlayer = ({
           {map(block.items, (item) => {
             const isSelected = includes(tracking.answerValues || [], item.value);
             return (
-              <div
+              <PromptBlockAnswer
                 key={item._id}
-                className={classnames("border-2 border-lm-2 dark:border-dm-2 py-4 px-4 rounded-md mb-2 last:mb-0",
-                  {
-                    "border-primary-regular dark:border-primary-light": isSelected
-                  }
-                )}
-                onClick={() => onAnswerClicked(item.value)}
-              >
-                <div>
-                  <Body body={getString({ model: item, field: "text" })} />
-                </div>
-              </div>
+                item={item}
+                isMultiSelect={block.isMultiSelect}
+                isSelected={isSelected}
+                onAnswerClicked={onAnswerClicked}
+              />
             );
           })}
         </div>

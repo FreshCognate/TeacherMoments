@@ -18,6 +18,7 @@ const schema = {
   ...title,
   ...body,
   ...placeholder,
+  isMultiSelect: { type: Boolean, default: false },
   items: {
     type: [{
       ...text,
