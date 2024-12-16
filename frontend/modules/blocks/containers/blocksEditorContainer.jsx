@@ -56,6 +56,7 @@ class BlocksEditorContainer extends Component {
 
   sortBlocks = ({ sourceIndex, destinationIndex, blocks }) => {
     const clonedBlocks = cloneDeep(this.getBlocksBySlide());
+    console.log(clonedBlocks);
     const [removed] = clonedBlocks.splice(sourceIndex, 1);
     clonedBlocks.splice(destinationIndex, 0, removed);
 

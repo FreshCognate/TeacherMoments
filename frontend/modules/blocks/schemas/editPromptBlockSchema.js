@@ -17,6 +17,11 @@ const body = buildLanguageSchema('body', {
   features: ['bold', 'italic', 'underline', 'strikethrough', 'code', 'blockquote', 'link', 'leftAlign', 'centerAlign', 'rightAlign', 'justifyAlign', 'bulletedList', 'numberedList']
 })
 
+const answerText = buildLanguageSchema('text', {
+  type: 'Text',
+  label: 'Text'
+})
+
 export default {
   promptType: {
     type: 'Toggle',
@@ -31,5 +36,28 @@ export default {
     }]
   },
   ...body,
-  ...placeholder
+  ...placeholder,
+  isMultiSelect: {
+    type: 'Toggle',
+    label: 'Mutliple answers can be selected',
+    size: 'sm',
+    options: [{
+      value: false,
+      text: 'No'
+    }, {
+      value: true,
+      text: 'Yes'
+    }]
+  },
+  items: {
+    type: 'Array',
+    label: 'Answers',
+    subSchema: {
+      ...answerText,
+      value: {
+        type: 'Text',
+        label: 'Value'
+      }
+    }
+  }
 }

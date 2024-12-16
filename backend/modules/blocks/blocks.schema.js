@@ -18,6 +18,13 @@ const schema = {
   ...title,
   ...body,
   ...placeholder,
+  isMultiSelect: { type: Boolean, default: false },
+  items: {
+    type: [{
+      ...text,
+      value: { type: String },
+    }], default: [{ "en-US-text": "" }]
+  },
   actions: {
     type: [{
       ...text
