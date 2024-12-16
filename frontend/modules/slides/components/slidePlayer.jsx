@@ -15,6 +15,7 @@ const SlidePlayer = ({
   activeSlide,
   activeBlocks,
   onUpdateTracking,
+  navigateTo,
 }) => {
   if (!activeSlide) return (
     <Loading />
@@ -36,6 +37,7 @@ const SlidePlayer = ({
               onUpdateTracking={(update) => {
                 onUpdateTracking({ update, blockRef: block.ref });
               }}
+              navigateTo={navigateTo}
             />
           </div>
         );

@@ -1,4 +1,5 @@
 import buildLanguageSchema from '~/core/app/helpers/buildLanguageSchema';
+import '~/modules/slides/containers/slideRefSelectorContainer.formField';
 
 const text = buildLanguageSchema('text', {
   type: 'Text',
@@ -11,6 +12,10 @@ export default {
     label: 'Actions',
     subSchema: {
       ...text,
+      slideRef: {
+        type: 'SlideRefSelector',
+        label: 'Navigate to'
+      }
     }
   }
 }

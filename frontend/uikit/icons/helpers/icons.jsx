@@ -50,6 +50,20 @@ export default {
     ]
   },
 
+  open: {
+    viewBox: "0 0 24 24",
+    elements: [
+      <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    ]
+  },
+
+  close: {
+    viewBox: "0 0 24 24",
+    elements: [
+      <path d="M6 15L12 9L18 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    ]
+  },
+
   sortUp: {
     viewBox: "0 0 24 24",
     elements: [
