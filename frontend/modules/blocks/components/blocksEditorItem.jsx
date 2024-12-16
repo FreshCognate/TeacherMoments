@@ -16,6 +16,7 @@ const BlocksEditorItem = ({
   onCancelEditBlockClicked,
   onEditBlockClicked
 }) => {
+  console.log(block.sortOrder);
   return (
 
     <div className={classnames("mb-3 bg-lm-1 dark:bg-dm-1 border border-lm-2 dark:border-dm-2 outline-2 rounded-md cursor-pointer group", {
@@ -57,8 +58,12 @@ const BlocksEditorItem = ({
             <FlatButton icon="delete" color="warning" onClick={() => onDeleteBlockClicked(block._id)} />
           </div>
           <div className="flex items-center">
-            <FlatButton icon="sortUp" className="mr-3" isDisabled={block.sortOrder === 0} onClick={() => onSortUpClicked(block.sortOrder)} />
-            <FlatButton icon="sortDown" isDisabled={isLastBlock} onClick={() => onSortDownClicked(block.sortOrder)} />
+            {(block.sortOrder !== 0) && (
+              <FlatButton icon="sortUp" className="ml-3" onClick={() => onSortUpClicked(block.sortOrder)} />
+            )}
+            {(!isLastBlock) && (
+              <FlatButton icon="sortDown" className="ml-3" onClick={() => onSortDownClicked(block.sortOrder)} />
+            )}
           </div>
         </div>
       )}
