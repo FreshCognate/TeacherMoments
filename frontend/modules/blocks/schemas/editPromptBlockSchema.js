@@ -37,6 +37,18 @@ export default {
   },
   ...body,
   ...placeholder,
+  isMultiSelect: {
+    type: 'Toggle',
+    label: 'Mutliple answers can be selected',
+    size: 'sm',
+    options: [{
+      value: false,
+      text: 'No'
+    }, {
+      value: true,
+      text: 'Yes'
+    }]
+  },
   items: {
     type: 'Array',
     label: 'Answers',

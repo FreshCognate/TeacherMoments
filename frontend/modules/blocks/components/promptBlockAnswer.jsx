@@ -7,6 +7,7 @@ const PromptBlockAnswer = ({
   item,
   isMultiSelect,
   isSelected,
+  isComplete,
   onAnswerClicked
 }) => {
   const inputType = isMultiSelect ? 'checkbox' : 'radio';
@@ -19,13 +20,13 @@ const PromptBlockAnswer = ({
         "border-2 border-lm-2 dark:border-dm-2 p-4",
         "last:mb-0",
         {
-          "outline-2 hover:outline-lm-3 dark:hover:outline-dm-3": !isSelected,
-          "outline-2  outline-primary-regular dark:outline-primary-light": isSelected
+          "outline-2 hover:outline-lm-3 dark:hover:outline-dm-3": !isSelected && !isComplete,
+          "outline-2  outline-primary-regular dark:outline-primary-light": isSelected,
         }
       )}
     >
       <div className="mr-4">
-        <input type={inputType} checked={isSelected} className=" accent-primary-regular dark:accent-primary-light" onChange={() => onAnswerClicked(item.value)} />
+        <input type={inputType} disabled={isComplete} checked={isSelected} className=" accent-primary-regular dark:accent-primary-light disabled:accent-primary-regular dark:disabled:accent-primary-light" onChange={() => onAnswerClicked(item.value)} />
       </div>
       <div>
         <Body body={getString({ model: item, field: "text" })} />

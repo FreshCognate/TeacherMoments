@@ -27,6 +27,7 @@ const PromptBlockPlayer = ({
                 item={item}
                 isMultiSelect={block.isMultiSelect}
                 isSelected={isSelected}
+                isComplete={tracking.isComplete}
                 onAnswerClicked={onAnswerClicked}
               />
             );
