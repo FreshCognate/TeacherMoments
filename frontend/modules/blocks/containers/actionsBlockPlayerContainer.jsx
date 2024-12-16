@@ -4,7 +4,6 @@ import ActionsBlockPlayer from '../components/actionsBlockPlayer';
 class ActionsBlockPlayerContainer extends Component {
 
   onActionClicked = (slideRef) => {
-    console.log(slideRef);
     if (slideRef) {
       this.props.navigateTo({ slideRef });
     } else {
