@@ -56,8 +56,12 @@ const SlidesPanelItem = ({
             <FlatButton icon="delete" color="warning" onClick={() => onDeleteSlideClicked(slide._id)} />
           </div>
           <div className="flex items-center">
-            <FlatButton icon="sortUp" className="mr-3" isDisabled={slide.sortOrder === 0} onClick={() => onSortUpClicked(slide.sortOrder)} />
-            <FlatButton icon="sortDown" isDisabled={isLastSlide} onClick={() => onSortDownClicked(slide.sortOrder)} />
+            {(slide.sortOrder !== 0) && (
+              <FlatButton icon="sortUp" className="ml-3" onClick={() => onSortUpClicked(slide.sortOrder)} />
+            )}
+            {(!isLastSlide) && (
+              <FlatButton icon="sortDown" className="ml-3" isDisabled={isLastSlide} onClick={() => onSortDownClicked(slide.sortOrder)} />
+            )}
           </div>
         </div>
 
