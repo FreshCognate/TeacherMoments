@@ -4,7 +4,8 @@ import getString from '~/modules/ls/helpers/getString';
 import Button from '~/uikit/buttons/components/button';
 
 const ActionsBlockPlayer = ({
-  block
+  block,
+  onActionClicked
 }) => {
   return (
     <div className="flex items-center justify-between">
@@ -14,6 +15,7 @@ const ActionsBlockPlayer = ({
             key={action._id}
             text={getString({ model: action, field: 'text' })}
             color={"primary"}
+            onClick={() => onActionClicked(action.slideRef)}
           />
         )
       })}

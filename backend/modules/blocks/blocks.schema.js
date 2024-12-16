@@ -27,7 +27,8 @@ const schema = {
   },
   actions: {
     type: [{
-      ...text
+      ...text,
+      slideRef: { type: mongoose.Schema.Types.ObjectId },
     }], default: [{ "en-US-text": "Next" }]
   },
   createdAt: { type: Date, default: Date.now },

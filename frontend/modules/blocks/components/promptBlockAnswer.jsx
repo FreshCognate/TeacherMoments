@@ -11,7 +11,6 @@ const PromptBlockAnswer = ({
   onAnswerClicked
 }) => {
   const inputType = isMultiSelect ? 'checkbox' : 'radio';
-  console.log(isSelected);
 
   return (
     <label

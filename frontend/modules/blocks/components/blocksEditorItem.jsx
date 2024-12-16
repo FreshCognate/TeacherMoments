@@ -45,11 +45,14 @@ const BlocksEditorItem = ({
           )}
         </div>
       </div>
-      {(isEditing) && (
-        <EditBlockContainer blockId={block._id} />
-      )}
+      <div className="cursor-auto">
+
+        {(isEditing) && (
+          <EditBlockContainer blockId={block._id} />
+        )}
+      </div>
       {(!isEditing) && (
-        <div className="flex items-center justify-between bg-lm-2 dark:bg-dm-2 px-2 py-1 opacity-0 group-hover:opacity-100">
+        <div className="flex items-center justify-between bg-lm-2 cursor-auto dark:bg-dm-2 px-2 py-1 opacity-0 group-hover:opacity-100">
           <div className="flex items-center">
             <FlatButton icon="delete" color="warning" onClick={() => onDeleteBlockClicked(block._id)} />
           </div>
