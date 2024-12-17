@@ -1,5 +1,6 @@
 import has from 'lodash/has.js';
 import createTrigger from './services/createTrigger.js';
+import getTriggerById from './services/getTriggerById.js';
 
 export default {
 
@@ -16,7 +17,8 @@ export default {
   },
 
   read: async function ({ param }, context) {
-
+    const trigger = await getTriggerById({ triggerId: param }, {}, context);
+    return { trigger };
   },
 
   update: async function ({ param, body }, context) {
