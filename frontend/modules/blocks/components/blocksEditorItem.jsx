@@ -16,9 +16,8 @@ const BlocksEditorItem = ({
   onCancelEditBlockClicked,
   onEditBlockClicked
 }) => {
-  console.log(block.sortOrder);
-  return (
 
+  return (
     <div className={classnames("mb-3 bg-lm-1 dark:bg-dm-1 border border-lm-2 dark:border-dm-2 outline-2 rounded-md cursor-pointer group", {
       "outline outline-primary-regular dark:outline-primary-light": isSelected,
       "hover:outline hover:outline-lm-2 hover:dark:outline-dm-2": !isSelected
