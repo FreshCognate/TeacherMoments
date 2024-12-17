@@ -17,7 +17,8 @@ export default {
     body: {
       scenario: Joi.string().required(),
       triggerType: Joi.string().valid('SLIDE', 'BLOCK'),
-      elementRef: Joi.string().required()
+      elementRef: Joi.string().required(),
+      event: Joi.string().valid('ON_INIT', 'ON_SHOW')
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
@@ -28,6 +29,7 @@ export default {
   update: {
     param: 'id',
     body: {
+      event: Joi.string().valid('ON_INIT', 'ON_SHOW'),
       isDeleted: Joi.boolean().invalid(true),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
