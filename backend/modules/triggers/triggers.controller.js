@@ -1,6 +1,7 @@
 import has from 'lodash/has.js';
 import createTrigger from './services/createTrigger.js';
 import getTriggerById from './services/getTriggerById.js';
+import deleteTriggerById from './services/deleteTriggerById.js';
 
 export default {
 
@@ -26,7 +27,9 @@ export default {
   },
 
   delete: async function ({ param }, context) {
+    const trigger = await deleteTriggerById({ triggerId: param }, {}, context);
 
+    return { trigger };
   }
 
 };
