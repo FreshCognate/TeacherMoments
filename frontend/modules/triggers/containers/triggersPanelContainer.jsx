@@ -5,7 +5,7 @@ import WithRouter from '~/core/app/components/withRouter';
 class TriggersPanelContainer extends Component {
 
   state = {
-    slideEvent: 'ON_INIT',
+    slideEvent: 'ON_ENTER',
     blockEvent: 'ON_SHOW'
   }
 
