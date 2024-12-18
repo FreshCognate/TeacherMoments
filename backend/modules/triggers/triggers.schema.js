@@ -19,6 +19,7 @@ const schema = {
     enum: getTriggerActions(),
     required: true
   },
+  blocks: { type: [mongoose.Schema.Types.ObjectId], default: [] },
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   updatedAt: { type: Date },

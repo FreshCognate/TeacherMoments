@@ -20,7 +20,8 @@ export default {
       triggerType: Joi.string().valid('SLIDE', 'BLOCK'),
       elementRef: Joi.string().required(),
       event: Joi.string().valid(...getTriggerEvents()),
-      action: Joi.string().valid(...getTriggerActions())
+      action: Joi.string().valid(...getTriggerActions()),
+      blocks: Joi.array().items(Joi.string())
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
@@ -32,6 +33,7 @@ export default {
     param: 'id',
     body: {
       event: Joi.string().valid(...getTriggerEvents()),
+      blocks: Joi.array().items(Joi.string()),
       isDeleted: Joi.boolean().invalid(true),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],

@@ -5,6 +5,7 @@ import '~/core/app/containers/arrayContainer.formField';
 import '~/core/app/components/text.formField';
 import '~/core/app/components/toggle.formField';
 import '~/core/app/components/select.formField';
+import '~/modules/triggers/containers/triggerBlocksSelectorContainer.formField';
 import '~/core/app/conditions/modelValueIs';
 import '~/modules/ls/helpers/ls.condition'
 import '~/modules/blocks/triggers/hideBlocks.trigger';
