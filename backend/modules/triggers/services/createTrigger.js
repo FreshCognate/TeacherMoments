@@ -1,10 +1,10 @@
 export default async (props, options, context) => {
 
-  const { scenario, triggerType, elementRef, event, action } = props;
+  const { scenario, triggerType, elementRef, event, action, blocks } = props;
 
   const { models, user } = context;
 
-  let elementTriggerItems = await models.Trigger.find({ scenario, triggerType, elementRef, event, action, isDeleted: false });
+  let elementTriggerItems = await models.Trigger.find({ scenario, triggerType, elementRef, event, isDeleted: false });
 
   const sortOrder = elementTriggerItems.length;
 
@@ -14,6 +14,7 @@ export default async (props, options, context) => {
     elementRef,
     event,
     action,
+    blocks,
     sortOrder,
     createdBy: user._id,
   };

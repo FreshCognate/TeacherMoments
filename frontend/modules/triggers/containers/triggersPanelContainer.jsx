@@ -79,8 +79,8 @@ class TriggersPanelContainer extends Component {
           }]
         },
         blocks: {
-          type: 'TriggerBlockSelector',
-          label: 'Selected blocks',
+          type: 'TriggerBlocksSelector',
+          label: 'Selected blocks:',
         },
         conditions: {
           type: 'Conditions',
@@ -89,7 +89,8 @@ class TriggersPanelContainer extends Component {
         }
       },
       model: {
-        action: 'HIDE_BLOCKS'
+        action: 'HIDE_BLOCKS',
+        blocks: []
       },
       actions: [{
         type: 'CANCEL',
@@ -149,7 +150,7 @@ class TriggersPanelContainer extends Component {
           }]
         },
         blocks: {
-          type: 'TriggerBlockSelector',
+          type: 'TriggerBlocksSelector',
           label: 'Selected blocks',
         },
         conditions: {
