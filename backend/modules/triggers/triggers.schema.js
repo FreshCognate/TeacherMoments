@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import getTriggerEvents from './helpers/getTriggerEvents.js';
 
 const schema = {
   type: { type: String, default: 'trigger' },
@@ -7,7 +8,10 @@ const schema = {
   elementRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Slide', required: true },
   triggerType: { type: String, enum: ['SLIDE', 'BLOCK'], required: true },
   sortOrder: { type: Number },
-  event: { type: String, enum: ['ON_INIT', 'ON_SHOW'], required: true },
+  event: {
+    type: String,
+    enum: getTriggerEvents(), required: true
+  },
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   updatedAt: { type: Date },

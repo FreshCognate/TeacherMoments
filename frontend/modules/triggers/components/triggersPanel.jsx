@@ -16,8 +16,11 @@ const TriggersPanel = ({
           <SelectOptions
             value={slideEvent}
             options={[{
-              value: 'ON_INIT',
-              text: 'init'
+              value: 'ON_ENTER',
+              text: 'enter'
+            }, {
+              value: 'ON_EXIT',
+              text: 'exit'
             }]}
           />
         </div>
