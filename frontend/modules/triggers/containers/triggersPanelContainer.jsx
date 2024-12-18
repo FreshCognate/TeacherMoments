@@ -22,8 +22,22 @@ class TriggersPanelContainer extends Component {
   }
 
   getTriggersByElementAndEvent = () => {
+    const { params, location } = this.props.router;
+    const urlParams = new URLSearchParams(location.search);
+
+    const slideId = urlParams.get('slide');
+    const blockId = urlParams.get('block');
+
+    const elementRef = blockId ? blockId : slideId;
+
+    const triggerType = blockId ? 'BLOCK' : 'SLIDE';
+
+    const event = blockId ? this.state.blockEvent : this.state.slideEvent;
+
     return filter(this.props.triggers.data, (trigger) => {
-      return trigger;
+      if (trigger.elementRef === elementRef && trigger.event === event && trigger.triggerType === triggerType) {
+        return trigger;
+      }
     })
   }
 
@@ -96,6 +110,22 @@ class TriggersPanelContainer extends Component {
     })
   }
 
+  onEventChanged = (event) => {
+    const { params, location } = this.props.router;
+
+    const urlParams = new URLSearchParams(location.search);
+
+    const blockId = urlParams.get('block');
+
+    const eventKey = blockId ? 'blockEvent' : 'slideEvent';
+
+    const stateUpdate = {};
+    stateUpdate[eventKey] = event;
+
+    this.setState(stateUpdate);
+
+  }
+
   render() {
     const selectedType = this.getSelectedType();
 
@@ -106,6 +136,7 @@ class TriggersPanelContainer extends Component {
         blockEvent={this.state.blockEvent}
         triggers={this.getTriggersByElementAndEvent()}
         onAddTriggerClicked={this.onAddTriggerClicked}
+        onEventChanged={this.onEventChanged}
       />
     );
   }

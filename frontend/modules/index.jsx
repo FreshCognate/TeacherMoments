@@ -7,6 +7,7 @@ import '~/core/app/components/toggle.formField';
 import '~/core/app/components/select.formField';
 import '~/core/app/conditions/modelValueIs';
 import '~/modules/ls/helpers/ls.condition'
+import '~/modules/blocks/triggers/hideBlocks.trigger';
 
 axios.interceptors.response.use(function (response) {
   return response;
