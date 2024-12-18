@@ -4,6 +4,7 @@ import '~/core/app/containers/textAreaContainer.formField';
 import '~/core/app/containers/arrayContainer.formField';
 import '~/core/app/components/text.formField';
 import '~/core/app/components/toggle.formField';
+import '~/core/app/components/select.formField';
 import '~/core/app/conditions/modelValueIs';
 import '~/modules/ls/helpers/ls.condition'
 

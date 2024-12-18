@@ -16,9 +16,9 @@ export default {
   },
 
   create: async function ({ body }, context) {
-    const { scenario, triggerType, elementRef, event } = body;
+    const { scenario, triggerType, elementRef, event, action } = body;
 
-    const trigger = await createTrigger({ scenario, triggerType, elementRef, event }, {}, context);
+    const trigger = await createTrigger({ scenario, triggerType, elementRef, event, action }, {}, context);
 
     return { trigger };
   },
