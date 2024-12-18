@@ -12,24 +12,25 @@ const TriggersPanel = ({
   blockEvent,
   triggers,
   onAddTriggerClicked,
-  onEventChanged
+  onEventChanged,
+  onDeleteTriggerClicked,
+  onEditTriggerClicked
 }) => {
-  console.log(triggers);
-
   return (
     <div className="p-2">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-2">
         <Body body={selectedType === 'BLOCK' ? "Block triggers" : "Slide triggers"} size="sm" />
         <div>
           <FlatButton icon="create" onClick={onAddTriggerClicked} />
         </div>
       </div>
-      <div className="flex items-center mb-2">
-        <div>
+      <div className="flex items-center mb-2 border border-lm-3 dark:border-dm-3 rounded px-0.5 ">
+        <div className="text-sm">
           On:
         </div>
         <SelectOptions
           value={selectedType === 'BLOCK' ? blockEvent : slideEvent}
+          size="sm"
           options={selectedType === 'BLOCK' ? [{
             value: 'ON_SHOW',
             text: 'show'
@@ -52,6 +53,8 @@ const TriggersPanel = ({
             <TriggerItem
               key={trigger._id}
               trigger={trigger}
+              onDeleteTriggerClicked={onDeleteTriggerClicked}
+              onEditTriggerClicked={onEditTriggerClicked}
             />
           );
         })}

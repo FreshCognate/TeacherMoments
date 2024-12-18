@@ -6,6 +6,8 @@ import filter from 'lodash/filter';
 import addModal from '~/core/dialogs/helpers/addModal';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
+import find from 'lodash/find';
+import pick from 'lodash/pick';
 
 class TriggersPanelContainer extends Component {
 
@@ -101,7 +103,6 @@ class TriggersPanelContainer extends Component {
       if (state === 'ACTION') {
         if (type === 'CREATE') {
           const triggerBaseModel = this.getTriggerBaseModel();
-
           axios.post('/api/triggers', { ...triggerBaseModel, ...modal }).then(() => {
             this.props.triggers.fetch();
           }).catch(handleRequestError);
@@ -126,6 +127,57 @@ class TriggersPanelContainer extends Component {
 
   }
 
+  onDeleteTriggerClicked = (triggerId) => {
+    axios.delete(`/api/triggers/${triggerId}`).then(() => {
+      this.props.triggers.fetch();
+    }).catch(handleRequestError);
+  }
+
+  onEditTriggerClicked = (triggerId) => {
+    const trigger = find(this.props.triggers.data, { _id: triggerId });
+    addModal({
+      title: 'Edit trigger',
+      schema: {
+        action: {
+          type: 'Select',
+          label: 'Action:',
+          isInline: true,
+          isDisabled: true,
+          options: [{
+            value: 'HIDE_BLOCKS',
+            text: 'Hide blocks'
+          }]
+        },
+        blocks: {
+          type: 'TriggerBlockSelector',
+          label: 'Selected blocks',
+        },
+        conditions: {
+          type: 'Conditions',
+          label: 'Conditions',
+          isInline: true,
+        }
+      },
+      model: trigger,
+      actions: [{
+        type: 'CANCEL',
+        text: 'Cancel'
+      }, {
+        type: 'SAVE',
+        text: 'Save',
+        color: 'primary'
+      }]
+    }, (state, { type, modal }) => {
+      if (state === 'ACTION') {
+        if (type === 'SAVE') {
+          axios.put(`/api/triggers/${triggerId}`, pick(modal, ['blocks', 'conditions'])).then(() => {
+            this.props.triggers.fetch();
+          }).catch(handleRequestError);
+        }
+      }
+    })
+  }
+
   render() {
     const selectedType = this.getSelectedType();
 
@@ -137,6 +189,8 @@ class TriggersPanelContainer extends Component {
         triggers={this.getTriggersByElementAndEvent()}
         onAddTriggerClicked={this.onAddTriggerClicked}
         onEventChanged={this.onEventChanged}
+        onDeleteTriggerClicked={this.onDeleteTriggerClicked}
+        onEditTriggerClicked={this.onEditTriggerClicked}
       />
     );
   }
