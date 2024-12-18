@@ -1,14 +1,25 @@
 import React from 'react';
 import SelectOptions from '~/uikit/select/components/selectOptions';
+import map from 'lodash/map';
+import Body from '~/uikit/content/components/body';
+import FlatButton from '~/uikit/buttons/components/flatButton';
 
 const TriggersPanel = ({
   selectedType,
   slideEvent,
+  triggers,
+  onAddTriggerClicked
 }) => {
+  console.log(triggers);
   if (selectedType === 'SLIDE') {
     return (
       <div className="p-2">
-        <div>Slide triggers</div>
+        <div className="flex items-center justify-between">
+          <Body body="Slide triggers" size="sm" />
+          <div>
+            <FlatButton icon="create" onClick={onAddTriggerClicked} />
+          </div>
+        </div>
         <div className="flex items-center">
           <div>
             On:
@@ -25,7 +36,13 @@ const TriggersPanel = ({
           />
         </div>
         <div>
-
+          {map(triggers, (trigger) => {
+            return (
+              <div key={trigger._id}>
+                {trigger.event}
+              </div>
+            );
+          })}
         </div>
       </div>
     );

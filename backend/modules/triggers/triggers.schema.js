@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import getTriggerEvents from './helpers/getTriggerEvents.js';
+import getTriggerActions from './helpers/getTriggerActions.js';
 
 const schema = {
   type: { type: String, default: 'trigger' },
@@ -10,7 +11,13 @@ const schema = {
   sortOrder: { type: Number },
   event: {
     type: String,
-    enum: getTriggerEvents(), required: true
+    enum: getTriggerEvents(),
+    required: true
+  },
+  action: {
+    type: String,
+    enum: getTriggerActions(),
+    required: true
   },
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
