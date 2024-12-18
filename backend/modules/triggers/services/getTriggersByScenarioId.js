@@ -12,10 +12,10 @@ export default async (props, options, context) => {
 
   const search = { scenario: scenarioId, isDeleted };
 
-  const blocks = await models.Block.find(search).sort('sortOrder');
+  const triggers = await models.Trigger.find(search).sort('sortOrder');
 
   return {
-    blocks
+    triggers
   };
 
 };

@@ -8,8 +8,7 @@ export default {
   controller,
   all: {
     query: {
-      searchValue: Joi.string().allow('').default(''),
-      currentPage: Joi.number().default(1)
+      scenario: Joi.string().required()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
