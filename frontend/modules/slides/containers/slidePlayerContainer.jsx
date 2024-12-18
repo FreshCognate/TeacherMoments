@@ -2,8 +2,21 @@ import React, { Component } from 'react';
 import SlidePlayer from '../components/slidePlayer';
 import updateTracking from '~/modules/tracking/helpers/updateTracking';
 import navigateTo from '~/modules/tracking/helpers/navigateTo';
+import trigger from '~/modules/triggers/helpers/trigger';
 
 class SlidePlayerContainer extends Component {
+
+  state = {
+    isLoading: true
+  }
+
+  componentDidUpdate = (prevProps) => {
+    if (this.props.activeSlide !== prevProps.activeSlide) {
+      trigger({ triggerType: 'SLIDE', event: 'ON_ENTER', elementRef: this.props.activeSlide.ref }, {}).then(() => {
+        this.setState({ isLoading: false })
+      });
+    }
+  }
 
   onUpdateTracking = ({ blockRef, update }) => {
     return updateTracking({ slideRef: this.props.activeSlide.ref, blockRef, update });
@@ -21,6 +34,7 @@ class SlidePlayerContainer extends Component {
       <SlidePlayer
         activeSlide={activeSlide}
         activeBlocks={activeBlocks}
+        isLoading={this.state.isLoading}
         onUpdateTracking={this.onUpdateTracking}
         navigateTo={this.navigateTo}
       />
