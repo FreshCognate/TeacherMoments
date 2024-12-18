@@ -6,11 +6,14 @@ const SelectOptions = ({
   className,
   options,
   value,
+  size,
   isDisabled,
   onChange
 }) => {
 
-  const classes = classnames('', className);
+  const classes = classnames('', {
+    'text-sm': size === 'sm'
+  }, className);
 
   return (
     <select className={classes} value={value} disabled={isDisabled} onChange={(event) => onChange(event.target.value)}>

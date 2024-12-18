@@ -5,7 +5,9 @@ import getTriggerDescription from '../helpers/getTriggerDescription';
 import Body from '~/uikit/content/components/body';
 
 const TriggerItem = ({
-  trigger
+  trigger,
+  onDeleteTriggerClicked,
+  onEditTriggerClicked
 }) => {
   return (
     <div className={classnames(
@@ -13,16 +15,17 @@ const TriggerItem = ({
       "bg-lm-2 dark:bg-dm-2",
       "border border-lm-2 dark:border-dm-2 hover:border-lm-3 dark:hover:border-dm-3"
     )}>
-      <div className="mb-1">
+      <div className="mb-1 flex items-center justify-between">
         <Body body={getTriggerDescription(trigger)} size="sm" />
+        <FlatButton icon="edit" text="Edit" size="sm" color="primary" onClick={() => onEditTriggerClicked(trigger._id)} />
       </div>
       <div className="flex items-center justify-between">
         <div>
-          <FlatButton icon="delete" />
+          <FlatButton icon="delete" color="warning" size="sm" onClick={() => onDeleteTriggerClicked(trigger._id)} />
         </div>
         <div className="flex items-center">
-          <FlatButton icon="sortUp" />
-          <FlatButton icon="sortDown" className="ml-3" />
+          <FlatButton icon="sortUp" size="sm" />
+          <FlatButton icon="sortDown" size="sm" className="ml-3" />
         </div>
       </div>
     </div>
