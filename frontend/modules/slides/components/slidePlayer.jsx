@@ -14,10 +14,11 @@ const BLOCK_MAPPINGS = {
 const SlidePlayer = ({
   activeSlide,
   activeBlocks,
+  isLoading,
   onUpdateTracking,
   navigateTo,
 }) => {
-  if (!activeSlide) return (
+  if (!activeSlide || isLoading) return (
     <Loading />
   );
   return (
@@ -25,7 +26,10 @@ const SlidePlayer = ({
       {map(activeBlocks, (block) => {
         let Block = BLOCK_MAPPINGS[block.blockType];
         if (!Block) return <div key={block._id} className="mb-4 last:mb-0">Block is unsupported</div>;
-        const blockTracking = getBlockTracking({ blockRef: block.ref })
+        const blockTracking = getBlockTracking({ blockRef: block.ref });
+
+        if (blockTracking.isHidden) return null;
+
         return (
           <div
             key={block._id}

@@ -15,6 +15,6 @@ export default async ({ slideRef, blockRef, update }) => {
 
   currentStage.blocksByRef[blockRef] = currentBlockTracking;
 
-  tracking.set({ stages });
+  return tracking.set({ stages });
 
 }
