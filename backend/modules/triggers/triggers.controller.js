@@ -4,10 +4,14 @@ import getTriggerById from './services/getTriggerById.js';
 import deleteTriggerById from './services/deleteTriggerById.js';
 import updateTriggerById from './services/updateTriggerById.js';
 import restoreTriggerById from './services/restoreTriggerById.js';
+import getTriggersByScenarioId from './services/getTriggersByScenarioId.js';
 
 export default {
 
   all: async function ({ query }, context) {
+    const { scenario, isDeleted } = query;
+
+    return await getTriggersByScenarioId({ scenarioId: scenario }, { isDeleted }, context);
 
   },
 
