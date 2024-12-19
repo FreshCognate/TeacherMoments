@@ -1,3 +1,4 @@
 export default () => ([
-  'HIDE_BLOCKS'
+  'HIDE_BLOCKS',
+  'SHOW_BLOCKS'
 ])

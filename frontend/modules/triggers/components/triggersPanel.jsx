@@ -37,6 +37,9 @@ const TriggersPanel = ({
           }, {
             value: 'ON_HIDE',
             text: 'hide'
+          }, {
+            value: 'ON_COMPLETE',
+            text: 'complete'
           }] : [{
             value: 'ON_ENTER',
             text: 'enter'
