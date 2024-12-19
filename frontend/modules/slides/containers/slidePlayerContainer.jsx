@@ -13,13 +13,16 @@ class SlidePlayerContainer extends Component {
   componentDidUpdate = (prevProps) => {
     if (this.props.activeSlide !== prevProps.activeSlide) {
       trigger({ triggerType: 'SLIDE', event: 'ON_ENTER', elementRef: this.props.activeSlide.ref }, {}).then(() => {
-        this.setState({ isLoading: false })
+        this.setState({ isLoading: false });
       });
     }
   }
 
-  onUpdateTracking = ({ blockRef, update }) => {
-    return updateTracking({ slideRef: this.props.activeSlide.ref, blockRef, update });
+  onUpdateTracking = async ({ blockRef, update }) => {
+    await updateTracking({ slideRef: this.props.activeSlide.ref, blockRef, update });
+    if (update.isComplete) {
+      trigger({ triggerType: 'BLOCK', event: 'ON_COMPLETE', elementRef: blockRef }, {});
+    }
   }
 
   navigateTo = ({ slideRef }) => {

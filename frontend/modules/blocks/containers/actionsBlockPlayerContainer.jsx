@@ -5,6 +5,7 @@ class ActionsBlockPlayerContainer extends Component {
 
   onActionClicked = (slideRef) => {
     if (slideRef) {
+      this.props.onUpdateTracking({ actionValue: slideRef });
       this.props.navigateTo({ slideRef });
     } else {
       console.warn('This action is missing a slide');

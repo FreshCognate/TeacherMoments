@@ -76,6 +76,9 @@ class TriggersPanelContainer extends Component {
           options: [{
             value: 'HIDE_BLOCKS',
             text: 'Hide blocks'
+          }, {
+            value: 'SHOW_BLOCKS',
+            text: 'Show blocks'
           }]
         },
         blocks: {
