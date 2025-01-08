@@ -56,7 +56,6 @@
     "redis": "^4.6.5",
     "slugify": "^1.6.0",
     "socket.io": "^4.6.1",
-    "socket.io-client": "^4.6.1",
     "validator": "^13.9.0"
   },
   "devDependencies": {
