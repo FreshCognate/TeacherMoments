@@ -79,6 +79,9 @@ class TriggersPanelContainer extends Component {
           }, {
             value: 'SHOW_BLOCKS',
             text: 'Show blocks'
+          }, {
+            value: 'NAVIGATE_BY_PROMPTS',
+            text: 'Navigate by prompts'
           }]
         },
         blocks: {

@@ -3,3 +3,4 @@ import './scenarios/index.js';
 import './slides/index.js';
 import './blocks/index.js';
 import './triggers/index.js';
+import './generate/index.js';
