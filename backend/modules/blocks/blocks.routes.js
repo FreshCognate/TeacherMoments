@@ -50,7 +50,8 @@ export default {
       actions: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('text', Joi.string().allow('')),
-        slideRef: Joi.string()
+        slideRef: Joi.string(),
+        context: Joi.array(),
       }),
       tags: Joi.array().items(Joi.string()),
       isDeleted: Joi.boolean().invalid(true),

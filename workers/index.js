@@ -1,11 +1,13 @@
+import './init.js';
 import http from 'http';
 import express from 'express';
 import events from 'events';
 events.EventEmitter.prototype._maxListeners = 100;
 
-
 if (process.env.SHOULD_RUN_WORKERS === 'true') {
   console.log('WORKERS ARE ENABLED');
+  const { default: createWorker } = await import('./createWorker.js');
+  createWorker({ name: 'generate' }, `${global.root}/runners/generate.js`);
 } else {
   const app = express();
   app.disable('x-powered-by');

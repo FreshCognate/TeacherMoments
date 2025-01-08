@@ -15,6 +15,11 @@ export default {
       slideRef: {
         type: 'SlideRefSelector',
         label: 'Navigate to'
+      },
+      context: {
+        type: 'TextArea',
+        label: 'AI - Choose this if:',
+        help: 'Context for AI driven navigation.'
       }
     }
   }

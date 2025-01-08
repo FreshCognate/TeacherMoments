@@ -10,6 +10,7 @@ import '~/core/app/conditions/modelValueIs';
 import '~/modules/ls/helpers/ls.condition'
 import '~/modules/blocks/triggers/hideBlocks.trigger';
 import '~/modules/blocks/triggers/showBlocks.trigger';
+import '~/modules/slides/triggers/navigateByPrompts.trigger';
 
 axios.interceptors.response.use(function (response) {
   return response;
