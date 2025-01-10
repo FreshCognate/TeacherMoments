@@ -2,7 +2,8 @@ import React from 'react';
 import ScenarioBuilderItemContainer from '../containers/scenarioBuilderItemContainer';
 
 const ScenarioBuilder = ({
-  rootSlide
+  rootSlide,
+  slideSelection
 }) => {
   const backgroundDotColor = '#454545'
   return (
@@ -14,6 +15,8 @@ const ScenarioBuilder = ({
       <div className="flex justify-center pt-5">
         <ScenarioBuilderItemContainer
           slide={rootSlide}
+          slideSelection={slideSelection}
+          layerIndex={-1}
         />
       </div>
     </div>

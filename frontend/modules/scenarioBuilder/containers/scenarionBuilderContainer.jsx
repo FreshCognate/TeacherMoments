@@ -3,6 +3,7 @@ import ScenarioBuilder from '../components/scenarioBuilder';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 import find from 'lodash/find';
+import getSlideSelectionFromQuery from '../helpers/getSlideSelectionFromQuery';
 
 class ScenarionBuilderContainer extends Component {
 
@@ -15,6 +16,7 @@ class ScenarionBuilderContainer extends Component {
     return (
       <ScenarioBuilder
         rootSlide={this.getRootSlide()}
+        slideSelection={getSlideSelectionFromQuery()}
       />
     );
   }

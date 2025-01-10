@@ -4,10 +4,15 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import Title from '~/uikit/content/components/title';
 import ScenarioBuilderItemContainer from '../containers/scenarioBuilderItemContainer';
 import getCache from '~/core/cache/helpers/getCache';
+import map from 'lodash/map';
 
 const ScenarioBuilderItem = ({
   slide,
-  onAddChildSlideClicked
+  slideSelection,
+  layerIndex,
+  shouldRenderChildren,
+  onAddChildSlideClicked,
+  onToggleChildSlidesClicked
 }) => {
   return (
     <div className="">
@@ -18,13 +23,20 @@ const ScenarioBuilderItem = ({
           )}
           <Title title={slide.name} />
           <div className="absolute -bottom-8 flex justify-center items-center w-full left-0">
-            <FlatButton icon="add" isCircular onClick={onAddChildSlideClicked} />
+            <div className="mx-1">
+              <FlatButton icon="add" isCircular onClick={onAddChildSlideClicked} />
+            </div>
+            {slide.children.length > 0 && (
+              <div className="mx-1">
+                <FlatButton icon={shouldRenderChildren ? "close" : "open"} isCircular onClick={() => onToggleChildSlidesClicked(shouldRenderChildren ? 'CLOSE' : 'OPEN')} />
+              </div>
+            )}
           </div>
         </div>
       </div>
-      {(slide.children.length > 0) && (
+      {(slide.children.length > 0 && shouldRenderChildren) && (
         <div className="flex justify-center pt-10 pb-7">
-          {slide.children.map(ref => {
+          {map(slide.children, (ref, index) => {
             const childSlide = getCache('slides').data.find(s => s.ref === ref);
             return (
               <div
@@ -33,6 +45,9 @@ const ScenarioBuilderItem = ({
               >
                 <ScenarioBuilderItemContainer
                   slide={childSlide}
+                  itemIndex={index}
+                  layerIndex={layerIndex + 1}
+                  slideSelection={slideSelection}
                 />
               </div>
             )

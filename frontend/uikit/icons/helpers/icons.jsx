@@ -58,6 +58,16 @@ export default {
     ]
   },
 
+  expand: {
+    viewBox: "0 0 24 24",
+    elements: [
+      <path d="M18 2L6 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />,
+      <path d="M18 22L6 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />,
+      <path d="M12 14V19M12 19L15 16M12 19L9 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />,
+      <path d="M12 10V5M12 5L15 8M12 5L9 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    ]
+  },
+
   open: {
     viewBox: "0 0 24 24",
     elements: [
