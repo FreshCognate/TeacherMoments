@@ -17,6 +17,7 @@ export default async (props, options, context) => {
     scenario,
     createdBy: user._id,
     sortOrder,
+    isRoot: sortOrder === 0,
   };
 
   const slide = await models.Slide.create(newSlideObject);
