@@ -6,6 +6,7 @@ import WithCache from '~/core/cache/containers/withCache';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import get from 'lodash/get';
 import debounce from 'lodash/debounce';
+import WithRouter from '~/core/app/components/withRouter';
 
 class ScenariosContainer extends Component {
 
@@ -50,8 +51,9 @@ class ScenariosContainer extends Component {
     }, (state, { type, modal }) => {
       if (state === 'ACTION') {
         if (type === 'CREATE') {
-          axios.post('/api/scenarios', modal).then(() => {
-            this.props.scenarios.fetch();
+          axios.post('/api/scenarios', modal).then((response) => {
+            const { scenario } = response.data;
+            this.props.router.navigate(`/scenarios/${scenario._id}/create`);
           }).catch(handleRequestError);
         }
       }
@@ -101,7 +103,7 @@ class ScenariosContainer extends Component {
   }
 };
 
-export default WithCache(ScenariosContainer, {
+export default WithRouter(WithCache(ScenariosContainer, {
   scenarios: {
     url: '/api/scenarios',
     transform: ({ data }) => data.scenarios,
@@ -112,4 +114,4 @@ export default WithCache(ScenariosContainer, {
       }
     }
   }
-});
+}));
