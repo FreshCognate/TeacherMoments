@@ -53,7 +53,7 @@ class ScenariosContainer extends Component {
         if (type === 'CREATE') {
           axios.post('/api/scenarios', modal).then((response) => {
             const { scenario } = response.data;
-            this.props.router.navigate(`/scenarios/${scenario._id}/create`);
+            this.props.router.navigate(`/scenarios/${scenario._id}/build`);
           }).catch(handleRequestError);
         }
       }

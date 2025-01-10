@@ -90,21 +90,21 @@ class BlocksEditorContainer extends Component {
     const { router } = this.props;
     const searchParams = new URLSearchParams(router.location.search);
     const slideId = searchParams.get('slide');
-    router.navigate(`/scenarios/${router.params.id}/create?slide=${slideId}&block=${blockId}`, { replace: true })
+    router.navigate(`/scenarios/${router.params.id}/build?slide=${slideId}&block=${blockId}`, { replace: true })
   }
 
   onCancelEditBlockClicked = (blockId) => {
     const { router } = this.props;
     const searchParams = new URLSearchParams(router.location.search);
     const slideId = searchParams.get('slide');
-    router.navigate(`/scenarios/${router.params.id}/create?slide=${slideId}&block=${blockId}`, { replace: true })
+    router.navigate(`/scenarios/${router.params.id}/build?slide=${slideId}&block=${blockId}`, { replace: true })
   }
 
   onEditBlockClicked = (blockId) => {
     const { router } = this.props;
     const searchParams = new URLSearchParams(router.location.search);
     const slideId = searchParams.get('slide');
-    router.navigate(`/scenarios/${router.params.id}/create?slide=${slideId}&block=${blockId}&isEditing=true`, { replace: true })
+    router.navigate(`/scenarios/${router.params.id}/build?slide=${slideId}&block=${blockId}&isEditing=true`, { replace: true })
   }
 
   render() {

@@ -51,7 +51,7 @@ class SlidesPanelContainer extends Component {
 
   onEditSlideClicked = (slideId) => {
     const { router } = this.props;
-    router.navigate(`/scenarios/${router.params.id}/create?slide=${slideId}&isEditing=true`, { replace: true })
+    router.navigate(`/scenarios/${router.params.id}/build?slide=${slideId}&isEditing=true`, { replace: true })
   }
 
   onAddSlideClicked = () => {
@@ -69,13 +69,13 @@ class SlidesPanelContainer extends Component {
 
   onSlideClicked = (slideId) => {
     const { router } = this.props;
-    router.navigate(`/scenarios/${router.params.id}/create?slide=${slideId}`, { replace: true })
+    router.navigate(`/scenarios/${router.params.id}/build?slide=${slideId}`, { replace: true })
   }
 
   onDeleteSlideClicked = (slideId) => {
     const { router, slides } = this.props;
     slides.setStatus('syncing');
-    router.navigate(`/scenarios/${router.params.id}/create`, { replace: true })
+    router.navigate(`/scenarios/${router.params.id}/build`, { replace: true })
     axios.delete(`/api/slides/${slideId}`).then(() => {
       slides.fetch();
     }).catch(handleRequestError);
@@ -99,7 +99,7 @@ class SlidesPanelContainer extends Component {
 
   onCancelEditSlideClicked = (slideId) => {
     const { router } = this.props;
-    router.navigate(`/scenarios/${router.params.id}/create?slide=${slideId}`, { replace: true })
+    router.navigate(`/scenarios/${router.params.id}/build?slide=${slideId}`, { replace: true })
   }
 
   render() {
