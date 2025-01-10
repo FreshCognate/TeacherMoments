@@ -23,9 +23,9 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { name, scenario } = body;
+    const { name, scenario, parent } = body;
 
-    const slide = await createSlide({ name, scenario }, {}, context);
+    const slide = await createSlide({ name, scenario, parent }, {}, context);
 
     return { slide };
 
