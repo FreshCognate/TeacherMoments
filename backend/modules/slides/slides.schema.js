@@ -7,6 +7,7 @@ const schema = {
   name: { type: String, default: '' },
   slideType: { type: String, enum: ['STEP', 'SUMMARY'], default: 'STEP' },
   sortOrder: { type: Number },
+  isRoot: { type: Boolean, default: false },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
   isLocked: { type: Boolean, default: false },
   lockedAt: { type: Date },

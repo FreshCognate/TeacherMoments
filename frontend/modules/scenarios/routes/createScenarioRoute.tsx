@@ -1,6 +1,6 @@
 import React from 'react';
 import CreateScenarioContainer from '../containers/createScenarioContainer';
-import ScenarionBuilderContainer from '../containers/scenarionBuilderContainer';
+import ScenarionBuilderContainer from '~/modules/scenarioBuilder/containers/scenarionBuilderContainer';
 
 export default function CreateScenarioRoute({ matches }: { matches: any[] }) {
   const currentMatch = matches[matches.length - 1];
