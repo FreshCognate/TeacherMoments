@@ -1,6 +1,6 @@
 export default async (props, options, context) => {
 
-  const { name, scenario } = props;
+  const { name, scenario, parent } = props;
 
   const { models, user } = context;
 
@@ -21,6 +21,13 @@ export default async (props, options, context) => {
   };
 
   const slide = await models.Slide.create(newSlideObject);
+
+  // If parent is provided, we need to update the parent slide to have the new slide as a child
+  if (parent) {
+    const parentSlide = await models.Slide.findById(parent);
+    parentSlide.children.push(slide._id);
+    await parentSlide.save();
+  }
 
   return slide;
 

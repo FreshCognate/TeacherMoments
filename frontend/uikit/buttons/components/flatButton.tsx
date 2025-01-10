@@ -32,7 +32,7 @@ export default function FlatButton({
   icon,
   iconSize = 16,
   iconPosition,
-  size,
+  size = 'rg',
   color,
   className,
   style,
@@ -48,7 +48,8 @@ export default function FlatButton({
     'hover:text-primary-regular dark:hover:text-primary-light': (color === 'primary'),
     'hover:text-warning-regular dark:hover:text-warning-light': (color === 'warning'),
     'text-xs': size === 'sm',
-    'text-sm': size !== 'sm'
+    'text-sm': size === 'rg',
+    'text-rg': size === 'lg'
   }, className)
 
   if (isCircular && size != 'sm') {
@@ -57,6 +58,10 @@ export default function FlatButton({
 
   if (size === 'sm') {
     iconSize = 12;
+  }
+
+  if (size === 'lg') {
+    iconSize = 20;
   }
 
   return (

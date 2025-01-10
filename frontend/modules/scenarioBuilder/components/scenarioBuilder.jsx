@@ -11,7 +11,7 @@ const ScenarioBuilder = ({
       backgroundPosition: "-9px -9px",
       backgroundImage: `radial-gradient(${backgroundDotColor} 1px, transparent 0)`,
     }}>
-      <div className="flex justify-center py-6">
+      <div className="flex justify-center pt-5">
         <ScenarioBuilderItemContainer
           slide={rootSlide}
         />

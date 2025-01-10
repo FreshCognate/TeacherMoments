@@ -18,8 +18,9 @@ export default {
   },
   create: {
     body: {
-      name: Joi.string().valid(''),
-      scenario: Joi.string().required()
+      name: Joi.string().allow(''),
+      scenario: Joi.string().required(),
+      parent: Joi.string(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
