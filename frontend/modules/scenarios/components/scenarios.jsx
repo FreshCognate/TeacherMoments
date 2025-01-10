@@ -39,7 +39,7 @@ const Scenarios = ({
         <div className="grid grid-cols-4 gap-4 p-4">
           {map(scenarios, (scenario) => {
             return (
-              <Link key={scenario._id} to={`/scenarios/${scenario._id}/create`}>
+              <Link key={scenario._id} to={`/scenarios/${scenario._id}/build`}>
                 <Card name={scenario.name} title={scenario.title} description={scenario.description}>
 
                 </Card>
