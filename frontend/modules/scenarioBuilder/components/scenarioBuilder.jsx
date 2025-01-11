@@ -1,5 +1,6 @@
 import React from 'react';
 import ScenarioBuilderItemContainer from '../containers/scenarioBuilderItemContainer';
+import ScenarioEditorToolbarContainer from '~/modules/scenarios/containers/scenarioEditorToolbarContainer';
 
 const ScenarioBuilder = ({
   rootSlide,
@@ -12,6 +13,9 @@ const ScenarioBuilder = ({
       backgroundPosition: "-9px -9px",
       backgroundImage: `radial-gradient(${backgroundDotColor} 1px, transparent 0)`,
     }}>
+      <div className="flex p-5 justify-center">
+        <ScenarioEditorToolbarContainer />
+      </div>
       <div className="flex justify-center pt-5">
         <ScenarioBuilderItemContainer
           slide={rootSlide}
