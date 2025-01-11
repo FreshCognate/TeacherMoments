@@ -8,17 +8,21 @@ import getSlideSelectionFromQuery from '../helpers/getSlideSelectionFromQuery';
 
 class ScenarioBuilderItemContainer extends Component {
 
+  getChildrenOffset = () => {
+    let slideSelection = getSlideSelectionFromQuery();
+    const currentItemIndex = slideSelection[this.props.layerIndex + 1];
+    return -((currentItemIndex * 256) + (16 * currentItemIndex));
+  }
+
   shouldRenderChildren = () => {
-    if (this.props.slide.isRoot) {
-      if (this.props.slideSelection.length > 0) {
-        return true;
+
+    let slideSelection = getSlideSelectionFromQuery();
+    if (slideSelection.length > 0 && this.props.isSelected) {
+      if (this.props.slide.isRoot) {
+        return true
       }
-    } else {
-      let slideSelection = getSlideSelectionFromQuery();
-      if (slideSelection.length > 0) {
-        if (slideSelection[this.props.layerIndex + 1] === this.props.itemIndex) {
-          return true;
-        }
+      if (slideSelection[this.props.layerIndex + 1] === 0 || slideSelection[this.props.layerIndex + 1]) {
+        return true;
       }
     }
     return false;
@@ -74,6 +78,16 @@ class ScenarioBuilderItemContainer extends Component {
     this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`);
   }
 
+  onSelectSlideClicked = () => {
+    let slideSelection = getSlideSelectionFromQuery();
+
+    slideSelection.splice(this.props.layerIndex, slideSelection.length - this.props.layerIndex);
+    slideSelection.push(this.props.itemIndex);
+
+    const scenarioId = getCache('scenario').data._id;
+    this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`);
+  }
+
   render() {
     return (
       <ScenarioBuilderItem
@@ -81,8 +95,11 @@ class ScenarioBuilderItemContainer extends Component {
         slideSelection={this.props.slideSelection}
         layerIndex={this.props.layerIndex}
         shouldRenderChildren={this.shouldRenderChildren()}
+        isSelected={this.props.isSelected}
+        childrenOffset={this.getChildrenOffset()}
         onAddChildSlideClicked={this.onAddChildSlideClicked}
         onToggleChildSlidesClicked={this.onToggleChildSlidesClicked}
+        onSelectSlideClicked={this.onSelectSlideClicked}
       />
     );
   }
