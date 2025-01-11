@@ -23,7 +23,7 @@ const ScenarioBuilderItem = ({
     <div className="">
       <div className="flex justify-center">
         <div className="relative">
-          <div className="relative border border-lm-3 dark:border-dm-3 bg-lm-0 dark:bg-dm-1 p-2 rounded-lg w-64 h-20 group transition-transform"
+          <div className="relative border border-lm-3 dark:border-dm-3 bg-lm-0 dark:bg-dm-1 p-2 rounded-lg w-64 h-20 group transition-transform duration-700"
             style={{ transform: `scale(${isSelected ? 1 : 0.8})` }}
           >
             {!isSelected && (
@@ -41,20 +41,22 @@ const ScenarioBuilderItem = ({
             )}
             <Title title={slide.name} />
           </div>
-          <div className="absolute z-10 -bottom-8 flex justify-center items-center w-full left-0">
-            <div className="mx-1">
-              <FlatButton icon="add" isCircular onClick={onAddChildSlideClicked} />
-            </div>
-            {slide.children.length > 0 && (
+          {(isSelected) && (
+            <div className="absolute z-10 -bottom-8 flex justify-center items-center w-full left-0">
               <div className="mx-1">
-                <FlatButton icon={shouldRenderChildren ? "close" : "open"} isCircular onClick={() => onToggleChildSlidesClicked(shouldRenderChildren ? 'CLOSE' : 'OPEN')} />
+                <FlatButton icon="add" isCircular onClick={onAddChildSlideClicked} />
               </div>
-            )}
-          </div>
+              {slide.children.length > 0 && (
+                <div className="mx-1">
+                  <FlatButton icon={shouldRenderChildren ? "close" : "open"} isCircular onClick={() => onToggleChildSlidesClicked(shouldRenderChildren ? 'CLOSE' : 'OPEN')} />
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
       {(slide.children.length > 0 && shouldRenderChildren) && (
-        <div className="flex justify-start pt-10 pb-7 w-64 transition-transform duration-700" style={{ transform: `translateX(${childrenOffset}px)` }}>
+        <div className="flex justify-start pt-10 pb-7 w-64 transition-transform duration-500" style={{ transform: `translateX(${childrenOffset}px)` }}>
           {map(slide.children, (ref, index) => {
             const childSlide = getCache('slides').data.find(s => s.ref === ref);
             const isSelected = slideSelection[newLayerIndex] === index;

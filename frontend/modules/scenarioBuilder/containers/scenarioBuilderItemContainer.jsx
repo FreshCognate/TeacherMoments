@@ -40,7 +40,9 @@ class ScenarioBuilderItemContainer extends Component {
               parent: this.props.slide._id
             }).then(() => {
               const slides = getCache('slides');
-              slides.fetch();
+              slides.fetch().then(() => {
+                this.openChildSlidesClicked();
+              });
             })
           }
         }
