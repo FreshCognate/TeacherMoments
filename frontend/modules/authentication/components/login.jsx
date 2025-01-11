@@ -8,7 +8,7 @@ const Login = ({
   onLoginButtonClicked
 }) => {
   return (
-    <div>
+    <div className="max-w-md mx-auto">
       <FormContainer
         schema={{
           email: {

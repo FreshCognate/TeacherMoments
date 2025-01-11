@@ -5,8 +5,26 @@ import axios from 'axios';
 import WithRouter from '~/core/app/components/withRouter';
 import getCache from '~/core/cache/helpers/getCache';
 import getSlideSelectionFromQuery from '../helpers/getSlideSelectionFromQuery';
+import each from 'lodash/each';
+import convertLayerIndexToLetter from '../helpers/convertLayerIndexToLetter';
 
 class ScenarioBuilderItemContainer extends Component {
+
+  getLocation = () => {
+    if (this.props.slide.isRoot) return 'Root';
+    let location = '';
+    each(this.props.slideSelection, (itemIndex, layerIndex) => {
+      if (layerIndex > this.props.layerIndex) return;
+      const letter = convertLayerIndexToLetter(layerIndex);
+      let currentItemIndex = itemIndex;
+      if (layerIndex === this.props.layerIndex) {
+        currentItemIndex = this.props.itemIndex;
+      }
+      if (layerIndex > 0) location += '.';
+      location += `${letter}${currentItemIndex + 1}`;
+    })
+    return location;
+  }
 
   getChildrenOffset = () => {
     let slideSelection = getSlideSelectionFromQuery();
@@ -63,7 +81,7 @@ class ScenarioBuilderItemContainer extends Component {
     if (this.props.slide.isRoot) {
       slideSelection = [0];
     } else {
-      slideSelection.push(this.props.itemIndex);
+      slideSelection.push(0);
     }
     const scenarioId = getCache('scenario').data._id;
     this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`);
@@ -96,6 +114,7 @@ class ScenarioBuilderItemContainer extends Component {
         slide={this.props.slide}
         slideSelection={this.props.slideSelection}
         layerIndex={this.props.layerIndex}
+        location={this.getLocation()}
         shouldRenderChildren={this.shouldRenderChildren()}
         isSelected={this.props.isSelected}
         childrenOffset={this.getChildrenOffset()}
