@@ -11,6 +11,7 @@ const ScenarioBuilderItem = ({
   slide,
   slideSelection,
   layerIndex,
+  location,
   isSelected,
   childrenOffset,
   shouldRenderChildren,
@@ -36,9 +37,7 @@ const ScenarioBuilderItem = ({
                 </div>
               </div>
             )}
-            {slide.isRoot && (
-              <Badge text="Root" />
-            )}
+            <Badge text={location} className="text-xs" />
             <Title title={slide.name} />
           </div>
           {(isSelected) && (
