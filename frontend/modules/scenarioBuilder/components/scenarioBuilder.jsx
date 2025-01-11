@@ -17,6 +17,7 @@ const ScenarioBuilder = ({
           slide={rootSlide}
           slideSelection={slideSelection}
           layerIndex={-1}
+          isSelected={true}
         />
       </div>
     </div>
