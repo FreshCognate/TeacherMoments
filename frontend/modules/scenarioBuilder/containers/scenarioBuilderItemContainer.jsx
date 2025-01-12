@@ -92,7 +92,7 @@ class ScenarioBuilderItemContainer extends Component {
     if (this.props.slide.isRoot) {
       slideSelection = [];
     } else {
-      slideSelection.pop();
+      slideSelection.splice(this.props.layerIndex + 1, slideSelection.length - this.props.layerIndex);
     }
     const scenarioId = getCache('scenario').data._id;
     this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`);
