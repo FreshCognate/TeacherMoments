@@ -5,6 +5,9 @@ import map from 'lodash/map';
 import PromptBlockPlayerContainer from '~/modules/blocks/containers/promptBlockPlayerContainer';
 import ActionsBlockPlayerContainer from '~/modules/blocks/containers/actionsBlockPlayerContainer';
 import getBlockTracking from '~/modules/tracking/helpers/getBlockTracking';
+import find from 'lodash/find';
+import getCache from '~/core/cache/helpers/getCache';
+import FlatButton from '~/uikit/buttons/components/flatButton';
 const BLOCK_MAPPINGS = {
   "TEXT": TextBlockPlayerContainer,
   "PROMPT": PromptBlockPlayerContainer,
@@ -46,6 +49,20 @@ const SlidePlayer = ({
           </div>
         );
       })}
+      {(activeSlide.children.length > 0) && (
+        <div className="mt-4 flex items-center">
+          {map(activeSlide.children, (childRef) => {
+            const childSlide = find(getCache('slides').data, { ref: childRef });
+            console.log(childSlide);
+            return (<div>
+              <FlatButton
+                text={childSlide.name}
+                onClick={() => navigateTo({ slideRef: childRef })}
+              />
+            </div>)
+          })}
+        </div>
+      )}
     </div >
   );
 };
