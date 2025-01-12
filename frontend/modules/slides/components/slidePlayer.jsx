@@ -50,16 +50,18 @@ const SlidePlayer = ({
         );
       })}
       {(activeSlide.children.length > 0) && (
-        <div className="mt-4 flex items-center">
+        <div className="mt-4">
           {map(activeSlide.children, (childRef) => {
             const childSlide = find(getCache('slides').data, { ref: childRef });
-            console.log(childSlide);
-            return (<div>
-              <FlatButton
-                text={childSlide.name}
-                onClick={() => navigateTo({ slideRef: childRef })}
-              />
-            </div>)
+            if (!childSlide) return null;
+            return (
+              <div key={childRef}>
+                <FlatButton
+                  text={childSlide.name}
+                  onClick={() => navigateTo({ slideRef: childRef })}
+                />
+              </div>
+            );
           })}
         </div>
       )}

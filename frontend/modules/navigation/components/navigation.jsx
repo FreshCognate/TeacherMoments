@@ -5,7 +5,7 @@ const Navigation = ({
   authentication
 }) => {
   return (
-    <div className="flex items-center sticky top-0 z-50 justify-between h-10 px-4 border-b border-b-lm-2 dark:border-b-dm-2 bg-lm-0 dark:bg-dm-1">
+    <div className="flex items-center fixed w-full top-0 z-50 justify-between h-10 px-4 border-b border-b-lm-2 dark:border-b-dm-2 bg-lm-0 dark:bg-dm-1">
       <div>
         <nav>
           <NavLink to="/" className="mr-4">

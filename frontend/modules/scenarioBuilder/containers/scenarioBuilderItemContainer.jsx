@@ -7,6 +7,7 @@ import getCache from '~/core/cache/helpers/getCache';
 import getSlideSelectionFromQuery from '../helpers/getSlideSelectionFromQuery';
 import each from 'lodash/each';
 import convertLayerIndexToLetter from '../helpers/convertLayerIndexToLetter';
+import getEditingDetailsFromQuery from '../helpers/getEditingDetailsFromQuery';
 
 class ScenarioBuilderItemContainer extends Component {
 
@@ -30,6 +31,25 @@ class ScenarioBuilderItemContainer extends Component {
     let slideSelection = getSlideSelectionFromQuery();
     const currentItemIndex = slideSelection[this.props.layerIndex + 1];
     return -((currentItemIndex * 256) + (16 * currentItemIndex));
+  }
+
+  getIsEditing = () => {
+    const { isEditing, layer, slide } = getEditingDetailsFromQuery();
+    if (!isEditing) return false;
+    if (this.props.slide.isRoot) {
+      if (layer === 'root') {
+        return true;
+      }
+    }
+    if (layer === this.props.layerIndex && this.props.slide._id === slide) return true;
+    return false;
+  }
+
+  getIsEditingChildren = () => {
+    const { isEditing, layer, slide } = getEditingDetailsFromQuery();
+    if (!isEditing) return false;
+    if (layer === this.props.layerIndex + 1) return true;
+    return false;
   }
 
   shouldRenderChildren = () => {
@@ -84,7 +104,9 @@ class ScenarioBuilderItemContainer extends Component {
       slideSelection.push(0);
     }
     const scenarioId = getCache('scenario').data._id;
-    this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`);
+    const { isEditing, layer, slide } = getEditingDetailsFromQuery();
+    let query = `slideSelection=${JSON.stringify(slideSelection)}&isEditing=${isEditing}&layer=${layer}&slide=${slide}`;
+    this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`);
   }
 
   closeChildSlidesClicked = () => {
@@ -108,6 +130,17 @@ class ScenarioBuilderItemContainer extends Component {
     this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`);
   }
 
+  onEditSlideClicked = () => {
+    let slideSelection = getSlideSelectionFromQuery();
+    const scenarioId = getCache('scenario').data._id;
+    let layer = this.props.layerIndex;
+    if (this.props.slide.isRoot) {
+      layer = 'root';
+    }
+    let query = `slideSelection=${JSON.stringify(slideSelection)}&isEditing=true&layer=${layer}&slide=${this.props.slide._id}`
+    this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`)
+  }
+
   render() {
     return (
       <ScenarioBuilderItem
@@ -117,10 +150,13 @@ class ScenarioBuilderItemContainer extends Component {
         location={this.getLocation()}
         shouldRenderChildren={this.shouldRenderChildren()}
         isSelected={this.props.isSelected}
+        isEditing={this.getIsEditing()}
+        isEditingChildren={this.getIsEditingChildren()}
         childrenOffset={this.getChildrenOffset()}
         onAddChildSlideClicked={this.onAddChildSlideClicked}
         onToggleChildSlidesClicked={this.onToggleChildSlidesClicked}
         onSelectSlideClicked={this.onSelectSlideClicked}
+        onEditSlideClicked={this.onEditSlideClicked}
       />
     );
   }
