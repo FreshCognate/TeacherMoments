@@ -10,6 +10,8 @@ import sortBy from 'lodash/sortBy';
 import find from 'lodash/find';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import getCache from '~/core/cache/helpers/getCache';
+import addModal from '~/core/dialogs/helpers/addModal';
+import BlockSelectorContainer from './blockSelectorContainer';
 
 class BlocksEditorContainer extends Component {
 
@@ -107,6 +109,17 @@ class BlocksEditorContainer extends Component {
     router.navigate(`/scenarios/${router.params.id}/build?slide=${slideId}&block=${blockId}&isEditing=true`, { replace: true })
   }
 
+  onCreateBlockClicked = () => {
+    addModal({
+      title: 'Choose a block type to add to your slide:',
+      component: <BlockSelectorContainer />,
+      actions: [{
+        type: 'CANCEL',
+        text: 'Cancel'
+      }]
+    })
+  }
+
   render() {
     return (
       <BlocksEditor
@@ -119,6 +132,7 @@ class BlocksEditorContainer extends Component {
         onBlockClicked={this.onBlockClicked}
         onCancelEditBlockClicked={this.onCancelEditBlockClicked}
         onEditBlockClicked={this.onEditBlockClicked}
+        onCreateBlockClicked={this.onCreateBlockClicked}
       />
     );
   }
