@@ -6,7 +6,7 @@ const ScenarioPreview = ({
   activeBlocks,
 }) => {
   return (
-    <div className="w-full max-w-md mt-2">
+    <div className="w-full max-w-md">
       <div className="text-xs border border-b-0 border-lm-2 dark:border-dm-2 bg-lm-1 dark:bg-dm-1 rounded-t inline ml-1 py-0.5 px-1">
         Slide: {activeSlide?.name}
       </div>

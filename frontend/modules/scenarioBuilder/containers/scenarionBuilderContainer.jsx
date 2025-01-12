@@ -13,8 +13,10 @@ class ScenarionBuilderContainer extends Component {
   }
 
   render() {
+    const { displayMode } = this.props.editor.data;
     return (
       <ScenarioBuilder
+        displayMode={displayMode}
         rootSlide={this.getRootSlide()}
         slideSelection={getSlideSelectionFromQuery()}
       />
@@ -22,4 +24,4 @@ class ScenarionBuilderContainer extends Component {
   }
 };
 
-export default WithRouter(WithCache(ScenarionBuilderContainer, null, ['scenario', 'slides']));
+export default WithRouter(WithCache(ScenarionBuilderContainer, null, ['editor', 'scenario', 'slides']));

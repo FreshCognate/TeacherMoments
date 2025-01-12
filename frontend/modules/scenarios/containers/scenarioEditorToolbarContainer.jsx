@@ -26,6 +26,7 @@ class ScenarioEditorToolbarContainer extends Component {
     return (
       <ScenarioEditorToolbar
         displayMode={displayMode}
+        isNewEditor={this.props.isNewEditor}
         onDisplayModeChanged={this.onDisplayModeChanged}
         onAddBlockClicked={this.onAddBlockClicked}
       />
