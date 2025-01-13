@@ -16,7 +16,7 @@ const BlocksEditor = ({
   onCreateBlockClicked
 }) => {
   return (
-    <div className="w-full pt-2 max-w-screen-sm">
+    <div className="w-full py-4 max-w-screen-sm">
       <div >
         {map(blocks, (block) => {
 

@@ -36,7 +36,7 @@ const DialogSidePanel = ({
     animation.transition = { ease: [0.8, 0, 0.3, 1], duration: 0.6, delay: 0 };
   }
 
-  const elementClassName = classnames("relative w-full h-100 p-4 flex", {
+  const elementClassName = classnames("relative w-full h-full p-4 flex", {
     "justify-end": sidePanel.position === 'right',
     "justify-start": sidePanel.position === 'left'
   });
@@ -67,7 +67,7 @@ const DialogSidePanel = ({
         style={style}
       >
 
-        <div className="flex flex-grow flex-0 items-center justify-between pl-4 pr-1 h-100 max-h-full">
+        <div className="flex flex-0 items-center justify-between pl-4 pr-1 max-h-full">
 
           <div>
             <Title title={sidePanel.title} element="h5" className="text-lg font-normal" />

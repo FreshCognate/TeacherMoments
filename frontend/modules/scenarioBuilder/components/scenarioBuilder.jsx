@@ -14,6 +14,7 @@ const ScenarioBuilder = ({
       backgroundSize: "20px 20px",
       backgroundPosition: "-9px -9px",
       backgroundImage: displayMode === 'EDITING' ? `radial-gradient(${backgroundDotColor} 1px, transparent 0)` : 'none',
+      paddingBottom: '200vh'
     }}>
       <div className="flex p-5 justify-center">
         <ScenarioEditorToolbarContainer isNewEditor />

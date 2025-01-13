@@ -17,7 +17,6 @@ const ScenarioBuilderItem = ({
   onSelectSlideClicked,
   onEditSlideClicked
 }) => {
-  console.log(isEditing);
   const newLayerIndex = layerIndex + 1;
   return (
     <div className="">
