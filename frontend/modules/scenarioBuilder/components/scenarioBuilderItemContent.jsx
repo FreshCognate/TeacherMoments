@@ -48,7 +48,7 @@ const ScenarioBuilderItemContent = ({
       {(isEditing) && (
         <div>
           <EditSlideContainer slideId={slide._id} />
-          <BlocksEditorContainer />
+          <BlocksEditorContainer isNewEditor />
         </div>
       )}
     </div>

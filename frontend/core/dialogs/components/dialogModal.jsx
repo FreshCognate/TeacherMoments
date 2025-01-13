@@ -39,7 +39,7 @@ const DialogModal = ({
     <FocusLock>
 
       <div
-        className={classnames('fixed z-50 w-full h-full flex justify-center items-center', modal.className)}
+        className={classnames('fixed z-50 w-full h-full flex justify-center items-center top-0 left-0', modal.className)}
         tabIndex="0"
         ref={ref}
       >

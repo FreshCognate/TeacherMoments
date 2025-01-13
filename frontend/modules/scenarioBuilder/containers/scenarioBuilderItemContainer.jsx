@@ -105,8 +105,11 @@ class ScenarioBuilderItemContainer extends Component {
     }
     const scenarioId = getCache('scenario').data._id;
     const { isEditing, layer, slide } = getEditingDetailsFromQuery();
-    let query = `slideSelection=${JSON.stringify(slideSelection)}&isEditing=${isEditing}&layer=${layer}&slide=${slide}`;
-    this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`);
+    let query = `slideSelection=${JSON.stringify(slideSelection)}`;
+    if (isEditing) {
+      query += `&isEditing=${isEditing}&layer=${layer}&slide=${slide}`;
+    }
+    this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true });
   }
 
   closeChildSlidesClicked = () => {
@@ -117,7 +120,7 @@ class ScenarioBuilderItemContainer extends Component {
       slideSelection.splice(this.props.layerIndex + 1, slideSelection.length - this.props.layerIndex);
     }
     const scenarioId = getCache('scenario').data._id;
-    this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`);
+    this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`, { replace: true });
   }
 
   onSelectSlideClicked = () => {
@@ -127,7 +130,7 @@ class ScenarioBuilderItemContainer extends Component {
     slideSelection.push(this.props.itemIndex);
 
     const scenarioId = getCache('scenario').data._id;
-    this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`);
+    this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`, { replace: true });
   }
 
   onEditSlideClicked = () => {
@@ -138,7 +141,7 @@ class ScenarioBuilderItemContainer extends Component {
       layer = 'root';
     }
     let query = `slideSelection=${JSON.stringify(slideSelection)}&isEditing=true&layer=${layer}&slide=${this.props.slide._id}`
-    this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`)
+    this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true })
   }
 
   render() {

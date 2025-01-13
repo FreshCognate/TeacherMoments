@@ -13,7 +13,7 @@ const CreateScenario = ({
       <div className="bg-lm-1 dark:bg-dm-1 rounded-lg min-w-60 ml-2 my-2 border border-lm-2 dark:border-dm-2 sticky top-2 h-full overflow-y-auto">
         <SlidesPanelContainer />
       </div>
-      <div className="w-full my-2 flex flex-col items-center">
+      <div className="w-full my-2 pt-10 flex flex-col items-center">
         <ScenarioEditorToolbarContainer />
         {(displayMode === 'EDITING') && (
           <BlocksEditorContainer />

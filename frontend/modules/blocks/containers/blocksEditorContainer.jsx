@@ -12,6 +12,8 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import getCache from '~/core/cache/helpers/getCache';
 import addModal from '~/core/dialogs/helpers/addModal';
 import BlockSelectorContainer from './blockSelectorContainer';
+import getSlideSelectionFromQuery from '~/modules/scenarioBuilder/helpers/getSlideSelectionFromQuery';
+import getEditingDetailsFromQuery from '~/modules/scenarioBuilder/helpers/getEditingDetailsFromQuery';
 
 class BlocksEditorContainer extends Component {
 
@@ -92,13 +94,19 @@ class BlocksEditorContainer extends Component {
     const { router } = this.props;
     const searchParams = new URLSearchParams(router.location.search);
     const slideId = searchParams.get('slide');
-    router.navigate(`/scenarios/${router.params.id}/build?slide=${slideId}&block=${blockId}`, { replace: true })
+    //router.navigate(`/scenarios/${router.params.id}/build?slide=${slideId}&block=${blockId}`, { replace: true })
   }
 
   onCancelEditBlockClicked = (blockId) => {
     const { router } = this.props;
     const searchParams = new URLSearchParams(router.location.search);
     const slideId = searchParams.get('slide');
+    const slideSelection = getSlideSelectionFromQuery();
+    const { isEditing, slide, layer } = getEditingDetailsFromQuery();
+    if (this.props.isNewEditor) {
+      router.navigate(`/scenarios/${router.params.id}/create?slideSelection=${JSON.stringify(slideSelection)}&isEditing=${isEditing}&layer=${layer}&slide=${slideId}`, { replace: true });
+      return;
+    }
     router.navigate(`/scenarios/${router.params.id}/build?slide=${slideId}&block=${blockId}`, { replace: true })
   }
 
@@ -106,6 +114,12 @@ class BlocksEditorContainer extends Component {
     const { router } = this.props;
     const searchParams = new URLSearchParams(router.location.search);
     const slideId = searchParams.get('slide');
+    const slideSelection = getSlideSelectionFromQuery();
+    const { isEditing, slide, layer } = getEditingDetailsFromQuery();
+    if (this.props.isNewEditor) {
+      router.navigate(`/scenarios/${router.params.id}/create?slideSelection=${JSON.stringify(slideSelection)}&isEditing=${isEditing}&layer=${layer}&slide=${slideId}&block=${blockId}`, { replace: true });
+      return;
+    }
     router.navigate(`/scenarios/${router.params.id}/build?slide=${slideId}&block=${blockId}&isEditing=true`, { replace: true })
   }
 
