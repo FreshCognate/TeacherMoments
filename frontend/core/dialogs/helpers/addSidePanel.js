@@ -19,6 +19,4 @@ export default (sidePanel, callback) => {
     }
   };
 
-
-  return promise;
 };

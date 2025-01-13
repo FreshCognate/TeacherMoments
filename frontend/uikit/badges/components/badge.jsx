@@ -17,7 +17,7 @@ const Badge = ({
   }
 
   return (
-    <div className={classnames("flex items-center border py-micro px-1 rounded-md bg-lm-1 border-lm-1 dark:bg-dm-1 dark:border-dm-1", className, {
+    <div className={classnames("flex items-center border py-micro px-1 rounded-md bg-lm-1 border-lm-2 dark:bg-dm-1 dark:border-dm-2", className, {
       "text-rg": size === 'lg',
       "text-sm": size === 'rg',
       "border-warning-regular dark:border-warning-light text-warning-regular dark:text-warning-light": color === 'warning',

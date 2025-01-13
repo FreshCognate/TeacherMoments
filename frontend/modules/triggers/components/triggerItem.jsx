@@ -11,7 +11,7 @@ const TriggerItem = ({
 }) => {
   return (
     <div className={classnames(
-      "p-2 rounded-md mb-2 ",
+      "p-2 rounded-md",
       "bg-lm-2 dark:bg-dm-2",
       "border border-lm-2 dark:border-dm-2 hover:border-lm-3 dark:hover:border-dm-3"
     )}>

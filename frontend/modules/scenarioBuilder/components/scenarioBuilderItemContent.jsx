@@ -5,6 +5,7 @@ import Icon from '~/uikit/icons/components/icon';
 import classnames from 'classnames';
 import EditSlideContainer from '~/modules/slides/containers/editSlideContainer';
 import BlocksEditorContainer from '~/modules/blocks/containers/blocksEditorContainer';
+import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
 
 const ScenarioBuilderItemContent = ({
   slide,
@@ -23,6 +24,9 @@ const ScenarioBuilderItemContent = ({
       className={className}
       style={{ transform: `scale(${isSelected ? 1 : 0.8})` }}
     >
+      <div className="flex">
+        <Badge text={location} className="text-xs" />
+      </div>
       {(!isSelected && !isEditing) && (
         <div
           className="group-hover:flex justify-center items-center hidden cursor-pointer absolute w-full h-full top-0 right-0 p-1 bg-opacity-40 bg-white dark:bg-black dark:bg-opacity-40 rounded-bl-lg rounded-tr-lg"
@@ -43,12 +47,15 @@ const ScenarioBuilderItemContent = ({
           </div>
         </div>
       )}
-      <Badge text={location} className="text-xs" />
       <Title title={slide.name} />
       {(isEditing) && (
         <div>
           <EditSlideContainer slideId={slide._id} />
-          <BlocksEditorContainer isNewEditor />
+          <div className="border-t border-t-lm-3 dark:border-t-dm-3 pt-4">
+            <TriggerDisplayContainer elementRef={slide.ref} triggerType="SLIDE" event="ON_ENTER" />
+            <BlocksEditorContainer isNewEditor />
+            <TriggerDisplayContainer elementRef={slide.ref} triggerType="SLIDE" event="ON_EXIT" />
+          </div>
         </div>
       )}
     </div>
