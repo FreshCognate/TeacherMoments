@@ -22,7 +22,7 @@ export default {
     body: {
       scenario: Joi.string().required(),
       slideRef: Joi.string().required(),
-      blockType: Joi.string().required().valid('TEXT')
+      blockType: Joi.string().required().valid('TEXT', 'PROMPT')
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
