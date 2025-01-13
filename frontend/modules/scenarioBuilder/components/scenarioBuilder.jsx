@@ -10,7 +10,7 @@ const ScenarioBuilder = ({
 }) => {
   const backgroundDotColor = '#454545'
   return (
-    <div className="bg-lm-1 dark:bg-dm-0 pt-16 h-screen" style={{
+    <div className="bg-lm-1 dark:bg-dm-0 pt-10 h-screen" style={{
       backgroundSize: "20px 20px",
       backgroundPosition: "-9px -9px",
       backgroundImage: displayMode === 'EDITING' ? `radial-gradient(${backgroundDotColor} 1px, transparent 0)` : 'none',

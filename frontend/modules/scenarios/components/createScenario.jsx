@@ -9,7 +9,7 @@ const CreateScenario = ({
   displayMode
 }) => {
   return (
-    <div className="flex justify-between overflow-y-scroll h-screen" style={{ paddingTop: "68px" }}>
+    <div className="flex justify-between overflow-y-scroll h-screen pt-7">
       <div className="bg-lm-1 dark:bg-dm-1 rounded-lg min-w-60 ml-2 my-2 border border-lm-2 dark:border-dm-2 sticky top-2 h-full overflow-y-auto">
         <SlidesPanelContainer />
       </div>
