@@ -15,6 +15,14 @@ const BlockSelector = ({
           className="opacity-60"
         />
       </div>
+      <div className="bg-lm-0 dark:bg-dm-0 border-t border-lm-1 dark:border-dm-1 p-4 cursor-pointer hover:bg-lm-1 dark:hover:bg-dm-1 transition-colors" onClick={() => onAddBlockTypeClicked('PROMPT')}>
+        <Title title="Prompt Block" element="h4" />
+        <Body
+          body="A prompt to take input from the user."
+          size="sm"
+          className="opacity-60"
+        />
+      </div>
     </div>
   );
 };

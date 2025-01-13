@@ -41,6 +41,12 @@ export default {
     type: 'Toggle',
     label: 'Mutliple answers can be selected',
     size: 'sm',
+    conditions: [{
+      type: 'modelValueIs',
+      field: 'promptType',
+      values: ['ANSWERS'],
+      shouldHideField: true
+    }],
     options: [{
       value: false,
       text: 'No'
@@ -52,6 +58,12 @@ export default {
   items: {
     type: 'Array',
     label: 'Answers',
+    conditions: [{
+      type: 'modelValueIs',
+      field: 'promptType',
+      values: ['ANSWERS'],
+      shouldHideField: true
+    }],
     subSchema: {
       ...answerText,
       value: {

@@ -9,9 +9,6 @@ export default {
     }, {
       value: 'PROMPT',
       text: 'Prompt'
-    }, {
-      value: 'ACTIONS',
-      text: 'Actions'
     }]
   }
 }
