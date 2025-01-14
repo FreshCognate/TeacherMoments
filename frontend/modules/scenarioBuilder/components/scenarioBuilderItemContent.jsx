@@ -6,6 +6,7 @@ import classnames from 'classnames';
 import EditSlideContainer from '~/modules/slides/containers/editSlideContainer';
 import BlocksEditorContainer from '~/modules/blocks/containers/blocksEditorContainer';
 import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
+import FlatButton from '~/uikit/buttons/components/flatButton';
 
 const ScenarioBuilderItemContent = ({
   slide,
@@ -13,7 +14,8 @@ const ScenarioBuilderItemContent = ({
   isSelected,
   isEditing,
   onSelectSlideClicked,
-  onEditSlideClicked
+  onEditSlideClicked,
+  onCancelEditingClicked
 }) => {
   const className = classnames("relative border border-lm-3 dark:border-dm-3 bg-lm-0 dark:bg-dm-1 p-2 rounded-lg group transition-transform duration-700", {
     "w-[512px]": isEditing,
@@ -24,8 +26,15 @@ const ScenarioBuilderItemContent = ({
       className={className}
       style={{ transform: `scale(${isSelected ? 1 : 0.8})` }}
     >
-      <div className="flex">
-        <Badge text={location} className="text-xs" />
+      <div className="flex justify-between">
+        <div className="flex">
+          <Badge text={location} className="text-xs" />
+        </div>
+        {(isEditing) && (
+          <div>
+            <FlatButton icon="cancel" onClick={onCancelEditingClicked} />
+          </div>
+        )}
       </div>
       {(!isSelected && !isEditing) && (
         <div

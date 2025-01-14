@@ -15,7 +15,8 @@ const ScenarioBuilderItem = ({
   onAddChildSlideClicked,
   onToggleChildSlidesClicked,
   onSelectSlideClicked,
-  onEditSlideClicked
+  onEditSlideClicked,
+  onCancelEditingClicked
 }) => {
   const newLayerIndex = layerIndex + 1;
   return (
@@ -29,6 +30,7 @@ const ScenarioBuilderItem = ({
             isEditing={isEditing}
             onSelectSlideClicked={onSelectSlideClicked}
             onEditSlideClicked={onEditSlideClicked}
+            onCancelEditingClicked={onCancelEditingClicked}
           />
           {(isSelected) && (
             <ScenarioBuilderItemActions
