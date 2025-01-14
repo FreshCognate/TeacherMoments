@@ -12,9 +12,8 @@ const ScenarioBuilderItemChildren = ({
   isEditingChildren
 }) => {
   return (
-    <div className="flex justify-start pt-10 pb-7 w-64 transition-transform duration-500" style={{
+    <div className="flex justify-start pt-10 pb-7 w-[440px] transition-transform duration-500" style={{
       transform: `translateX(${childrenOffset}px)`,
-      marginLeft: isEditing ? '128px' : isEditingChildren ? '-128px' : '0px',
     }}>
       {map(children, (ref, index) => {
         const childSlide = getCache('slides').data.find(s => s.ref === ref);

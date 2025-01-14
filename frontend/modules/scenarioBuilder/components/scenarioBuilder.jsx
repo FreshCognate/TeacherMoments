@@ -8,7 +8,9 @@ const ScenarioBuilder = ({
   displayMode,
   slideSelection
 }) => {
-  const backgroundDotColor = '#222'
+  const isDarkMode = window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
+  const backgroundDotColor = isDarkMode ? '#222' : '#ddd'
+
   return (
     <div className="bg-lm-1 dark:bg-dm-0 pt-10 min-h-screen" style={{
       backgroundSize: "20px 20px",

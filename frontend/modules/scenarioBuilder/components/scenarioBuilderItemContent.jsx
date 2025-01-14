@@ -2,7 +2,6 @@ import React from 'react';
 import Badge from '~/uikit/badges/components/badge';
 import Title from '~/uikit/content/components/title';
 import Icon from '~/uikit/icons/components/icon';
-import classnames from 'classnames';
 import EditSlideContainer from '~/modules/slides/containers/editSlideContainer';
 import BlocksEditorContainer from '~/modules/blocks/containers/blocksEditorContainer';
 import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
@@ -17,14 +16,13 @@ const ScenarioBuilderItemContent = ({
   onEditSlideClicked,
   onCancelEditingClicked
 }) => {
-  const className = classnames("relative border border-lm-3 dark:border-dm-3 bg-lm-0 dark:bg-dm-1 p-2 rounded-lg group transition-transform duration-700", {
-    "w-[512px]": isEditing,
-    "w-64": !isEditing
-  });
   return (
     <div
-      className={className}
-      style={{ transform: `scale(${isSelected ? 1 : 0.8})` }}
+      className="relative border border-lm-3 dark:border-dm-3 bg-lm-0 dark:bg-dm-1 p-2 w-[440px] rounded-lg group transition-transform duration-700"
+      style={{
+        transform: `scale(${isSelected ? 1 : 0.9})`,
+        outline: isSelected ? "solid 2px rgba(255,255,255, 0.2)" : "none"
+      }}
     >
       <div className="flex justify-between">
         <div className="flex">
@@ -32,7 +30,7 @@ const ScenarioBuilderItemContent = ({
         </div>
         {(isEditing) && (
           <div>
-            <FlatButton icon="cancel" onClick={onCancelEditingClicked} />
+            <FlatButton icon="done" text="Done" size="sm" color="primary" onClick={onCancelEditingClicked} />
           </div>
         )}
       </div>

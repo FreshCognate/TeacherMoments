@@ -3,6 +3,8 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
 import classnames from 'classnames';
 import EditBlockContainer from '../containers/editBlockContainer';
+import BlocksEditorItemDisplay from './blocksEditorItemDisplay';
+
 
 const BlocksEditorItem = ({
   block,
@@ -28,7 +30,7 @@ const BlocksEditorItem = ({
     }}>
       <div className="p-4 flex items-center justify-between">
         <div>
-          <Body body={` Block Item : ${block.blockType}`} size="sm" />
+          <Body body={` Block : ${block.blockType}`} size="sm" />
         </div>
         <div className="opacity-0 group-hover:opacity-100">
           {(isEditing) && (
@@ -46,10 +48,12 @@ const BlocksEditorItem = ({
         </div>
       </div>
       <div className="cursor-auto">
-
         {(isEditing) && (
           <EditBlockContainer blockId={block._id} />
         )}
+        {/* {(!isEditing) && (
+          <BlocksEditorItemDisplay block={block} />
+        )} */}
       </div>
       {(!isEditing) && (
         <div className="flex items-center justify-between bg-lm-2 cursor-auto dark:bg-dm-2 px-2 py-1 opacity-0 group-hover:opacity-100">
