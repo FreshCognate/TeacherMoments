@@ -8,6 +8,7 @@ import PromptBlockAnswer from './promptBlockAnswer';
 const PromptBlockPlayer = ({
   block,
   tracking,
+  isEditor,
   onSubmitButtonClicked,
   onTextInputChanged,
   onAnswerClicked
@@ -35,7 +36,7 @@ const PromptBlockPlayer = ({
         </div>
       )}
       {
-        (block.promptType === 'TEXT') && (
+        (block.promptType === 'TEXT' && !isEditor) && (
           <textarea
             placeholder={getString({ model: block, field: 'placeholder' })}
             value={tracking.textValue}
@@ -45,9 +46,11 @@ const PromptBlockPlayer = ({
           />
         )
       }
-      <div>
-        <Button isDisabled={tracking.isComplete} text="Submit" color="primary" onClick={onSubmitButtonClicked} />
-      </div>
+      {(!isEditor) && (
+        <div>
+          <Button isDisabled={tracking.isComplete} text="Submit" color="primary" onClick={onSubmitButtonClicked} />
+        </div>
+      )}
     </div >
   );
 };
