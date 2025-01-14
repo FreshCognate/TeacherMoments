@@ -144,6 +144,17 @@ class ScenarioBuilderItemContainer extends Component {
     this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true })
   }
 
+  onCancelEditingClicked = () => {
+    let slideSelection = getSlideSelectionFromQuery();
+    const scenarioId = getCache('scenario').data._id;
+    let layer = this.props.layerIndex;
+    if (this.props.slide.isRoot) {
+      layer = 'root';
+    }
+    let query = `slideSelection=${JSON.stringify(slideSelection)}`
+    this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true })
+  }
+
   render() {
     return (
       <ScenarioBuilderItem
@@ -160,6 +171,7 @@ class ScenarioBuilderItemContainer extends Component {
         onToggleChildSlidesClicked={this.onToggleChildSlidesClicked}
         onSelectSlideClicked={this.onSelectSlideClicked}
         onEditSlideClicked={this.onEditSlideClicked}
+        onCancelEditingClicked={this.onCancelEditingClicked}
       />
     );
   }
