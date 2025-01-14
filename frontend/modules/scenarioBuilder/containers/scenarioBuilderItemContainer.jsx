@@ -30,7 +30,7 @@ class ScenarioBuilderItemContainer extends Component {
   getChildrenOffset = () => {
     let slideSelection = getSlideSelectionFromQuery();
     const currentItemIndex = slideSelection[this.props.layerIndex + 1];
-    return -((currentItemIndex * 256) + (16 * currentItemIndex));
+    return -((currentItemIndex * 440) + (16 * currentItemIndex));
   }
 
   getIsEditing = () => {
