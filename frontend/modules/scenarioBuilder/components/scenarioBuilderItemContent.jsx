@@ -6,9 +6,12 @@ import EditSlideContainer from '~/modules/slides/containers/editSlideContainer';
 import BlocksEditorContainer from '~/modules/blocks/containers/blocksEditorContainer';
 import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
 import FlatButton from '~/uikit/buttons/components/flatButton';
+import Body from '~/uikit/content/components/body';
 
 const ScenarioBuilderItemContent = ({
   slide,
+  blocksCount,
+  triggersCount,
   location,
   isSelected,
   isEditing,
@@ -21,7 +24,8 @@ const ScenarioBuilderItemContent = ({
       className="relative border border-lm-3 dark:border-dm-3 bg-lm-0 dark:bg-dm-1 p-2 w-[440px] rounded-lg group transition-transform duration-700"
       style={{
         transform: `scale(${isSelected ? 1 : 0.9})`,
-        outline: isSelected ? "solid 2px rgba(255,255,255, 0.2)" : "none"
+        outline: isSelected ? "solid 2px rgba(255,255,255, 0.2)" : "none",
+        height: isEditing ? 'auto' : '90px'
       }}
     >
       <div className="flex justify-between">
@@ -54,7 +58,22 @@ const ScenarioBuilderItemContent = ({
           </div>
         </div>
       )}
-      <Title title={slide.name} />
+      {(!isEditing) && (
+
+        <div>
+          <div className="mb-2">
+            <Title title={slide.name} />
+          </div>
+          <div className="flex items-center">
+            <div className="mr-4">
+              <Body body={`Blocks: ${blocksCount}`} size="xs" />
+            </div>
+            <div>
+              <Body body={`Triggers: ${triggersCount}`} size="xs" />
+            </div>
+          </div>
+        </div>
+      )}
       {(isEditing) && (
         <div>
           <EditSlideContainer slideId={slide._id} />

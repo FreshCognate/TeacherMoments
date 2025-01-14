@@ -4,6 +4,7 @@ import Icon from '~/uikit/icons/components/icon';
 
 const TriggerDisplay = ({
   eventDescription,
+  triggersCount,
   onOpenTriggerPanelClicked
 }) => {
   return (
@@ -12,7 +13,7 @@ const TriggerDisplay = ({
         <Icon icon="trigger" size="12" />
       </div>
       <div>
-        <FlatButton text={`${eventDescription}: 0 triggers`} size="sm" onClick={onOpenTriggerPanelClicked} />
+        <FlatButton text={`${eventDescription}: ${triggersCount} trigger${triggersCount === 1 ? '' : 's'}`} size="sm" onClick={onOpenTriggerPanelClicked} />
       </div>
     </div>
   );
