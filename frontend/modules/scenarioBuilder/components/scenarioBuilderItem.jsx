@@ -12,6 +12,7 @@ const ScenarioBuilderItem = ({
   isSelected,
   isEditing,
   isEditingChildren,
+  isEditingSibling,
   childrenOffset,
   shouldRenderChildren,
   onAddChildSlideClicked,
@@ -32,6 +33,7 @@ const ScenarioBuilderItem = ({
             triggersCount={triggersCount}
             isSelected={isSelected}
             isEditing={isEditing}
+            isEditingSibling={isEditingSibling}
             onSelectSlideClicked={onSelectSlideClicked}
             onEditSlideClicked={onEditSlideClicked}
             onCancelEditingClicked={onCancelEditingClicked}
