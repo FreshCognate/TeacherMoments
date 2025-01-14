@@ -15,17 +15,20 @@ const ScenarioBuilderItemContent = ({
   location,
   isSelected,
   isEditing,
+  isEditingSibling,
   onSelectSlideClicked,
   onEditSlideClicked,
   onCancelEditingClicked
 }) => {
   return (
     <div
-      className="relative border border-lm-3 dark:border-dm-3 bg-lm-0 dark:bg-dm-1 p-2 w-[440px] rounded-lg group transition-transform duration-700"
+      className="relative border border-lm-3 dark:border-dm-3 bg-lm-0 dark:bg-dm-1 p-2 w-[440px] rounded-lg group"
       style={{
-        transform: `scale(${isSelected ? 1 : 0.9})`,
-        outline: isSelected ? "solid 2px rgba(255,255,255, 0.2)" : "none",
-        height: isEditing ? 'auto' : '90px'
+        transform: `scale(${isSelected ? 1 : 0.8})`,
+        outline: isSelected ? isEditing ? "solid 2px rgba(255,255,255, 0.6)" : "solid 2px rgba(255,255,255, 0.2)" : "none",
+        maxHeight: isEditing ? '5000px' : '90px',
+        overflow: 'hidden',
+        transition: isEditing ? `transform 600ms 300ms, max-height ease-in-out 1000ms 300ms` : 'transform 300ms, max-height ease-in-out 4000ms 300ms'
       }}
     >
       <div className="flex justify-between">
@@ -38,7 +41,7 @@ const ScenarioBuilderItemContent = ({
           </div>
         )}
       </div>
-      {(!isSelected && !isEditing) && (
+      {((!isSelected && !isEditing) && !isEditingSibling) && (
         <div
           className="group-hover:flex justify-center items-center hidden cursor-pointer absolute w-full h-full top-0 right-0 p-1 bg-opacity-40 bg-white dark:bg-black dark:bg-opacity-40 rounded-bl-lg rounded-tr-lg"
           onClick={onSelectSlideClicked}
@@ -48,7 +51,7 @@ const ScenarioBuilderItemContent = ({
           </div>
         </div>
       )}
-      {(isSelected && !isEditing) && (
+      {((isSelected && !isEditing) || (!isSelected && isEditingSibling)) && (
         <div
           className="group-hover:flex justify-center items-center hidden cursor-pointer absolute w-full h-full top-0 right-0 p-1 bg-opacity-40 bg-white dark:bg-black dark:bg-opacity-40 rounded-bl-lg rounded-tr-lg"
           onClick={onEditSlideClicked}

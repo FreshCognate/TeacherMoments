@@ -46,6 +46,18 @@ class ScenarioBuilderItemContainer extends Component {
     return false;
   }
 
+  getIsEditingSibling = () => {
+    const { isEditing, layer } = getEditingDetailsFromQuery();
+    if (!isEditing) return false;
+    if (this.props.slide.isRoot) {
+      if (layer === 'root') {
+        return false;
+      }
+    }
+    if (layer === this.props.layerIndex) return true;
+    return false;
+  }
+
   getIsEditingChildren = () => {
     const { isEditing, layer, slide } = getEditingDetailsFromQuery();
     if (!isEditing) return false;
@@ -153,6 +165,7 @@ class ScenarioBuilderItemContainer extends Component {
     if (this.props.slide.isRoot) {
       layer = 'root';
     }
+    slideSelection[this.props.layerIndex] = this.props.itemIndex;
     let query = `slideSelection=${JSON.stringify(slideSelection)}&isEditing=true&layer=${layer}&slide=${this.props.slide._id}`
     this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true })
   }
@@ -181,6 +194,7 @@ class ScenarioBuilderItemContainer extends Component {
         isSelected={this.props.isSelected}
         isEditing={this.getIsEditing()}
         isEditingChildren={this.getIsEditingChildren()}
+        isEditingSibling={this.getIsEditingSibling()}
         childrenOffset={this.getChildrenOffset()}
         onAddChildSlideClicked={this.onAddChildSlideClicked}
         onToggleChildSlidesClicked={this.onToggleChildSlidesClicked}
