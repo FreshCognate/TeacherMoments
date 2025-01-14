@@ -5,6 +5,8 @@ import ScenarioBuilderItemChildren from './scenarioBuilderItemChildren';
 const ScenarioBuilderItem = ({
   slide,
   slideSelection,
+  blocksCount,
+  triggersCount,
   layerIndex,
   location,
   isSelected,
@@ -26,6 +28,8 @@ const ScenarioBuilderItem = ({
           <ScenarioBuilderItemContent
             location={location}
             slide={slide}
+            blocksCount={blocksCount}
+            triggersCount={triggersCount}
             isSelected={isSelected}
             isEditing={isEditing}
             onSelectSlideClicked={onSelectSlideClicked}

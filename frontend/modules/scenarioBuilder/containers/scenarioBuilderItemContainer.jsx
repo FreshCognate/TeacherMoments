@@ -6,6 +6,7 @@ import WithRouter from '~/core/app/components/withRouter';
 import getCache from '~/core/cache/helpers/getCache';
 import getSlideSelectionFromQuery from '../helpers/getSlideSelectionFromQuery';
 import each from 'lodash/each';
+import filter from 'lodash/filter';
 import convertLayerIndexToLetter from '../helpers/convertLayerIndexToLetter';
 import getEditingDetailsFromQuery from '../helpers/getEditingDetailsFromQuery';
 
@@ -50,6 +51,18 @@ class ScenarioBuilderItemContainer extends Component {
     if (!isEditing) return false;
     if (layer === this.props.layerIndex + 1) return true;
     return false;
+  }
+
+  getBlocksCount = () => {
+    const blocks = getCache('blocks');
+    const slideBlocks = filter(blocks.data, (block) => block.slideRef === this.props.slide.ref);
+    return slideBlocks.length;
+  }
+
+  getTriggersCount = () => {
+    const triggers = getCache('triggers');
+    const slideTriggers = filter(triggers.data, (trigger) => trigger.elementRef === this.props.slide.ref);
+    return slideTriggers.length;
   }
 
   shouldRenderChildren = () => {
@@ -160,6 +173,8 @@ class ScenarioBuilderItemContainer extends Component {
       <ScenarioBuilderItem
         slide={this.props.slide}
         slideSelection={this.props.slideSelection}
+        blocksCount={this.getBlocksCount()}
+        triggersCount={this.getTriggersCount()}
         layerIndex={this.props.layerIndex}
         location={this.getLocation()}
         shouldRenderChildren={this.shouldRenderChildren()}
