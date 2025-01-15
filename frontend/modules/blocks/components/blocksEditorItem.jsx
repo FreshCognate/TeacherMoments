@@ -16,7 +16,6 @@ const BlocksEditorItem = ({
   onDeleteBlockClicked,
   onSortUpClicked,
   onSortDownClicked,
-  onBlockClicked,
   onCancelEditBlockClicked,
   onEditBlockClicked
 }) => {
@@ -29,11 +28,7 @@ const BlocksEditorItem = ({
     <div className={classnames("mb-3 bg-lm-1 dark:bg-dm-1 border border-lm-3 dark:border-dm-3 outline-2 rounded-md cursor-pointer group/block", {
       "outline outline-primary-regular dark:outline-primary-light": isSelected,
       "hover:outline hover:outline-lm-2 hover:dark:outline-dm-2": !isSelected
-    })} onClick={() => {
-      if (!isEditing) {
-        onBlockClicked(block._id)
-      }
-    }}>
+    })}>
       <div className="p-3 flex items-center justify-between">
         <div>
           <div className="mb-2">

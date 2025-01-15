@@ -19,7 +19,7 @@ const ScenarioBuilder = ({
       paddingBottom: '200vh'
     }}>
       <div className="flex p-5 justify-center">
-        <ScenarioEditorToolbarContainer isNewEditor />
+        <ScenarioEditorToolbarContainer />
       </div>
       <div className="flex justify-center pt-5">
         {(displayMode === 'EDITING') && (

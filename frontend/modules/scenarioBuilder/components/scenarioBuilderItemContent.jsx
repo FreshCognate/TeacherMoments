@@ -82,7 +82,7 @@ const ScenarioBuilderItemContent = ({
           <EditSlideContainer slideId={slide._id} />
           <div className="border-t border-t-lm-3 dark:border-t-dm-3 pt-4">
             <TriggerDisplayContainer elementRef={slide.ref} triggerType="SLIDE" event="ON_ENTER" />
-            <BlocksEditorContainer isNewEditor />
+            <BlocksEditorContainer />
             <TriggerDisplayContainer elementRef={slide.ref} triggerType="SLIDE" event="ON_EXIT" />
           </div>
         </div>
