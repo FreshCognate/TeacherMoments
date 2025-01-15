@@ -4,7 +4,9 @@ import Body from '~/uikit/content/components/body';
 import classnames from 'classnames';
 import EditBlockContainer from '../containers/editBlockContainer';
 import BlocksEditorItemDisplay from './blocksEditorItemDisplay';
-
+import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
+import filter from 'lodash/filter';
+import getCache from '~/core/cache/helpers/getCache';
 
 const BlocksEditorItem = ({
   block,
@@ -19,8 +21,12 @@ const BlocksEditorItem = ({
   onEditBlockClicked
 }) => {
 
+  const triggers = getCache('triggers');
+
+  const triggersCount = filter(triggers.data, (trigger) => trigger.elementRef === block.ref).length;
+
   return (
-    <div className={classnames("mb-3 bg-lm-1 dark:bg-dm-1 border border-lm-2 dark:border-dm-2 outline-2 rounded-md cursor-pointer group", {
+    <div className={classnames("mb-3 bg-lm-1 dark:bg-dm-1 border border-lm-3 dark:border-dm-3 outline-2 rounded-md cursor-pointer group/block", {
       "outline outline-primary-regular dark:outline-primary-light": isSelected,
       "hover:outline hover:outline-lm-2 hover:dark:outline-dm-2": !isSelected
     })} onClick={() => {
@@ -28,11 +34,14 @@ const BlocksEditorItem = ({
         onBlockClicked(block._id)
       }
     }}>
-      <div className="p-4 flex items-center justify-between">
+      <div className="p-3 flex items-center justify-between">
         <div>
-          <Body body={` Block : ${block.blockType}`} size="sm" />
+          <div className="mb-2">
+            <Body body={` Block : ${block.blockType}`} size="sm" />
+          </div>
+          <Body body={` Triggers : ${triggersCount}`} size="xs" />
         </div>
-        <div className="opacity-0 group-hover:opacity-100">
+        <div className="opacity-0 group-hover/block:opacity-100">
           {(isEditing) && (
             <FlatButton icon="done" text="Done" size="sm" color="primary" onClick={(event) => {
               event.stopPropagation();
@@ -49,14 +58,17 @@ const BlocksEditorItem = ({
       </div>
       <div className="cursor-auto">
         {(isEditing) && (
-          <EditBlockContainer blockId={block._id} />
+          <div className="p-3">
+            <EditBlockContainer blockId={block._id} />
+            <TriggerDisplayContainer elementRef={block.ref} triggerType="BLOCK" event="ON_COMPLETE" />
+          </div>
         )}
         {/* {(!isEditing) && (
           <BlocksEditorItemDisplay block={block} />
         )} */}
       </div>
       {(!isEditing) && (
-        <div className="flex items-center justify-between bg-lm-2 cursor-auto dark:bg-dm-2 px-2 py-1 opacity-0 group-hover:opacity-100">
+        <div className="flex items-center justify-between bg-lm-2 cursor-auto dark:bg-dm-2 px-2 py-1 opacity-0 group-hover/blocks:opacity-100">
           <div className="flex items-center">
             <FlatButton icon="delete" color="warning" onClick={() => onDeleteBlockClicked(block._id)} />
           </div>
