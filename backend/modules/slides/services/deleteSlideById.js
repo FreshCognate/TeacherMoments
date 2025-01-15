@@ -15,7 +15,7 @@ export default async (props, options, context) => {
   // Remove slide from any children
   await models.Slide.updateMany({ children: slide.ref }, { $pull: { children: slide.ref } });
 
-  const scenarioSlides = await models.Slide.find({ scenario: slide.scenario, isDeleted: false }).sort('sortOrder');
+  const scenarioSlides = await models.Slide.find({ scenario: slide.scenario, isDeleted: false });
 
   let sortOrder = 0;
   for (const scenarioSlide of scenarioSlides) {

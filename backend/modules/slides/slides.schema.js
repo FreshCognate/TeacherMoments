@@ -6,7 +6,6 @@ const schema = {
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
   name: { type: String, default: '' },
   slideType: { type: String, enum: ['STEP', 'SUMMARY'], default: 'STEP' },
-  sortOrder: { type: Number },
   isRoot: { type: Boolean, default: false },
   children: [mongoose.Schema.Types.ObjectId],
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],

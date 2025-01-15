@@ -12,7 +12,7 @@ export default async (props, options, context) => {
 
   const search = { scenario: scenarioId, isDeleted };
 
-  const slides = await models.Slide.find(search).sort('sortOrder');
+  const slides = await models.Slide.find(search);
 
   return {
     slides
