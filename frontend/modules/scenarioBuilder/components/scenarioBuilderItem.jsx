@@ -6,6 +6,7 @@ const ScenarioBuilderItem = ({
   slide,
   parent,
   slideSelection,
+  selectedSlide,
   blocksCount,
   triggersCount,
   layerIndex,
@@ -49,6 +50,7 @@ const ScenarioBuilderItem = ({
           {(isSelected) && (
             <ScenarioBuilderItemActions
               slide={slide}
+              selectedSlide={selectedSlide}
               shouldRenderChildren={shouldRenderChildren}
               onAddChildSlideClicked={onAddChildSlideClicked}
               onToggleChildSlidesClicked={onToggleChildSlidesClicked}

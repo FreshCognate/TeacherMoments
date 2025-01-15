@@ -58,6 +58,7 @@ const SlidePlayer = ({
               <div key={childRef}>
                 <FlatButton
                   text={childSlide.name}
+                  className="border bg-lm-2 dark:bg-dm-2 border-lm-2 dark:border-dm-2 p-2 w-full mb-2 rounded-md"
                   onClick={() => navigateTo({ slideRef: childRef })}
                 />
               </div>
