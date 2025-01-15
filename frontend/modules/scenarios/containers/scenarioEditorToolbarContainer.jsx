@@ -7,7 +7,10 @@ import BlockSelectorContainer from '~/modules/blocks/containers/blockSelectorCon
 class ScenarioEditorToolbarContainer extends Component {
 
   onDisplayModeChanged = (displayMode) => {
-    this.props.editor.set({ displayMode })
+    this.props.editor.set({ displayMode });
+    if (displayMode === 'PREVIEW') {
+      document.getElementById("scenario-builder").scrollTo({ top: 0, behaviour: 'instant' });
+    }
   }
 
   onAddBlockClicked = () => {
