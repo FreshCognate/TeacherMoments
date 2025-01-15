@@ -4,6 +4,7 @@ import ScenarioBuilderItemChildren from './scenarioBuilderItemChildren';
 
 const ScenarioBuilderItem = ({
   slide,
+  parent,
   slideSelection,
   blocksCount,
   triggersCount,
@@ -13,17 +14,21 @@ const ScenarioBuilderItem = ({
   isEditing,
   isEditingChildren,
   isEditingSibling,
+  isOptionsOpen,
+  isDeleting,
   childrenOffset,
   shouldRenderChildren,
   onAddChildSlideClicked,
   onToggleChildSlidesClicked,
   onSelectSlideClicked,
   onEditSlideClicked,
-  onCancelEditingClicked
+  onCancelEditingClicked,
+  onOptionsToggled,
+  onOptionClicked
 }) => {
   const newLayerIndex = layerIndex + 1;
   return (
-    <div className="">
+    <div className={isDeleting ? 'opacity-20' : ''}>
       <div className="flex justify-center">
         <div className="relative">
           <ScenarioBuilderItemContent
@@ -34,9 +39,12 @@ const ScenarioBuilderItem = ({
             isSelected={isSelected}
             isEditing={isEditing}
             isEditingSibling={isEditingSibling}
+            isOptionsOpen={isOptionsOpen}
             onSelectSlideClicked={onSelectSlideClicked}
             onEditSlideClicked={onEditSlideClicked}
             onCancelEditingClicked={onCancelEditingClicked}
+            onOptionsToggled={onOptionsToggled}
+            onOptionClicked={onOptionClicked}
           />
           {(isSelected) && (
             <ScenarioBuilderItemActions
@@ -50,6 +58,7 @@ const ScenarioBuilderItem = ({
       </div>
       {(slide.children.length > 0 && shouldRenderChildren) && (
         <ScenarioBuilderItemChildren
+          parent={parent}
           children={slide.children}
           slideSelection={slideSelection}
           childrenOffset={childrenOffset}

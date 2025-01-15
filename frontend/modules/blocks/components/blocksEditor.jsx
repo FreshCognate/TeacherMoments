@@ -10,7 +10,6 @@ const BlocksEditor = ({
   onDeleteBlockClicked,
   onSortUpClicked,
   onSortDownClicked,
-  onBlockClicked,
   onCancelEditBlockClicked,
   onEditBlockClicked,
   onCreateBlockClicked
@@ -34,7 +33,6 @@ const BlocksEditor = ({
               onDeleteBlockClicked={onDeleteBlockClicked}
               onSortUpClicked={onSortUpClicked}
               onSortDownClicked={onSortDownClicked}
-              onBlockClicked={onBlockClicked}
               onCancelEditBlockClicked={onCancelEditBlockClicked}
               onEditBlockClicked={onEditBlockClicked}
             />

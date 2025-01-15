@@ -7,10 +7,19 @@ import getCache from '~/core/cache/helpers/getCache';
 import getSlideSelectionFromQuery from '../helpers/getSlideSelectionFromQuery';
 import each from 'lodash/each';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 import convertLayerIndexToLetter from '../helpers/convertLayerIndexToLetter';
 import getEditingDetailsFromQuery from '../helpers/getEditingDetailsFromQuery';
+import addModal from '~/core/dialogs/helpers/addModal';
+import cloneDeep from 'lodash/cloneDeep';
+import handleRequestError from '~/core/app/helpers/handleRequestError';
 
 class ScenarioBuilderItemContainer extends Component {
+
+  state = {
+    isOptionsOpen: false,
+    isDeleting: false
+  }
 
   getLocation = () => {
     if (this.props.slide.isRoot) return 'Root';
@@ -75,6 +84,51 @@ class ScenarioBuilderItemContainer extends Component {
     const triggers = getCache('triggers');
     const slideTriggers = filter(triggers.data, (trigger) => trigger.elementRef === this.props.slide.ref);
     return slideTriggers.length;
+  }
+
+  deleteSlide = () => {
+    addModal({
+      title: 'Delete slide',
+      body: "Are you sure you want to delete this slide? Don't worry, you can always restore a slide.",
+      actions: [{
+        type: 'CANCEL',
+        text: 'Cancel'
+      }, {
+        type: 'DELETE',
+        text: 'Delete',
+        color: 'warning'
+      }]
+    }, async (state, { type }) => {
+      if (state === 'ACTION' && type === 'DELETE') {
+        this.setState({ isDeleting: true });
+        axios.delete(`/api/slides/${this.props.slide._id}`).then(() => {
+          const slides = getCache('slides');
+          const blocks = getCache('blocks');
+
+          const slideSelection = getSlideSelectionFromQuery();
+          const parentSlide = find(slides.data, (slide) => slide.ref = this.props.parent);
+          const parentChildren = cloneDeep(parentSlide.children);
+
+          parentChildren.splice(this.props.itemIndex, 1);
+
+          if (parentChildren.length > 0) {
+            let newItemIndex = 0;
+            if (this.props.itemIndex > 0) {
+              newItemIndex = this.props.itemIndex - 1;
+            }
+            const scenarioId = getCache('scenario').data._id;
+            slideSelection[this.props.layerIndex] = newItemIndex;
+            let query = `slideSelection=${JSON.stringify(slideSelection)}`
+            this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true })
+          } else {
+            this.closeChildSlidesClicked();
+          }
+
+          blocks.fetch();
+          slides.fetch();
+        }).catch(handleRequestError);
+      }
+    })
   }
 
   shouldRenderChildren = () => {
@@ -181,10 +235,23 @@ class ScenarioBuilderItemContainer extends Component {
     this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true })
   }
 
+  onOptionsToggled = (isOptionsOpen) => {
+    this.setState({ isOptionsOpen });
+  }
+
+  onOptionClicked = (action) => {
+    switch (action) {
+      case 'DELETE':
+        this.deleteSlide();
+        break;
+    }
+  }
+
   render() {
     return (
       <ScenarioBuilderItem
         slide={this.props.slide}
+        parent={this.props.slide.ref}
         slideSelection={this.props.slideSelection}
         blocksCount={this.getBlocksCount()}
         triggersCount={this.getTriggersCount()}
@@ -195,12 +262,16 @@ class ScenarioBuilderItemContainer extends Component {
         isEditing={this.getIsEditing()}
         isEditingChildren={this.getIsEditingChildren()}
         isEditingSibling={this.getIsEditingSibling()}
+        isOptionsOpen={this.state.isOptionsOpen}
+        isDeleting={this.state.isDeleting}
         childrenOffset={this.getChildrenOffset()}
         onAddChildSlideClicked={this.onAddChildSlideClicked}
         onToggleChildSlidesClicked={this.onToggleChildSlidesClicked}
         onSelectSlideClicked={this.onSelectSlideClicked}
         onEditSlideClicked={this.onEditSlideClicked}
         onCancelEditingClicked={this.onCancelEditingClicked}
+        onOptionsToggled={this.onOptionsToggled}
+        onOptionClicked={this.onOptionClicked}
       />
     );
   }

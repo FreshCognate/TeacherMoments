@@ -5,11 +5,10 @@ import getCache from '~/core/cache/helpers/getCache';
 
 const ScenarioBuilderItemChildren = ({
   children,
+  parent,
   slideSelection,
   newLayerIndex,
-  childrenOffset,
-  isEditing,
-  isEditingChildren
+  childrenOffset
 }) => {
   return (
     <div className="flex justify-start pt-10 pb-7 w-[440px] transition-transform duration-500" style={{
@@ -25,6 +24,7 @@ const ScenarioBuilderItemChildren = ({
           >
             <ScenarioBuilderItemContainer
               slide={childSlide}
+              parent={parent}
               itemIndex={index}
               layerIndex={newLayerIndex}
               isSelected={isSelected}

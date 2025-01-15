@@ -7,6 +7,7 @@ import BlocksEditorContainer from '~/modules/blocks/containers/blocksEditorConta
 import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
+import Options from '~/uikit/dropdowns/components/options';
 
 const ScenarioBuilderItemContent = ({
   slide,
@@ -16,9 +17,12 @@ const ScenarioBuilderItemContent = ({
   isSelected,
   isEditing,
   isEditingSibling,
+  isOptionsOpen,
   onSelectSlideClicked,
   onEditSlideClicked,
-  onCancelEditingClicked
+  onCancelEditingClicked,
+  onOptionsToggled,
+  onOptionClicked
 }) => {
   return (
     <div
@@ -36,7 +40,15 @@ const ScenarioBuilderItemContent = ({
           <Badge text={location} className="text-xs" />
         </div>
         {(isEditing) && (
-          <div>
+          <div className="flex items-center">
+            <div className="mr-2 border-r border-lm-3 dark:border-dm-3 pr-2">
+              <Options
+                options={[{ action: 'DELETE', text: 'Delete', icon: 'delete', color: 'warning' }]}
+                isOpen={isOptionsOpen}
+                onToggle={onOptionsToggled}
+                onOptionClicked={onOptionClicked}
+              />
+            </div>
             <FlatButton icon="done" text="Done" size="sm" color="primary" onClick={onCancelEditingClicked} />
           </div>
         )}
@@ -82,7 +94,7 @@ const ScenarioBuilderItemContent = ({
           <EditSlideContainer slideId={slide._id} />
           <div className="border-t border-t-lm-3 dark:border-t-dm-3 pt-4">
             <TriggerDisplayContainer elementRef={slide.ref} triggerType="SLIDE" event="ON_ENTER" />
-            <BlocksEditorContainer isNewEditor />
+            <BlocksEditorContainer />
             <TriggerDisplayContainer elementRef={slide.ref} triggerType="SLIDE" event="ON_EXIT" />
           </div>
         </div>
