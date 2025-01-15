@@ -8,6 +8,7 @@ import getSlideSelectionFromQuery from '../helpers/getSlideSelectionFromQuery';
 import each from 'lodash/each';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import get from 'lodash/get';
 import convertLayerIndexToLetter from '../helpers/convertLayerIndexToLetter';
 import getEditingDetailsFromQuery from '../helpers/getEditingDetailsFromQuery';
 import addModal from '~/core/dialogs/helpers/addModal';
@@ -155,10 +156,23 @@ class ScenarioBuilderItemContainer extends Component {
               name: modal.name,
               scenario: scenario._id,
               parent: this.props.slide._id
-            }).then(() => {
+            }).then((response) => {
+              const newSlideId = get(response, 'data.slide._id');
               const slides = getCache('slides');
               slides.fetch().then(() => {
-                this.openChildSlidesClicked();
+                let slideSelection = getSlideSelectionFromQuery();
+                if (slideSelection[this.props.layerIndex + 1] === 0 || slideSelection[this.props.layerIndex + 1]) {
+                  slideSelection[this.props.layerIndex + 1] = this.props.slide.children.length;
+                } else {
+                  slideSelection.push(this.props.slide.children.length);
+                }
+                const scenarioId = getCache('scenario').data._id;
+                const { isEditing, layer, slide } = getEditingDetailsFromQuery();
+                let query = `slideSelection=${JSON.stringify(slideSelection)}`;
+                if (isEditing && layer === this.props.layerIndex + 1) {
+                  query += `&isEditing=${isEditing}&layer=${layer}&slide=${newSlideId}`;
+                }
+                this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true });
               });
             })
           }
