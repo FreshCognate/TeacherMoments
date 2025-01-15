@@ -87,6 +87,15 @@ class ScenarioBuilderItemContainer extends Component {
     return slideTriggers.length;
   }
 
+  getSelectedSlide = () => {
+    const slideSelection = getSlideSelectionFromQuery();
+    if (slideSelection[this.props.layerIndex + 1] === 0 || slideSelection[this.props.layerIndex + 1] > 0) {
+      return slideSelection[this.props.layerIndex + 1] + 1;
+    } else {
+      return 0;
+    }
+  }
+
   deleteSlide = () => {
     addModal({
       title: 'Delete slide',
@@ -267,6 +276,7 @@ class ScenarioBuilderItemContainer extends Component {
         slide={this.props.slide}
         parent={this.props.slide.ref}
         slideSelection={this.props.slideSelection}
+        selectedSlide={this.getSelectedSlide()}
         blocksCount={this.getBlocksCount()}
         triggersCount={this.getTriggersCount()}
         layerIndex={this.props.layerIndex}
