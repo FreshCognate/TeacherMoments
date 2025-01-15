@@ -12,6 +12,9 @@ export default async (props, options, context) => {
 
   if (!slide) throw { message: 'This slide does not exist', statusCode: 404 };
 
+  // Remove slide from any children
+  await models.Slide.updateMany({ children: slide.ref }, { $pull: { children: slide.ref } });
+
   const scenarioSlides = await models.Slide.find({ scenario: slide.scenario, isDeleted: false }).sort('sortOrder');
 
   let sortOrder = 0;
