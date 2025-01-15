@@ -32,7 +32,7 @@ const ScenarioBuilderItemContent = ({
         outline: isSelected ? isEditing ? "solid 2px rgba(255,255,255, 0.6)" : "solid 2px rgba(255,255,255, 0.2)" : "none",
         maxHeight: isEditing ? '5000px' : '90px',
         overflow: 'hidden',
-        transition: isEditing ? `transform 600ms 300ms, max-height ease-in-out 1000ms 300ms` : 'transform 300ms, max-height ease-in-out 4000ms 300ms'
+        transition: isEditing ? `transform 600ms 300ms, max-height ease-in-out 2000ms` : 'transform 300ms, max-height ease-in-out 4000ms 300ms'
       }}
     >
       <div className="flex justify-between">
