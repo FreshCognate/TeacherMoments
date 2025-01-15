@@ -7,7 +7,7 @@ const EditBlock = ({
   onEditBlockUpdate
 }) => {
   return (
-    <div className="p-4">
+    <div className="">
       <FormContainer
         renderKey={block.blockType}
         schema={schema}

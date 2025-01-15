@@ -8,5 +8,7 @@ export default ({ event, triggerType }) => {
       return `On enter ${TRIGGER_TYPE_MAPPINGS[triggerType]}`
     case 'ON_EXIT':
       return `On exit ${TRIGGER_TYPE_MAPPINGS[triggerType]}`
+    case 'ON_COMPLETE':
+      return `On ${TRIGGER_TYPE_MAPPINGS[triggerType]} complete`
   }
 }

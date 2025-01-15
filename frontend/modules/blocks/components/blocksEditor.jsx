@@ -17,7 +17,7 @@ const BlocksEditor = ({
 }) => {
   return (
     <div className="w-full py-4 max-w-screen-sm">
-      <div >
+      <div className="group/blocks">
         {map(blocks, (block) => {
 
           const isSelected = (block._id === selectedBlockId);

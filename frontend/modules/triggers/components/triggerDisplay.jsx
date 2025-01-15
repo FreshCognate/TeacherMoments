@@ -13,7 +13,12 @@ const TriggerDisplay = ({
         <Icon icon="trigger" size="12" />
       </div>
       <div>
-        <FlatButton text={`${eventDescription}: ${triggersCount} trigger${triggersCount === 1 ? '' : 's'}`} size="sm" onClick={onOpenTriggerPanelClicked} />
+        <FlatButton
+          text={`${eventDescription}: ${triggersCount} trigger${triggersCount === 1 ? '' : 's'}`}
+          size="sm"
+          color="primary"
+          onClick={onOpenTriggerPanelClicked}
+        />
       </div>
     </div>
   );
