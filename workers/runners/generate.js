@@ -1,3 +1,4 @@
+import generateGiveFeedback from '../tasks/generateGiveFeedback.js';
 import generateNavigateByPrompts from '../tasks/generateNavigateByPrompts.js';
 
 export default async (job) => {
@@ -8,6 +9,9 @@ export default async (job) => {
         prompts: job.data.prompts,
         actions: job.data.actions,
       });
+    }
+    if (job.name === 'GIVE_FEEDBACK') {
+      await generateGiveFeedback(job.data);
     }
   } catch (error) {
     console.log(error);

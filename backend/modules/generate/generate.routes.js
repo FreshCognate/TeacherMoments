@@ -8,8 +8,16 @@ export default {
   controller,
   create: {
     body: {
-      generateType: Joi.string().valid('NAVIGATE_BY_PROMPTS'),
+      generateType: Joi.string().valid('NAVIGATE_BY_PROMPTS', 'GIVE_FEEDBACK'),
       prompts: Joi.array(),
+      stem: Joi.string().allow(''),
+      answerText: Joi.string(),
+      answerValue: Joi.string(),
+      feedbackItems: Joi.array().items({
+        _id: Joi.string(),
+        text: Joi.string(),
+        value: Joi.string()
+      }),
       actions: Joi.array(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
