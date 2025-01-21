@@ -22,6 +22,11 @@ const answerText = buildLanguageSchema('text', {
   label: 'Text'
 })
 
+const feedbackText = buildLanguageSchema('text', {
+  type: 'Text',
+  label: 'Text'
+})
+
 export default {
   promptType: {
     type: 'Toggle',
@@ -66,6 +71,23 @@ export default {
     }],
     subSchema: {
       ...answerText,
+      value: {
+        type: 'Text',
+        label: 'Value'
+      }
+    }
+  },
+  feedbackItems: {
+    type: 'Array',
+    label: 'Feedback',
+    conditions: [{
+      type: 'modelValueIs',
+      field: 'promptType',
+      values: ['ANSWERS'],
+      shouldHideField: true
+    }],
+    subSchema: {
+      ...feedbackText,
       value: {
         type: 'Text',
         label: 'Value'

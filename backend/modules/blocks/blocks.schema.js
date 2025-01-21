@@ -32,6 +32,13 @@ const schema = {
       context: textAreaSchema,
     }], default: [{ "en-US-text": "Next" }]
   },
+  feedbackItems: {
+    type: [{
+      ...text,
+      value: { type: String }
+    }],
+    default: [{ "en-US-text": "" }]
+  },
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   updatedAt: { type: Date },
