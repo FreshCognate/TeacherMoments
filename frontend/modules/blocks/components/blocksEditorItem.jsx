@@ -3,10 +3,10 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
 import classnames from 'classnames';
 import EditBlockContainer from '../containers/editBlockContainer';
-import BlocksEditorItemDisplay from './blocksEditorItemDisplay';
 import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
 import filter from 'lodash/filter';
 import getCache from '~/core/cache/helpers/getCache';
+import getBlockDisplayName from '../helpers/getBlockDisplayName';
 
 const BlocksEditorItem = ({
   block,
@@ -32,9 +32,9 @@ const BlocksEditorItem = ({
       <div className="p-3 flex items-center justify-between">
         <div>
           <div className="mb-2">
-            <Body body={` Block : ${block.blockType}`} size="sm" />
+            <Body body={` Block: ${getBlockDisplayName(block)}`} size="sm" />
           </div>
-          <Body body={` Triggers : ${triggersCount}`} size="xs" />
+          <Body body={` Triggers: ${triggersCount}`} size="xs" />
         </div>
         <div className="opacity-0 group-hover/block:opacity-100">
           {(isEditing) && (
@@ -58,9 +58,6 @@ const BlocksEditorItem = ({
             <TriggerDisplayContainer elementRef={block.ref} triggerType="BLOCK" event="ON_COMPLETE" />
           </div>
         )}
-        {/* {(!isEditing) && (
-          <BlocksEditorItemDisplay block={block} />
-        )} */}
       </div>
       {(!isEditing) && (
         <div className="flex items-center justify-between bg-lm-2 cursor-auto dark:bg-dm-2 px-2 py-1 opacity-0 group-hover/blocks:opacity-100">
