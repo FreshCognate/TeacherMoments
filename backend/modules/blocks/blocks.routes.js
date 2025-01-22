@@ -35,7 +35,6 @@ export default {
     body: {
       name: Joi.string(),
       blockType: Joi.string().valid('TEXT', 'PROMPT', 'ACTIONS'),
-      promptType: Joi.string().valid('ANSWERS', 'TEXT'),
       sourceIndex: Joi.number(),
       destinationIndex: Joi.number(),
       ...buildLanguageValidation('title', Joi.array()),

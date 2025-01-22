@@ -2,13 +2,7 @@ import buildLanguageSchema from "~/core/app/helpers/buildLanguageSchema";
 
 const placeholder = buildLanguageSchema('placeholder', {
   type: 'Text',
-  label: 'Placeholder',
-  conditions: [{
-    type: 'modelValueIs',
-    field: 'promptType',
-    values: ['TEXT'],
-    shouldHideField: true
-  }]
+  label: 'Placeholder'
 });
 
 const body = buildLanguageSchema('body', {
@@ -28,30 +22,12 @@ const feedbackText = buildLanguageSchema('text', {
 })
 
 export default {
-  promptType: {
-    type: 'Toggle',
-    label: 'Prompt type',
-    size: 'sm',
-    options: [{
-      value: 'ANSWERS',
-      text: 'Answers'
-    }, {
-      value: 'TEXT',
-      text: 'Text'
-    }]
-  },
   ...body,
   ...placeholder,
   isMultiSelect: {
     type: 'Toggle',
     label: 'Mutliple answers can be selected',
     size: 'sm',
-    conditions: [{
-      type: 'modelValueIs',
-      field: 'promptType',
-      values: ['ANSWERS'],
-      shouldHideField: true
-    }],
     options: [{
       value: false,
       text: 'No'
@@ -63,12 +39,6 @@ export default {
   items: {
     type: 'Array',
     label: 'Answers',
-    conditions: [{
-      type: 'modelValueIs',
-      field: 'promptType',
-      values: ['ANSWERS'],
-      shouldHideField: true
-    }],
     subSchema: {
       ...answerText,
       value: {
@@ -80,12 +50,6 @@ export default {
   feedbackItems: {
     type: 'Array',
     label: 'Feedback',
-    conditions: [{
-      type: 'modelValueIs',
-      field: 'promptType',
-      values: ['ANSWERS'],
-      shouldHideField: true
-    }],
     subSchema: {
       ...feedbackText,
       value: {
