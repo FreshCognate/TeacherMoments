@@ -7,9 +7,9 @@ import getSockets from "~/core/sockets/helpers/getSockets";
 import axios from 'axios';
 import navigateTo from "~/modules/tracking/helpers/navigateTo";
 
-registerTrigger('NAVIGATE_BY_PROMPTS', {
+registerTrigger('NAVIGATE_FROM_PROMPTS', {
   getDescription: (trigger) => {
-    return `Navigate by prompts`;
+    return `Navigate from prompts`;
   },
   trigger: async ({ trigger, context }) => {
     for (const blockRef of trigger.blocks) {
@@ -18,7 +18,7 @@ registerTrigger('NAVIGATE_BY_PROMPTS', {
       console.log(contextBlocks);
 
 
-      // workers:generate:generateNavigateByPrompts
+      // workers:generate:generateNavigateFromPrompts
       // await updateTracking({
       //   blockRef,
       //   update: {
@@ -29,14 +29,14 @@ registerTrigger('NAVIGATE_BY_PROMPTS', {
 
     const sockets = await getSockets();
 
-    sockets.on("workers:generate:generateNavigateByPrompts", ({ message }) => {
+    sockets.on("workers:generate:generateNavigateFromPrompts", ({ message }) => {
       if (message._id) {
         navigateTo({ slideRef: "675f1c9a5f271bd59ff9797f" })
       }
     })
 
     await axios.post('/api/generate', {
-      "generateType": "NAVIGATE_BY_PROMPTS",
+      "generateType": "NAVIGATE_FROM_PROMPTS",
       "prompts": [{
         "stem": "What do you see as the main characteristics of an Engineering Manager?",
         "answer": "Leadership, helping people achieve their maximum potential"

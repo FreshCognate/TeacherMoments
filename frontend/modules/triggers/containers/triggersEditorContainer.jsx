@@ -38,16 +38,10 @@ class TriggersEditorContainer extends Component {
           label: 'Action:',
           isInline: true,
           options: [{
-            value: 'HIDE_BLOCKS',
-            text: 'Hide blocks'
-          }, {
-            value: 'SHOW_BLOCKS',
-            text: 'Show blocks'
-          }, {
-            value: 'NAVIGATE_BY_PROMPTS',
+            value: 'NAVIGATE_FROM_PROMPTS',
             text: 'Navigate by prompts'
           }, {
-            value: 'GIVE_FEEDBACK',
+            value: 'GIVE_FEEDBACK_FROM_PROMPTS',
             text: 'Give feedback'
           }]
         },
@@ -62,7 +56,7 @@ class TriggersEditorContainer extends Component {
         }
       },
       model: {
-        action: 'HIDE_BLOCKS',
+        action: 'GIVE_FEEDBACK_FROM_PROMPTS',
         blocks: []
       },
       actions: [{
@@ -101,10 +95,7 @@ class TriggersEditorContainer extends Component {
           label: 'Action:',
           isInline: true,
           isDisabled: true,
-          options: [{
-            value: 'HIDE_BLOCKS',
-            text: 'Hide blocks'
-          }]
+          options: []
         },
         blocks: {
           type: 'TriggerBlocksSelector',

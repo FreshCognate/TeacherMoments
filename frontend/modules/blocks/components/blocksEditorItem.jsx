@@ -4,8 +4,6 @@ import Body from '~/uikit/content/components/body';
 import classnames from 'classnames';
 import EditBlockContainer from '../containers/editBlockContainer';
 import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
-import filter from 'lodash/filter';
-import getCache from '~/core/cache/helpers/getCache';
 import getBlockDisplayName from '../helpers/getBlockDisplayName';
 
 const BlocksEditorItem = ({
@@ -20,10 +18,6 @@ const BlocksEditorItem = ({
   onEditBlockClicked
 }) => {
 
-  const triggers = getCache('triggers');
-
-  const triggersCount = filter(triggers.data, (trigger) => trigger.elementRef === block.ref).length;
-
   return (
     <div className={classnames("mb-3 bg-lm-1 dark:bg-dm-1 border border-lm-3 dark:border-dm-3 outline-2 rounded-md cursor-pointer group/block", {
       "outline outline-primary-regular dark:outline-primary-light": isSelected,
@@ -34,7 +28,6 @@ const BlocksEditorItem = ({
           <div className="mb-2">
             <Body body={` Block: ${getBlockDisplayName(block)}`} size="sm" />
           </div>
-          <Body body={` Triggers: ${triggersCount}`} size="xs" />
         </div>
         <div className="opacity-0 group-hover/block:opacity-100">
           {(isEditing) && (
@@ -55,7 +48,6 @@ const BlocksEditorItem = ({
         {(isEditing) && (
           <div className="p-3">
             <EditBlockContainer blockId={block._id} />
-            <TriggerDisplayContainer elementRef={block.ref} triggerType="BLOCK" event="ON_COMPLETE" />
           </div>
         )}
       </div>

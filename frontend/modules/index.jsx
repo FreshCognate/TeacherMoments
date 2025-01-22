@@ -8,9 +8,7 @@ import '~/core/app/components/select.formField';
 import '~/modules/triggers/containers/triggerBlocksSelectorContainer.formField';
 import '~/core/app/conditions/modelValueIs';
 import '~/modules/ls/helpers/ls.condition'
-import '~/modules/blocks/triggers/hideBlocks.trigger';
-import '~/modules/blocks/triggers/showBlocks.trigger';
-import '~/modules/slides/triggers/navigateByPrompts.trigger';
+import '~/modules/slides/triggers/navigateFromPrompts.trigger';
 import '~/modules/blocks/triggers/giveFeedback.trigger';
 
 axios.interceptors.response.use(function (response) {
