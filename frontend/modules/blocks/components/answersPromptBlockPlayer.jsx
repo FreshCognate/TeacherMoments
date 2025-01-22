@@ -9,6 +9,7 @@ import AnswersPromptBlockPlayerAnswer from './answersPromptBlockPlayerAnswer';
 const AnswersPromptBlockPlayer = ({
   block,
   tracking,
+  isSubmitButtonDisabled,
   onSubmitButtonClicked,
   onAnswerClicked
 }) => {
@@ -21,7 +22,7 @@ const AnswersPromptBlockPlayer = ({
 
       <div className="mb-2">
         {map(block.options, (option) => {
-          const isSelected = includes(tracking.answerValues || [], option.value);
+          const isSelected = includes(tracking.answerValues, option.value);
           return (
             <AnswersPromptBlockPlayerAnswer
               key={option._id}
@@ -36,7 +37,7 @@ const AnswersPromptBlockPlayer = ({
       </div>
 
       <div>
-        <Button isDisabled={tracking.isComplete} text="Submit" color="primary" onClick={onSubmitButtonClicked} />
+        <Button isDisabled={isSubmitButtonDisabled} text="Submit" color="primary" onClick={onSubmitButtonClicked} />
       </div>
 
     </div >

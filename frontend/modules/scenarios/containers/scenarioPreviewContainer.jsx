@@ -4,6 +4,7 @@ import get from 'lodash/get';
 import find from 'lodash/find';
 import filter from 'lodash/filter';
 import WithCache from '~/core/cache/containers/withCache';
+import navigateTo from '~/modules/tracking/helpers/navigateTo';
 
 class ScenarioPreviewContainer extends Component {
 
@@ -15,13 +16,7 @@ class ScenarioPreviewContainer extends Component {
 
   startScenario = () => {
     const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
-    this.props.tracking.set({
-      activeSlideRef: firstSlideRef,
-      stages: [{
-        slideRef: firstSlideRef,
-        blocksByRef: {}
-      }]
-    })
+    navigateTo({ slideRef: firstSlideRef });
   }
 
   getActiveSlide = () => {
