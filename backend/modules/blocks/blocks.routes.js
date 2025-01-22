@@ -44,6 +44,7 @@ export default {
       options: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('text', Joi.string().allow('')),
+        ...buildLanguageValidation('feedback', Joi.array()),
         value: Joi.string(),
       }),
       feedbackItems: Joi.array().items({
