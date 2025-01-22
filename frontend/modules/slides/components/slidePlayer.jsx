@@ -10,7 +10,7 @@ import getCache from '~/core/cache/helpers/getCache';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 const BLOCK_MAPPINGS = {
   "TEXT": TextBlockPlayerContainer,
-  "PROMPT": PromptBlockPlayerContainer,
+  "ANSWERS_PROMPT": PromptBlockPlayerContainer,
   "ACTIONS": ActionsBlockPlayerContainer
 }
 

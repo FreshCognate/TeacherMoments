@@ -10,7 +10,7 @@ import editActionsBlockSchema from '../schemas/editActionsBlockSchema';
 
 const SCHEMA_MAPPINGS = {
   TEXT: editTextBlockSchema,
-  PROMPT: editPromptBlockSchema,
+  ANSWERS_PROMPT: editPromptBlockSchema,
   ACTIONS: editActionsBlockSchema
 }
 

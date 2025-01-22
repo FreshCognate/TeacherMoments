@@ -11,7 +11,7 @@ const schema = {
   ref: mongoose.Schema.Types.ObjectId,
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
   slideRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Slide', required: true },
-  blockType: { type: String, enum: ['TEXT', 'PROMPT', 'ACTIONS'], default: 'TEXT' },
+  blockType: { type: String, enum: ['TEXT', 'ANSWERS_PROMPT', 'ACTIONS'], default: 'TEXT' },
   sortOrder: { type: Number },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
   ...title,
