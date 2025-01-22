@@ -16,14 +16,14 @@ const answerText = buildLanguageSchema('text', {
   label: 'Text'
 })
 
-const feedbackText = buildLanguageSchema('text', {
-  type: 'Text',
-  label: 'Text'
+const feedbackText = buildLanguageSchema('feedback', {
+  type: 'TextArea',
+  label: 'Feedback',
+  features: ['bold', 'italic', 'underline', 'strikethrough', 'code', 'blockquote', 'link', 'leftAlign', 'centerAlign', 'rightAlign', 'justifyAlign', 'bulletedList', 'numberedList']
 })
 
 export default {
   ...body,
-  ...placeholder,
   isMultiSelect: {
     type: 'Toggle',
     label: 'Mutliple answers can be selected',
@@ -41,16 +41,6 @@ export default {
     label: 'Answers',
     subSchema: {
       ...answerText,
-      value: {
-        type: 'Text',
-        label: 'Value'
-      }
-    }
-  },
-  feedbackItems: {
-    type: 'Array',
-    label: 'Feedback',
-    subSchema: {
       ...feedbackText,
       value: {
         type: 'Text',

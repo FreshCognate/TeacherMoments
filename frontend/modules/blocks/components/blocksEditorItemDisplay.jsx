@@ -4,7 +4,7 @@ import PromptBlockPlayer from './promptBlockPlayer';
 import ActionsBlockPlayer from './actionsBlockPlayer';
 const COMPONENT_MAPPINGS = {
   TEXT: TextBlockPlayer,
-  PROMPT: PromptBlockPlayer,
+  ANSWERS_PROMPT: PromptBlockPlayer,
   ACTIONS: ActionsBlockPlayer
 }
 

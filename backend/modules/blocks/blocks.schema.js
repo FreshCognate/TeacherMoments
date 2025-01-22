@@ -5,23 +5,24 @@ const title = buildLanguageSchema('title', textAreaSchema);
 const body = buildLanguageSchema('body', textAreaSchema);
 const placeholder = buildLanguageSchema('placeholder', { type: String, default: '' });
 const text = buildLanguageSchema('text', { type: String, default: '' });
+const feedback = buildLanguageSchema('feedback', textAreaSchema);
 
 const schema = {
   type: { type: String, default: 'block' },
   ref: mongoose.Schema.Types.ObjectId,
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
   slideRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Slide', required: true },
-  blockType: { type: String, enum: ['TEXT', 'PROMPT', 'ACTIONS'], default: 'TEXT' },
-  promptType: { type: String, enum: ['TEXT', 'ANSWERS'], default: 'TEXT' },
+  blockType: { type: String, enum: ['TEXT', 'ANSWERS_PROMPT', 'ACTIONS'], default: 'TEXT' },
   sortOrder: { type: Number },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
   ...title,
   ...body,
   ...placeholder,
   isMultiSelect: { type: Boolean, default: false },
-  items: {
+  options: {
     type: [{
       ...text,
+      ...feedback,
       value: { type: String },
     }], default: [{ "en-US-text": "" }]
   },

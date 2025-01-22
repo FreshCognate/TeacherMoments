@@ -1,0 +1,14 @@
+[
+  {
+    "blockType": "TEXT",
+    "displayType": "DISPLAY",
+    "displayName": "Text",
+    "description": "A rich text editor. Great for adding instructions or detailing a scene."
+  },
+  {
+    "blockType": "ANSWERS_PROMPT",
+    "displayType": "PROMPT",
+    "displayName": "Answers prompt",
+    "description": "A prompt with predefined answers for the user to select."
+  }
+]

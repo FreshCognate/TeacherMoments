@@ -22,7 +22,7 @@ export default {
     body: {
       scenario: Joi.string().required(),
       slideRef: Joi.string().required(),
-      blockType: Joi.string().required().valid('TEXT', 'PROMPT')
+      blockType: Joi.string().required().valid('TEXT', 'ANSWERS_PROMPT')
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
@@ -34,17 +34,17 @@ export default {
     param: 'id',
     body: {
       name: Joi.string(),
-      blockType: Joi.string().valid('TEXT', 'PROMPT', 'ACTIONS'),
-      promptType: Joi.string().valid('ANSWERS', 'TEXT'),
+      blockType: Joi.string().valid('TEXT', 'ANSWERS_PROMPT', 'ACTIONS'),
       sourceIndex: Joi.number(),
       destinationIndex: Joi.number(),
       ...buildLanguageValidation('title', Joi.array()),
       ...buildLanguageValidation('body', Joi.array()),
       ...buildLanguageValidation('placeholder', Joi.string()),
       isMultiSelect: Joi.boolean(),
-      items: Joi.array().items({
+      options: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('text', Joi.string().allow('')),
+        ...buildLanguageValidation('feedback', Joi.array()),
         value: Joi.string(),
       }),
       feedbackItems: Joi.array().items({
