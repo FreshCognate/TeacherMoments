@@ -5,6 +5,7 @@ import getCache from '~/core/cache/helpers/getCache';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import find from 'lodash/find';
+import blocks from '../../../../config/blocks.json';
 
 class BlockSelectorContainer extends Component {
 
@@ -27,6 +28,7 @@ class BlockSelectorContainer extends Component {
   render() {
     return (
       <BlockSelector
+        blocks={blocks}
         onAddBlockTypeClicked={this.onAddBlockTypeClicked}
       />
     );

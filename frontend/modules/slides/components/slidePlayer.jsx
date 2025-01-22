@@ -2,7 +2,7 @@ import React from 'react';
 import TextBlockPlayerContainer from '~/modules/blocks/containers/textBlockPlayerContainer';
 import Loading from '~/uikit/loaders/components/loading';
 import map from 'lodash/map';
-import PromptBlockPlayerContainer from '~/modules/blocks/containers/promptBlockPlayerContainer';
+import AnswersPromptBlockPlayerContainer from '~/modules/blocks/containers/answersPromptBlockPlayerContainer';
 import ActionsBlockPlayerContainer from '~/modules/blocks/containers/actionsBlockPlayerContainer';
 import getBlockTracking from '~/modules/tracking/helpers/getBlockTracking';
 import find from 'lodash/find';
@@ -10,7 +10,7 @@ import getCache from '~/core/cache/helpers/getCache';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 const BLOCK_MAPPINGS = {
   "TEXT": TextBlockPlayerContainer,
-  "ANSWERS_PROMPT": PromptBlockPlayerContainer,
+  "ANSWERS_PROMPT": AnswersPromptBlockPlayerContainer,
   "ACTIONS": ActionsBlockPlayerContainer
 }
 

@@ -5,6 +5,7 @@ const title = buildLanguageSchema('title', textAreaSchema);
 const body = buildLanguageSchema('body', textAreaSchema);
 const placeholder = buildLanguageSchema('placeholder', { type: String, default: '' });
 const text = buildLanguageSchema('text', { type: String, default: '' });
+const feedback = buildLanguageSchema('feedback', textAreaSchema);
 
 const schema = {
   type: { type: String, default: 'block' },
@@ -18,9 +19,10 @@ const schema = {
   ...body,
   ...placeholder,
   isMultiSelect: { type: Boolean, default: false },
-  items: {
+  options: {
     type: [{
       ...text,
+      ...feedback,
       value: { type: String },
     }], default: [{ "en-US-text": "" }]
   },

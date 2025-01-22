@@ -41,7 +41,7 @@ export default {
       ...buildLanguageValidation('body', Joi.array()),
       ...buildLanguageValidation('placeholder', Joi.string()),
       isMultiSelect: Joi.boolean(),
-      items: Joi.array().items({
+      options: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('text', Joi.string().allow('')),
         value: Joi.string(),
