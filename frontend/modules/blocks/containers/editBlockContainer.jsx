@@ -7,6 +7,9 @@ import editBlockSchema from '../schemas/editBlockSchema';
 import editTextBlockSchema from '../schemas/editTextBlockSchema';
 import editAnswersPromptBlockSchema from '../schemas/editAnswersPromptBlockSchema';
 import editActionsBlockSchema from '../schemas/editActionsBlockSchema';
+import getSlideSelectionFromQuery from '~/modules/scenarioBuilder/helpers/getSlideSelectionFromQuery';
+import getEditingDetailsFromQuery from '~/modules/scenarioBuilder/helpers/getEditingDetailsFromQuery';
+import WithRouter from '~/core/app/components/withRouter';
 
 const SCHEMA_MAPPINGS = {
   TEXT: editTextBlockSchema,
@@ -43,19 +46,29 @@ class EditBlockContainer extends Component {
     });
   }
 
+  onCloseEditorClicked = () => {
+    const { router } = this.props;
+    const searchParams = new URLSearchParams(router.location.search);
+    const slideId = searchParams.get('slide');
+    const slideSelection = getSlideSelectionFromQuery();
+    const { isEditing, layer } = getEditingDetailsFromQuery();
+    router.navigate(`/scenarios/${router.params.id}/create?slideSelection=${JSON.stringify(slideSelection)}&isEditing=${isEditing}&layer=${layer}&slide=${slideId}`, { replace: true });
+  }
+
   render() {
     const { block } = this.props;
     return (
       <EditBlock
         block={block.data}
         schema={this.getSchema()}
+        onCloseEditorClicked={this.onCloseEditorClicked}
         onEditBlockUpdate={this.onEditBlockUpdate}
       />
     );
   }
 };
 
-export default WithCache(EditBlockContainer, {
+export default WithRouter(WithCache(EditBlockContainer, {
   block: {
     url: '/api/blocks/:id',
     transform: ({ data }) => data.block,
@@ -70,4 +83,4 @@ export default WithCache(EditBlockContainer, {
       return currentBlock;
     }
   }
-});
+}));

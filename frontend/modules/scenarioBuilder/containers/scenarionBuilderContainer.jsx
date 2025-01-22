@@ -12,13 +12,29 @@ class ScenarionBuilderContainer extends Component {
     return rootSlide;
   }
 
+  getEditingBlockDetails = () => {
+    const searchParams = new URLSearchParams(this.props.router.location.search);
+    const blockId = searchParams.get('block');
+    const isEditing = searchParams.get('isEditing');
+
+    return {
+      isEditing: blockId && isEditing,
+      blockId
+    };
+  }
+
   render() {
+
     const { displayMode } = this.props.editor.data;
+    const { isEditing, blockId } = this.getEditingBlockDetails();
+
     return (
       <ScenarioBuilder
         displayMode={displayMode}
         rootSlide={this.getRootSlide()}
         slideSelection={getSlideSelectionFromQuery()}
+        blockId={blockId}
+        isEditingBlock={isEditing}
       />
     );
   }
