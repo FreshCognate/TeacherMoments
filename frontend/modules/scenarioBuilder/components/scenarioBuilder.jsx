@@ -2,11 +2,14 @@ import React from 'react';
 import ScenarioBuilderItemContainer from '../containers/scenarioBuilderItemContainer';
 import ScenarioEditorToolbarContainer from '~/modules/scenarios/containers/scenarioEditorToolbarContainer';
 import ScenarioPreviewContainer from '~/modules/scenarios/containers/scenarioPreviewContainer';
+import EditBlockContainer from '~/modules/blocks/containers/editBlockContainer';
 
 const ScenarioBuilder = ({
   rootSlide,
   displayMode,
-  slideSelection
+  slideSelection,
+  blockId,
+  isEditingBlock
 }) => {
   const isDarkMode = window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
   const backgroundDotColor = isDarkMode ? '#222' : '#ddd'
@@ -35,6 +38,9 @@ const ScenarioBuilder = ({
             <ScenarioPreviewContainer />
           )}
         </div>
+        {(isEditingBlock && blockId) && (
+          <EditBlockContainer blockId={blockId} />
+        )}
       </div>
     </div>
   );
