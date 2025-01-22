@@ -62,7 +62,7 @@ export default async ({ prompts, actions }) => {
 
   const sockets = await getSockets();
 
-  sockets.emit(`workers:generate:generateNavigateByPrompts`, {
+  sockets.emit(`workers:generate:generateNavigateFromPrompts`, {
     message: response
   });
 

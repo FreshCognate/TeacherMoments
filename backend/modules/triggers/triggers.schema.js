@@ -7,7 +7,7 @@ const schema = {
   ref: mongoose.Schema.Types.ObjectId,
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
   elementRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Slide', required: true },
-  triggerType: { type: String, enum: ['SLIDE', 'BLOCK'], required: true },
+  triggerType: { type: String, enum: ['SLIDE'], required: true },
   sortOrder: { type: Number },
   event: {
     type: String,

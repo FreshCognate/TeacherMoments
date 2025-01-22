@@ -8,7 +8,7 @@ export default {
   controller,
   create: {
     body: {
-      generateType: Joi.string().valid('NAVIGATE_BY_PROMPTS', 'GIVE_FEEDBACK'),
+      generateType: Joi.string().valid('NAVIGATE_FROM_PROMPTS', 'GIVE_FEEDBACK_FROM_PROMPTS'),
       prompts: Joi.array(),
       stem: Joi.string().allow(''),
       answerText: Joi.string(),

@@ -53,7 +53,7 @@ export default async ({ stem, answerText, answerValue, feedbackItems }) => {
 
   console.log(response);
 
-  sockets.emit(`workers:generate:generateGiveFeedback`, {
+  sockets.emit(`workers:generate:generateGiveFeedbackFromPrompts`, {
     message: response
   });
 }

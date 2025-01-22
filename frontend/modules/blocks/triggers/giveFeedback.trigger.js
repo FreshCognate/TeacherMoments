@@ -1,18 +1,15 @@
 import getCache from "~/core/cache/helpers/getCache";
-import updateTracking from "~/modules/tracking/helpers/updateTracking";
 import registerTrigger from "~/modules/triggers/helpers/registerTrigger"
-import filter from 'lodash/filter';
 import handleRequestError from "~/core/app/helpers/handleRequestError";
 import getSockets from "~/core/sockets/helpers/getSockets";
 import axios from 'axios';
-import navigateTo from "~/modules/tracking/helpers/navigateTo";
 import getBlockTracking from "~/modules/tracking/helpers/getBlockTracking";
 import getBlockByRef from "../helpers/getBlockByRef";
 import getString from "~/modules/ls/helpers/getString";
 
-registerTrigger('GIVE_FEEDBACK', {
+registerTrigger('GIVE_FEEDBACK_FROM_PROMPTS', {
   getDescription: (trigger) => {
-    return `Give feedback`;
+    return `Give feedback from prompts`;
   },
   trigger: async ({ trigger, context }) => {
     console.log(trigger, context);
@@ -22,24 +19,9 @@ registerTrigger('GIVE_FEEDBACK', {
 
     const block = getBlockByRef({ ref: trigger.elementRef });
 
-    // for (const blockRef of trigger.blocks) {
-    //   console.log('trigger navigate by prompts');
-    //   const contextBlocks = filter(getCache('blocks').data, { ref: blockRef });
-    //   console.log(contextBlocks);
-
-
-    //   // workers:generate:generateNavigateByPrompts
-    //   // await updateTracking({
-    //   //   blockRef,
-    //   //   update: {
-    //   //     isHidden: false
-    //   //   }
-    //   // })
-    // }
-
     const sockets = await getSockets();
 
-    sockets.on("workers:generate:generateGiveFeedback", ({ message }) => {
+    sockets.on("workers:generate:generateGiveFeedbackFromPrompts", ({ message }) => {
       if (message._id) {
         console.log('message', message);
       }
@@ -50,7 +32,7 @@ registerTrigger('GIVE_FEEDBACK', {
     return;
 
     await axios.post('/api/generate', {
-      "generateType": "GIVE_FEEDBACK",
+      "generateType": "GIVE_FEEDBACK_FROM_PROMPTS",
       "stem": getString({ model: block, field: "body" }),
       "answerText": "Red pill",
       "answerValue": "Red Pill",
