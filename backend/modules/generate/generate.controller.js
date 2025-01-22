@@ -5,9 +5,9 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { generateType, prompts, actions } = body;
+    const { generateType, prompts, actions, stem, answerText, answerValue, feedbackItems } = body;
 
-    const generate = await createGenerate({ generateType, prompts, actions }, {}, context);
+    const generate = await createGenerate({ generateType, prompts, actions, stem, answerText, answerValue, feedbackItems }, {}, context);
 
     return { generate }
 

@@ -46,6 +46,9 @@ class TriggersEditorContainer extends Component {
           }, {
             value: 'NAVIGATE_BY_PROMPTS',
             text: 'Navigate by prompts'
+          }, {
+            value: 'GIVE_FEEDBACK',
+            text: 'Give feedback'
           }]
         },
         blocks: {
