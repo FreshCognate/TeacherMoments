@@ -22,7 +22,9 @@ export default async ({ slideRef, blockRef, update }) => {
     const isSlideComplete = getIsSlideComplete({ blocksByRef: currentStage.blocksByRef });
     if (isSlideComplete) {
       currentStage.isComplete = true;
-      trigger({ triggerType: 'SLIDE', event: 'ON_COMPLETE', elementRef: slideRef }, {});
+      setTimeout(() => {
+        trigger({ triggerType: 'SLIDE', event: 'ON_COMPLETE', elementRef: slideRef }, {});
+      }, 0);
     }
   }
 

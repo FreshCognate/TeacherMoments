@@ -39,10 +39,13 @@ class TriggersEditorContainer extends Component {
           isInline: true,
           options: [{
             value: 'NAVIGATE_FROM_PROMPTS',
-            text: 'Navigate by prompts'
+            text: 'Navigate from prompts'
           }, {
             value: 'GIVE_FEEDBACK_FROM_PROMPTS',
-            text: 'Give feedback'
+            text: 'Give feedback from prompts'
+          }, {
+            value: 'SHOW_FEEDBACK_FROM_PROMPTS',
+            text: 'Show feedback from prompts'
           }]
         },
         blocks: {
