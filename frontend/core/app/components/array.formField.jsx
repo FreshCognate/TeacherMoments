@@ -43,7 +43,7 @@ const ArrayFormField = ({
         })}
       </div>
       <div className="border-b border-x border-lm-3 dark:border-dm-3 inline-flex rounded-b">
-        <FlatButton icon="create" text="Add action" className="py-1 px-2" onClick={onAddActionClicked} />
+        <FlatButton icon="create" text={schema.addButtonText} className="py-1 px-2" onClick={onAddActionClicked} />
       </div>
     </div>
   );

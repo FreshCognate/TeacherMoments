@@ -1,7 +1,7 @@
 [
   {
     "blockType": "TEXT",
-    "displayType": "DISPLAY",
+    "displayType": "VISUAL",
     "displayName": "Text",
     "description": "A rich text editor. Great for adding instructions or detailing a scene."
   },
@@ -10,5 +10,11 @@
     "displayType": "PROMPT",
     "displayName": "Answers prompt",
     "description": "A prompt with predefined answers for the user to select."
+  },
+  {
+    "blockType": "INPUT_PROMPT",
+    "displayType": "PROMPT",
+    "displayName": "Input prompt",
+    "description": "A prompt with either text or audio input."
   }
 ]

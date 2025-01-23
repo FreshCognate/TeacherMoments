@@ -9,40 +9,29 @@ const body = buildLanguageSchema('body', {
   type: 'TextArea',
   label: 'Question',
   features: ['bold', 'italic', 'underline', 'strikethrough', 'code', 'blockquote', 'link', 'leftAlign', 'centerAlign', 'rightAlign', 'justifyAlign', 'bulletedList', 'numberedList']
-})
+});
 
 const answerText = buildLanguageSchema('text', {
   type: 'Text',
-  label: 'Text'
+  label: 'Choose this feedback if...'
 })
 
 const feedbackText = buildLanguageSchema('feedback', {
   type: 'TextArea',
-  label: 'Feedback',
+  label: 'Text',
   features: ['bold', 'italic', 'underline', 'strikethrough', 'code', 'blockquote', 'link', 'leftAlign', 'centerAlign', 'rightAlign', 'justifyAlign', 'bulletedList', 'numberedList']
 })
 
 export default {
   ...body,
-  isMultiSelect: {
-    type: 'Toggle',
-    label: 'Mutliple answers can be selected',
-    size: 'sm',
-    options: [{
-      value: false,
-      text: 'No'
-    }, {
-      value: true,
-      text: 'Yes'
-    }]
-  },
+  ...placeholder,
   options: {
     type: 'Array',
-    label: 'Answers',
-    addButtonText: "Add answer",
+    label: 'Feedback',
+    addButtonText: 'Add feedback',
     subSchema: {
-      ...answerText,
       ...feedbackText,
+      ...answerText,
       value: {
         type: 'Text',
         label: 'Value'

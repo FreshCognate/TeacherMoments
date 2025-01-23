@@ -6,6 +6,7 @@ import getCache from '~/core/cache/helpers/getCache';
 import editBlockSchema from '../schemas/editBlockSchema';
 import editTextBlockSchema from '../schemas/editTextBlockSchema';
 import editAnswersPromptBlockSchema from '../schemas/editAnswersPromptBlockSchema';
+import editInputPromptBlockSchema from '../schemas/editInputPromptBlockSchema';
 import editActionsBlockSchema from '../schemas/editActionsBlockSchema';
 import getSlideSelectionFromQuery from '~/modules/scenarioBuilder/helpers/getSlideSelectionFromQuery';
 import getEditingDetailsFromQuery from '~/modules/scenarioBuilder/helpers/getEditingDetailsFromQuery';
@@ -15,6 +16,7 @@ import getBlocksBySlideRef from '../helpers/getBlocksBySlideRef';
 const SCHEMA_MAPPINGS = {
   TEXT: editTextBlockSchema,
   ANSWERS_PROMPT: editAnswersPromptBlockSchema,
+  INPUT_PROMPT: editInputPromptBlockSchema,
   ACTIONS: editActionsBlockSchema
 }
 
