@@ -1,6 +1,8 @@
 import getCache from "~/core/cache/helpers/getCache";
 import cloneDeep from 'lodash/cloneDeep';
 import extend from 'lodash/extend';
+import getIsSlideComplete from './getIsSlideComplete';
+import trigger from "~/modules/triggers/helpers/trigger";
 
 export default async ({ slideRef, blockRef, update }) => {
 
@@ -14,6 +16,15 @@ export default async ({ slideRef, blockRef, update }) => {
   extend(currentBlockTracking, update);
 
   currentStage.blocksByRef[blockRef] = currentBlockTracking;
+
+  // If update has isComplete we should see if the slide is complete as something big has happened
+  if (update.isComplete) {
+    const isSlideComplete = getIsSlideComplete({ blocksByRef: currentStage.blocksByRef });
+    if (isSlideComplete) {
+      currentStage.isComplete = true;
+      trigger({ triggerType: 'SLIDE', event: 'ON_COMPLETE', elementRef: slideRef }, {});
+    }
+  }
 
   return tracking.set({ stages });
 

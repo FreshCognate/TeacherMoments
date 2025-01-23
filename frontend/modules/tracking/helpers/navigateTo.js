@@ -2,6 +2,7 @@ import getCache from "~/core/cache/helpers/getCache";
 import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import each from 'lodash/each';
+import getIsSlideComplete from "./getIsSlideComplete";
 
 export default async ({ slideRef }) => {
 
@@ -22,12 +23,21 @@ export default async ({ slideRef }) => {
           answerValues: [],
           isComplete: false
         }
+        break;
+      case 'INPUT_PROMPT':
+        defaultTracking = {
+          textValue: "",
+          isComplete: false
+        }
+        break;
     }
 
     blocksByRef[block.ref] = defaultTracking;
-  })
+  });
 
-  stages.push({ slideRef: slideRef, blocksByRef })
+  let isSlideComplete = getIsSlideComplete({ blocksByRef });
+
+  stages.push({ slideRef: slideRef, blocksByRef, isComplete: isSlideComplete })
 
   tracking.set({ activeSlideRef: slideRef, stages });
 

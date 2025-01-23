@@ -20,9 +20,6 @@ class SlidePlayerContainer extends Component {
 
   onUpdateTracking = async ({ blockRef, update }) => {
     await updateTracking({ slideRef: this.props.activeSlide.ref, blockRef, update });
-    if (update.isComplete) {
-      trigger({ triggerType: 'BLOCK', event: 'ON_COMPLETE', elementRef: blockRef }, {});
-    }
   }
 
   navigateTo = ({ slideRef }) => {
