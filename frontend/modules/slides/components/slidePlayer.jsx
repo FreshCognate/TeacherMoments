@@ -4,6 +4,7 @@ import Loading from '~/uikit/loaders/components/loading';
 import map from 'lodash/map';
 import AnswersPromptBlockPlayerContainer from '~/modules/blocks/containers/answersPromptBlockPlayerContainer';
 import ActionsBlockPlayerContainer from '~/modules/blocks/containers/actionsBlockPlayerContainer';
+import InputPromptBlockPlayerContainer from '~/modules/blocks/containers/inputPromptBlockPlayerContainer';
 import getBlockTracking from '~/modules/tracking/helpers/getBlockTracking';
 import find from 'lodash/find';
 import getCache from '~/core/cache/helpers/getCache';
@@ -11,6 +12,7 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 const BLOCK_MAPPINGS = {
   "TEXT": TextBlockPlayerContainer,
   "ANSWERS_PROMPT": AnswersPromptBlockPlayerContainer,
+  "INPUT_PROMPT": InputPromptBlockPlayerContainer,
   "ACTIONS": ActionsBlockPlayerContainer
 }
 
@@ -28,7 +30,7 @@ const SlidePlayer = ({
     <div className="w-full bg-lm-0 dark:bg-dm-1 border border-lm-2 dark:border-dm-2 rounded max-w-screen-sm p-4">
       {map(activeBlocks, (block) => {
         let Block = BLOCK_MAPPINGS[block.blockType];
-        if (!Block) return <div key={block._id} className="mb-4 last:mb-0">Block is unsupported</div>;
+        if (!Block) return <div key={block._id} className="mb-4 last:mb-0 border p-2 border-lm-3 dark:border-dm-3 text-center">Block is unsupported</div>;
         const blockTracking = getBlockTracking({ blockRef: block.ref });
 
         if (blockTracking.isHidden) return null;
