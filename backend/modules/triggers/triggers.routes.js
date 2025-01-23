@@ -17,7 +17,7 @@ export default {
   create: {
     body: {
       scenario: Joi.string().required(),
-      triggerType: Joi.string().valid('SLIDE', 'BLOCK'),
+      triggerType: Joi.string().valid('SLIDE'),
       elementRef: Joi.string().required(),
       event: Joi.string().valid(...getTriggerEvents()),
       action: Joi.string().valid(...getTriggerActions()),

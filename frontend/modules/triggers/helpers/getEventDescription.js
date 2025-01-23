@@ -1,6 +1,5 @@
 const TRIGGER_TYPE_MAPPINGS = {
-  SLIDE: 'slide',
-  BLOCK: 'block'
+  SLIDE: 'slide'
 }
 export default ({ event, triggerType }) => {
   switch (event) {
