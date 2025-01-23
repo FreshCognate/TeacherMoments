@@ -54,6 +54,7 @@ export default WithCache(ScenarioPreviewContainer, {
     getInitialData: () => {
       return {
         activeSlideRef: null,
+        stages: []
       }
     }
   }

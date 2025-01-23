@@ -3,6 +3,8 @@ import SlidePlayer from '../components/slidePlayer';
 import updateTracking from '~/modules/tracking/helpers/updateTracking';
 import navigateTo from '~/modules/tracking/helpers/navigateTo';
 import trigger from '~/modules/triggers/helpers/trigger';
+import getSlideTracking from '~/modules/tracking/helpers/getSlideTracking';
+import WithCache from '~/core/cache/containers/withCache';
 
 class SlidePlayerContainer extends Component {
 
@@ -30,6 +32,8 @@ class SlidePlayerContainer extends Component {
 
     const { activeSlide, activeBlocks } = this.props;
 
+    const slideTracking = getSlideTracking();
+
     return (
       <SlidePlayer
         activeSlide={activeSlide}
@@ -37,9 +41,10 @@ class SlidePlayerContainer extends Component {
         isLoading={this.state.isLoading}
         onUpdateTracking={this.onUpdateTracking}
         navigateTo={this.navigateTo}
+        tracking={slideTracking}
       />
     );
   }
 };
 
-export default SlidePlayerContainer;
+export default WithCache(SlidePlayerContainer, null, ['tracking']);

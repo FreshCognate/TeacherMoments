@@ -6,7 +6,7 @@ export default async (props, options, context) => {
 
   const slideBlocks = await models.Block.find({ scenario, slideRef, isDeleted: false });
 
-  const sortOrder = slideBlocks.length;
+  const sortOrder = slideBlocks.length - 1;
 
   const newBlockObject = {
     scenario,

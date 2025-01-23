@@ -9,6 +9,8 @@ import getBlockTracking from '~/modules/tracking/helpers/getBlockTracking';
 import find from 'lodash/find';
 import getCache from '~/core/cache/helpers/getCache';
 import FlatButton from '~/uikit/buttons/components/flatButton';
+import Body from '~/uikit/content/components/body';
+
 const BLOCK_MAPPINGS = {
   "TEXT": TextBlockPlayerContainer,
   "ANSWERS_PROMPT": AnswersPromptBlockPlayerContainer,
@@ -22,10 +24,12 @@ const SlidePlayer = ({
   isLoading,
   onUpdateTracking,
   navigateTo,
+  tracking,
 }) => {
   if (!activeSlide || isLoading) return (
     <Loading />
   );
+
   return (
     <div className="w-full bg-lm-0 dark:bg-dm-1 border border-lm-2 dark:border-dm-2 rounded max-w-screen-sm p-4">
       {map(activeBlocks, (block) => {
@@ -51,6 +55,15 @@ const SlidePlayer = ({
           </div>
         );
       })}
+      {(tracking.feedbackItems && tracking.feedbackItems.length > 0) && (
+        <div className="bg-blue-200 bg-opacity-30 border border-blue-200 p-2 rounded-md dark:text-gray-200 text-gray-800">
+          {map(tracking.feedbackItems, (feedbackItem, index) => {
+            return (
+              <Body key={index} body={feedbackItem} />
+            )
+          })}
+        </div>
+      )}
       {(activeSlide.children.length > 0) && (
         <div className="mt-4">
           {map(activeSlide.children, (childRef) => {

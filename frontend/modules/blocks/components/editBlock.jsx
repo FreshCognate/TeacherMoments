@@ -47,7 +47,7 @@ const EditBlock = ({
 
           <div className="p-6">
             <FormContainer
-              renderKey={block.blockType}
+              renderKey={`${block._id}-${block.blockType}`}
               schema={schema}
               model={block}
               onUpdate={onEditBlockUpdate}

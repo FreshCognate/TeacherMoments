@@ -4,8 +4,8 @@ import handleRequestError from "~/core/app/helpers/handleRequestError";
 import getSockets from "~/core/sockets/helpers/getSockets";
 import axios from 'axios';
 import getBlockTracking from "~/modules/tracking/helpers/getBlockTracking";
-import getBlockByRef from "../helpers/getBlockByRef";
 import getString from "~/modules/ls/helpers/getString";
+import getBlockByRef from "~/modules/blocks/helpers/getBlockByRef";
 
 registerTrigger('GIVE_FEEDBACK_FROM_PROMPTS', {
   getDescription: (trigger) => {
