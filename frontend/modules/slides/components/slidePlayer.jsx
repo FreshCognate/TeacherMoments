@@ -3,7 +3,7 @@ import TextBlockPlayerContainer from '~/modules/blocks/containers/textBlockPlaye
 import Loading from '~/uikit/loaders/components/loading';
 import map from 'lodash/map';
 import AnswersPromptBlockPlayerContainer from '~/modules/blocks/containers/answersPromptBlockPlayerContainer';
-import ActionsBlockPlayerContainer from '~/modules/blocks/containers/actionsBlockPlayerContainer';
+import ActionsPromptBlockPlayerContainer from '~/modules/blocks/containers/actionsPromptBlockPlayerContainer';
 import InputPromptBlockPlayerContainer from '~/modules/blocks/containers/inputPromptBlockPlayerContainer';
 import getBlockTracking from '~/modules/tracking/helpers/getBlockTracking';
 import find from 'lodash/find';
@@ -15,7 +15,7 @@ const BLOCK_MAPPINGS = {
   "TEXT": TextBlockPlayerContainer,
   "ANSWERS_PROMPT": AnswersPromptBlockPlayerContainer,
   "INPUT_PROMPT": InputPromptBlockPlayerContainer,
-  "ACTIONS": ActionsBlockPlayerContainer
+  "ACTIONS_PROMPT": ActionsPromptBlockPlayerContainer
 }
 
 const SlidePlayer = ({

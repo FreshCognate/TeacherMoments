@@ -22,7 +22,7 @@ export default {
     body: {
       scenario: Joi.string().required(),
       slideRef: Joi.string().required(),
-      blockType: Joi.string().required().valid('TEXT', 'ANSWERS_PROMPT', 'INPUT_PROMPT')
+      blockType: Joi.string().required().valid('TEXT', 'ANSWERS_PROMPT', 'INPUT_PROMPT', 'ACTIONS_PROMPT')
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
@@ -55,8 +55,8 @@ export default {
       actions: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('text', Joi.string().allow('')),
-        slideRef: Joi.string(),
-        context: Joi.array(),
+        actionType: Joi.string().valid('COMPLETE_SLIDE', 'RESET_SCENARIO'),
+        actionValue: Joi.string().allow(''),
       }),
       tags: Joi.array().items(Joi.string()),
       isDeleted: Joi.boolean().invalid(true),

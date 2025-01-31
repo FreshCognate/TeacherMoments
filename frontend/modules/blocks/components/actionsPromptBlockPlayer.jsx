@@ -3,7 +3,7 @@ import map from 'lodash/map';
 import getString from '~/modules/ls/helpers/getString';
 import Button from '~/uikit/buttons/components/button';
 
-const ActionsBlockPlayer = ({
+const ActionsPromptBlockPlayer = ({
   block,
   onActionClicked
 }) => {
@@ -15,7 +15,7 @@ const ActionsBlockPlayer = ({
             key={action._id}
             text={getString({ model: action, field: 'text' })}
             color={"primary"}
-            onClick={() => onActionClicked(action.slideRef)}
+            onClick={() => onActionClicked(action)}
           />
         )
       })}
@@ -23,4 +23,4 @@ const ActionsBlockPlayer = ({
   );
 };
 
-export default ActionsBlockPlayer;
+export default ActionsPromptBlockPlayer;

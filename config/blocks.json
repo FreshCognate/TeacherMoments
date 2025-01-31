@@ -16,5 +16,11 @@
     "displayType": "PROMPT",
     "displayName": "Input prompt",
     "description": "A prompt with either text or audio input."
+  },
+  {
+    "blockType": "ACTIONS_PROMPT",
+    "displayType": "PROMPT",
+    "displayName": "Actions prompt",
+    "description": "A prompt with a set of buttons to trigger different events."
   }
 ]

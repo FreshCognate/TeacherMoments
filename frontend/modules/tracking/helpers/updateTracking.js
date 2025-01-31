@@ -20,8 +20,9 @@ export default async ({ slideRef, blockRef, update }) => {
   // If update has isComplete we should see if the slide is complete as something big has happened
   if (update.isComplete) {
     const isSlideComplete = getIsSlideComplete({ blocksByRef: currentStage.blocksByRef });
-    if (isSlideComplete) {
+    if (isSlideComplete && !currentStage.isComplete) {
       currentStage.isComplete = true;
+      currentState.completedAt = new Date();
       setTimeout(() => {
         trigger({ triggerType: 'SLIDE', event: 'ON_COMPLETE', elementRef: slideRef }, {});
       }, 0);
