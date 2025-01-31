@@ -12,7 +12,7 @@ const schema = {
   ref: mongoose.Schema.Types.ObjectId,
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
   slideRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Slide', required: true },
-  blockType: { type: String, enum: ['TEXT', 'ANSWERS_PROMPT', 'INPUT_PROMPT', 'ACTIONS'], default: 'TEXT' },
+  blockType: { type: String, enum: ['TEXT', 'ANSWERS_PROMPT', 'INPUT_PROMPT', 'ACTIONS_PROMPT'], default: 'TEXT' },
   sortOrder: { type: Number },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
   ...title,
@@ -29,8 +29,8 @@ const schema = {
   actions: {
     type: [{
       ...text,
-      slideRef: { type: mongoose.Schema.Types.ObjectId },
-      context: textAreaSchema,
+      actionType: { type: String, default: 'COMPLETE_SLIDE', enum: ['RESET_SCENARIO', 'COMPLETE_SLIDE'] },
+      actionValue: { type: String, default: '' },
     }], default: [{ "en-US-text": "Next" }]
   },
   feedbackItems: {

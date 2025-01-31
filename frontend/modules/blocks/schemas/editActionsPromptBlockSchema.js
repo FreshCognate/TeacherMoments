@@ -12,14 +12,16 @@ export default {
     label: 'Actions',
     subSchema: {
       ...text,
-      slideRef: {
-        type: 'SlideRefSelector',
-        label: 'Navigate to'
-      },
-      context: {
-        type: 'TextArea',
-        label: 'AI - Choose this if:',
-        help: 'Context for AI driven navigation.'
+      actionType: {
+        type: 'Select',
+        label: 'On click',
+        options: [{
+          value: 'COMPLETE_SLIDE',
+          text: 'complete slide'
+        }, {
+          value: 'RESET_SCENARIO',
+          text: 'Reset scenario'
+        }]
       }
     }
   }

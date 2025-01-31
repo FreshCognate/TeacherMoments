@@ -7,7 +7,7 @@ import editBlockSchema from '../schemas/editBlockSchema';
 import editTextBlockSchema from '../schemas/editTextBlockSchema';
 import editAnswersPromptBlockSchema from '../schemas/editAnswersPromptBlockSchema';
 import editInputPromptBlockSchema from '../schemas/editInputPromptBlockSchema';
-import editActionsBlockSchema from '../schemas/editActionsBlockSchema';
+import editActionsPromptBlockSchema from '../schemas/editActionsPromptBlockSchema';
 import getSlideSelectionFromQuery from '~/modules/scenarioBuilder/helpers/getSlideSelectionFromQuery';
 import getEditingDetailsFromQuery from '~/modules/scenarioBuilder/helpers/getEditingDetailsFromQuery';
 import WithRouter from '~/core/app/components/withRouter';
@@ -17,7 +17,7 @@ const SCHEMA_MAPPINGS = {
   TEXT: editTextBlockSchema,
   ANSWERS_PROMPT: editAnswersPromptBlockSchema,
   INPUT_PROMPT: editInputPromptBlockSchema,
-  ACTIONS: editActionsBlockSchema
+  ACTIONS_PROMPT: editActionsPromptBlockSchema
 }
 
 class EditBlockContainer extends Component {
