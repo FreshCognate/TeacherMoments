@@ -10,8 +10,10 @@ const feedback = buildLanguageSchema('feedback', textAreaSchema);
 const schema = {
   type: { type: String, default: 'block' },
   ref: mongoose.Schema.Types.ObjectId,
+  originalRef: mongoose.Schema.Types.ObjectId,
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
   slideRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Slide', required: true },
+  originalSlideRef: mongoose.Schema.Types.ObjectId,
   blockType: { type: String, enum: ['TEXT', 'ANSWERS_PROMPT', 'INPUT_PROMPT', 'ACTIONS_PROMPT'], default: 'TEXT' },
   sortOrder: { type: Number },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],

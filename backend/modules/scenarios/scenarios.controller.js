@@ -4,6 +4,7 @@ import restoreScenarioById from './services/restoreScenarioById.js';
 import updateScenarioById from './services/updateScenarioById.js';
 import deleteScenarioById from './services/deleteScenarioById.js';
 import createScenario from './services/createScenario.js';
+import duplicateScenario from './services/duplicateScenario.js';
 import has from 'lodash/has.js';
 
 export default {
@@ -17,9 +18,15 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { name, accessType } = body;
+    const { name, accessType, scenarioId } = body;
 
-    const scenario = await createScenario({ name, accessType }, {}, context);
+    let scenario;
+
+    if (scenarioId) {
+      scenario = await duplicateScenario({ scenarioId }, {}, context);
+    } else {
+      scenario = await createScenario({ name, accessType }, {}, context);
+    }
 
     return { scenario }
 

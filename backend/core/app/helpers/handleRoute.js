@@ -1,5 +1,6 @@
 import pick from 'lodash/pick.js';
 import getModelsAndTenant from '#core/databases/helpers/getModelsAndTenant.js';
+import getConnection from '#core/databases/helpers/getConnection.js';
 
 export default ({ param, bodyArguments, queryArguments, filesArguments, props, method }) => async (req, res, next) => {
 
@@ -25,11 +26,13 @@ export default ({ param, bodyArguments, queryArguments, filesArguments, props, m
 
     const { models, tenant } = await getModelsAndTenant(req);
 
+    const connection = getConnection();
+
     methodArguments.props = props;
 
     try {
 
-      const response = await method(methodArguments, { models, tenant, req, res, user: req.user });
+      const response = await method(methodArguments, { models, tenant, req, res, user: req.user, connection });
 
       return res.json(response);
 
