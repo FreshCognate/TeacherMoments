@@ -35,6 +35,8 @@ export default {
       name: Joi.string(),
       ...buildLanguageValidation('title', Joi.string().allow('')),
       ...buildLanguageValidation('description', Joi.array()),
+      ...buildLanguageValidation('consent', Joi.array()),
+      ...buildLanguageValidation('summary', Joi.array()),
       accessType: Joi.string().valid("PUBLIC", "PRIVATE"),
       tags: Joi.array().items(Joi.string()),
       collaborators: Joi.array().items({

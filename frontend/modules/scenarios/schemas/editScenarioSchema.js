@@ -12,6 +12,18 @@ const description = buildLanguageSchema('description', {
   features: ['bold', 'italic', 'underline', 'strikethrough', 'code', 'blockquote', 'link', 'leftAlign', 'centerAlign', 'rightAlign', 'justifyAlign', 'bulletedList', 'numberedList']
 });
 
+const consent = buildLanguageSchema('consent', {
+  type: 'TextArea',
+  label: 'Consent agreement',
+  features: ['bold', 'italic', 'underline', 'strikethrough', 'code', 'blockquote', 'link', 'leftAlign', 'centerAlign', 'rightAlign', 'justifyAlign', 'bulletedList', 'numberedList']
+});
+
+const summary = buildLanguageSchema('summary', {
+  type: 'TextArea',
+  label: 'After a scenario has been completed, the participant will be shown this:',
+  features: ['bold', 'italic', 'underline', 'strikethrough', 'code', 'blockquote', 'link', 'leftAlign', 'centerAlign', 'rightAlign', 'justifyAlign', 'bulletedList', 'numberedList']
+});
+
 export default {
   name: {
     type: 'Text',
@@ -20,4 +32,6 @@ export default {
   },
   ...title,
   ...description,
+  ...consent,
+  ...summary
 }
