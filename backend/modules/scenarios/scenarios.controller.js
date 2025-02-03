@@ -9,9 +9,9 @@ import has from 'lodash/has.js';
 export default {
   all: async function ({ query }, context) {
 
-    const { searchValue, currentPage, accessType, isDeleted } = query;
+    const { searchValue, currentPage, sortBy, accessType, isDeleted } = query;
 
-    return await getScenarios({ accessType }, { searchValue, currentPage, isDeleted }, context);
+    return await getScenarios({ accessType }, { searchValue, currentPage, sortBy, isDeleted }, context);
 
   },
 

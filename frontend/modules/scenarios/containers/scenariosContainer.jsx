@@ -78,11 +78,25 @@ class ScenariosContainer extends Component {
     this.debounceFetch(scenarios.fetch);
   }
 
+  onFiltersChanged = (filter) => {
+    const { scenarios } = this.props;
+    scenarios.setStatus('syncing');
+    scenarios.setQuery({ currentPage: 1, accessType: filter });
+    scenarios.fetch();
+  }
+
+  onSortByChanged = (sortBy) => {
+    const { scenarios } = this.props;
+    scenarios.setStatus('syncing');
+    scenarios.setQuery({ currentPage: 1, sortBy: sortBy });
+    scenarios.fetch();
+  }
+
   render() {
 
     const { query, status, data } = this.props.scenarios;
 
-    const { searchValue, currentPage } = query;
+    const { searchValue, currentPage, accessType, sortBy } = query;
     const totalPages = get(this.props, 'scenarios.response.totalPages', 1);
     const isSyncing = status === 'syncing';
     const isLoading = status === 'loading' || status === 'unresolved';
@@ -93,11 +107,17 @@ class ScenariosContainer extends Component {
         searchValue={searchValue}
         currentPage={currentPage}
         totalPages={totalPages}
+        filter={accessType}
+        filters={[{ value: '', text: 'All' }, { value: 'PUBLIC', text: 'Public' }, { value: 'PRIVATE', text: 'Private' }]}
+        sortBy={sortBy}
+        sortByOptions={[{ value: 'NAME', text: 'Name' }, { value: 'NEWEST', text: 'Newest' }, { value: 'OLDEST', text: 'Oldest' }]}
         isSyncing={isSyncing}
         isLoading={isLoading}
         onSearchValueChange={this.onSearchValueChange}
         onPaginationClicked={this.onPaginationClicked}
         onCreateScenarioClicked={this.onCreateScenarioClicked}
+        onFiltersChanged={this.onFiltersChanged}
+        onSortByChanged={this.onSortByChanged}
       />
     );
   }
@@ -110,7 +130,9 @@ export default WithRouter(WithCache(ScenariosContainer, {
     getQuery: ({ }) => {
       return {
         searchValue: '',
-        currentPage: 1
+        currentPage: 1,
+        accessType: '',
+        sortBy: 'NAME'
       }
     }
   }

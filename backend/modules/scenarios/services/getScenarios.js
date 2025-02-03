@@ -11,6 +11,7 @@ export default async (props, options, context) => {
   let {
     searchValue = '',
     currentPage = 1,
+    sortBy = 'NAME',
     isDeleted = false,
   } = options;
 
@@ -32,11 +33,19 @@ export default async (props, options, context) => {
     search.accessType = accessType;
   }
 
+  let sort = 'name';
+
+  if (sortBy === 'NEWEST') {
+    sort = '-createdAt';
+  } else if (sortBy === 'OLDEST') {
+    sort = 'createdAt';
+  }
+
   const count = await models.Scenario.countDocuments(search);
 
   const totalPages = getTotalPages(count);
 
-  const scenarios = await models.Scenario.find(search, null, searchOptions).sort('name');
+  const scenarios = await models.Scenario.find(search, null, searchOptions).sort(sort);
 
   return {
     scenarios,

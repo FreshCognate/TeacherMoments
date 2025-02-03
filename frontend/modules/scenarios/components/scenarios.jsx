@@ -10,11 +10,17 @@ const Scenarios = ({
   searchValue,
   currentPage,
   totalPages,
+  filter,
+  filters,
+  sortBy,
+  sortByOptions,
   isSyncing,
   isLoading,
   onCreateScenarioClicked,
   onSearchValueChange,
-  onPaginationClicked
+  onPaginationClicked,
+  onFiltersChanged,
+  onSortByChanged
 }) => {
   return (
     <div className="flex h-full">
@@ -27,13 +33,21 @@ const Scenarios = ({
             searchValue={searchValue}
             currentPage={currentPage}
             totalPages={totalPages}
+            filter={filter}
+            filters={filters}
+            sortBy={sortBy}
+            sortByOptions={sortByOptions}
             hasSearch
             hasPagination
+            hasFilters
+            hasSortBy
             isSyncing={isSyncing}
             isLoading={isLoading}
             shouldAutoFocus
             onSearchValueChange={onSearchValueChange}
             onPaginationClicked={onPaginationClicked}
+            onFiltersChanged={onFiltersChanged}
+            onSortByChanged={onSortByChanged}
           />
         </div>
         <div className="grid grid-cols-4 gap-4 p-4">
