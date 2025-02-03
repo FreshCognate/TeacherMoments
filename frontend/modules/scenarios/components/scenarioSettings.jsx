@@ -12,7 +12,7 @@ const ScenarioSettings = ({
   return (
     <div className="p-4">
       <Title title="Scenario settings" />
-      <div className="w-1/4">
+      <div className="w-1/3">
         <FormContainer
           schema={schema}
           model={scenario}

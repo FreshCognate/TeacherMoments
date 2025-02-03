@@ -4,12 +4,16 @@ import buildLanguageSchema from '#core/app/helpers/buildLanguageSchema.js';
 
 const title = buildLanguageSchema('title', { type: String, default: '' });
 const description = buildLanguageSchema('description', textAreaSchema);
+const consent = buildLanguageSchema('consent', textAreaSchema);
+const summary = buildLanguageSchema('summary', textAreaSchema);
 
 const schema = {
   type: { type: String, default: 'scenario' },
   name: { type: String, default: '', required: true },
   ...title,
   ...description,
+  ...consent,
+  ...summary,
   accessType: { type: String, enum: ['PUBLIC', 'PRIVATE'] },
   isExample: { type: Boolean, default: false },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
