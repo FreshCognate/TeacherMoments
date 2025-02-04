@@ -141,6 +141,11 @@ class ScenarioBuilderItemContainer extends Component {
     })
   }
 
+  duplicateSlide = () => {
+    const editor = getCache('editor');
+    editor.set({ isDuplicating: true, duplicateId: this.props.slide._id, duplicateType: 'slide' });
+  }
+
   shouldRenderChildren = () => {
 
     let slideSelection = getSlideSelectionFromQuery();
@@ -267,7 +272,11 @@ class ScenarioBuilderItemContainer extends Component {
       case 'DELETE':
         this.deleteSlide();
         break;
+      case 'DUPLICATE':
+        this.duplicateSlide();
+        break;
     }
+    this.setState({ isOptionsOpen: false });
   }
 
   render() {

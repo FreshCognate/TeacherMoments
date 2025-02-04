@@ -43,7 +43,7 @@ const ScenarioBuilderItemContent = ({
           <div className="flex items-center">
             <div className="mr-2 border-r border-lm-3 dark:border-dm-3 pr-2">
               <Options
-                options={[{ action: 'DELETE', text: 'Delete', icon: 'delete', color: 'warning' }]}
+                options={[{ action: 'DUPLICATE', text: 'Copy', icon: 'copy' }, { action: 'DELETE', text: 'Delete', icon: 'delete', color: 'warning' }]}
                 isOpen={isOptionsOpen}
                 onToggle={onOptionsToggled}
                 onOptionClicked={onOptionClicked}
