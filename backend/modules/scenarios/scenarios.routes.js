@@ -19,8 +19,9 @@ export default {
   },
   create: {
     body: {
-      name: Joi.string().required(),
-      accessType: Joi.string().required().valid("PUBLIC", "PRIVATE"),
+      name: Joi.string().when('scenarioId', { is: Joi.string(), then: Joi.optional(), otherwise: Joi.required() }),
+      accessType: Joi.string().when('scenarioId', { is: Joi.string(), then: Joi.optional(), otherwise: Joi.required().valid("PUBLIC", "PRIVATE") }),
+      scenarioId: Joi.string().optional(),
       tags: Joi.array().items(Joi.string())
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],

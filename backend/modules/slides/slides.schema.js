@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const schema = {
   type: { type: String, default: 'slide' },
   ref: mongoose.Schema.Types.ObjectId,
+  originalRef: mongoose.Schema.Types.ObjectId,
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
   name: { type: String, default: '' },
   slideType: { type: String, enum: ['STEP', 'SUMMARY'], default: 'STEP' },

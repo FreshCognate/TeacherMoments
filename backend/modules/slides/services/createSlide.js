@@ -22,7 +22,7 @@ export default async (props, options, context) => {
   // If parent is provided, we need to update the parent slide to have the new slide as a child
   if (parent) {
     const parentSlide = await models.Slide.findById(parent);
-    parentSlide.children.push(slide._id);
+    parentSlide.children.push(slide.ref);
     await parentSlide.save();
   }
 

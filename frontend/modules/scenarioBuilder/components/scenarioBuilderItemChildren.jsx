@@ -16,6 +16,7 @@ const ScenarioBuilderItemChildren = ({
     }}>
       {map(children, (ref, index) => {
         const childSlide = getCache('slides').data.find(s => s.ref === ref);
+        if (!childSlide) return null;
         const isSelected = slideSelection[newLayerIndex] === index;
         return (
           <div
