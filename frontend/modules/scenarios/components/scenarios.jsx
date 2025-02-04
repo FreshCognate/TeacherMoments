@@ -4,6 +4,11 @@ import map from 'lodash/map';
 import { Link } from 'react-router';
 import ActionBar from '~/uikit/actionBars/components/actionBar';
 import Card from '~/uikit/cards/components/card';
+import Title from '~/uikit/content/components/title';
+import Body from '~/uikit/content/components/body';
+import CardContent from '~/uikit/cards/components/cardContent';
+import CardActions from '~/uikit/cards/components/cardActions';
+import FlatButton from '~/uikit/buttons/components/flatButton';
 
 const Scenarios = ({
   scenarios,
@@ -20,7 +25,8 @@ const Scenarios = ({
   onSearchValueChange,
   onPaginationClicked,
   onFiltersChanged,
-  onSortByChanged
+  onSortByChanged,
+  onDuplicateScenarioClicked
 }) => {
   return (
     <div className="flex h-full">
@@ -53,11 +59,22 @@ const Scenarios = ({
         <div className="grid grid-cols-4 gap-4 p-4">
           {map(scenarios, (scenario) => {
             return (
-              <Link key={scenario._id} to={`/scenarios/${scenario._id}/create`}>
-                <Card name={scenario.name} title={scenario.title} description={scenario.description}>
-
-                </Card>
-              </Link>
+              <Card key={scenario._id}>
+                <CardContent>
+                  <Title title={scenario.name} />
+                  <Body body={scenario.title} />
+                  <Body body={scenario.description} />
+                </CardContent>
+                <CardActions>
+                  <Link to={`/scenarios/${scenario._id}/create`}>
+                    <FlatButton
+                      icon="edit"
+                      text="Edit"
+                    />
+                  </Link>
+                  <FlatButton icon="copy" text="Copy" onClick={() => onDuplicateScenarioClicked(scenario._id)} />
+                </CardActions>
+              </Card>
             );
           })}
         </div>

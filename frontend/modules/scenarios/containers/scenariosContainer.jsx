@@ -92,6 +92,15 @@ class ScenariosContainer extends Component {
     scenarios.fetch();
   }
 
+  onDuplicateScenarioClicked = (scenarioId) => {
+    const { scenarios } = this.props;
+    scenarios.setStatus('syncing');
+    axios.post(`/api/scenarios`, { scenarioId }).then((response) => {
+      const newScenarioId = response.data.scenario._id;
+      this.props.router.navigate(`/scenarios/${newScenarioId}/create`);
+    }).catch(handleRequestError);
+  }
+
   render() {
 
     const { query, status, data } = this.props.scenarios;
@@ -118,6 +127,7 @@ class ScenariosContainer extends Component {
         onCreateScenarioClicked={this.onCreateScenarioClicked}
         onFiltersChanged={this.onFiltersChanged}
         onSortByChanged={this.onSortByChanged}
+        onDuplicateScenarioClicked={this.onDuplicateScenarioClicked}
       />
     );
   }
