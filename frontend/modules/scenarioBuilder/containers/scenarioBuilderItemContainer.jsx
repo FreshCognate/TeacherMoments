@@ -286,35 +286,40 @@ class ScenarioBuilderItemContainer extends Component {
     const scenarioId = getCache('scenario').data._id;
 
     let sortOrder = 0;
+    let parentId = this.props.slide._id;
+    const slides = getCache('slides');
+    const parentSlide = find(slides.data, (slide) => slide.ref = this.props.parent);
+
     switch (position) {
       case 'CHILD':
         sortOrder = this.props.slide.children.length;
         break;
       case 'BEFORE':
         sortOrder = this.props.itemIndex;
+        parentId = parentSlide._id;
         break;
       case 'AFTER':
         sortOrder = this.props.itemIndex + 1;
+        parentId = parentSlide._id;
         break;
     }
 
     axios.post(`/api/slides`, {
       scenarioId: scenarioId,
       slideId: editor.data.duplicateId,
-      parentId: this.props.slide._id,
+      parentId,
       sortOrder
-    }).then(() => {
+    }).then(async () => {
       const slides = getCache('slides');
       const blocks = getCache('blocks');
-      slides.fetch().then(() => {
-        editor.set({
-          isCreatingDuplicate: false,
-          isDuplicating: false,
-          duplicateId: null,
-          duplicateType: null
-        })
+      await blocks.fetch();
+      await slides.fetch()
+      editor.set({
+        isCreatingDuplicate: false,
+        isDuplicating: false,
+        duplicateId: null,
+        duplicateType: null
       });
-      blocks.fetch();
     }).catch((error) => {
       handleRequestError(error);
       editor.set({

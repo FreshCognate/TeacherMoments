@@ -7,6 +7,7 @@ import classnames from 'classnames';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
 import Icon from '~/uikit/icons/components/icon';
+import Loading from '~/uikit/loaders/components/loading';
 
 const ScenarioBuilder = ({
   rootSlide,
@@ -17,6 +18,7 @@ const ScenarioBuilder = ({
   duplicateId,
   isEditingBlock,
   isDuplicating,
+  isCreatingDuplicate,
   onCancelDuplicatingClicked
 }) => {
   const isDarkMode = window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
@@ -32,7 +34,12 @@ const ScenarioBuilder = ({
             <Icon icon="paste" size={12} className="mr-2" /><Body body={`Pick a place to copy the ${duplicateType} to`} size="sm" />
           </div>
           <div>
-            <FlatButton text="Cancel" onClick={onCancelDuplicatingClicked} />
+            {(isCreatingDuplicate) && (
+              <Loading text="Creating..." size="sm" />
+            )}
+            {(!isCreatingDuplicate) && (
+              <FlatButton text="Cancel" onClick={onCancelDuplicatingClicked} />
+            )}
           </div>
         </div>
       )}

@@ -20,6 +20,7 @@ export default async ({ scenario, parentId, slideId, sortOrder }, context) => {
     duplicatedSlideObject.originalScenario = existingSlide.scenario;
     duplicatedSlideObject.isRoot = false;
     duplicatedSlideObject.createdAt = new Date();
+    duplicatedSlideObject.children = [];
 
     const bulkSlides = await models.Slide.create([duplicatedSlideObject], { session });
 

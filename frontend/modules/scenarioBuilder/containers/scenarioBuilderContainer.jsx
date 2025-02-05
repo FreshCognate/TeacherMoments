@@ -29,7 +29,13 @@ class ScenarionBuilderContainer extends Component {
 
   render() {
 
-    const { displayMode, isDuplicating, duplicateType, duplicateId } = this.props.editor.data;
+    const {
+      displayMode,
+      duplicateType,
+      duplicateId,
+      isDuplicating,
+      isCreatingDuplicate,
+    } = this.props.editor.data;
     const { isEditing, blockId } = this.getEditingBlockDetails();
 
     return (
@@ -42,6 +48,7 @@ class ScenarionBuilderContainer extends Component {
         duplicateId={duplicateId}
         isEditingBlock={isEditing}
         isDuplicating={isDuplicating}
+        isCreatingDuplicate={isCreatingDuplicate}
         onCancelDuplicatingClicked={this.onCancelDuplicatingClicked}
       />
     );
