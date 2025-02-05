@@ -14,6 +14,7 @@ import getEditingDetailsFromQuery from '../helpers/getEditingDetailsFromQuery';
 import addModal from '~/core/dialogs/helpers/addModal';
 import cloneDeep from 'lodash/cloneDeep';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
+import WithCache from '~/core/cache/containers/withCache';
 
 class ScenarioBuilderItemContainer extends Component {
 
@@ -378,4 +379,4 @@ class ScenarioBuilderItemContainer extends Component {
   }
 };
 
-export default WithRouter(ScenarioBuilderItemContainer);
+export default WithRouter(WithCache(ScenarioBuilderItemContainer, null, ['slides', 'blocks']));

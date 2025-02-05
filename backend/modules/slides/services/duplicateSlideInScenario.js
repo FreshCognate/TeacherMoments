@@ -2,7 +2,6 @@ import omit from 'lodash/omit.js';
 import duplicateBlocks from '../../blocks/services/duplicateBlocks.js';
 
 export default async ({ scenario, parentId, slideId, sortOrder }, context) => {
-  console.log(scenario, parentId, slideId, sortOrder);
 
   const { models, connection } = context;
 
@@ -30,7 +29,7 @@ export default async ({ scenario, parentId, slideId, sortOrder }, context) => {
 
     const children = parentSlide.children;
 
-    children.splice(1, 0, duplicatedSlide.ref);
+    children.splice(sortOrder, 0, duplicatedSlide.ref);
 
     await parentSlide.save();
 
