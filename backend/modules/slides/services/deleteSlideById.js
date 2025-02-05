@@ -4,10 +4,12 @@ export default async (props, options, context) => {
 
   const { models, user } = context;
 
+  const deletedAt = new Date();
+
   const slide = await models.Slide.findByIdAndUpdate(slideId, {
     isRoot: false,
     isDeleted: true,
-    deletedAt: new Date(),
+    deletedAt,
     deletedBy: user._id
   }, { new: true });
 
@@ -16,14 +18,7 @@ export default async (props, options, context) => {
   // Remove slide from any children
   await models.Slide.updateMany({ children: slide.ref }, { $pull: { children: slide.ref } });
 
-  const scenarioSlides = await models.Slide.find({ scenario: slide.scenario, isDeleted: false });
-
-  let sortOrder = 0;
-  for (const scenarioSlide of scenarioSlides) {
-    scenarioSlide.sortOrder = sortOrder;
-    sortOrder++;
-    await scenarioSlide.save();
-  }
+  await models.Block.updateMany({ slideRef: slide.ref }, { isDeleted: true, deletedAt, deletedBy: user._id });
 
   return slide;
 
