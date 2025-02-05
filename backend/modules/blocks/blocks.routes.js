@@ -12,7 +12,7 @@ export default {
       searchValue: Joi.string().allow('').default(''),
       currentPage: Joi.number().default(1),
       blockType: Joi.string(),
-      scenario: Joi.string(),
+      scenarioId: Joi.string(),
       slideRef: Joi.string(),
       isDeleted: Joi.boolean()
     },
@@ -20,7 +20,7 @@ export default {
   },
   create: {
     body: {
-      scenario: Joi.string().required(),
+      scenarioId: Joi.string().required(),
       slideRef: Joi.string().required(),
       blockType: Joi.string().required().valid('TEXT', 'ANSWERS_PROMPT', 'INPUT_PROMPT', 'ACTIONS_PROMPT')
     },

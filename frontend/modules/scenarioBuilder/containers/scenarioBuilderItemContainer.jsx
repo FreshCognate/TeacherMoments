@@ -168,8 +168,8 @@ class ScenarioBuilderItemContainer extends Component {
           if (!modal.slideRef) {
             axios.post(`/api/slides`, {
               name: modal.name,
-              scenario: scenario._id,
-              parent: this.props.slide._id
+              scenarioId: scenario._id,
+              parentId: this.props.slide._id
             }).then((response) => {
               const newSlideId = get(response, 'data.slide._id');
               const slides = getCache('slides');
@@ -260,7 +260,7 @@ class ScenarioBuilderItemContainer extends Component {
       layer = 'root';
     }
     let query = `slideSelection=${JSON.stringify(slideSelection)}`
-    this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true })
+    this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true });
   }
 
   onOptionsToggled = (isOptionsOpen) => {
@@ -273,30 +273,92 @@ class ScenarioBuilderItemContainer extends Component {
         this.deleteSlide();
         break;
       case 'DUPLICATE':
+        this.onCancelEditingClicked();
         this.duplicateSlide();
         break;
     }
     this.setState({ isOptionsOpen: false });
   }
 
+  onPasteSlideClicked = (position) => {
+    const editor = getCache('editor');
+    editor.set({ isCreatingDuplicate: true });
+    const scenarioId = getCache('scenario').data._id;
+
+    let sortOrder = 0;
+    switch (position) {
+      case 'CHILD':
+        sortOrder = this.props.slide.children.length;
+        break;
+      case 'BEFORE':
+        sortOrder = this.props.itemIndex;
+        break;
+      case 'AFTER':
+        sortOrder = this.props.itemIndex + 1;
+        break;
+    }
+
+    axios.post(`/api/slides`, {
+      scenarioId: scenarioId,
+      slideId: editor.data.duplicateId,
+      parentId: this.props.slide._id,
+      sortOrder
+    }).then(() => {
+      const slides = getCache('slides');
+      const blocks = getCache('blocks');
+      slides.fetch().then(() => {
+        editor.set({
+          isCreatingDuplicate: false,
+          isDuplicating: false,
+          duplicateId: null,
+          duplicateType: null
+        })
+      });
+      blocks.fetch();
+    }).catch((error) => {
+      handleRequestError(error);
+      editor.set({
+        isCreatingDuplicate: false,
+        isDuplicating: false,
+        duplicateId: null,
+        duplicateType: null
+      });
+    });
+  }
+
   render() {
+
+    const {
+      slide,
+      slideSelection,
+      layerIndex,
+      isSelected,
+      isDuplicating
+    } = this.props;
+
+    const {
+      isOptionsOpen,
+      isDeleting
+    } = this.state;
+
     return (
       <ScenarioBuilderItem
-        slide={this.props.slide}
-        parent={this.props.slide.ref}
-        slideSelection={this.props.slideSelection}
+        slide={slide}
+        parent={slide.ref}
+        slideSelection={slideSelection}
         selectedSlide={this.getSelectedSlide()}
         blocksCount={this.getBlocksCount()}
         triggersCount={this.getTriggersCount()}
-        layerIndex={this.props.layerIndex}
+        layerIndex={layerIndex}
         location={this.getLocation()}
         shouldRenderChildren={this.shouldRenderChildren()}
-        isSelected={this.props.isSelected}
+        isSelected={isSelected}
         isEditing={this.getIsEditing()}
         isEditingChildren={this.getIsEditingChildren()}
         isEditingSibling={this.getIsEditingSibling()}
-        isOptionsOpen={this.state.isOptionsOpen}
-        isDeleting={this.state.isDeleting}
+        isOptionsOpen={isOptionsOpen}
+        isDeleting={isDeleting}
+        isDuplicating={isDuplicating}
         childrenOffset={this.getChildrenOffset()}
         onAddChildSlideClicked={this.onAddChildSlideClicked}
         onToggleChildSlidesClicked={this.onToggleChildSlidesClicked}
@@ -305,6 +367,7 @@ class ScenarioBuilderItemContainer extends Component {
         onCancelEditingClicked={this.onCancelEditingClicked}
         onOptionsToggled={this.onOptionsToggled}
         onOptionClicked={this.onOptionClicked}
+        onPasteSlideClicked={this.onPasteSlideClicked}
       />
     );
   }

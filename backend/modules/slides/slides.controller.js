@@ -6,15 +6,16 @@ import updateSlideById from './services/updateSlideById.js';
 import deleteSlideById from './services/deleteSlideById.js';
 import createSlide from './services/createSlide.js';
 import reorderSlide from './services/reorderSlide.js';
+import duplicateSlideInScenario from './services/duplicateSlideInScenario.js';
 import has from 'lodash/has.js';
 
 export default {
   all: async function ({ query }, context) {
 
-    const { searchValue, currentPage, scenario, isDeleted } = query;
+    const { searchValue, currentPage, scenarioId, isDeleted } = query;
 
-    if (scenario) {
-      return await getSlidesByScenarioId({ scenarioId: scenario }, { isDeleted }, context);
+    if (scenarioId) {
+      return await getSlidesByScenarioId({ scenarioId }, { isDeleted }, context);
     }
 
     return await getSlides({}, { searchValue, currentPage, isDeleted }, context);
@@ -23,9 +24,15 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { name, scenario, parent } = body;
+    const { name, scenarioId, parentId, slideId, sortOrder } = body;
 
-    const slide = await createSlide({ name, scenario, parent }, {}, context);
+    let slide;
+
+    if (slideId) {
+      slide = await duplicateSlideInScenario({ scenario: scenarioId, parentId, slideId, sortOrder }, context);
+    } else {
+      slide = await createSlide({ name, scenario: scenarioId, parentId }, {}, context);
+    }
 
     return { slide };
 

@@ -1,6 +1,7 @@
 import ScenarioBuilderItemContent from './scenarioBuilderItemContent';
 import ScenarioBuilderItemActions from './scenarioBuilderItemActions';
 import ScenarioBuilderItemChildren from './scenarioBuilderItemChildren';
+import FlatButton from '~/uikit/buttons/components/flatButton';
 
 const ScenarioBuilderItem = ({
   slide,
@@ -17,6 +18,7 @@ const ScenarioBuilderItem = ({
   isEditingSibling,
   isOptionsOpen,
   isDeleting,
+  isDuplicating,
   childrenOffset,
   shouldRenderChildren,
   onAddChildSlideClicked,
@@ -25,13 +27,24 @@ const ScenarioBuilderItem = ({
   onEditSlideClicked,
   onCancelEditingClicked,
   onOptionsToggled,
-  onOptionClicked
+  onOptionClicked,
+  onPasteSlideClicked
 }) => {
   const newLayerIndex = layerIndex + 1;
   return (
     <div className={isDeleting ? 'opacity-20' : ''} id={`scenario-builder-slide-${slide._id}`}>
       <div className="flex justify-center">
         <div className="relative">
+          {(!slide.isRoot && isSelected && isDuplicating) && (
+            <>
+              <div className="absolute z-20 -left-8 top-1/2 -mt-3">
+                <FlatButton icon="paste" isCircular onClick={() => onPasteSlideClicked('BEFORE')} />
+              </div>
+              <div className="absolute z-20 -right-8 top-1/2 -mt-3">
+                <FlatButton icon="paste" isCircular onClick={() => onPasteSlideClicked('AFTER')} />
+              </div>
+            </>
+          )}
           <ScenarioBuilderItemContent
             location={location}
             slide={slide}
@@ -41,6 +54,7 @@ const ScenarioBuilderItem = ({
             isEditing={isEditing}
             isEditingSibling={isEditingSibling}
             isOptionsOpen={isOptionsOpen}
+            isDuplicating={isDuplicating}
             onSelectSlideClicked={onSelectSlideClicked}
             onEditSlideClicked={onEditSlideClicked}
             onCancelEditingClicked={onCancelEditingClicked}
@@ -51,9 +65,11 @@ const ScenarioBuilderItem = ({
             <ScenarioBuilderItemActions
               slide={slide}
               selectedSlide={selectedSlide}
+              isDuplicating={isDuplicating}
               shouldRenderChildren={shouldRenderChildren}
               onAddChildSlideClicked={onAddChildSlideClicked}
               onToggleChildSlidesClicked={onToggleChildSlidesClicked}
+              onPasteSlideClicked={onPasteSlideClicked}
             />
           )}
         </div>
@@ -65,6 +81,7 @@ const ScenarioBuilderItem = ({
           slideSelection={slideSelection}
           childrenOffset={childrenOffset}
           newLayerIndex={newLayerIndex}
+          isDuplicating={isDuplicating}
           isEditing={isEditing}
           isEditingChildren={isEditingChildren}
         />

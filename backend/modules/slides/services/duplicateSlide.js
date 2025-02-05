@@ -9,6 +9,8 @@ export default async ({ slideId, newScenarioId }, context) => {
   const duplicatedSlideObject = omit(slide, ['_id', 'ref']);
   duplicatedSlideObject.scenario = newScenarioId;
   duplicatedSlideObject.originalRef = slide.ref;
+  duplicatedSlideObject.originalScenario = slide.scenario;
+  duplicatedSlideObject.createdAt = new Date();
 
   const bulkSlides = await models.Slide.create([duplicatedSlideObject], { session });
 

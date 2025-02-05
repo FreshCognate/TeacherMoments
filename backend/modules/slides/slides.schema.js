@@ -3,8 +3,9 @@ import mongoose from 'mongoose';
 const schema = {
   type: { type: String, default: 'slide' },
   ref: mongoose.Schema.Types.ObjectId,
-  originalRef: mongoose.Schema.Types.ObjectId,
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
+  originalRef: mongoose.Schema.Types.ObjectId,
+  originalScenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario' },
   name: { type: String, default: '' },
   slideType: { type: String, enum: ['STEP', 'SUMMARY'], default: 'STEP' },
   isRoot: { type: Boolean, default: false },

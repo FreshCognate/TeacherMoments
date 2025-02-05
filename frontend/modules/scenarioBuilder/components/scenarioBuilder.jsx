@@ -6,12 +6,15 @@ import EditBlockContainer from '~/modules/blocks/containers/editBlockContainer';
 import classnames from 'classnames';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
+import Icon from '~/uikit/icons/components/icon';
 
 const ScenarioBuilder = ({
   rootSlide,
   displayMode,
   slideSelection,
   blockId,
+  duplicateType,
+  duplicateId,
   isEditingBlock,
   isDuplicating,
   onCancelDuplicatingClicked
@@ -24,9 +27,9 @@ const ScenarioBuilder = ({
       "outline outline-2 -outline-offset-2 outline-blue-500": isDuplicating
     })}>
       {(isDuplicating) && (
-        <div className="text-white bg-blue-500 fixed w-full top-0 z-50 flex items-center justify-between px-4 py-4" style={{ top: '68px' }}>
-          <div>
-            <Body body="Pick a place to copy the slide to" size="sm" />
+        <div className="text-white bg-blue-500 fixed w-full top-0 z-40 flex items-center justify-between px-4 py-4" style={{ top: '68px' }}>
+          <div className="flex items-center">
+            <Icon icon="paste" size={12} className="mr-2" /><Body body={`Pick a place to copy the ${duplicateType} to`} size="sm" />
           </div>
           <div>
             <FlatButton text="Cancel" onClick={onCancelDuplicatingClicked} />
@@ -48,7 +51,10 @@ const ScenarioBuilder = ({
               slide={rootSlide}
               slideSelection={slideSelection}
               layerIndex={-1}
+              duplicateId={duplicateId}
+              duplicateType={duplicateType}
               isSelected={true}
+              isDuplicating={isDuplicating}
             />
           )}
           {(displayMode === 'PREVIEW') && (

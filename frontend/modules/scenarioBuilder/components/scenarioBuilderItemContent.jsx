@@ -18,6 +18,7 @@ const ScenarioBuilderItemContent = ({
   isEditing,
   isEditingSibling,
   isOptionsOpen,
+  isDuplicating,
   onSelectSlideClicked,
   onEditSlideClicked,
   onCancelEditingClicked,
@@ -63,7 +64,7 @@ const ScenarioBuilderItemContent = ({
           </div>
         </div>
       )}
-      {((isSelected && !isEditing) || (!isSelected && isEditingSibling)) && (
+      {(((isSelected && !isEditing) || (!isSelected && isEditingSibling)) && !isDuplicating) && (
         <div
           className="group-hover:flex justify-center items-center hidden cursor-pointer absolute w-full h-full top-0 right-0 p-1 bg-opacity-40 bg-white dark:bg-black dark:bg-opacity-40 rounded-bl-lg rounded-tr-lg"
           onClick={onEditSlideClicked}
