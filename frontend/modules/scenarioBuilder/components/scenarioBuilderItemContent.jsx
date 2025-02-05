@@ -25,6 +25,13 @@ const ScenarioBuilderItemContent = ({
   onOptionsToggled,
   onOptionClicked
 }) => {
+
+  const optionActions = [{ action: 'DUPLICATE', text: 'Copy', icon: 'copy' }];
+
+  if (!slide.isRoot) {
+    optionActions.push({ action: 'DELETE', text: 'Delete', icon: 'delete', color: 'warning' });
+  }
+
   return (
     <div
       className="relative border border-lm-3 dark:border-dm-3 bg-lm-0 dark:bg-dm-1 p-2 w-[440px] rounded-lg group"
@@ -44,7 +51,7 @@ const ScenarioBuilderItemContent = ({
           <div className="flex items-center">
             <div className="mr-2 border-r border-lm-3 dark:border-dm-3 pr-2">
               <Options
-                options={[{ action: 'DUPLICATE', text: 'Copy', icon: 'copy' }, { action: 'DELETE', text: 'Delete', icon: 'delete', color: 'warning' }]}
+                options={optionActions}
                 isOpen={isOptionsOpen}
                 onToggle={onOptionsToggled}
                 onOptionClicked={onOptionClicked}
