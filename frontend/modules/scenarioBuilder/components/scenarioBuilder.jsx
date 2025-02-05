@@ -3,20 +3,47 @@ import ScenarioBuilderItemContainer from '../containers/scenarioBuilderItemConta
 import ScenarioEditorToolbarContainer from '~/modules/scenarios/containers/scenarioEditorToolbarContainer';
 import ScenarioPreviewContainer from '~/modules/scenarios/containers/scenarioPreviewContainer';
 import EditBlockContainer from '~/modules/blocks/containers/editBlockContainer';
+import classnames from 'classnames';
+import FlatButton from '~/uikit/buttons/components/flatButton';
+import Body from '~/uikit/content/components/body';
+import Icon from '~/uikit/icons/components/icon';
+import Loading from '~/uikit/loaders/components/loading';
 
 const ScenarioBuilder = ({
   rootSlide,
   displayMode,
   slideSelection,
   blockId,
-  isEditingBlock
+  duplicateType,
+  duplicateId,
+  isEditingBlock,
+  isDuplicating,
+  isCreatingDuplicate,
+  onCancelDuplicatingClicked
 }) => {
   const isDarkMode = window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
   const backgroundDotColor = isDarkMode ? '#222' : '#ddd'
 
   return (
-    <div id="scenario-builder" style={{ height: 'calc(100vh - 28px', marginTop: '28px' }} className="overflow-x-hidden overflow-y-scroll">
-      <div className="bg-lm-1 dark:bg-dm-0 min-h-screen" style={{
+    <div id="scenario-builder" style={{ height: 'calc(100vh - 68px', marginTop: '28px' }} className={classnames("relative overflow-x-hidden overflow-y-scroll", {
+      "outline outline-2 -outline-offset-2 outline-blue-500": isDuplicating
+    })}>
+      {(isDuplicating) && (
+        <div className="text-white bg-blue-500 fixed w-full top-0 z-40 flex items-center justify-between px-4 py-4" style={{ top: '68px' }}>
+          <div className="flex items-center">
+            <Icon icon="paste" size={12} className="mr-2" /><Body body={`Pick a place to copy the ${duplicateType} to`} size="sm" />
+          </div>
+          <div>
+            {(isCreatingDuplicate) && (
+              <Loading text="Creating..." size="sm" />
+            )}
+            {(!isCreatingDuplicate) && (
+              <FlatButton text="Cancel" onClick={onCancelDuplicatingClicked} />
+            )}
+          </div>
+        </div>
+      )}
+      <div className={"bg-lm-1 dark:bg-dm-0 min-h-screen"} style={{
         backgroundSize: "20px 20px",
         backgroundPosition: "-9px -9px",
         backgroundImage: displayMode === 'EDITING' ? `radial-gradient(${backgroundDotColor} 1px, transparent 0)` : 'none',
@@ -31,7 +58,10 @@ const ScenarioBuilder = ({
               slide={rootSlide}
               slideSelection={slideSelection}
               layerIndex={-1}
+              duplicateId={duplicateId}
+              duplicateType={duplicateType}
               isSelected={true}
+              isDuplicating={isDuplicating}
             />
           )}
           {(displayMode === 'PREVIEW') && (

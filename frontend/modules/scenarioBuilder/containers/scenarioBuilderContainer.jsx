@@ -23,9 +23,19 @@ class ScenarionBuilderContainer extends Component {
     };
   }
 
+  onCancelDuplicatingClicked = () => {
+    this.props.editor.set({ isDuplicating: false, duplicateType: null, duplicateId: null });
+  }
+
   render() {
 
-    const { displayMode } = this.props.editor.data;
+    const {
+      displayMode,
+      duplicateType,
+      duplicateId,
+      isDuplicating,
+      isCreatingDuplicate,
+    } = this.props.editor.data;
     const { isEditing, blockId } = this.getEditingBlockDetails();
 
     return (
@@ -34,7 +44,12 @@ class ScenarionBuilderContainer extends Component {
         rootSlide={this.getRootSlide()}
         slideSelection={getSlideSelectionFromQuery()}
         blockId={blockId}
+        duplicateType={duplicateType}
+        duplicateId={duplicateId}
         isEditingBlock={isEditing}
+        isDuplicating={isDuplicating}
+        isCreatingDuplicate={isCreatingDuplicate}
+        onCancelDuplicatingClicked={this.onCancelDuplicatingClicked}
       />
     );
   }

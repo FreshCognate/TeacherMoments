@@ -8,7 +8,8 @@ const ScenarioBuilderItemChildren = ({
   parent,
   slideSelection,
   newLayerIndex,
-  childrenOffset
+  childrenOffset,
+  isDuplicating
 }) => {
   return (
     <div className="flex justify-start pt-10 pb-7 w-[440px] transition-transform duration-500" style={{
@@ -29,6 +30,7 @@ const ScenarioBuilderItemChildren = ({
               itemIndex={index}
               layerIndex={newLayerIndex}
               isSelected={isSelected}
+              isDuplicating={isDuplicating}
               slideSelection={slideSelection}
             />
           </div>

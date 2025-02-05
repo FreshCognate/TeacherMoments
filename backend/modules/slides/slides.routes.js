@@ -11,7 +11,7 @@ export default {
       searchValue: Joi.string().allow('').default(''),
       currentPage: Joi.number().default(1),
       slideType: Joi.string(),
-      scenario: Joi.string(),
+      scenarioId: Joi.string(),
       isDeleted: Joi.boolean()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
@@ -19,8 +19,10 @@ export default {
   create: {
     body: {
       name: Joi.string().allow(''),
-      scenario: Joi.string().required(),
-      parent: Joi.string(),
+      scenarioId: Joi.string().required(),
+      parentId: Joi.string(),
+      slideId: Joi.string(),
+      sortOrder: Joi.number().when('slideId', { is: Joi.string(), then: Joi.required(), otherwise: Joi.optional() })
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },

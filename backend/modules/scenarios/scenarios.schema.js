@@ -10,6 +10,7 @@ const summary = buildLanguageSchema('summary', textAreaSchema);
 const schema = {
   type: { type: String, default: 'scenario' },
   name: { type: String, default: '', required: true },
+  originalScenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario' },
   ...title,
   ...description,
   ...consent,

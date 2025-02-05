@@ -18,6 +18,7 @@ const ScenarioBuilderItemContent = ({
   isEditing,
   isEditingSibling,
   isOptionsOpen,
+  isDuplicating,
   onSelectSlideClicked,
   onEditSlideClicked,
   onCancelEditingClicked,
@@ -43,7 +44,7 @@ const ScenarioBuilderItemContent = ({
           <div className="flex items-center">
             <div className="mr-2 border-r border-lm-3 dark:border-dm-3 pr-2">
               <Options
-                options={[{ action: 'DELETE', text: 'Delete', icon: 'delete', color: 'warning' }]}
+                options={[{ action: 'DUPLICATE', text: 'Copy', icon: 'copy' }, { action: 'DELETE', text: 'Delete', icon: 'delete', color: 'warning' }]}
                 isOpen={isOptionsOpen}
                 onToggle={onOptionsToggled}
                 onOptionClicked={onOptionClicked}
@@ -63,7 +64,7 @@ const ScenarioBuilderItemContent = ({
           </div>
         </div>
       )}
-      {((isSelected && !isEditing) || (!isSelected && isEditingSibling)) && (
+      {(((isSelected && !isEditing) || (!isSelected && isEditingSibling)) && !isDuplicating) && (
         <div
           className="group-hover:flex justify-center items-center hidden cursor-pointer absolute w-full h-full top-0 right-0 p-1 bg-opacity-40 bg-white dark:bg-black dark:bg-opacity-40 rounded-bl-lg rounded-tr-lg"
           onClick={onEditSlideClicked}

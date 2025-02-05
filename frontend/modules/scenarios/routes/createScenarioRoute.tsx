@@ -1,6 +1,6 @@
 import React from 'react';
-import ScenarionBuilderContainer from '~/modules/scenarioBuilder/containers/scenarionBuilderContainer';
+import ScenarioBuilderContainer from '~/modules/scenarioBuilder/containers/scenarioBuilderContainer';
 
 export default function CreateScenarioRoute() {
-  return <ScenarionBuilderContainer />
+  return <ScenarioBuilderContainer />
 }

@@ -12,13 +12,13 @@ import has from 'lodash/has.js';
 export default {
   all: async function ({ query }, context) {
 
-    const { searchValue, currentPage, scenario, slideRef, isDeleted } = query;
+    const { searchValue, currentPage, scenarioId, slideRef, isDeleted } = query;
 
-    if (scenario) {
+    if (scenarioId) {
       if (slideRef) {
-        return await getBlocksByScenarioIdAndSlideRef({ scenarioId: scenario, slideRef }, { isDeleted }, context);
+        return await getBlocksByScenarioIdAndSlideRef({ scenarioId, slideRef }, { isDeleted }, context);
       } else {
-        return await getBlocksByScenarioId({ scenarioId: scenario }, { isDeleted }, context);
+        return await getBlocksByScenarioId({ scenarioId }, { isDeleted }, context);
       }
     }
 
@@ -28,9 +28,9 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { scenario, slideRef, blockType } = body;
+    const { scenarioId, slideRef, blockType } = body;
 
-    const block = await createBlock({ scenario, slideRef, blockType }, {}, context);
+    const block = await createBlock({ scenario: scenarioId, slideRef, blockType }, {}, context);
 
     return { block };
 

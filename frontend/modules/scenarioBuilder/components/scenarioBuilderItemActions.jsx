@@ -5,9 +5,11 @@ import Body from '~/uikit/content/components/body';
 const ScnarioBuilderItemActions = ({
   slide,
   selectedSlide,
+  isDuplicating,
   shouldRenderChildren,
   onAddChildSlideClicked,
-  onToggleChildSlidesClicked
+  onToggleChildSlidesClicked,
+  onPasteSlideClicked
 }) => {
   let prefix = '';
   if (selectedSlide > 0) {
@@ -16,7 +18,12 @@ const ScnarioBuilderItemActions = ({
   return (
     <div className="absolute z-10 -bottom-8 flex justify-center items-center w-full left-0">
       <div className="mx-1">
-        <FlatButton icon="add" isCircular onClick={onAddChildSlideClicked} />
+        {(isDuplicating) && (
+          <FlatButton icon="paste" isCircular color="primary" onClick={() => onPasteSlideClicked("CHILD")} />
+        )}
+        {(!isDuplicating) && (
+          <FlatButton icon="add" isCircular onClick={onAddChildSlideClicked} />
+        )}
       </div>
       {slide.children.length > 0 && (
         <div className="mx-1">

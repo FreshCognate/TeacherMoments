@@ -11,6 +11,8 @@ export default async ({ blockId, newScenarioId, newSlideRef }, context) => {
   duplicatedBlockObject.slideRef = newSlideRef;
   duplicatedBlockObject.originalRef = block.ref;
   duplicatedBlockObject.originalSlideRef = block.slideRef;
+  duplicatedBlockObject.originalScenario = block.scenario;
+  duplicatedBlockObject.createdAt = new Date();
 
   await models.Block.create([duplicatedBlockObject], { session });
 

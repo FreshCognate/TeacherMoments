@@ -54,7 +54,7 @@ export default WithRouter(WithCache(ScenarioEditorContainer, {
       return { id: props.router.params.id };
     },
     getQuery: ({ props }) => {
-      return { scenario: props.router.params.id };
+      return { scenarioId: props.router.params.id };
     },
     lifeTime: 0,
     staleTime: 0
@@ -67,7 +67,7 @@ export default WithRouter(WithCache(ScenarioEditorContainer, {
       return { id: props.router.params.id };
     },
     getQuery: ({ props }) => {
-      return { scenario: props.router.params.id };
+      return { scenarioId: props.router.params.id };
     },
     lifeTime: 0,
     staleTime: 0
