@@ -7,6 +7,7 @@ import deleteSlideById from './services/deleteSlideById.js';
 import createSlide from './services/createSlide.js';
 import reorderSlide from './services/reorderSlide.js';
 import duplicateSlideInScenario from './services/duplicateSlideInScenario.js';
+import lockSlide from './services/lockSlide.js';
 import has from 'lodash/has.js';
 
 export default {
@@ -54,6 +55,11 @@ export default {
     if (has(body, 'sourceIndex') || has(body, 'destinationIndex')) {
       const { sourceIndex, destinationIndex } = body;
       const slide = await reorderSlide({ sourceIndex, destinationIndex, slideId: param }, {}, context);
+      return { slide };
+    }
+
+    if (has(body, 'isLocked')) {
+      const slide = await lockSlide({ slideId: param }, {}, context);
       return { slide };
     }
 
