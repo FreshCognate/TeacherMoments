@@ -112,12 +112,12 @@ class ScenarioBuilderItemContainer extends Component {
     }, async (state, { type }) => {
       if (state === 'ACTION' && type === 'DELETE') {
         this.setState({ isDeleting: true });
-        axios.delete(`/api/slides/${this.props.slide._id}`).then(() => {
+        axios.delete(`/api/slides/${this.props.slide._id}`).then(async () => {
           const slides = getCache('slides');
           const blocks = getCache('blocks');
 
           const slideSelection = getSlideSelectionFromQuery();
-          const parentSlide = find(slides.data, (slide) => slide.ref = this.props.parent);
+          const parentSlide = find(slides.data, (slide) => slide.ref === this.props.parent);
           const parentChildren = cloneDeep(parentSlide.children);
 
           parentChildren.splice(this.props.itemIndex, 1);
@@ -132,11 +132,17 @@ class ScenarioBuilderItemContainer extends Component {
             let query = `slideSelection=${JSON.stringify(slideSelection)}`
             this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true })
           } else {
-            this.closeChildSlidesClicked();
+            if (this.props.slide.isRoot) {
+              slideSelection = [];
+            } else {
+              slideSelection.splice(this.props.layerIndex, slideSelection.length - this.props.layerIndex);
+            }
+            const scenarioId = getCache('scenario').data._id;
+            this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`, { replace: true });
           }
-
           blocks.fetch();
           slides.fetch();
+
         }).catch(handleRequestError);
       }
     })
@@ -290,7 +296,7 @@ class ScenarioBuilderItemContainer extends Component {
     let parentId = this.props.slide._id;
     let layerIndex = this.props.layerIndex;
     const slides = getCache('slides');
-    const parentSlide = find(slides.data, (slide) => slide.ref = this.props.parent);
+    const parentSlide = find(slides.data, (slide) => slide.ref === this.props.parent);
 
     switch (position) {
       case 'CHILD':
