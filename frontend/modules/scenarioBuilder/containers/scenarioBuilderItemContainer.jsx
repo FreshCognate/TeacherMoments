@@ -97,6 +97,15 @@ class ScenarioBuilderItemContainer extends Component {
     }
   }
 
+  getIsLockedFromEditing = () => {
+    const { isLocked, lockedBy } = this.props.slide;
+    const authentication = getCache('authentication');
+    if (isLocked && lockedBy !== authentication.data._id) {
+      return true;
+    }
+    return false;
+  }
+
   deleteSlide = () => {
     addModal({
       title: 'Delete slide',
@@ -387,6 +396,7 @@ class ScenarioBuilderItemContainer extends Component {
         isOptionsOpen={isOptionsOpen}
         isDeleting={isDeleting}
         isDuplicating={isDuplicating}
+        isLockedFromEditing={this.getIsLockedFromEditing()}
         childrenOffset={this.getChildrenOffset()}
         onAddChildSlideClicked={this.onAddChildSlideClicked}
         onToggleChildSlidesClicked={this.onToggleChildSlidesClicked}
