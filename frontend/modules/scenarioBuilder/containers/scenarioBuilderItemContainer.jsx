@@ -257,6 +257,11 @@ class ScenarioBuilderItemContainer extends Component {
     slideSelection[this.props.layerIndex] = this.props.itemIndex;
     let query = `slideSelection=${JSON.stringify(slideSelection)}&isEditing=true&layer=${layer}&slide=${this.props.slide._id}`
     this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true });
+    if (!this.props.slide.isLocked) {
+      axios.put(`/api/slides/${this.props.slide._id}`, {
+        isLocked: true
+      });
+    }
   }
 
   onCancelEditingClicked = () => {
