@@ -19,6 +19,7 @@ const ScenarioBuilderItem = ({
   isOptionsOpen,
   isDeleting,
   isDuplicating,
+  isLockedFromEditing,
   childrenOffset,
   shouldRenderChildren,
   onAddChildSlideClicked,
@@ -55,6 +56,7 @@ const ScenarioBuilderItem = ({
             isEditingSibling={isEditingSibling}
             isOptionsOpen={isOptionsOpen}
             isDuplicating={isDuplicating}
+            isLockedFromEditing={isLockedFromEditing}
             onSelectSlideClicked={onSelectSlideClicked}
             onEditSlideClicked={onEditSlideClicked}
             onCancelEditingClicked={onCancelEditingClicked}

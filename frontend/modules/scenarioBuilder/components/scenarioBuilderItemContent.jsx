@@ -19,6 +19,7 @@ const ScenarioBuilderItemContent = ({
   isEditingSibling,
   isOptionsOpen,
   isDuplicating,
+  isLockedFromEditing,
   onSelectSlideClicked,
   onEditSlideClicked,
   onCancelEditingClicked,
@@ -71,13 +72,28 @@ const ScenarioBuilderItemContent = ({
           </div>
         </div>
       )}
-      {(((isSelected && !isEditing) || (!isSelected && isEditingSibling)) && !isDuplicating) && (
+      {(((isSelected && !isEditing) || (!isSelected && isEditingSibling)) && !isDuplicating && !isLockedFromEditing) && (
         <div
           className="group-hover:flex justify-center items-center hidden cursor-pointer absolute w-full h-full top-0 right-0 p-1 bg-opacity-40 bg-white dark:bg-black dark:bg-opacity-40 rounded-bl-lg rounded-tr-lg"
           onClick={onEditSlideClicked}
         >
           <div>
             <Icon icon="edit" />
+          </div>
+        </div>
+      )}
+      {(((isSelected && !isEditing) || (!isSelected && isEditingSibling)) && !isDuplicating && isLockedFromEditing) && (
+        <div
+          className="flex justify-center items-center absolute w-full h-full top-0 right-0 p-1 bg-opacity-40 bg-white dark:bg-black dark:bg-opacity-80 rounded-bl-lg rounded-tr-lg"
+        >
+          <div className="flex items-center">
+            <div className="mr-2">
+              <Icon icon="locked" />
+            </div>
+            <div>
+              <Body body="Another user is editing this slide" size="sm" />
+              <FlatButton text="Request access?" color="primary" />
+            </div>
           </div>
         </div>
       )}

@@ -12,7 +12,7 @@ class NavigationContainer extends Component {
   render() {
     return (
       <Navigation
-        authentication={this.props.authentication}
+        authentication={this.props.authentication.data}
       />
     );
   }
@@ -23,5 +23,10 @@ export default WithCache(NavigationContainer, {
     getInitialData: () => ({
       language: 'en-US'
     })
+  },
+  authentication: {
+    getInitialData: ({ props }) => {
+      return props.loaderData.authentication;
+    }
   }
 });
