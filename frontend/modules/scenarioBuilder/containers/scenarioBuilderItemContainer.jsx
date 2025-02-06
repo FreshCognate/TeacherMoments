@@ -288,12 +288,14 @@ class ScenarioBuilderItemContainer extends Component {
 
     let sortOrder = 0;
     let parentId = this.props.slide._id;
+    let layerIndex = this.props.layerIndex;
     const slides = getCache('slides');
     const parentSlide = find(slides.data, (slide) => slide.ref = this.props.parent);
 
     switch (position) {
       case 'CHILD':
         sortOrder = this.props.slide.children.length;
+        layerIndex++;
         break;
       case 'BEFORE':
         sortOrder = this.props.itemIndex;
@@ -314,7 +316,16 @@ class ScenarioBuilderItemContainer extends Component {
       const slides = getCache('slides');
       const blocks = getCache('blocks');
       await blocks.fetch();
-      await slides.fetch()
+      await slides.fetch();
+      // Navigate to duplicated slide
+      let slideSelection = getSlideSelectionFromQuery();
+
+      slideSelection.splice(layerIndex, slideSelection.length - layerIndex);
+      slideSelection.push(sortOrder);
+
+      const scenarioId = getCache('scenario').data._id;
+      this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`, { replace: true });
+
       editor.set({
         isCreatingDuplicate: false,
         isDuplicating: false,
