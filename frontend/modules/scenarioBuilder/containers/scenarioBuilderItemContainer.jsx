@@ -15,6 +15,7 @@ import addModal from '~/core/dialogs/helpers/addModal';
 import cloneDeep from 'lodash/cloneDeep';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import WithCache from '~/core/cache/containers/withCache';
+import getIsCurrentUser from '~/modules/authentication/helpers/getIsCurrentUser';
 
 class ScenarioBuilderItemContainer extends Component {
 
@@ -99,8 +100,8 @@ class ScenarioBuilderItemContainer extends Component {
 
   getIsLockedFromEditing = () => {
     const { isLocked, lockedBy } = this.props.slide;
-    const authentication = getCache('authentication');
-    if (isLocked && lockedBy !== authentication.data._id) {
+    const isCurrentUser = getIsCurrentUser(lockedBy);
+    if (isLocked && !isCurrentUser) {
       return true;
     }
     return false;
@@ -269,7 +270,10 @@ class ScenarioBuilderItemContainer extends Component {
     if (!this.props.slide.isLocked) {
       axios.put(`/api/slides/${this.props.slide._id}`, {
         isLocked: true
-      });
+      }).then((response) => {
+        const slides = getCache('slides');
+        slides.set(response.data.slide, { setType: 'itemExtend', setFind: { _id: this.props.slide._id } })
+      })
     }
   }
 

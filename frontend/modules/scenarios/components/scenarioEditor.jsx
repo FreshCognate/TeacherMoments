@@ -21,8 +21,8 @@ const ScenarioEditor = ({
               Scenarios
             </Link>
             <span>{` > `}</span>
-            <Link to={`/scenarios/${scenario._id}`}>
-              {scenario.name}
+            <Link to={`/scenarios/${scenario?._id}`}>
+              {scenario?.name}
             </Link>
           </div>
         </div>
