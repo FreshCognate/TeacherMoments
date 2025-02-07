@@ -8,6 +8,7 @@ import createSlide from './services/createSlide.js';
 import reorderSlide from './services/reorderSlide.js';
 import duplicateSlideInScenario from './services/duplicateSlideInScenario.js';
 import lockSlide from './services/lockSlide.js';
+import unlockSlide from './services/unlockSlide.js';
 import has from 'lodash/has.js';
 
 export default {
@@ -59,7 +60,13 @@ export default {
     }
 
     if (has(body, 'isLocked')) {
-      const slide = await lockSlide({ slideId: param }, {}, context);
+      let slide;
+      if (body.isLocked) {
+        slide = await lockSlide({ slideId: param }, {}, context);
+        return { slide };
+      } else {
+        slide = await unlockSlide({ slideId: param }, {}, context);
+      }
       return { slide };
     }
 

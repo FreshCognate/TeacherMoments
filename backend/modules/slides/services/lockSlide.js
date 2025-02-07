@@ -21,7 +21,7 @@ export default async (props, options, context) => {
 
   const sockets = getSockets();
 
-  sockets.emit(`SCENARIO:${slide.scenario}_EVENT:LOCK_SLIDE`, { slide });
+  sockets.emit(`SCENARIO:${slide.scenario}_EVENT:SLIDE_LOCK_STATUS`, { slide });
 
   return slide;
 

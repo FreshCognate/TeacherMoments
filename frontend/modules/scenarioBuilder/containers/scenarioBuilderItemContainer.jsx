@@ -286,6 +286,14 @@ class ScenarioBuilderItemContainer extends Component {
     }
     let query = `slideSelection=${JSON.stringify(slideSelection)}`
     this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true });
+    if (this.props.slide.isLocked) {
+      axios.put(`/api/slides/${this.props.slide._id}`, {
+        isLocked: false
+      }).then((response) => {
+        const slides = getCache('slides');
+        slides.set(response.data.slide, { setType: 'itemExtend', setFind: { _id: this.props.slide._id } })
+      })
+    }
   }
 
   onOptionsToggled = (isOptionsOpen) => {
