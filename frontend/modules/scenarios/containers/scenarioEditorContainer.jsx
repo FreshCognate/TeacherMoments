@@ -15,13 +15,17 @@ class ScenarioEditorContainer extends Component {
 
   setupListeners = async () => {
     const sockets = await getSockets();
-    sockets.on(`SCENARIO:${this.props.scenario.data._id}_EVENT:LOCK_SLIDE`, (response) => {
-      const isCurrentUser = getIsCurrentUser(response.userId);
+
+    sockets.on(`SCENARIO:${this.props.scenario.data._id}_EVENT:SLIDE_LOCK_STATUS`, (response) => {
       if (response.slide) {
-        this.props.slides.set(response.slide, { setType: 'itemExtend', setFind: { _id: response.slide._id } })
+        this.props.slides.set(response.slide, { setType: 'itemExtend', setFind: { _id: response.slide._id } });
+
+        const isCurrentUser = getIsCurrentUser(response.userId);
+
         if (!isCurrentUser) {
           this.props.slides.fetch();
         }
+
       }
     });
   }
