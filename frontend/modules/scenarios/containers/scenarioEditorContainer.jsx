@@ -2,8 +2,29 @@ import React, { Component } from 'react';
 import ScenarioEditor from '../components/scenarioEditor';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
+import getSockets from '~/core/sockets/helpers/getSockets';
+import getIsCurrentUser from '~/modules/authentication/helpers/getIsCurrentUser';
 
 class ScenarioEditorContainer extends Component {
+
+  componentDidUpdate = (prevProps) => {
+    if (!prevProps.scenario.data?._id && this.props.scenario.data?._id) {
+      this.setupListeners();
+    }
+  }
+
+  setupListeners = async () => {
+    const sockets = await getSockets();
+    sockets.on(`SCENARIO:${this.props.scenario.data._id}_EVENT:LOCK_SLIDE`, (response) => {
+      const isCurrentUser = getIsCurrentUser(response.userId);
+      if (response.slide) {
+        this.props.slides.set(response.slide, { setType: 'itemExtend', setFind: { _id: response.slide._id } })
+        if (!isCurrentUser) {
+          this.props.slides.fetch();
+        }
+      }
+    });
+  }
 
   onToggleClicked = (value) => {
     const { navigate, params } = this.props.router;

@@ -1,3 +1,5 @@
+import { getSockets } from "#core/io/index.js";
+
 export default async (props, options, context) => {
 
   const { slideId } = props;
@@ -16,6 +18,10 @@ export default async (props, options, context) => {
   slide.lockedBy = user._id;
 
   await slide.save();
+
+  const sockets = getSockets();
+
+  sockets.emit(`SCENARIO:${slide.scenario}_EVENT:LOCK_SLIDE`, { slide });
 
   return slide;
 
