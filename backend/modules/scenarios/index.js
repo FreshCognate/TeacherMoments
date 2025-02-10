@@ -17,8 +17,10 @@ import { on } from '#core/events/index.js';
 let SOCKETS = {};
 
 on('core:io:connected', async function (socket) {
-  console.log(socket);
   socket.on('EVENT:SLIDE_REQUEST_ACCESS', (payload) => {
-    console.log(payload);
+    socket.broadcast.emit(`SCENARIO:${payload.scenarioId}_EVENT:SLIDE_REQUEST_ACCESS`, {
+      slideId: payload.slideId,
+      lockedBy: payload.lockedBy
+    })
   });
 })
