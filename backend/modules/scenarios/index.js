@@ -10,3 +10,15 @@ registerModel({
 });
 
 registerRoutes(routes);
+
+
+import { on } from '#core/events/index.js';
+
+let SOCKETS = {};
+
+on('core:io:connected', async function (socket) {
+  console.log(socket);
+  socket.on('EVENT:SLIDE_REQUEST_ACCESS', (payload) => {
+    console.log(payload);
+  });
+})

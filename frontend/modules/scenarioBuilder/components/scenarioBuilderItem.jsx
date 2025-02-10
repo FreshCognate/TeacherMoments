@@ -29,7 +29,8 @@ const ScenarioBuilderItem = ({
   onCancelEditingClicked,
   onOptionsToggled,
   onOptionClicked,
-  onPasteSlideClicked
+  onPasteSlideClicked,
+  onRequestAccessClicked
 }) => {
   const newLayerIndex = layerIndex + 1;
   return (
@@ -62,6 +63,7 @@ const ScenarioBuilderItem = ({
             onCancelEditingClicked={onCancelEditingClicked}
             onOptionsToggled={onOptionsToggled}
             onOptionClicked={onOptionClicked}
+            onRequestAccessClicked={onRequestAccessClicked}
           />
           {(isSelected) && (
             <ScenarioBuilderItemActions

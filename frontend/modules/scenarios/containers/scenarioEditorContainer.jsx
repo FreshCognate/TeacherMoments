@@ -4,6 +4,8 @@ import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import getIsCurrentUser from '~/modules/authentication/helpers/getIsCurrentUser';
+import getEditingDetailsFromQuery from '~/modules/scenarioBuilder/helpers/getEditingDetailsFromQuery';
+import getSlideSelectionFromQuery from '~/modules/scenarioBuilder/helpers/getSlideSelectionFromQuery';
 
 class ScenarioEditorContainer extends Component {
 
@@ -23,6 +25,15 @@ class ScenarioEditorContainer extends Component {
         const isCurrentUser = getIsCurrentUser(response.userId);
 
         if (!isCurrentUser) {
+          if (response.slide.isLocked) {
+            const { isEditing, layer, slide } = getEditingDetailsFromQuery();
+            if (isEditing && slide === response.slide._id) {
+              let slideSelection = getSlideSelectionFromQuery();
+              const scenarioId = this.props.scenario.data._id;
+              let query = `slideSelection=${JSON.stringify(slideSelection)}`
+              this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true });
+            }
+          }
           this.props.slides.fetch();
         }
 

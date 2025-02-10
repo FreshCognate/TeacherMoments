@@ -6,11 +6,11 @@ export default async (props, options, context) => {
 
   const { models, user } = context;
 
-  const slide = await models.Slide.findByIdAndUpdate(slideId, { isLocked: false, lockedAt: null, lockedBy: null });
+  const slide = await models.Slide.findByIdAndUpdate(slideId, { isLocked: false, lockedAt: null, lockedBy: null }, { new: true });
 
   const sockets = getSockets();
 
-  sockets.emit(`SCENARIO:${slide.scenario}_EVENT:SLIDE_LOCK_STATUS`, { slide });
+  sockets.emit(`SCENARIO:${slide.scenario}_EVENT:SLIDE_LOCK_STATUS`, { slide, userId: user._id });
 
   return slide;
 
