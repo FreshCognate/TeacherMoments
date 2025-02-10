@@ -23,4 +23,19 @@ on('core:io:connected', async function (socket) {
       lockedBy: payload.lockedBy
     })
   });
+
+  socket.on('EVENT:SLIDE_DENY_ACCESS', (payload) => {
+    socket.broadcast.emit(`SCENARIO:${payload.scenarioId}_EVENT:SLIDE_DENY_ACCESS`, {
+      slideId: payload.slideId,
+      lockedBy: payload.lockedBy
+    })
+  });
+
+  socket.on('EVENT:SLIDE_ACCEPT_ACCESS', (payload) => {
+    socket.broadcast.emit(`SCENARIO:${payload.scenarioId}_EVENT:SLIDE_ACCEPT_ACCESS`, {
+      slideId: payload.slideId,
+      lockedBy: payload.lockedBy
+    })
+  });
+
 })

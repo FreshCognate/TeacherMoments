@@ -43,7 +43,9 @@ export default (toast: any, callback: any) => {
 
   toast.triggerAction = (type: string) => {
     removeToast({ type });
-    callback('ACTION', { type });
+    if (callback) {
+      callback('ACTION', { type });
+    }
   };
 
 

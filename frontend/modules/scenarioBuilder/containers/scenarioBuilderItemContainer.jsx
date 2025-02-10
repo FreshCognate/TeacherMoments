@@ -19,6 +19,7 @@ import getIsCurrentUser from '~/modules/authentication/helpers/getIsCurrentUser'
 import Timer from '~/uikit/loaders/components/timer';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import ScenarioRequestAccessTimer from '../components/scenarioRequestAccessTimer';
+import addToast from '~/core/dialogs/helpers/addToast';
 
 class ScenarioBuilderItemContainer extends Component {
 
@@ -178,6 +179,17 @@ class ScenarioBuilderItemContainer extends Component {
       }
     }
     return false;
+  }
+
+  takeOverEditing = () => {
+    axios.put(`/api/slides/${this.props.slide._id}`, {
+      isLocked: false
+    }).then((response) => {
+      const slides = getCache('slides');
+      slides.set(response.data.slide, { setType: 'itemExtend', setFind: { _id: this.props.slide._id } }).then(() => {
+        this.onEditSlideClicked();
+      });
+    }).catch(handleRequestError);
   }
 
   onAddChildSlideClicked = () => {
@@ -382,25 +394,43 @@ class ScenarioBuilderItemContainer extends Component {
     let removeCurrentModal;
     const sockets = await getSockets();
     const { _id, scenario, lockedBy } = this.props.slide;
+    let shouldTakeOverEditing = true;
+
     sockets.emit(`EVENT:SLIDE_REQUEST_ACCESS`, {
       scenarioId: scenario,
       slideId: _id,
       lockedBy,
     });
+
+    sockets.off(`SCENARIO:${scenario}_EVENT:SLIDE_DENY_ACCESS`);
+    sockets.off(`SCENARIO:${scenario}_EVENT:SLIDE_ACCEPT_ACCESS`);
+
+    sockets.on(`SCENARIO:${scenario}_EVENT:SLIDE_DENY_ACCESS`, (payload) => {
+      if (_id === payload.slideId) {
+        shouldTakeOverEditing = false;
+        removeCurrentModal();
+        addToast({ title: 'Editor denied your request to edit this slide.', body: 'Please try again later', timeout: 4000 })
+      }
+    });
+
+    sockets.on(`SCENARIO:${scenario}_EVENT:SLIDE_ACCEPT_ACCESS`, (payload) => {
+      if (_id === payload.slideId) {
+        shouldTakeOverEditing = true;
+        removeCurrentModal();
+        this.takeOverEditing();
+        addToast({ title: 'Editor has accepted your request to edit this slide.', timeout: 4000 })
+      }
+    })
+
     addModal({
       title: 'Requesting access to edit slide',
       body: 'You are requesting to take control over editing this slide. After 10 seconds you will automatically take control if the user does not respond.',
       component: <ScenarioRequestAccessTimer value={10} onFinish={() => {
-        if (removeCurrentModal) {
+        if (shouldTakeOverEditing) {
           removeCurrentModal();
-          axios.put(`/api/slides/${this.props.slide._id}`, {
-            isLocked: false
-          }).then((response) => {
-            const slides = getCache('slides');
-            slides.set(response.data.slide, { setType: 'itemExtend', setFind: { _id: this.props.slide._id } }).then(() => {
-              this.onEditSlideClicked();
-            });
-          }).catch(handleRequestError);
+          this.takeOverEditing();
+        } else {
+          removeCurrentModal();
         }
       }} />,
       actions: [{

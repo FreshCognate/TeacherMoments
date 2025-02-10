@@ -58,7 +58,19 @@ class ScenarioEditorContainer extends Component {
             actions: [{ type: 'CANCEL', text: 'Cancel' }, { type: 'ACCEPT', text: 'Accept' }]
           }, (state, payload) => {
             if (state === 'ACTION') {
-              console.log(payload);
+              if (payload.type === 'CANCEL') {
+                sockets.emit(`EVENT:SLIDE_DENY_ACCESS`, {
+                  scenarioId: this.props.scenario.data._id,
+                  slideId,
+                  lockedBy,
+                });
+              } else if (payload.type === 'ACCEPT') {
+                sockets.emit(`EVENT:SLIDE_ACCEPT_ACCESS`, {
+                  scenarioId: this.props.scenario.data._id,
+                  slideId,
+                  lockedBy,
+                });
+              }
             }
           })
         }
