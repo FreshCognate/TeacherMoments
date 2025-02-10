@@ -35,7 +35,7 @@ class ScenarionBuilderContainer extends Component {
       duplicateId,
       isDuplicating,
       isCreatingDuplicate,
-    } = this.props.editor.data;
+    } = this.props.editor?.data;
     const { isEditing, blockId } = this.getEditingBlockDetails();
 
     return (

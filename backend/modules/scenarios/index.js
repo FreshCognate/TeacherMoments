@@ -10,3 +10,32 @@ registerModel({
 });
 
 registerRoutes(routes);
+
+
+import { on } from '#core/events/index.js';
+
+let SOCKETS = {};
+
+on('core:io:connected', async function (socket) {
+  socket.on('EVENT:SLIDE_REQUEST_ACCESS', (payload) => {
+    socket.broadcast.emit(`SCENARIO:${payload.scenarioId}_EVENT:SLIDE_REQUEST_ACCESS`, {
+      slideId: payload.slideId,
+      lockedBy: payload.lockedBy
+    })
+  });
+
+  socket.on('EVENT:SLIDE_DENY_ACCESS', (payload) => {
+    socket.broadcast.emit(`SCENARIO:${payload.scenarioId}_EVENT:SLIDE_DENY_ACCESS`, {
+      slideId: payload.slideId,
+      lockedBy: payload.lockedBy
+    })
+  });
+
+  socket.on('EVENT:SLIDE_ACCEPT_ACCESS', (payload) => {
+    socket.broadcast.emit(`SCENARIO:${payload.scenarioId}_EVENT:SLIDE_ACCEPT_ACCESS`, {
+      slideId: payload.slideId,
+      lockedBy: payload.lockedBy
+    })
+  });
+
+})

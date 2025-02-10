@@ -4,6 +4,9 @@ import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import getIsCurrentUser from '~/modules/authentication/helpers/getIsCurrentUser';
+import getEditingDetailsFromQuery from '~/modules/scenarioBuilder/helpers/getEditingDetailsFromQuery';
+import getSlideSelectionFromQuery from '~/modules/scenarioBuilder/helpers/getSlideSelectionFromQuery';
+import addToast from '~/core/dialogs/helpers/addToast';
 
 class ScenarioEditorContainer extends Component {
 
@@ -23,11 +26,62 @@ class ScenarioEditorContainer extends Component {
         const isCurrentUser = getIsCurrentUser(response.userId);
 
         if (!isCurrentUser) {
+          if (response.slide.isLocked) {
+            const { isEditing, layer, slide } = getEditingDetailsFromQuery();
+            if (isEditing && slide === response.slide._id) {
+              let slideSelection = getSlideSelectionFromQuery();
+              const scenarioId = this.props.scenario.data._id;
+              let query = `slideSelection=${JSON.stringify(slideSelection)}`
+              this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true });
+            }
+          }
           this.props.slides.fetch();
         }
 
       }
     });
+
+    sockets.on(`SCENARIO:${this.props.scenario.data._id}_EVENT:SLIDE_REQUEST_ACCESS`, (payload) => {
+      const {
+        slideId,
+        lockedBy,
+      } = payload;
+
+      const isCurrentUserEditing = getIsCurrentUser(lockedBy);
+
+      if (isCurrentUserEditing) {
+        const { isEditing, layer, slide } = getEditingDetailsFromQuery();
+        if (isEditing && slide === slideId) {
+          addToast({
+            title: 'Another editor is asking to edit this slide.',
+            timeout: 1000 * 10,
+            actions: [{ type: 'CANCEL', text: 'Cancel' }, { type: 'ACCEPT', text: 'Accept' }]
+          }, (state, payload) => {
+            if (state === 'ACTION') {
+              if (payload.type === 'CANCEL') {
+                sockets.emit(`EVENT:SLIDE_DENY_ACCESS`, {
+                  scenarioId: this.props.scenario.data._id,
+                  slideId,
+                  lockedBy,
+                });
+              } else if (payload.type === 'ACCEPT') {
+                sockets.emit(`EVENT:SLIDE_ACCEPT_ACCESS`, {
+                  scenarioId: this.props.scenario.data._id,
+                  slideId,
+                  lockedBy,
+                });
+              }
+            }
+          })
+        }
+      }
+    });
+  }
+
+  componentWillUnmount = async () => {
+    const sockets = await getSockets();
+    sockets.off(`SCENARIO:${this.props.scenario.data._id}_EVENT:SLIDE_LOCK_STATUS`);
+    sockets.off(`SCENARIO:${this.props.scenario.data._id}_EVENT:SLIDE_REQUEST_ACCESS`);
   }
 
   onToggleClicked = (value) => {

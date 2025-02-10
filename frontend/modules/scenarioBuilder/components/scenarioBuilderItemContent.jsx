@@ -24,7 +24,8 @@ const ScenarioBuilderItemContent = ({
   onEditSlideClicked,
   onCancelEditingClicked,
   onOptionsToggled,
-  onOptionClicked
+  onOptionClicked,
+  onRequestAccessClicked
 }) => {
 
   const optionActions = [{ action: 'DUPLICATE', text: 'Copy', icon: 'copy' }];
@@ -92,7 +93,11 @@ const ScenarioBuilderItemContent = ({
             </div>
             <div>
               <Body body="Another user is editing this slide" size="sm" />
-              <FlatButton text="Request access?" color="primary" />
+              <FlatButton
+                text="Request access?"
+                color="primary"
+                onClick={onRequestAccessClicked}
+              />
             </div>
           </div>
         </div>
