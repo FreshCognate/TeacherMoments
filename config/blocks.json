@@ -6,6 +6,12 @@
     "description": "A rich text editor. Great for adding instructions or detailing a scene."
   },
   {
+    "blockType": "IMAGES",
+    "displayType": "VISUAL",
+    "displayName": "Images",
+    "description": "A set of images. Great for visually setting a scene."
+  },
+  {
     "blockType": "ANSWERS_PROMPT",
     "displayType": "PROMPT",
     "displayName": "Answers prompt",
