@@ -2,19 +2,15 @@ import React from 'react';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
 import classnames from 'classnames';
-import EditBlockContainer from '../containers/editBlockContainer';
-import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
 import getBlockDisplayName from '../helpers/getBlockDisplayName';
 
 const BlocksEditorItem = ({
   block,
   isLastBlock,
-  isEditing,
   isSelected,
   onDeleteBlockClicked,
   onSortUpClicked,
   onSortDownClicked,
-  onCancelEditBlockClicked,
   onEditBlockClicked
 }) => {
 
