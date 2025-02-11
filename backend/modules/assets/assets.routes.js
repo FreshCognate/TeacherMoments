@@ -7,6 +7,14 @@ import getFileTypes from './helpers/getFileTypes.js';
 export default {
   route: '/assets',
   controller,
+  all: {
+    query: {
+      searchValue: Joi.string().allow('').default(''),
+      currentPage: Joi.number().default(1),
+      isDeleted: Joi.boolean()
+    },
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+  },
   create: {
     body: {
       name: Joi.string().required(),
