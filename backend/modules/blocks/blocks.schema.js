@@ -6,6 +6,8 @@ const body = buildLanguageSchema('body', textAreaSchema);
 const placeholder = buildLanguageSchema('placeholder', { type: String, default: '' });
 const text = buildLanguageSchema('text', { type: String, default: '' });
 const feedback = buildLanguageSchema('feedback', textAreaSchema);
+const asset = buildLanguageSchema('asset', { type: mongoose.Schema.Types.ObjectId, ref: 'Asset' });
+const caption = buildLanguageSchema('caption', { type: String, default: '' });
 
 const schema = {
   type: { type: String, default: 'block' },
@@ -22,6 +24,12 @@ const schema = {
   ...body,
   ...placeholder,
   isMultiSelect: { type: Boolean, default: false },
+  items: {
+    type: [{
+      ...asset,
+      ...caption
+    }]
+  },
   options: {
     type: [{
       ...text,

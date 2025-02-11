@@ -40,6 +40,11 @@ export default {
       ...buildLanguageValidation('body', Joi.array()),
       ...buildLanguageValidation('placeholder', Joi.string()),
       isMultiSelect: Joi.boolean(),
+      items: Joi.array().items({
+        _id: Joi.string(),
+        ...buildLanguageValidation('caption', Joi.string().allow('')),
+        ...buildLanguageValidation('asset', Joi.string().allow('')),
+      }),
       options: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('text', Joi.string().allow('')),

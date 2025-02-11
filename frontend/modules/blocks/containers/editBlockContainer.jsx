@@ -12,9 +12,11 @@ import getSlideSelectionFromQuery from '~/modules/scenarioBuilder/helpers/getSli
 import getEditingDetailsFromQuery from '~/modules/scenarioBuilder/helpers/getEditingDetailsFromQuery';
 import WithRouter from '~/core/app/components/withRouter';
 import getBlocksBySlideRef from '../helpers/getBlocksBySlideRef';
+import editImagesBlockSchema from '../schemas/editImagesBlockSchema';
 
 const SCHEMA_MAPPINGS = {
   TEXT: editTextBlockSchema,
+  IMAGES: editImagesBlockSchema,
   ANSWERS_PROMPT: editAnswersPromptBlockSchema,
   INPUT_PROMPT: editInputPromptBlockSchema,
   ACTIONS_PROMPT: editActionsPromptBlockSchema

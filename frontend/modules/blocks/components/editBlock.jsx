@@ -20,7 +20,7 @@ const EditBlock = ({
         }
       }}
     >
-      <div className="bg-lm-0 dark:bg-dm-0  rounded-lg overflow-scroll">
+      <div className="bg-lm-0 dark:bg-dm-0 rounded-lg overflow-scroll w-4/12">
         <div className="flex justify-between px-2 py-2 bg-lm-1 dark:bg-dm-1">
           <div className="flex items-center">
             <FlatButton
