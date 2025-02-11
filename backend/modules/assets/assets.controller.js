@@ -1,5 +1,6 @@
 import getAssets from './services/getAssets.js';
 import createAsset from './services/createAsset.js';
+import getAssetById from './services/getAssetById.js';
 
 export default {
 
@@ -19,6 +20,13 @@ export default {
 
     return { asset };
 
-  }
+  },
+
+  read: async function ({ param }, context) {
+
+    const asset = await getAssetById({ assetId: param }, {}, context);
+    return { asset };
+
+  },
 
 };
