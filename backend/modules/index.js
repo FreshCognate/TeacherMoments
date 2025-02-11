@@ -4,3 +4,4 @@ import './slides/index.js';
 import './blocks/index.js';
 import './triggers/index.js';
 import './generate/index.js';
+import './assets/index.js';
