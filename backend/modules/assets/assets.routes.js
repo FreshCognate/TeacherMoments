@@ -26,4 +26,13 @@ export default {
     param: 'id',
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
+  update: {
+    param: 'id',
+    body: {
+      name: Joi.string(),
+      tags: Joi.array().items(Joi.string()),
+      isDeleted: Joi.boolean().invalid(true),
+    },
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+  },
 };
