@@ -130,7 +130,7 @@ class ScenarioBuilderItemContainer extends Component {
           const slides = getCache('slides');
           const blocks = getCache('blocks');
 
-          const slideSelection = getSlideSelectionFromQuery();
+          let slideSelection = getSlideSelectionFromQuery();
           const parentSlide = find(slides.data, (slide) => slide.ref === this.props.parent);
           const parentChildren = cloneDeep(parentSlide.children);
 
