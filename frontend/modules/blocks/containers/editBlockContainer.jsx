@@ -40,6 +40,7 @@ class EditBlockContainer extends Component {
   }
 
   getBlockNavigation = () => {
+    if (!this.props.block.data) return {};
     const blocks = getBlocksBySlideRef({ slideRef: this.props.block.data.slideRef });
 
     return {

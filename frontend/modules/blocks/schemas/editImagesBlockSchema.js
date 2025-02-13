@@ -7,7 +7,9 @@ const caption = buildLanguageSchema('caption', {
 
 const asset = buildLanguageSchema('asset', {
   type: 'AssetSelector',
-  label: 'Image'
+  label: 'Image',
+  fileTypes: ['image'],
+  maxFiles: 1
 });
 
 export default {
