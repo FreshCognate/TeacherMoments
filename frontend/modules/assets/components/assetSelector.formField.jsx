@@ -54,6 +54,7 @@ const AssetSelectorFormField = ({
             text="Choose existing file"
             icon="select"
             iconSize={24}
+            isDisabled
             className="flex-col items-center justify-center bg-lm-3/60 dark:bg-dm-3/50 p-2 rounded h-20 w-full"
           />
         </div>
@@ -63,7 +64,7 @@ const AssetSelectorFormField = ({
           <div className="flex items-center justify-start bg-lm-3/50 dark:bg-dm-3/50 p-2 rounded h-20 w-full">
             {map(acceptedFiles, (acceptedFile) => {
               return (
-                <div className="" key={acceptedFile.name}>
+                <div className="flex" key={acceptedFile.name}>
                   <div >
                     <img
                       src={acceptedFile.preview}
@@ -71,16 +72,23 @@ const AssetSelectorFormField = ({
                       onLoad={() => { URL.revokeObjectURL(acceptedFile.preview) }}
                     />
                   </div>
+                  <div className="p-2 text-black/80 dark:text-white/80">
+                    {isUploading && (
+                      <div className="flex flex-col ">
+                        <div>
+                          Uploading...
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="text-xs w-10">
+                            {`${acceptedFile.progress}%`}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )
             })}
-            <div className="p-2 text-black/80 dark:text-white/80">
-              {isUploading && (
-                <div>
-                  Uploading...
-                </div>
-              )}
-            </div>
           </div>
         </div>
       )}

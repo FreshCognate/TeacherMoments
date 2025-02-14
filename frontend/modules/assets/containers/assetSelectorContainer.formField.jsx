@@ -21,13 +21,27 @@ class AssetSelectorFormFieldContainer extends Component {
     this.setState({
       acceptedFiles: map(files, (file) => {
         file.preview = URL.createObjectURL(file);
+        file.progress = 0;
         return file;
       }),
       isUploading: true
+    }, () => {
+
+      each(files, (file, index) => {
+        uploadAsset({ file }, (state, payload) => {
+          if (state === 'INIT') {
+            console.log(payload);
+          }
+          if (state === 'PROGRESS') {
+            this.state.acceptedFiles[index].progress = payload.progress;
+            this.setState({ acceptedFiles: this.state.acceptedFiles });
+          }
+          if (state === 'FINISH') {
+            console.log(payload);
+          }
+        });
+      })
     });
-    each(files, (file) => {
-      uploadAsset({ file });
-    })
   }
 
   onDropRejected = (props) => {
