@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import getMimeTypes from './helpers/getMimeTypes.js';
 import getFileTypes from './helpers/getFileTypes.js';
 
 const schema = {
@@ -9,7 +10,7 @@ const schema = {
   extension: String,
   fileType: { type: String, enum: getFileTypes() },
   size: Number,
-  mimetype: String,
+  mimetype: { type: String, enum: getMimeTypes() },
   sizes: [Number],
   orientation: { type: String, enum: ['landscape', 'portrait'] },
   width: { type: Number },

@@ -26,8 +26,7 @@ class AssetSelectorFormFieldContainer extends Component {
       isUploading: true
     });
     each(files, (file) => {
-      const listenerEvent = uploadAsset({ file });
-      console.log(listenerEvent);
+      uploadAsset({ file });
     })
   }
 
