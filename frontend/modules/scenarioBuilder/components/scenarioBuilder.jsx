@@ -43,7 +43,7 @@ const ScenarioBuilder = ({
           </div>
         </div>
       )}
-      <div className={"bg-lm-1 dark:bg-dm-0 min-h-screen"} style={{
+      <div className={"bg-lm-0 dark:bg-dm-0 min-h-screen"} style={{
         backgroundSize: "20px 20px",
         backgroundPosition: "-9px -9px",
         backgroundImage: displayMode === 'EDITING' ? `radial-gradient(${backgroundDotColor} 1px, transparent 0)` : 'none',

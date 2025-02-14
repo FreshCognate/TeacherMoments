@@ -14,16 +14,22 @@ const ScenarioEditor = ({
   if (isLoading) return <Loading />
   return (
     <div>
-      <div className="flex items-center fixed w-full top-10 z-30 justify-stretch px-4 h-7 border-b border-b-lm-2 dark:border-b-dm-2 bg-lm-1 dark:bg-dm-1">
+      <div className="flex items-center fixed w-full top-10 z-30 justify-stretch px-4 h-7 bg-lm-1 dark:bg-dm-1">
         <div className="w-1/3 flex items-center">
           <div className="text-xs">
-            <Link to="/scenarios">
+            <Link
+              to="/scenarios"
+              className="text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 transition-colors"
+            >
               Scenarios
             </Link>
-            <span>{` > `}</span>
-            <Link to={`/scenarios/${scenario?._id}`}>
+            <span className="text-black/60 dark:text-white/60">{` > `}</span>
+            <span
+
+              className="text-black/60 dark:text-white/60"
+            >
               {scenario?.name}
-            </Link>
+            </span>
           </div>
         </div>
         <div className="w-1/3 flex justify-center">

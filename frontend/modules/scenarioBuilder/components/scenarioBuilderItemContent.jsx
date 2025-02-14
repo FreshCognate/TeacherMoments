@@ -36,11 +36,12 @@ const ScenarioBuilderItemContent = ({
 
   return (
     <div
-      className="relative border border-lm-3 dark:border-dm-3 bg-lm-0 dark:bg-dm-1 p-2 w-[440px] rounded-lg group"
+      className="relative  bg-lm-2 shadow dark:bg-dm-2 p-2 w-[440px] rounded-lg group"
       style={{
         transform: `scale(${isSelected ? 1 : 0.8})`,
-        outline: isSelected ? isEditing ? "solid 2px rgba(255,255,255, 0.6)" : "solid 2px rgba(255,255,255, 0.2)" : "none",
-        maxHeight: isEditing ? '5000px' : '90px',
+        outline: isEditing ? "solid 2px rgba(255,255,255, 0.2)" : "none",
+        maxHeight: isEditing ? '5000px' : '120px',
+        height: isEditing ? 'auto' : '120px',
         overflow: 'hidden',
         transition: isEditing ? `transform 600ms 300ms, max-height ease-in-out 2000ms` : 'transform 300ms, max-height ease-in-out 4000ms 300ms'
       }}
@@ -105,10 +106,10 @@ const ScenarioBuilderItemContent = ({
       {(!isEditing) && (
 
         <div>
-          <div className="mb-2">
-            <Title title={slide.name} />
+          <div className="my-2">
+            <Title title={slide.name} className="text-black/80 dark:text-white/80" />
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center text-black/60 dark:text-white/60">
             <div className="mr-4">
               <Body body={`Blocks: ${blocksCount}`} size="xs" />
             </div>
@@ -121,13 +122,12 @@ const ScenarioBuilderItemContent = ({
       {(isEditing) && (
         <div>
           <EditSlideContainer slideId={slide._id} />
-          <div className="border-t border-t-lm-3 dark:border-t-dm-3">
-            <BlocksEditorContainer />
-            <TriggerDisplayContainer elementRef={slide.ref} triggerType="SLIDE" event="ON_COMPLETE" />
-          </div>
+          <BlocksEditorContainer />
+          <TriggerDisplayContainer elementRef={slide.ref} triggerType="SLIDE" event="ON_COMPLETE" />
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 };
 

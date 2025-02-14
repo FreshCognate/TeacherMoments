@@ -13,15 +13,15 @@ const EditBlock = ({
   onNavigateToNextBlock
 }) => {
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-dm-2 bg-opacity-60 dark:bg-dm-2 dark:bg-opacity-60 p-2 z-30 flex justify-end"
+    <div className="fixed top-0 left-0 w-full h-full bg-dm-2/80 p-2 z-30 flex justify-end"
       onClick={(event) => {
         if (event.target === event.currentTarget) {
           onCloseEditorClicked();
         }
       }}
     >
-      <div className="bg-lm-0 dark:bg-dm-0 rounded-lg overflow-scroll w-4/12">
-        <div className="flex justify-between px-2 py-2 bg-lm-1 dark:bg-dm-1">
+      <div className="bg-lm-2 dark:bg-dm-2 rounded-lg overflow-scroll w-4/12">
+        <div className="flex justify-between px-2 py-2 bg-lm-3/50 dark:bg-dm-3/50">
           <div className="flex items-center">
             <FlatButton
               text="Previous block"

@@ -19,7 +19,7 @@ const AssetSelectorFormField = ({
     <div>
       {(acceptedFiles.length === 0) && (
 
-        <div className="flex space-x-2  border-2 border-lm-3 dark:border-dm-3 p-2 rounded-lg">
+        <div className="flex space-x-2">
           <Dropzone
             accept={accepts}
             maxFiles={maxFiles}
@@ -28,7 +28,7 @@ const AssetSelectorFormField = ({
             onDropRejected={onDropRejected}>
             {({ getRootProps, getInputProps, isFocused, isDragAccept, isDragReject }) => {
               const className = classnames("flex items-center justify-center cursor-pointer",
-                "border border-lm-3 dark:border-dm-3 hover:bg-lm-1 hover:dark:bg-dm-1",
+                "bg-lm-3/60 dark:bg-dm-3/50",
                 "p2 rounded h-20 w-full",
                 "text-black dark:text-white text-opacity-60 dark:text-opacity-60",
                 "hover:text-opacity-100 hover:dark:text-opacity-100",
@@ -54,13 +54,13 @@ const AssetSelectorFormField = ({
             text="Choose existing file"
             icon="select"
             iconSize={24}
-            className="flex-col items-center justify-center bg-lm-0 dark:bg-dm-0 hover:bg-lm-1 hover:dark:bg-dm-1 border border-lm-3 dark:border-dm-3 p-2 rounded h-20 w-full"
+            className="flex-col items-center justify-center bg-lm-3/60 dark:bg-dm-3/50 p-2 rounded h-20 w-full"
           />
         </div>
       )}
       {(acceptedFiles.length > 0) && (
-        <div className="flex space-x-2  border-2 border-lm-3 dark:border-dm-3 p-2 rounded-lg">
-          <div className="flex items-center justify-start bg-lm-0 dark:bg-dm-0  border border-lm-3 dark:border-dm-3 p-2 rounded h-20 w-full">
+        <div className="flex space-x-2">
+          <div className="flex items-center justify-start bg-lm-3/50 dark:bg-dm-3/50 p-2 rounded h-20 w-full">
             {map(acceptedFiles, (acceptedFile) => {
               return (
                 <div className="" key={acceptedFile.name}>
@@ -74,7 +74,7 @@ const AssetSelectorFormField = ({
                 </div>
               )
             })}
-            <div className="p-2">
+            <div className="p-2 text-black/80 dark:text-white/80">
               {isUploading && (
                 <div>
                   Uploading...

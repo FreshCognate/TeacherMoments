@@ -29,11 +29,16 @@ const ActionBar = ({
   onSortByChanged
 }) => {
   return (
-    <div className="relative p-2">
+    <div className="relative py-2 px-4">
       <div className="flex items-center">
         <div className="flex-1 flex items-center">
           {hasSearch && (
-            <Search shouldAutoFocus={shouldAutoFocus} value={searchValue} onChange={onSearchValueChange} />
+            <Search
+              shouldAutoFocus={shouldAutoFocus}
+              value={searchValue}
+              placeholder="Search scenarios..."
+              onChange={onSearchValueChange}
+            />
           )}
           {(hasFilters) && (
             <div className="ml-4 flex items-center">
