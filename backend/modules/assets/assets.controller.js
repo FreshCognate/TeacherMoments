@@ -18,11 +18,11 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { name, assetType } = body;
+    const { name, mimetype } = body;
 
-    const asset = await createAsset({ name, assetType }, {}, context);
+    const { asset, signedUrl } = await createAsset({ name, mimetype }, {}, context);
 
-    return { asset };
+    return { asset, signedUrl };
 
   },
 

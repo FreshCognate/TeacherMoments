@@ -2,7 +2,7 @@ import Joi from 'joi';
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
 import controller from './assets.controller.js';
-import getFileTypes from './helpers/getFileTypes.js';
+import getMimeTypes from './helpers/getMimeTypes.js';
 
 export default {
   route: '/assets',
@@ -18,7 +18,7 @@ export default {
   create: {
     body: {
       name: Joi.string().required(),
-      fileType: Joi.string().required().valid(...getFileTypes())
+      mimetype: Joi.string().required().valid(...getMimeTypes())
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
