@@ -42,7 +42,7 @@ const BlocksEditor = ({
           );
         })}
       </div>
-      <div>
+      <div className="pl-2">
         <FlatButton
           text="Create block"
           icon="create"
