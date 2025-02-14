@@ -15,7 +15,10 @@ const BlocksEditor = ({
   onCreateBlockClicked
 }) => {
   return (
-    <div className="w-full py-4 max-w-screen-sm">
+    <div className="w-full pt-4 pb-8 max-w-screen-sm">
+      <div className="mb-2 inline-block text-xs text-black/60 dark:text-white/60 font-bold">
+        Blocks
+      </div>
       <div className="group/blocks">
         {map(blocks, (block) => {
 

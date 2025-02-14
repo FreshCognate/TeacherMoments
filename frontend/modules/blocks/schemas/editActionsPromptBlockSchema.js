@@ -10,6 +10,7 @@ export default {
   actions: {
     type: 'Array',
     label: 'Actions',
+    addButtonText: "Add another action",
     subSchema: {
       ...text,
       actionType: {

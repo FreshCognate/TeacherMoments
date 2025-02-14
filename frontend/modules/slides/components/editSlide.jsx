@@ -8,7 +8,7 @@ const EditSlide = ({
   onSlideFormUpdate
 }) => {
   return (
-    <div className="">
+    <div className="pt-4">
       <FormContainer
         schema={schema}
         model={slide}

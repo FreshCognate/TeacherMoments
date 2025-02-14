@@ -11,7 +11,7 @@ const SelectOptions = ({
   onChange
 }) => {
 
-  const classes = classnames('', {
+  const classes = classnames('p-2 rounded bg-lm-0/60 dark:bg-dm-0/30', {
     'text-sm': size === 'sm'
   }, className);
 

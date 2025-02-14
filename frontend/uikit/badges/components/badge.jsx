@@ -17,12 +17,16 @@ const Badge = ({
   }
 
   return (
-    <div className={classnames("flex items-center border py-micro px-1 rounded-md bg-lm-1 border-lm-2 dark:bg-dm-1 dark:border-dm-2", className, {
-      "text-rg": size === 'lg',
-      "text-sm": size === 'rg',
-      "border-warning-regular dark:border-warning-light text-warning-regular dark:text-warning-light": color === 'warning',
-      "border-primary-regular dark:border-primary-light text-primary-regular dark:text-primary-light": color === 'primary'
-    })}>
+    <div className={classnames("flex items-center py-micro px-2 rounded-full bg-lm-0/60  dark:bg-dm-0/60",
+      "text-black/60 dark:text-white/60",
+      className,
+      {
+
+        "text-rg": size === 'lg',
+        "text-sm": size === 'rg',
+        "border-warning-regular dark:border-warning-light text-warning-regular dark:text-warning-light": color === 'warning',
+        "border-primary-regular dark:border-primary-light text-primary-regular dark:text-primary-light": color === 'primary'
+      })}>
       {(icon) && (
         <Icon icon={icon} color={color} className={classnames("dark:text-white text-1 mr-1", {
           "text-warning-regular dark:text-warning-light": color === 'warning',

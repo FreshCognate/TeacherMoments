@@ -8,8 +8,8 @@ const TriggerDisplay = ({
   onOpenTriggerPanelClicked
 }) => {
   return (
-    <div className="bg-lm-2 dark:bg-dm-2 text-xs rounded flex items-center overflow-auto">
-      <div className="bg-lm-2 dark:bg-dm-3 p-4 mr-2 border-r border-lm-3 dark:border-dm-3">
+    <div className="bg-lm-3/50 dark:bg-dm-3/50 text-xs rounded flex items-center overflow-auto">
+      <div className="bg-lm-3/50 dark:bg-dm-3/50 p-4 mr-2 border-r border-lm-3 dark:border-dm-3">
         <Icon icon="trigger" size="12" />
       </div>
       <div>

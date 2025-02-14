@@ -11,13 +11,13 @@ const Toggle = ({
   isDisabled,
   onClick
 }) => {
-  const classNames = classnames('border border-lm-0 inline-flex items-center rounded overflow-hidden border-lm-3 dark:border-dm-3', className);
+  const classNames = classnames('inline-flex items-center rounded overflow-hidden', className);
   return (
     <div className={classNames}>
       {map(options, (option) => {
         const isSelected = value === option.value;
 
-        let className = classnames({
+        let className = classnames("bg-lm-0 dark:bg-dm-0", {
           'p-2': size !== 'sm',
           'py-1 px-2 text-xs': size === 'sm',
           'opacity-40': !isSelected,

@@ -14,18 +14,18 @@ const ArrayFormField = ({
   return (
     <div>
 
-      <div className="border rounded rounded-bl-none border-lm-3 dark:border-dm-3">
+      <div className=" ">
         {map(value, (action, index) => {
           return (
-            <div key={action._id} className="border-b last:border-b-0 border-lm-3 dark:border-dm-3 group/actionItem">
-              <div className="p-2">
+            <div key={action._id} className="bg-lm-3/50 dark:bg-dm-3/50 mb-2 rounded-lg overflow-hidden group/actionItem">
+              <div className="p-4">
                 <FormContainer
                   schema={schema.subSchema}
                   model={action}
                   onUpdate={(formUpdate) => onUpdateAction(action._id, formUpdate)}
                 />
               </div>
-              <div className="bg-lm-2 dark:bg-dm-2 px-2 py-1 flex justify-between opacity-0 group-hover/actionItem:opacity-100">
+              <div className="bg-lm-3 dark:bg-dm-3 px-2 py-2 flex justify-between group-hover/actionItem:opacity-100">
                 <div>
                   <FlatButton icon="delete" color="warning" onClick={() => onRemoveActionClicked(action._id)} />
                 </div>
@@ -42,8 +42,8 @@ const ArrayFormField = ({
           );
         })}
       </div>
-      <div className="border-b border-x border-lm-3 dark:border-dm-3 inline-flex rounded-b">
-        <FlatButton icon="create" text={schema.addButtonText} className="py-1 px-2" onClick={onAddActionClicked} />
+      <div className="inline-flex">
+        <FlatButton icon="create" text={schema.addButtonText} onClick={onAddActionClicked} />
       </div>
     </div>
   );
