@@ -36,10 +36,10 @@ const ScenarioBuilderItemContent = ({
 
   return (
     <div
-      className="relative  bg-lm-2 shadow dark:bg-dm-2 p-2 w-[440px] rounded-lg group"
+      className="relative  bg-lm-2 shadow dark:bg-dm-2 p-4 w-[440px] rounded-lg group"
       style={{
         transform: `scale(${isSelected ? 1 : 0.8})`,
-        outline: isEditing ? "solid 2px rgba(255,255,255, 0.2)" : "none",
+        outline: isEditing ? "solid 2px rgba(255,255,255, 0)" : "none",
         maxHeight: isEditing ? '5000px' : '120px',
         height: isEditing ? 'auto' : '120px',
         overflow: 'hidden',

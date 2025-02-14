@@ -42,7 +42,7 @@ const ArrayFormField = ({
           );
         })}
       </div>
-      <div className="inline-flex">
+      <div className="inline-flex pl-2">
         <FlatButton icon="create" text={schema.addButtonText} onClick={onAddActionClicked} />
       </div>
     </div>
