@@ -15,6 +15,8 @@ const schema = {
   width: { type: Number },
   height: { type: Number },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
+  isUploading: { type: Boolean, default: false },
+  isProcessing: { type: Boolean, default: false },
   isAIGenerated: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

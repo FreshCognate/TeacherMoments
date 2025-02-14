@@ -8,9 +8,12 @@ export default async (props, options, context) => {
     name,
     fileType,
     createdBy: user._id,
+    isUploading: true
   };
 
   const asset = await models.Asset.create(newAssetObject);
+
+  // When creating a new asset we should create a signing url.
 
   return asset;
 

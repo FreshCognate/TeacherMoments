@@ -18,9 +18,9 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { name, assetType } = body;
+    const { name, fileType } = body;
 
-    const asset = await createAsset({ name, assetType }, {}, context);
+    const asset = await createAsset({ name, fileType }, {}, context);
 
     return { asset };
 
