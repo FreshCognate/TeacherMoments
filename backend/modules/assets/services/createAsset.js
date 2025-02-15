@@ -13,8 +13,10 @@ export default async (props, options, context) => {
 
   const extension = getFileExtension(mimetype);
 
+  const sanitizedFileName = sanitizeFileName(name);
+
   const newAssetObject = {
-    name: sanitizeFileName(name),
+    name: sanitizedFileName,
     fileType,
     extension,
     createdBy: user._id,
@@ -25,7 +27,11 @@ export default async (props, options, context) => {
   const asset = await models.Asset.create(newAssetObject);
 
   // When creating a new asset we should create a signing url.
-  const signedUrl = await getUploadSignedUrl(`assets/${fileType}s/${asset._id}/original/${name}`);
+  const signedUrl = await getUploadSignedUrl({
+    assetPath: `assets/${fileType}s/${asset._id}/original/${sanitizedFileName}`,
+    ACL: 'public-read',
+    ContentType: mimetype
+  });
 
   return { asset, signedUrl };
 

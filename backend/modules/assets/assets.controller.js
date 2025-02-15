@@ -4,6 +4,7 @@ import getAssetById from './services/getAssetById.js';
 import restoreAssetById from './services/restoreAssetById.js';
 import updateAssetById from './services/updateAssetById.js';
 import deleteAssetById from './services/deleteAssetById.js';
+import setAssetToUploaded from './services/setAssetToUploaded.js';
 import has from 'lodash/has.js';
 
 export default {
@@ -34,6 +35,11 @@ export default {
   },
 
   update: async function ({ param, body }, context) {
+
+    if (has(body, 'isUploading')) {
+      const asset = await setAssetToUploaded({ assetId: param }, {}, context);
+      return { asset };
+    }
 
     if (has(body, 'isDeleted')) {
       const asset = await restoreAssetById({ assetId: param }, {}, context);
