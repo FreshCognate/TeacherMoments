@@ -8,6 +8,7 @@ if (process.env.SHOULD_RUN_WORKERS === 'true') {
   console.log('WORKERS ARE ENABLED');
   const { default: createWorker } = await import('./createWorker.js');
   createWorker({ name: 'generate' }, `${global.root}/runners/generate.js`);
+  createWorker({ name: 'assets' }, `${global.root}/runners/assets.js`);
 } else {
   const app = express();
   app.disable('x-powered-by');
