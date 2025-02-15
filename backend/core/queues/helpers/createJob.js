@@ -1,6 +1,34 @@
+import { FlowProducer } from 'bullmq';
 import getQueue from './getQueue.js';
+import map from 'lodash/map.js';
+import Redis from 'ioredis';
+import QUEUES from '../queues.js';
 
-export default ({ queue, name, repeat, job }) => {
+
+
+export default ({ queue, name, repeat, job, children }) => {
+
+  if (children) {
+    const urlRedis = new Redis(process.env.REDIS_URL, {
+      maxRetriesPerRequest: null
+    });
+    const flowProducer = new FlowProducer({ connection: urlRedis });
+    const flow = {
+      name,
+      queueName: queue,
+      data: job,
+      children: map(children, (child) => {
+        return {
+          name: child.name,
+          queueName: child.queue,
+          data: child.job
+        }
+      })
+    };
+    flowProducer.add(flow);
+    return;
+  }
+
   const queueItem = getQueue(queue);
   if (repeat) {
     return queueItem.add(name, job, {
