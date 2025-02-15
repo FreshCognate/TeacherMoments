@@ -31,6 +31,7 @@ export default {
     body: {
       name: Joi.string(),
       tags: Joi.array().items(Joi.string()),
+      isUploading: Joi.boolean().invalid(true),
       isDeleted: Joi.boolean().invalid(true),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],

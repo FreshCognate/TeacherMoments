@@ -5,6 +5,7 @@ import getFileUploadAssepts from '../helpers/getFileUploadAssepts';
 import map from 'lodash/map';
 import each from 'lodash/each';
 import uploadAsset from '../helpers/uploadAsset';
+import getCache from '~/core/cache/helpers/getCache';
 
 class AssetSelectorFormFieldContainer extends Component {
 
@@ -30,14 +31,20 @@ class AssetSelectorFormFieldContainer extends Component {
       each(files, (file, index) => {
         uploadAsset({ file }, (state, payload) => {
           if (state === 'INIT') {
-            console.log(payload);
+            const { asset } = payload;
+            this.props.updateField(asset._id);
           }
           if (state === 'PROGRESS') {
             this.state.acceptedFiles[index].progress = payload.progress;
             this.setState({ acceptedFiles: this.state.acceptedFiles });
           }
           if (state === 'FINISH') {
-            console.log(payload);
+            const block = getCache('block');
+            block.fetch().then(() => {
+              setTimeout(() => {
+                this.setState({ isUploading: false, acceptedFiles: [] });
+              }, 0);
+            })
           }
         });
       })
@@ -48,20 +55,28 @@ class AssetSelectorFormFieldContainer extends Component {
     console.log('rejecting', props);
   }
 
+  onRemoveAssetClicked = () => {
+    this.props.updateField(null);
+  }
+
   render() {
 
     const { fileTypes, maxFiles } = this.props.schema;
 
     const { acceptedFiles, isUploading } = this.state;
 
+    console.log(acceptedFiles, isUploading);
+
     return (
       <AssetSelectorFormField
+        value={this.props.value}
         accepts={getFileUploadAssepts(fileTypes)}
         acceptedFiles={acceptedFiles}
         maxFiles={maxFiles}
         isUploading={isUploading}
         onDrop={this.onDrop}
         onDropRejected={this.onDropRejected}
+        onRemoveAssetClicked={this.onRemoveAssetClicked}
       />
     );
   }

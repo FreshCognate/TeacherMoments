@@ -44,7 +44,9 @@ export async function loader({ request }) {
   return {
     isAuthenticated,
     authentication,
-    NODE_ENV: process.env.NODE_ENV
+    NODE_ENV: process.env.NODE_ENV,
+    STORAGE_NAME: process.env.STORAGE_NAME,
+    STORAGE_ENDPOINT: process.env.STORAGE_ENDPOINT,
   }
 }
 
@@ -69,6 +71,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App(props) {
   if (typeof window !== 'undefined') {
     window.NODE_ENV = props.loaderData.NODE_ENV;
+    window.STORAGE_NAME = props.loaderData.STORAGE_NAME;
+    window.STORAGE_ENDPOINT = props.loaderData.STORAGE_ENDPOINT;
   }
 
   return (

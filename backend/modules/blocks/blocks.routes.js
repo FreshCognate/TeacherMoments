@@ -43,7 +43,7 @@ export default {
       items: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('caption', Joi.string().allow('')),
-        ...buildLanguageValidation('asset', Joi.string().allow('')),
+        ...buildLanguageValidation('asset', Joi.string().allow(null)),
       }),
       options: Joi.array().items({
         _id: Joi.string(),
