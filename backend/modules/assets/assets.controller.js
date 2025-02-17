@@ -19,9 +19,9 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { name, mimetype } = body;
+    const { name, width, height, orientation, mimetype } = body;
 
-    const { asset, signedUrl } = await createAsset({ name, mimetype }, {}, context);
+    const { asset, signedUrl } = await createAsset({ name, width, height, orientation, mimetype }, {}, context);
 
     return { asset, signedUrl };
 

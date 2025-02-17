@@ -1,9 +1,12 @@
 import axios from 'axios';
+import getFileDimensions from './getFileDimensions';
 
 export default async ({ file }, callback = () => { }) => {
   try {
 
-    const assetResponse = await axios.post('/api/assets', { name: file.name, mimetype: file.type });
+    const { width, height, orientation } = await getFileDimensions(file);
+
+    const assetResponse = await axios.post('/api/assets', { name: file.name, width, height, orientation, mimetype: file.type });
 
     const { signedUrl, asset } = assetResponse.data;
 
