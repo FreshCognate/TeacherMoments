@@ -5,13 +5,34 @@ import { Upload } from '@aws-sdk/lib-storage';
 import getAssetKey from '../helpers/getAssetKey.js';
 import { PassThrough } from 'stream';
 
+const SIZES = [640, 320, 160];
+
+const resizeAndUploadImage = async ({ stream, size, asset, s3Client, Bucket }) => {
+  const transformStream = Sharp()
+    .resize(size)
+    .on('error', (err) => console.error('Sharp processing error:', err));
+
+  const uploadKey = getAssetKey(asset, size);
+
+  const upload = new Upload({
+    client: s3Client,
+    params: {
+      Bucket,
+      Key: uploadKey,
+      Body: stream.pipe(transformStream),
+      ACL: 'public-read',
+      ContentType: asset.mimetype
+    }
+  });
+
+  await upload.done();
+}
+
 export default async ({ assetId }) => {
 
   const { models } = await connectDatabase();
   const asset = await models.Asset.findById(assetId);
   const assetKey = getAssetKey(asset, 'original');
-
-  console.log('Starting image processing...');
 
   const region = process.env.STORAGE_ENDPOINT.split('.')[0];
 
@@ -32,29 +53,23 @@ export default async ({ assetId }) => {
     throw new Error('Invalid image stream from S3');
   }
 
-  const passThrough = new PassThrough();
+  const availableSizes = [];
 
-  // Process image using sharp (without excessive memory use)
-  const transformStream = Sharp()
-    .resize(320) // Keep aspect ratio
-    .on('error', (err) => console.error('Sharp processing error:', err));
-
-  Body.pipe(transformStream).pipe(passThrough);
-
-  const uploadKey = getAssetKey(asset, '320');
-
-  // Upload the transformed image stream using `@aws-sdk/lib-storage`
-  const upload = new Upload({
-    client: s3Client,
-    params: {
-      Bucket,
-      Key: uploadKey,
-      Body: passThrough, // Stream output directly to S3
-      ACL: 'public-read',
-      ContentType: asset.mimetype
+  for (const size of SIZES) {
+    if (asset.width > size) {
+      availableSizes.push(size);
     }
-  });
+  }
 
-  await upload.done();
+  const resizePromises = availableSizes.map((size) => {
+    const clonedStream = Body.pipe(new PassThrough());
+    return resizeAndUploadImage({ stream: clonedStream, size, asset, s3Client, Bucket });
+  })
+
+  await Promise.all(resizePromises);
+
+  asset.set('sizes', availableSizes);
+
+  await asset.save();
 
 }
