@@ -1,4 +1,5 @@
 import createAssetSizes from "../tasks/createAssetSizes.js";
+import updateAssetToProcessed from '../tasks/updateAssetToProcessed.js';
 import '../../backend/modules/assets/index.js';
 
 export default async (job) => {
@@ -6,6 +7,9 @@ export default async (job) => {
     console.log(job);
     if (job.name === 'PROCESS_ASSET_SIZES') {
       await createAssetSizes({ assetId: job.data.assetId });
+    }
+    if (job.name === 'PROCESS_ASSET') {
+      await updateAssetToProcessed({ assetId: job.data.assetId });
     }
   } catch (error) {
     console.log(error);
