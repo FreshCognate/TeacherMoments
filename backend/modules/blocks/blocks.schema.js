@@ -28,6 +28,7 @@ const schema = {
   imagesBorderRadius: { type: Number, default: 0, enum: [0, 8] },
   mediaCompleteOn: { type: String, enum: ['ON_START', 'ON_END'], default: 'ON_END' },
   mediaType: { type: String, enum: ['YOUTUBE', 'ASSET'], default: 'ASSET' },
+  mediaSrc: { type: String, default: '' },
   items: {
     type: [{
       ...asset,

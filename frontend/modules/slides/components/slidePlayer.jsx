@@ -11,10 +11,12 @@ import getCache from '~/core/cache/helpers/getCache';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
 import ImagesBlockPlayerContainer from '~/modules/blocks/containers/imagesBlockPlayerContainer';
+import MediaBlockPlayerContainer from '~/modules/blocks/containers/mediaBlockPlayerContainer';
 
 const BLOCK_MAPPINGS = {
   "TEXT": TextBlockPlayerContainer,
   "IMAGES": ImagesBlockPlayerContainer,
+  "MEDIA": MediaBlockPlayerContainer,
   "ANSWERS_PROMPT": AnswersPromptBlockPlayerContainer,
   "INPUT_PROMPT": InputPromptBlockPlayerContainer,
   "ACTIONS_PROMPT": ActionsPromptBlockPlayerContainer
