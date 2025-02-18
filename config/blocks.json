@@ -12,6 +12,12 @@
     "description": "A set of images. Great for visually setting a scene."
   },
   {
+    "blockType": "MEDIA",
+    "displayType": "VISUAL",
+    "displayName": "Media",
+    "description": "A media element that can either be audio or video. This includes YouTube."
+  },
+  {
     "blockType": "ANSWERS_PROMPT",
     "displayType": "PROMPT",
     "displayName": "Answers prompt",
