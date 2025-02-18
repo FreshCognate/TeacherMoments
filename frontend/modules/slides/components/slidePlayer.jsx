@@ -10,9 +10,11 @@ import find from 'lodash/find';
 import getCache from '~/core/cache/helpers/getCache';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
+import ImagesBlockPlayerContainer from '~/modules/blocks/containers/imagesBlockPlayerContainer';
 
 const BLOCK_MAPPINGS = {
   "TEXT": TextBlockPlayerContainer,
+  "IMAGES": ImagesBlockPlayerContainer,
   "ANSWERS_PROMPT": AnswersPromptBlockPlayerContainer,
   "INPUT_PROMPT": InputPromptBlockPlayerContainer,
   "ACTIONS_PROMPT": ActionsPromptBlockPlayerContainer
