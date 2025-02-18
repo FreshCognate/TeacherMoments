@@ -34,6 +34,8 @@ export default {
     body: {
       event: Joi.string().valid(...getTriggerEvents()),
       blocks: Joi.array().items(Joi.string()),
+      sourceIndex: Joi.number(),
+      destinationIndex: Joi.number(),
       isDeleted: Joi.boolean().invalid(true),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],

@@ -7,6 +7,8 @@ import addModal from '~/core/dialogs/helpers/addModal';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import WithRouter from '~/core/app/components/withRouter';
+import cloneDeep from 'lodash/cloneDeep';
+import each from 'lodash/each';
 
 class TriggersEditorContainer extends Component {
 
@@ -129,6 +131,37 @@ class TriggersEditorContainer extends Component {
       }
     })
   }
+  sortTriggers = ({ sourceIndex, destinationIndex }) => {
+    const clonedTriggers = cloneDeep(this.getTriggers());
+    const [removed] = clonedTriggers.splice(sourceIndex, 1);
+    clonedTriggers.splice(destinationIndex, 0, removed);
+
+    each(clonedTriggers, (item, index) => {
+      item.sortOrder = index;
+    });
+
+    this.props.triggers.set(clonedTriggers, { setType: 'replace' });
+
+    axios.put(`/api/triggers/${removed._id}`, { sourceIndex, destinationIndex }).then(() => {
+      this.props.triggers.fetch();
+    }).catch(handleRequestError);
+  }
+
+  onSortUpClicked = (sortOrder) => {
+    const sourceIndex = sortOrder;
+    const destinationIndex = sortOrder - 1;
+
+    this.sortTriggers({ sourceIndex, destinationIndex });
+  }
+
+  onSortDownClicked = (sortOrder) => {
+
+    const sourceIndex = sortOrder;
+    const destinationIndex = sortOrder + 1;
+
+    this.sortTriggers({ sourceIndex, destinationIndex });
+
+  }
 
   render() {
     const { event, triggerType } = this.props;
@@ -139,6 +172,8 @@ class TriggersEditorContainer extends Component {
         onAddTriggerClicked={this.onAddTriggerClicked}
         onEditTriggerClicked={this.onEditTriggerClicked}
         onDeleteTriggerClicked={this.onDeleteTriggerClicked}
+        onSortUpClicked={this.onSortUpClicked}
+        onSortDownClicked={this.onSortDownClicked}
       />
     );
   }

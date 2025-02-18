@@ -4,6 +4,7 @@ import getTriggerById from './services/getTriggerById.js';
 import deleteTriggerById from './services/deleteTriggerById.js';
 import updateTriggerById from './services/updateTriggerById.js';
 import restoreTriggerById from './services/restoreTriggerById.js';
+import reorderTrigger from './services/reorderTrigger.js';
 import getTriggersByScenarioId from './services/getTriggersByScenarioId.js';
 
 export default {
@@ -31,6 +32,12 @@ export default {
   update: async function ({ param, body }, context) {
     if (has(body, 'isDeleted')) {
       const trigger = await restoreTriggerById({ triggerId: param }, {}, context);
+      return { trigger };
+    }
+
+    if (has(body, 'sourceIndex') || has(body, 'destinationIndex')) {
+      const { sourceIndex, destinationIndex } = body;
+      const trigger = await reorderTrigger({ sourceIndex, destinationIndex, triggerId: param }, {}, context);
       return { trigger };
     }
 
