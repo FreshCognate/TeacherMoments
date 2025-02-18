@@ -12,7 +12,13 @@ export default async (props, options, context) => {
 
   if (!trigger) throw { message: 'This trigger does not exist', statusCode: 404 };
 
-  const elementTriggers = await models.Trigger.find({ scenario: trigger.scenario, triggerType: trigger.triggerType, elementRef: trigger.elementRef, isDeleted: false }).sort('sortOrder');
+  const elementTriggers = await models.Trigger.find({
+    scenario: trigger.scenario,
+    triggerType: trigger.triggerType,
+    elementRef: trigger.elementRef,
+    event: trigger.event,
+    isDeleted: false
+  }).sort('sortOrder');
 
   let sortOrder = 0;
   for (const elementTrigger of elementTriggers) {

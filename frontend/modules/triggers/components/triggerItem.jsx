@@ -6,8 +6,11 @@ import Body from '~/uikit/content/components/body';
 
 const TriggerItem = ({
   trigger,
+  isLastTrigger,
   onDeleteTriggerClicked,
-  onEditTriggerClicked
+  onEditTriggerClicked,
+  onSortUpClicked,
+  onSortDownClicked
 }) => {
   return (
     <div className={classnames(
@@ -24,8 +27,12 @@ const TriggerItem = ({
           <FlatButton icon="delete" color="warning" size="sm" onClick={() => onDeleteTriggerClicked(trigger._id)} />
         </div>
         <div className="flex items-center">
-          <FlatButton icon="sortUp" size="sm" />
-          <FlatButton icon="sortDown" size="sm" className="ml-3" />
+          {(trigger.sortOrder !== 0) && (
+            <FlatButton icon="sortUp" size="sm" onClick={() => onSortUpClicked(trigger.sortOrder)} />
+          )}
+          {(!isLastTrigger) && (
+            <FlatButton icon="sortDown" size="sm" className="ml-3" onClick={() => onSortDownClicked(trigger.sortOrder)} />
+          )}
         </div>
       </div>
     </div>
