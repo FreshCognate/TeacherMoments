@@ -6,7 +6,7 @@ export default async (props, options, context) => {
 
   const { models } = context;
 
-  const asset = await models.Asset.findByIdAndUpdate(assetId, { isUploading: false }, { new: true });
+  const asset = await models.Asset.findByIdAndUpdate(assetId, { isUploading: false, isProcessing: true }, { new: true });
 
   if (!asset) throw { message: 'This asset does not exist', statusCode: 404 };
 
