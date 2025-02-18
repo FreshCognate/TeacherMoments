@@ -7,6 +7,7 @@ const Image = ({
   src,
   size = '320',
   shape,
+  borderRadius,
 }) => {
 
   let imageSrc = src;
@@ -20,6 +21,7 @@ const Image = ({
     "aspect-[3/2]": shape === 'LANDSCAPE',
     "aspect-[2/3]": shape === 'PORTRAIT',
     "aspect-square": shape === 'SQUARE',
+    "rounded-[8px]": borderRadius === 8 && shape !== 'CIRCLE'
   });
 
   console.log(imageSrc);

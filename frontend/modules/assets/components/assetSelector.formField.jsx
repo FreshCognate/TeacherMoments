@@ -20,13 +20,12 @@ const AssetSelectorFormField = ({
 
   return (
     <div>
-      {(value && value._id) && (
-        <AssetSelectorDisplayFormField
-          asset={value}
-          isUploading={isUploading}
-          onRemoveAssetClicked={onRemoveAssetClicked}
-        />
-      )}
+      <AssetSelectorDisplayFormField
+        asset={value}
+        file={acceptedFiles[0]}
+        isUploading={isUploading}
+        onRemoveAssetClicked={onRemoveAssetClicked}
+      />
       {(acceptedFiles.length === 0 && !value) && (
 
         <div className="flex space-x-2">
@@ -67,19 +66,6 @@ const AssetSelectorFormField = ({
             isDisabled
             className="flex-col items-center justify-center bg-lm-3/60 dark:bg-dm-3/50 p-2 rounded h-20 w-full"
           />
-        </div>
-      )}
-      {(acceptedFiles.length > 0 && isUploading) && (
-        <div className="flex">
-          {map(acceptedFiles, (acceptedFile) => {
-            return (
-              <AssetSelectorDisplayFormField
-                key={acceptedFile.name}
-                file={acceptedFile}
-                isUploading={isUploading}
-              />
-            )
-          })}
         </div>
       )}
     </div>

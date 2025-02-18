@@ -34,6 +34,18 @@ export default {
       text: 'None'
     }]
   },
+  imagesBorderRadius: {
+    type: 'Toggle',
+    size: 'sm',
+    label: 'Image corners',
+    options: [{
+      value: 8,
+      text: 'Rounded'
+    }, {
+      value: 0,
+      text: 'Square'
+    }]
+  },
   items: {
     type: 'Array',
     label: 'Images',

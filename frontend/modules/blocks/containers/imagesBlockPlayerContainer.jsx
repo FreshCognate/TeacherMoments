@@ -7,6 +7,7 @@ class ImagesBlockPlayerContainer extends Component {
       <ImagesBlockPlayer
         items={this.props.block.items}
         imagesShape={this.props.block.imagesShape}
+        imagesBorderRadius={this.props.block.imagesBorderRadius}
       />
     );
   }

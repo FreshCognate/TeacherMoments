@@ -6,7 +6,8 @@ import classnames from 'classnames';
 
 const ImagesBlockPlayer = ({
   items,
-  imagesShape
+  imagesShape,
+  imagesBorderRadius
 }) => {
   let imageSize = 640;
   if (items.length > 1) {
@@ -25,6 +26,7 @@ const ImagesBlockPlayer = ({
               asset={getContent({ model: item, field: 'asset' })}
               size={imageSize}
               shape={imagesShape}
+              borderRadius={imagesBorderRadius}
             />
           </div>
         );
