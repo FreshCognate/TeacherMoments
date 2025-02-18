@@ -18,6 +18,9 @@ export default {
   create: {
     body: {
       name: Joi.string().required(),
+      width: Joi.number(),
+      height: Joi.number(),
+      orientation: Joi.string().valid('portrait', 'landscape'),
       mimetype: Joi.string().required().valid(...getMimeTypes())
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],

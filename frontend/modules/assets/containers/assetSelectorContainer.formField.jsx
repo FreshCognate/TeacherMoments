@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import AssetSelectorFormField from '../components/assetSelector.formField';
 import registerField from '~/core/forms/helpers/registerField';
-import getFileUploadAssepts from '../helpers/getFileUploadAssepts';
+import getFileUploadAccepts from '../helpers/getFileUploadAccepts';
 import map from 'lodash/map';
 import each from 'lodash/each';
 import uploadAsset from '../helpers/uploadAsset';
@@ -70,7 +70,7 @@ class AssetSelectorFormFieldContainer extends Component {
     return (
       <AssetSelectorFormField
         value={this.props.value}
-        accepts={getFileUploadAssepts(fileTypes)}
+        accepts={getFileUploadAccepts(fileTypes)}
         acceptedFiles={acceptedFiles}
         maxFiles={maxFiles}
         isUploading={isUploading}

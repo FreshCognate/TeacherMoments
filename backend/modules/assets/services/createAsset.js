@@ -5,7 +5,7 @@ import sanitizeFileName from "../helpers/sanitizeFileName.js";
 
 export default async (props, options, context) => {
 
-  const { name, mimetype } = props;
+  const { name, width, height, orientation, mimetype } = props;
 
   const { models, user } = context;
 
@@ -21,6 +21,9 @@ export default async (props, options, context) => {
     extension,
     createdBy: user._id,
     isUploading: true,
+    width,
+    height,
+    orientation,
     mimetype,
   };
 
