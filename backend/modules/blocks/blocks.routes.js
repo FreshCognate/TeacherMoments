@@ -42,6 +42,7 @@ export default {
       isMultiSelect: Joi.boolean(),
       imagesShape: Joi.string().valid('CIRCLE', 'LANDSCAPE', 'PORTRAIT', 'SQUARE', 'NONE'),
       imagesBorderRadius: Joi.number().valid(0, 8),
+      mediaCompleteOn: Joi.string().valid('ON_START', 'ON_END'),
       items: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('caption', Joi.string().allow('')),

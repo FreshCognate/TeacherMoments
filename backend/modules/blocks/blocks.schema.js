@@ -26,6 +26,7 @@ const schema = {
   isMultiSelect: { type: Boolean, default: false },
   imagesShape: { type: String, enum: ['CIRCLE', 'LANDSCAPE', 'PORTRAIT', 'SQUARE', 'NONE'], default: 'LANDSCAPE' },
   imagesBorderRadius: { type: Number, default: 0, enum: [0, 8] },
+  mediaCompleteOn: { type: String, enum: ['ON_START', 'ON_END'], default: 'ON_END' },
   items: {
     type: [{
       ...asset,
