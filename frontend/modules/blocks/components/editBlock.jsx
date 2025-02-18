@@ -12,6 +12,7 @@ const EditBlock = ({
   onNavigateToPreviousBlock,
   onNavigateToNextBlock
 }) => {
+  const random = Math.random();
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-dm-2/80 p-2 z-30 flex justify-end"
       onClick={(event) => {
@@ -47,7 +48,7 @@ const EditBlock = ({
 
           <div className="p-6">
             <FormContainer
-              renderKey={`${block._id}-${block.blockType}`}
+              renderKey={`${block._id}-${block.blockType}-${random}`}
               schema={schema}
               model={block}
               onUpdate={onEditBlockUpdate}

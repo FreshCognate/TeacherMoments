@@ -37,4 +37,14 @@ export default {
       text: 'YouTube'
     }]
   },
+  mediaSrc: {
+    type: 'Text',
+    label: 'YouTube link',
+    conditions: [{
+      type: 'modelValueIs',
+      values: ['YOUTUBE'],
+      field: 'mediaType',
+      shouldHideField: true
+    }]
+  }
 }
