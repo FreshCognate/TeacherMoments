@@ -24,5 +24,17 @@ export default {
       value: 'ON_END',
       text: 'Finished'
     }]
-  }
+  },
+  mediaType: {
+    type: 'Toggle',
+    label: 'Media type',
+    size: 'sm',
+    options: [{
+      value: 'ASSET',
+      text: 'Upload'
+    }, {
+      value: 'YOUTUBE',
+      text: 'YouTube'
+    }]
+  },
 }

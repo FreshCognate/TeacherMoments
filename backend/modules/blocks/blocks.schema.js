@@ -27,6 +27,7 @@ const schema = {
   imagesShape: { type: String, enum: ['CIRCLE', 'LANDSCAPE', 'PORTRAIT', 'SQUARE', 'NONE'], default: 'LANDSCAPE' },
   imagesBorderRadius: { type: Number, default: 0, enum: [0, 8] },
   mediaCompleteOn: { type: String, enum: ['ON_START', 'ON_END'], default: 'ON_END' },
+  mediaType: { type: String, enum: ['YOUTUBE', 'ASSET'], default: 'ASSET' },
   items: {
     type: [{
       ...asset,
