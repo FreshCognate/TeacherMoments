@@ -5,7 +5,8 @@ import Image from '~/uikit/content/components/image';
 import classnames from 'classnames';
 
 const ImagesBlockPlayer = ({
-  items
+  items,
+  imagesShape
 }) => {
   let imageSize = 640;
   if (items.length > 1) {
@@ -23,6 +24,7 @@ const ImagesBlockPlayer = ({
             <Image
               asset={getContent({ model: item, field: 'asset' })}
               size={imageSize}
+              shape={imagesShape}
             />
           </div>
         );

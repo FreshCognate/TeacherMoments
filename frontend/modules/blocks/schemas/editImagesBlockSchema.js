@@ -13,6 +13,27 @@ const asset = buildLanguageSchema('asset', {
 });
 
 export default {
+  imagesShape: {
+    type: 'Toggle',
+    label: 'Image shape',
+    size: 'sm',
+    options: [{
+      value: 'CIRCLE',
+      text: 'Circle'
+    }, {
+      value: 'LANDSCAPE',
+      text: 'Landscape'
+    }, {
+      value: 'PORTRAIT',
+      text: 'Portrait'
+    }, {
+      value: 'SQUARE',
+      text: 'Square'
+    }, {
+      value: 'NONE',
+      text: 'None'
+    }]
+  },
   items: {
     type: 'Array',
     label: 'Images',

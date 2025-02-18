@@ -40,6 +40,7 @@ export default {
       ...buildLanguageValidation('body', Joi.array()),
       ...buildLanguageValidation('placeholder', Joi.string()),
       isMultiSelect: Joi.boolean(),
+      imagesShape: Joi.string().valid('CIRCLE', 'LANDSCAPE', 'PORTRAIT', 'SQUARE', 'NONE'),
       items: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('caption', Joi.string().allow('')),
