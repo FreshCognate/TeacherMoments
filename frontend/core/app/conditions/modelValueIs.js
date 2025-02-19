@@ -7,8 +7,6 @@ const modelValueIs = function ({
   condition,
 }) {
 
-  console.log('running');
-
   if (includes(condition.values, get(model, condition.field))) {
 
     return {
