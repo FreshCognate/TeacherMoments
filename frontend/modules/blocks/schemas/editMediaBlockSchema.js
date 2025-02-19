@@ -18,10 +18,10 @@ export default {
     label: 'Media is complete when',
     size: 'sm',
     options: [{
-      value: 'ON_START',
+      value: 'START',
       text: 'Started'
     }, {
-      value: 'ON_END',
+      value: 'END',
       text: 'Finished'
     }]
   },
