@@ -1,6 +1,5 @@
 import getBlockPopulate from "../helpers/getBlockPopulate.js";
-
-getBlockPopulate()
+import getBlockItemsPopulate from "../helpers/getBlockItemsPopulate.js";
 
 export default async (props, options, context) => {
 
@@ -17,7 +16,7 @@ export default async (props, options, context) => {
 
   const search = { scenario: scenarioId, slideRef: slideRef, isDeleted };
 
-  const blocks = await models.Block.find(search).sort('sortOrder').populate(getBlockPopulate());
+  const blocks = await models.Block.find(search).sort('sortOrder').populate(getBlockPopulate()).populate(getBlockItemsPopulate());
 
   return {
     blocks

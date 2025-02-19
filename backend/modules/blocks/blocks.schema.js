@@ -6,6 +6,7 @@ const body = buildLanguageSchema('body', textAreaSchema);
 const placeholder = buildLanguageSchema('placeholder', { type: String, default: '' });
 const text = buildLanguageSchema('text', { type: String, default: '' });
 const feedback = buildLanguageSchema('feedback', textAreaSchema);
+const mediaAsset = buildLanguageSchema('mediaAsset', { type: mongoose.Schema.Types.ObjectId, ref: 'Asset' });
 const asset = buildLanguageSchema('asset', { type: mongoose.Schema.Types.ObjectId, ref: 'Asset' });
 const caption = buildLanguageSchema('caption', { type: String, default: '' });
 
@@ -29,6 +30,7 @@ const schema = {
   mediaCompleteOn: { type: String, enum: ['START', 'END'], default: 'END' },
   mediaType: { type: String, enum: ['YOUTUBE', 'ASSET'], default: 'ASSET' },
   mediaSrc: { type: String, default: '' },
+  ...mediaAsset,
   items: {
     type: [{
       ...asset,

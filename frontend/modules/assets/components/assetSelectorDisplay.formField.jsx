@@ -2,6 +2,7 @@ import React from 'react';
 import getAssetUrl from '~/core/app/helpers/getAssetUrl';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import includes from 'lodash/includes';
+import getFileType from '../helpers/getFileType';
 
 const AssetSelectorDisplayFormField = ({
   asset,
@@ -11,17 +12,20 @@ const AssetSelectorDisplayFormField = ({
 }) => {
   let preview;
   let title;
-  let body;
   let hasRemoveButton = false;
   let progress;
   let size = 'original';
+  let fileType;
   if (asset && asset._id && !isUploading) {
+    fileType = asset.fileType;
     if (!asset.isUploading) {
       title = asset.name;
-      console.log(asset);
-      if (asset.hasBeenProcessed) {
-        if (includes(asset.sizes, 160)) {
-          size = 160;
+
+      if (asset.fileType === 'image') {
+        if (asset.hasBeenProcessed) {
+          if (includes(asset.sizes, 160)) {
+            size = 160;
+          }
         }
       }
       preview = getAssetUrl(asset, size);
@@ -32,6 +36,7 @@ const AssetSelectorDisplayFormField = ({
     preview = file.preview;
     title = 'Uploading';
     progress = `${file.progress}%`
+    fileType = getFileType(file);
   }
 
   if (!preview) return null;
@@ -40,19 +45,32 @@ const AssetSelectorDisplayFormField = ({
     <div className="flex items-center justify-between bg-lm-3/50 dark:bg-dm-3/50 p-2 rounded h-20 w-full">
       <div className="flex items-center">
         <div className="min-w-16">
-          <img
-            src={preview}
-            className="aspect-square w-16 h-16 bg-lm-1 dark:bg-dm-1 rounded object-cover overflow-hidden"
-            onLoad={() => {
-              if (file) {
-                URL.revokeObjectURL(file.preview)
-              }
-            }}
-          />
+          {(fileType === 'image') && (
+            <img
+              src={preview}
+              className="aspect-square w-16 h-16 bg-lm-1 dark:bg-dm-1 rounded object-cover overflow-hidden"
+              onLoad={() => {
+                if (file) {
+                  URL.revokeObjectURL(file.preview)
+                }
+              }}
+            />
+          )}
+          {(fileType === 'video') && (
+            <video
+              src={preview}
+              className="aspect-square w-16 h-16 bg-lm-1 dark:bg-dm-1 rounded object-cover overflow-hidden"
+              onLoad={() => {
+                if (file) {
+                  URL.revokeObjectURL(file.preview)
+                }
+              }}
+            />
+          )}
         </div>
-        <div className="p-2 text-black/80 dark:text-white/80">
+        <div className="p-2 text-black/60 dark:text-white/60">
           <div className="flex flex-col">
-            <div className="text-sm  break-all">
+            <div className="text-sm  break-all line-clamp-3">
               {title}
             </div>
             {isUploading && (

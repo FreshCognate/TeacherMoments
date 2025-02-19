@@ -10,9 +10,10 @@ import AssetSelectorDisplayFormField from './assetSelectorDisplay.formField';
 const AssetSelectorFormField = ({
   value,
   accepts,
-  maxFiles,
-  acceptedFiles,
+  acceptedFile,
+  error,
   isUploading,
+  hasError,
   onDrop,
   onDropRejected,
   onRemoveAssetClicked
@@ -22,17 +23,17 @@ const AssetSelectorFormField = ({
     <div>
       <AssetSelectorDisplayFormField
         asset={value}
-        file={acceptedFiles[0]}
+        file={acceptedFile}
         isUploading={isUploading}
         onRemoveAssetClicked={onRemoveAssetClicked}
       />
-      {(acceptedFiles.length === 0 && !value) && (
+      {(!acceptedFile && !value) && (
 
         <div className="flex space-x-2">
           <Dropzone
             accept={accepts}
-            maxFiles={maxFiles}
-            multiple={maxFiles !== 1}
+            maxFiles={1}
+            multiple={false}
             onDrop={onDrop}
             onDropRejected={onDropRejected}>
             {({ getRootProps, getInputProps, isFocused, isDragAccept, isDragReject }) => {
@@ -66,6 +67,11 @@ const AssetSelectorFormField = ({
             isDisabled
             className="flex-col items-center justify-center bg-lm-3/60 dark:bg-dm-3/50 p-2 rounded h-20 w-full"
           />
+        </div>
+      )}
+      {(hasError) && (
+        <div className="text-xs text-warning-regular dark:text-warning-light mt-1">
+          {error}
         </div>
       )}
     </div>
