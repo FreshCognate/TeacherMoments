@@ -1,4 +1,5 @@
 import buildLanguageSchema from "~/core/app/helpers/buildLanguageSchema";
+import setContent from "~/modules/ls/helpers/setContent";
 
 const mediaAsset = buildLanguageSchema('mediaAsset', {
   type: 'AssetSelector',
@@ -36,8 +37,12 @@ export default {
       value: 'YOUTUBE',
       text: 'YouTube'
     }],
-    onUpdate: ({ update, updateFields }) => {
-      console.log(update, updateFields);
+    onUpdate: ({ value, update }) => {
+      if (value === 'ASSET') {
+        update.mediaSrc = "";
+      } else if (value === 'YOUTUBE') {
+        setContent({ model: update, field: 'mediaAsset', content: null });
+      }
     }
   },
   mediaSrc: {

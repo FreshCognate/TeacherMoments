@@ -42,6 +42,9 @@ const FormField = ({
   function updateField(update, callback) {
     const updateObject = {};
     updateObject[fieldKey] = update;
+    if (schema.onUpdate) {
+      schema.onUpdate({ value: update, update: updateObject });
+    }
     return onUpdateField({
       update: updateObject,
       callback
