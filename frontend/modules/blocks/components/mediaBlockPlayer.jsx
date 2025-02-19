@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactPlayer from 'react-player';
+import getAssetUrl from '~/core/app/helpers/getAssetUrl';
 
 const MediaBlockPlayer = ({
   mediaType,
   mediaSrc,
+  mediaAsset,
   onVideoStarted,
   onVideoEnded
 }) => {
@@ -11,6 +13,10 @@ const MediaBlockPlayer = ({
   let mediaUrl;
   if (mediaType === 'YOUTUBE') {
     mediaUrl = mediaSrc
+  }
+
+  if (mediaType === 'ASSET') {
+    mediaUrl = getAssetUrl(mediaAsset, 'original');
   }
 
   return (
