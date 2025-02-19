@@ -33,7 +33,6 @@ class AssetSelectorFormFieldContainer extends Component {
       isUploading: true
     }, () => {
       each(files, (file, index) => {
-        console.log(file);
         uploadAsset({ file }, (state, payload) => {
           if (state === 'INIT') {
             const { asset } = payload;

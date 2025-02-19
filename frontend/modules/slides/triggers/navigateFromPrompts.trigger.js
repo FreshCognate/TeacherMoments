@@ -13,9 +13,7 @@ registerTrigger('NAVIGATE_FROM_PROMPTS', {
   },
   trigger: async ({ trigger, context }) => {
     for (const blockRef of trigger.blocks) {
-      console.log('trigger navigate by prompts');
       const contextBlocks = filter(getCache('blocks').data, { ref: blockRef });
-      console.log(contextBlocks);
 
 
       // workers:generate:generateNavigateFromPrompts

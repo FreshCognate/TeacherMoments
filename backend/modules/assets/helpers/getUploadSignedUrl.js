@@ -20,7 +20,6 @@ export default async ({ assetPath, ACL, ContentType }) => {
     ACL,
     ContentType
   };
-  console.log(params);
   const command = new PutObjectCommand(params);
   const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
   return url;

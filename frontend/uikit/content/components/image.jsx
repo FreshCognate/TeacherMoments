@@ -24,8 +24,6 @@ const Image = ({
     "rounded-[8px]": borderRadius === 8 && shape !== 'CIRCLE'
   });
 
-  console.log(imageSrc);
-
   return (
     <img
       src={imageSrc}
