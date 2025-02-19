@@ -50,9 +50,9 @@ const AssetSelectorDisplayFormField = ({
             }}
           />
         </div>
-        <div className="p-2 text-black/80 dark:text-white/80">
+        <div className="p-2 text-black/60 dark:text-white/60">
           <div className="flex flex-col">
-            <div className="text-sm  break-all">
+            <div className="text-sm  break-all line-clamp-3">
               {title}
             </div>
             {isUploading && (

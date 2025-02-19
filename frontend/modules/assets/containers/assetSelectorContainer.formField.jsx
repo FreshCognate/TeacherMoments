@@ -10,39 +10,44 @@ import getCache from '~/core/cache/helpers/getCache';
 class AssetSelectorFormFieldContainer extends Component {
 
   state = {
+    hasError: false,
+    error: null,
     isUploading: false,
-    acceptedFiles: [],
+    acceptedFile: null,
   }
 
   componentWillUnmount = () => {
-    each(this.state.acceptedFiles, (acceptedFile) => URL.revokeObjectURL(acceptedFile.preview));
+    if (this.state.acceptedFile) {
+      URL.revokeObjectURL(this.state.acceptedFile.preview);
+    }
   }
 
   onDrop = (files) => {
+    const acceptedFile = files[0];
+    acceptedFile.preview = URL.createObjectURL(acceptedFile);
+    acceptedFile.progress = 0;
     this.setState({
-      acceptedFiles: map(files, (file) => {
-        file.preview = URL.createObjectURL(file);
-        file.progress = 0;
-        return file;
-      }),
+      hasError: false,
+      error: null,
+      acceptedFile,
       isUploading: true
     }, () => {
-
       each(files, (file, index) => {
+        console.log(file);
         uploadAsset({ file }, (state, payload) => {
           if (state === 'INIT') {
             const { asset } = payload;
             this.props.updateField(asset._id);
           }
           if (state === 'PROGRESS') {
-            this.state.acceptedFiles[index].progress = payload.progress;
-            this.setState({ acceptedFiles: this.state.acceptedFiles });
+            this.state.acceptedFile.progress = payload.progress;
+            this.setState({ acceptedFile: this.state.acceptedFile });
           }
           if (state === 'FINISH') {
             const block = getCache('block');
             block.fetch().then(() => {
               setTimeout(() => {
-                this.setState({ isUploading: false, acceptedFiles: [] });
+                this.setState({ isUploading: false, acceptedFile: null });
               }, 0);
             })
           }
@@ -51,8 +56,13 @@ class AssetSelectorFormFieldContainer extends Component {
     });
   }
 
-  onDropRejected = (props) => {
-    console.log('rejecting', props);
+  onDropRejected = (rejectedFiles) => {
+    const rejectedFile = rejectedFiles[0];
+    const error = rejectedFile.errors[0].message;
+    this.setState({
+      error: error,
+      hasError: true
+    })
   }
 
   onRemoveAssetClicked = () => {
@@ -61,18 +71,17 @@ class AssetSelectorFormFieldContainer extends Component {
 
   render() {
 
-    const { fileTypes, maxFiles } = this.props.schema;
+    const { fileTypes } = this.props.schema;
 
-    const { acceptedFiles, isUploading } = this.state;
-
-    console.log(acceptedFiles, isUploading);
+    const { acceptedFile, isUploading, hasError, error } = this.state;
 
     return (
       <AssetSelectorFormField
         value={this.props.value}
         accepts={getFileUploadAccepts(fileTypes)}
-        acceptedFiles={acceptedFiles}
-        maxFiles={maxFiles}
+        acceptedFile={acceptedFile}
+        hasError={hasError}
+        error={error}
         isUploading={isUploading}
         onDrop={this.onDrop}
         onDropRejected={this.onDropRejected}

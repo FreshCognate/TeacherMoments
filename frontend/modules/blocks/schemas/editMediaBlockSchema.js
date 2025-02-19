@@ -4,7 +4,6 @@ const mediaAsset = buildLanguageSchema('mediaAsset', {
   type: 'AssetSelector',
   label: 'Media upload',
   fileTypes: ['video'],
-  maxFiles: 1,
   conditions: [{
     type: 'modelValueIs',
     values: ['ASSET'],
