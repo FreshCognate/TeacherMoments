@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MediaBlockPlayer from '../components/mediaBlockPlayer';
+import getContent from '~/modules/ls/helpers/getContent';
 
 class MediaBlockPlayerContainer extends Component {
 
@@ -17,10 +18,15 @@ class MediaBlockPlayerContainer extends Component {
 
   render() {
     const { mediaType, mediaSrc } = this.props.block;
+
+    const mediaAsset = getContent({ model: this.props.block, field: 'mediaAsset' });
+    console.log(this.props.tracking);
+
     return (
       <MediaBlockPlayer
         mediaType={mediaType}
         mediaSrc={mediaSrc}
+        mediaAsset={mediaAsset}
         onVideoStarted={this.onVideoStarted}
         onVideoEnded={this.onVideoEnded}
       />
