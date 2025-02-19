@@ -44,7 +44,7 @@ export default {
       imagesBorderRadius: Joi.number().valid(0, 8),
       mediaCompleteOn: Joi.string().valid('START', 'END'),
       mediaType: Joi.string().valid('YOUTUBE', 'ASSET'),
-      mediaSrc: Joi.string(),
+      mediaSrc: Joi.string().allow(''),
       ...buildLanguageValidation('mediaAsset', [Joi.string().allow(null), Joi.object()]),
       items: Joi.array().items({
         _id: Joi.string(),
