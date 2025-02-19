@@ -15,7 +15,7 @@ const MediaBlockPlayer = ({
     mediaUrl = mediaSrc
   }
 
-  if (mediaType === 'ASSET') {
+  if (mediaType === 'ASSET' && mediaAsset) {
     mediaUrl = getAssetUrl(mediaAsset, 'original');
   }
 
