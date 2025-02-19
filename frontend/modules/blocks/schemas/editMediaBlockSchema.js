@@ -1,15 +1,16 @@
 import buildLanguageSchema from "~/core/app/helpers/buildLanguageSchema";
 
-const caption = buildLanguageSchema('caption', {
-  type: 'Text',
-  label: 'Caption'
-});
-
-const asset = buildLanguageSchema('asset', {
+const mediaAsset = buildLanguageSchema('mediaAsset', {
   type: 'AssetSelector',
-  label: 'Image',
-  fileTypes: ['image'],
-  maxFiles: 1
+  label: 'Media upload',
+  fileTypes: ['video'],
+  maxFiles: 1,
+  conditions: [{
+    type: 'modelValueIs',
+    values: ['ASSET'],
+    field: 'mediaType',
+    shouldHideField: true
+  }]
 });
 
 export default {
@@ -35,7 +36,10 @@ export default {
     }, {
       value: 'YOUTUBE',
       text: 'YouTube'
-    }]
+    }],
+    onUpdate: ({ update, updateFields }) => {
+      console.log(update, updateFields);
+    }
   },
   mediaSrc: {
     type: 'Text',
@@ -46,5 +50,6 @@ export default {
       field: 'mediaType',
       shouldHideField: true
     }]
-  }
+  },
+  ...mediaAsset
 }
