@@ -42,6 +42,7 @@ export default {
       isMultiSelect: Joi.boolean(),
       imagesShape: Joi.string().valid('CIRCLE', 'LANDSCAPE', 'PORTRAIT', 'SQUARE', 'NONE'),
       imagesBorderRadius: Joi.number().valid(0, 8),
+      inputType: Joi.string().valid('AUDIO', 'TEXT', 'AUDIO_AND_TEXT'),
       mediaCompleteOn: Joi.string().valid('START', 'END'),
       mediaType: Joi.string().valid('YOUTUBE', 'ASSET'),
       mediaSrc: Joi.string().allow(''),
