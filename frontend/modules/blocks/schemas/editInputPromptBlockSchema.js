@@ -34,9 +34,6 @@ export default {
     }, {
       value: 'TEXT',
       text: 'Text'
-    }, {
-      value: 'AUDIO_AND_TEXT',
-      text: 'Both'
     }]
   },
   inputTypeWarning: {
