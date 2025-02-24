@@ -23,6 +23,33 @@ const feedbackText = buildLanguageSchema('feedback', {
 })
 
 export default {
+  inputType: {
+    type: 'Toggle',
+    label: 'Input type',
+    help: 'Decide which input type the learner is presented with.',
+    size: 'sm',
+    options: [{
+      value: 'AUDIO',
+      text: 'Audio'
+    }, {
+      value: 'TEXT',
+      text: 'Text'
+    }, {
+      value: 'AUDIO_AND_TEXT',
+      text: 'Both'
+    }]
+  },
+  inputTypeWarning: {
+    type: 'Alert',
+    alertType: 'info',
+    alertText: 'A text element will display if the users browser does not support audio.',
+    conditions: [{
+      type: 'modelValueIs',
+      field: 'inputType',
+      values: ['AUDIO', 'AUDIO_AND_TEXT'],
+      shouldHideField: true
+    }]
+  },
   ...body,
   ...placeholder,
   options: {
