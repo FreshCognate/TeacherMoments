@@ -1,6 +1,7 @@
 import React from 'react';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import classnames from 'classnames';
+import AudioRecorder from '~/uikit/content/components/audioRecorder';
 let ReactMediaRecorder = null;
 if (typeof window !== 'undefined') {
   await import('react-media-recorder').then((mod) => {
@@ -16,34 +17,19 @@ const InputPromptAudioBlockPlayer = ({
   return (
     <div>
       <ReactMediaRecorder
-        render={({ status, startRecording, stopRecording, mediaBlobUrl }) => {
-          let recordButtonIcon = status === 'recording' ? 'recording' : 'record';
-          const recordButtonClassName = classnames("rounded-full p-2 bg-lm-3 dark:bg-dm-3", {
-            "animate-pulse": status === 'recording'
-          })
+        render={({ status, startRecording, stopRecording, mediaBlobUrl, clearBlobUrl }) => {
+
           return (
-            <div>
-              <div className="p-2 bg-lm-2/60 dark:bg-dm-2 rounded-lg">
-                <FlatButton
-                  icon={recordButtonIcon}
-                  isCircular
-                  className={recordButtonClassName}
-                  color="warning"
-                  onClick={() => {
-                    if (status === 'recording') {
-                      stopRecording();
-                    } else {
-                      startRecording();
-                    }
-                  }}
-                />
-              </div>
-              {(mediaBlobUrl) && (
-                <div className="mt-2 w-full">
-                  <audio src={mediaBlobUrl} className="w-full" controls onLoadedMetadata={onAudioLoaded} />
-                </div>
-              )}
-            </div>
+            <AudioRecorder
+              status={status}
+              startRecording={startRecording}
+              stopRecording={stopRecording}
+              clearBlobUrl={clearBlobUrl}
+              mediaBlobUrl={mediaBlobUrl}
+              hasAudioLoaded={hasAudioLoaded}
+              onAudioLoaded={onAudioLoaded}
+            />
+
           )
         }}
       />
