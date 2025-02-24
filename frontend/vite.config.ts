@@ -10,6 +10,9 @@ export default defineConfig({
     port: 3000,
     hmr: { port: 3001 }
   },
+  build: {
+    target: "esnext",
+  },
   css: {
     postcss: {
       plugins: [tailwindcss, autoprefixer],
