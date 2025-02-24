@@ -27,7 +27,7 @@
     "blockType": "INPUT_PROMPT",
     "displayType": "PROMPT",
     "displayName": "Input prompt",
-    "description": "A prompt with either text or audio input."
+    "description": "A prompt with either text or audio as an input."
   },
   {
     "blockType": "ACTIONS_PROMPT",
