@@ -20,7 +20,6 @@ class MediaBlockPlayerContainer extends Component {
     const { mediaType, mediaSrc } = this.props.block;
 
     const mediaAsset = getContent({ model: this.props.block, field: 'mediaAsset' });
-    console.log(this.props.tracking);
 
     return (
       <MediaBlockPlayer
