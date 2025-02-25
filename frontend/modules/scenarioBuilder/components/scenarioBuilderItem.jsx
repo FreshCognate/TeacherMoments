@@ -34,7 +34,7 @@ const ScenarioBuilderItem = ({
 }) => {
   const newLayerIndex = layerIndex + 1;
   return (
-    <div className={isDeleting ? 'opacity-20' : ''} id={`scenario-builder-slide-${slide._id}`}>
+    <div className={isDeleting ? 'opacity-20' : ''} style={{ scrollMarginTop: "50px" }} id={`scenario-builder-slide-${slide._id}`}>
       <div className="flex justify-center">
         <div className="relative">
           {(!slide.isRoot && isSelected && isDuplicating) && (

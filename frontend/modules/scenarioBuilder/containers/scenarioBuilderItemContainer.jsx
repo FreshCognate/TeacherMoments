@@ -270,24 +270,34 @@ class ScenarioBuilderItemContainer extends Component {
 
     const scenarioId = getCache('scenario').data._id;
     this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`, { replace: true });
+    const { _id } = this.props.slide;
+    document.getElementById(`scenario-builder-slide-${_id}`).scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      document.getElementById(`scenario-builder-slide-${_id}`).scrollIntoView({ behavior: "smooth" });
+    }, 0);
   }
 
   onEditSlideClicked = () => {
     let slideSelection = getSlideSelectionFromQuery();
     const scenarioId = getCache('scenario').data._id;
     let layer = this.props.layerIndex;
-    if (this.props.slide.isRoot) {
+    const { isRoot, _id, isLocked } = this.props.slide;
+    if (isRoot) {
       layer = 'root';
     }
     slideSelection[this.props.layerIndex] = this.props.itemIndex;
-    let query = `slideSelection=${JSON.stringify(slideSelection)}&isEditing=true&layer=${layer}&slide=${this.props.slide._id}`
+    let query = `slideSelection=${JSON.stringify(slideSelection)}&isEditing=true&layer=${layer}&slide=${_id}`
     this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true });
-    if (!this.props.slide.isLocked) {
-      axios.put(`/api/slides/${this.props.slide._id}`, {
+    document.getElementById(`scenario-builder-slide-${_id}`).scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      document.getElementById(`scenario-builder-slide-${_id}`).scrollIntoView({ behavior: "smooth" });
+    }, 0);
+    if (!isLocked) {
+      axios.put(`/api/slides/${_id}`, {
         isLocked: true
       }).then((response) => {
         const slides = getCache('slides');
-        slides.set(response.data.slide, { setType: 'itemExtend', setFind: { _id: this.props.slide._id } })
+        slides.set(response.data.slide, { setType: 'itemExtend', setFind: { _id: _id } })
       })
     }
   }
