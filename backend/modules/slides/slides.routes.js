@@ -21,8 +21,7 @@ export default {
       name: Joi.string().allow(''),
       scenarioId: Joi.string().required(),
       parentId: Joi.string(),
-      slideId: Joi.string(),
-      sortOrder: Joi.number().when('slideId', { is: Joi.string(), then: Joi.required(), otherwise: Joi.optional() })
+      slideId: Joi.string()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
