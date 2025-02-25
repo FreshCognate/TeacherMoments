@@ -50,7 +50,7 @@ const AudioRecorder = ({
       </div>
       {(mediaBlobUrl) && (
         <div className="mt-2 w-full">
-          <audio className="w-full" controls download={false} onCanPlayThrough={onAudioLoaded}>
+          <audio className="w-full" controls controlsList="nodownload" onCanPlayThrough={onAudioLoaded}>
             <source src={mediaBlobUrl} />
           </audio>
         </div>

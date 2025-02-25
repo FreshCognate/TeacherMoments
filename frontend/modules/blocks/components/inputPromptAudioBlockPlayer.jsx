@@ -11,9 +11,9 @@ if (typeof window !== 'undefined') {
 
 const InputPromptAudioBlockPlayer = ({
   hasAudioLoaded,
-  onAudioLoaded
+  onAudioLoaded,
+  onAudioRecorded
 }) => {
-  console.log(hasAudioLoaded);
   return (
     <div>
       <ReactMediaRecorder
@@ -23,7 +23,10 @@ const InputPromptAudioBlockPlayer = ({
             <AudioRecorder
               status={status}
               startRecording={startRecording}
-              stopRecording={stopRecording}
+              stopRecording={() => {
+                onAudioRecorded();
+                stopRecording();
+              }}
               clearBlobUrl={clearBlobUrl}
               mediaBlobUrl={mediaBlobUrl}
               hasAudioLoaded={hasAudioLoaded}

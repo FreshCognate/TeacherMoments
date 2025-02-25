@@ -11,7 +11,8 @@ const InputPromptBlockPlayer = ({
   hasAudioLoaded,
   onSubmitButtonClicked,
   onTextInputChanged,
-  onAudioLoaded
+  onAudioLoaded,
+  onAudioRecorded
 }) => {
   return (
     <div>
@@ -25,6 +26,7 @@ const InputPromptBlockPlayer = ({
           tracking={tracking}
           hasAudioLoaded={hasAudioLoaded}
           onAudioLoaded={onAudioLoaded}
+          onAudioRecorded={onAudioRecorded}
         />
       )}
 

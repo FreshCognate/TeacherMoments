@@ -19,8 +19,11 @@ class InputPromptBlockPlayerContainer extends Component {
   }
 
   onAudioLoaded = () => {
-    console.log('loaded');
     this.setState({ hasAudioLoaded: true });
+  }
+
+  onAudioRecorded = () => {
+    this.props.onUpdateTracking({ isComplete: true });
   }
 
   render() {
@@ -33,6 +36,7 @@ class InputPromptBlockPlayerContainer extends Component {
         onTextInputChanged={this.onTextInputChanged}
         onSubmitButtonClicked={this.onSubmitButtonClicked}
         onAudioLoaded={this.onAudioLoaded}
+        onAudioRecorded={this.onAudioRecorded}
       />
     );
   }
