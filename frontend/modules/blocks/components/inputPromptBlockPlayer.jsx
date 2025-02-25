@@ -9,10 +9,12 @@ const InputPromptBlockPlayer = ({
   block,
   tracking,
   hasAudioLoaded,
+  isAudioDisabled,
   onSubmitButtonClicked,
   onTextInputChanged,
   onAudioLoaded,
-  onAudioRecorded
+  onAudioRecorded,
+  onPermissionDenied
 }) => {
   return (
     <div>
@@ -20,17 +22,18 @@ const InputPromptBlockPlayer = ({
         <Body body={getString({ model: block, field: 'body' })} />
       </div>
 
-      {(block.inputType === 'AUDIO') && (
+      {(block.inputType === 'AUDIO' && !isAudioDisabled) && (
         <InputPromptAudioBlockPlayer
           block={block}
           tracking={tracking}
           hasAudioLoaded={hasAudioLoaded}
           onAudioLoaded={onAudioLoaded}
           onAudioRecorded={onAudioRecorded}
+          onPermissionDenied={onPermissionDenied}
         />
       )}
 
-      {block.inputType === 'TEXT' && (
+      {(block.inputType === 'TEXT' || isAudioDisabled) && (
         <InputPromptTextBlockPlayer
           block={block}
           tracking={tracking}
