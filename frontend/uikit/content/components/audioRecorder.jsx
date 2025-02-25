@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import classnames from 'classnames';
 
 const AudioRecorder = ({
   status,
+  error,
   startRecording,
   stopRecording,
   clearBlobUrl,
   mediaBlobUrl,
   hasAudioLoaded,
-  onAudioLoaded
+  onAudioLoaded,
+  onPermissionDenied
 }) => {
   let recordButtonIcon = status === 'recording' ? 'recording' : 'record';
   const recordButtonClassName = classnames("rounded-full p-2 bg-lm-3 dark:bg-dm-3", {
@@ -21,6 +23,13 @@ const AudioRecorder = ({
     statusText = "Audio has been saved!";
     hasRemoveAudioButton = true;
   }
+
+  useEffect(() => {
+    if (error === 'permission_denied') {
+      onPermissionDenied();
+    }
+  }, [error]);
+
   return (
     <div>
       <div className="p-2 bg-lm-2/60 dark:bg-dm-2 rounded-lg flex items-center justify-between">

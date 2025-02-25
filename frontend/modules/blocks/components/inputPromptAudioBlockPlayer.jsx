@@ -12,16 +12,18 @@ if (typeof window !== 'undefined') {
 const InputPromptAudioBlockPlayer = ({
   hasAudioLoaded,
   onAudioLoaded,
-  onAudioRecorded
+  onAudioRecorded,
+  onPermissionDenied
 }) => {
   return (
     <div>
       <ReactMediaRecorder
-        render={({ status, startRecording, stopRecording, mediaBlobUrl, clearBlobUrl }) => {
-
+        render={({ error, status, startRecording, stopRecording, mediaBlobUrl, clearBlobUrl }) => {
+          console.log(error, status);
           return (
             <AudioRecorder
               status={status}
+              error={error}
               startRecording={startRecording}
               stopRecording={() => {
                 onAudioRecorded();
@@ -31,6 +33,7 @@ const InputPromptAudioBlockPlayer = ({
               mediaBlobUrl={mediaBlobUrl}
               hasAudioLoaded={hasAudioLoaded}
               onAudioLoaded={onAudioLoaded}
+              onPermissionDenied={onPermissionDenied}
             />
 
           )
