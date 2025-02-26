@@ -15,12 +15,14 @@ import getBlocksBySlideRef from '../helpers/getBlocksBySlideRef';
 import editImagesBlockSchema from '../schemas/editImagesBlockSchema';
 import editMediaBlockSchema from '../schemas/editMediaBlockSchema';
 import editSuggestionBlockSchema from '../schemas/editSuggestionBlockSchema';
+import editResponseBlockSchema from '../schemas/editResponseBlockSchema';
 
 const SCHEMA_MAPPINGS = {
   TEXT: editTextBlockSchema,
   IMAGES: editImagesBlockSchema,
   MEDIA: editMediaBlockSchema,
   SUGGESTION: editSuggestionBlockSchema,
+  RESPONSE: editResponseBlockSchema,
   ANSWERS_PROMPT: editAnswersPromptBlockSchema,
   INPUT_PROMPT: editInputPromptBlockSchema,
   ACTIONS_PROMPT: editActionsPromptBlockSchema
