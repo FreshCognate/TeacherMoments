@@ -46,6 +46,7 @@ export default {
       mediaCompleteOn: Joi.string().valid('START', 'END'),
       mediaType: Joi.string().valid('YOUTUBE', 'ASSET'),
       mediaSrc: Joi.string().allow(''),
+      showSuggestionAs: Joi.string().valid('BUTTON', 'VISIBLE'),
       ...buildLanguageValidation('mediaAsset', [Joi.string().allow(null), Joi.object()]),
       items: Joi.array().items({
         _id: Joi.string(),

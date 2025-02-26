@@ -14,11 +14,13 @@ import WithRouter from '~/core/app/components/withRouter';
 import getBlocksBySlideRef from '../helpers/getBlocksBySlideRef';
 import editImagesBlockSchema from '../schemas/editImagesBlockSchema';
 import editMediaBlockSchema from '../schemas/editMediaBlockSchema';
+import editSuggestionBlockSchema from '../schemas/editSuggestionBlockSchema';
 
 const SCHEMA_MAPPINGS = {
   TEXT: editTextBlockSchema,
   IMAGES: editImagesBlockSchema,
   MEDIA: editMediaBlockSchema,
+  SUGGESTION: editSuggestionBlockSchema,
   ANSWERS_PROMPT: editAnswersPromptBlockSchema,
   INPUT_PROMPT: editInputPromptBlockSchema,
   ACTIONS_PROMPT: editActionsPromptBlockSchema

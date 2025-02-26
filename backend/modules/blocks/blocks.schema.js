@@ -31,6 +31,7 @@ const schema = {
   mediaCompleteOn: { type: String, enum: ['START', 'END'], default: 'END' },
   mediaType: { type: String, enum: ['YOUTUBE', 'ASSET'], default: 'ASSET' },
   mediaSrc: { type: String, default: '' },
+  showSuggestionAs: { type: String, enum: ['BUTTON', 'VISIBLE'], default: 'BUTTON' },
   ...mediaAsset,
   items: {
     type: [{
