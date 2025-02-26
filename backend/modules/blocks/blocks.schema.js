@@ -18,7 +18,7 @@ const schema = {
   originalRef: mongoose.Schema.Types.ObjectId,
   originalSlideRef: mongoose.Schema.Types.ObjectId,
   originalScenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario' },
-  blockType: { type: String, enum: ['TEXT', 'IMAGES', 'MEDIA', 'ANSWERS_PROMPT', 'INPUT_PROMPT', 'ACTIONS_PROMPT'], default: 'TEXT' },
+  blockType: { type: String, enum: ['TEXT', 'IMAGES', 'MEDIA', 'SUGGESTION', 'ANSWERS_PROMPT', 'INPUT_PROMPT', 'ACTIONS_PROMPT'], default: 'TEXT' },
   sortOrder: { type: Number },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
   ...title,
@@ -31,6 +31,7 @@ const schema = {
   mediaCompleteOn: { type: String, enum: ['START', 'END'], default: 'END' },
   mediaType: { type: String, enum: ['YOUTUBE', 'ASSET'], default: 'ASSET' },
   mediaSrc: { type: String, default: '' },
+  showSuggestionAs: { type: String, enum: ['BUTTON', 'VISIBLE'], default: 'BUTTON' },
   ...mediaAsset,
   items: {
     type: [{

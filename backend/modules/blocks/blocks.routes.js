@@ -22,7 +22,7 @@ export default {
     body: {
       scenarioId: Joi.string().required(),
       slideRef: Joi.string().required(),
-      blockType: Joi.string().required().valid('TEXT', 'IMAGES', 'MEDIA', 'ANSWERS_PROMPT', 'INPUT_PROMPT', 'ACTIONS_PROMPT')
+      blockType: Joi.string().required().valid('TEXT', 'IMAGES', 'MEDIA', 'SUGGESTION', 'ANSWERS_PROMPT', 'INPUT_PROMPT', 'ACTIONS_PROMPT')
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
@@ -46,6 +46,7 @@ export default {
       mediaCompleteOn: Joi.string().valid('START', 'END'),
       mediaType: Joi.string().valid('YOUTUBE', 'ASSET'),
       mediaSrc: Joi.string().allow(''),
+      showSuggestionAs: Joi.string().valid('BUTTON', 'VISIBLE'),
       ...buildLanguageValidation('mediaAsset', [Joi.string().allow(null), Joi.object()]),
       items: Joi.array().items({
         _id: Joi.string(),

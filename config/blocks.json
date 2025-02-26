@@ -18,6 +18,12 @@
     "description": "A media element that can either be audio or video. This includes YouTube."
   },
   {
+    "blockType": "SUGGESTION",
+    "displayType": "VISUAL",
+    "displayName": "Suggestion",
+    "description": "A suggestion box to help guide the user."
+  },
+  {
     "blockType": "ANSWERS_PROMPT",
     "displayType": "PROMPT",
     "displayName": "Answers prompt",
