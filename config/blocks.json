@@ -24,6 +24,12 @@
     "description": "A suggestion box to help guide the user."
   },
   {
+    "blockType": "RESPONSE",
+    "displayType": "VISUAL",
+    "displayName": "Response",
+    "description": "Embed a response from a previous slide."
+  },
+  {
     "blockType": "ANSWERS_PROMPT",
     "displayType": "PROMPT",
     "displayName": "Answers prompt",
