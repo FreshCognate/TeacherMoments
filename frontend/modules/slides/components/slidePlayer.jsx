@@ -12,11 +12,13 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
 import ImagesBlockPlayerContainer from '~/modules/blocks/containers/imagesBlockPlayerContainer';
 import MediaBlockPlayerContainer from '~/modules/blocks/containers/mediaBlockPlayerContainer';
+import SuggestionBlockPlayerContainer from '~/modules/blocks/containers/suggestionBlockPlayerContainer';
 
 const BLOCK_MAPPINGS = {
   "TEXT": TextBlockPlayerContainer,
   "IMAGES": ImagesBlockPlayerContainer,
   "MEDIA": MediaBlockPlayerContainer,
+  "SUGGESTION": SuggestionBlockPlayerContainer,
   "ANSWERS_PROMPT": AnswersPromptBlockPlayerContainer,
   "INPUT_PROMPT": InputPromptBlockPlayerContainer,
   "ACTIONS_PROMPT": ActionsPromptBlockPlayerContainer
