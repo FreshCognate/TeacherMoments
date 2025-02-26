@@ -32,6 +32,8 @@ const schema = {
   mediaType: { type: String, enum: ['YOUTUBE', 'ASSET'], default: 'ASSET' },
   mediaSrc: { type: String, default: '' },
   showSuggestionAs: { type: String, enum: ['BUTTON', 'VISIBLE'], default: 'BUTTON' },
+  responseType: { type: String, default: 'PROMPT', enum: ['PROMPT'] },
+  responseRef: { type: mongoose.Schema.Types.ObjectId },
   ...mediaAsset,
   items: {
     type: [{

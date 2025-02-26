@@ -8,6 +8,7 @@ import '~/core/app/components/select.formField';
 import '~/core/app/components/alert.formField';
 import '~/modules/triggers/containers/triggerBlocksSelectorContainer.formField';
 import '~/modules/assets/containers/assetSelectorContainer.formField';
+import '~/modules/blocks/containers/responseSelectorContainer.formField';
 import '~/core/app/conditions/modelValueIs';
 import '~/modules/ls/helpers/ls.condition'
 import '~/modules/slides/triggers/navigateFromPrompts.trigger';
