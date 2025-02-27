@@ -19,7 +19,6 @@ const InputPromptAudioBlockPlayer = ({
     <div>
       <ReactMediaRecorder
         render={({ error, status, startRecording, stopRecording, mediaBlobUrl, clearBlobUrl }) => {
-          console.log(error, status);
           return (
             <AudioRecorder
               status={status}

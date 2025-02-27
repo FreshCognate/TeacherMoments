@@ -10,6 +10,7 @@ const InputPromptBlockPlayer = ({
   tracking,
   hasAudioLoaded,
   isAudioDisabled,
+  isResponseBlock,
   onSubmitButtonClicked,
   onTextInputChanged,
   onAudioLoaded,
@@ -26,6 +27,7 @@ const InputPromptBlockPlayer = ({
         <InputPromptAudioBlockPlayer
           block={block}
           tracking={tracking}
+          isResponseBlock={isResponseBlock}
           hasAudioLoaded={hasAudioLoaded}
           onAudioLoaded={onAudioLoaded}
           onAudioRecorded={onAudioRecorded}
@@ -37,6 +39,7 @@ const InputPromptBlockPlayer = ({
         <InputPromptTextBlockPlayer
           block={block}
           tracking={tracking}
+          isResponseBlock={isResponseBlock}
           onTextInputChanged={onTextInputChanged}
           onSubmitButtonClicked={onSubmitButtonClicked}
         />

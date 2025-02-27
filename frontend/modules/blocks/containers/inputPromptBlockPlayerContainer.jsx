@@ -39,7 +39,7 @@ class InputPromptBlockPlayerContainer extends Component {
   }
 
   render() {
-    const { block, tracking } = this.props;
+    const { block, tracking, isResponseBlock } = this.props;
     const { isAudioDisabled } = getUserPreferences();
     return (
       <InputPromptBlockPlayer
@@ -47,6 +47,7 @@ class InputPromptBlockPlayerContainer extends Component {
         tracking={tracking}
         hasAudioLoaded={this.state.hasAudioLoaded}
         isAudioDisabled={isAudioDisabled}
+        isResponseBlock={isResponseBlock}
         onTextInputChanged={this.onTextInputChanged}
         onSubmitButtonClicked={this.onSubmitButtonClicked}
         onAudioLoaded={this.onAudioLoaded}
