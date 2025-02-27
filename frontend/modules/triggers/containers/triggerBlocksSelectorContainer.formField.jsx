@@ -17,7 +17,14 @@ class TriggerBlocksSelectorContainer extends Component {
     const currentSlide = find(this.props.slides.data, { _id: slideId });
     return filter(this.props.blocks.data, (block) => {
       if (block.slideRef === currentSlide.ref) {
-        return block;
+        const { blockTypes } = this.props.schema;
+        if (blockTypes && blockTypes.length > 0) {
+          if (includes(blockTypes, block.blockType)) {
+            return block;
+          }
+        } else {
+          return block;
+        }
       }
     })
   }

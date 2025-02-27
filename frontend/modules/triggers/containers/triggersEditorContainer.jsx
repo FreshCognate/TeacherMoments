@@ -9,6 +9,8 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import WithRouter from '~/core/app/components/withRouter';
 import cloneDeep from 'lodash/cloneDeep';
 import each from 'lodash/each';
+import find from 'lodash/find';
+import pick from 'lodash/pick';
 
 class TriggersEditorContainer extends Component {
 
@@ -40,12 +42,6 @@ class TriggersEditorContainer extends Component {
           label: 'Action:',
           isInline: true,
           options: [{
-            value: 'NAVIGATE_FROM_PROMPTS',
-            text: 'Navigate from prompts'
-          }, {
-            value: 'GIVE_FEEDBACK_FROM_PROMPTS',
-            text: 'Give feedback from prompts'
-          }, {
             value: 'SHOW_FEEDBACK_FROM_PROMPTS',
             text: 'Show feedback from prompts'
           }]
@@ -53,6 +49,7 @@ class TriggersEditorContainer extends Component {
         blocks: {
           type: 'TriggerBlocksSelector',
           label: 'Selected blocks:',
+          blockTypes: ['INPUT_PROMPT', 'ANSWERS_PROMPT']
         },
         conditions: {
           type: 'Conditions',
@@ -61,7 +58,7 @@ class TriggersEditorContainer extends Component {
         }
       },
       model: {
-        action: 'GIVE_FEEDBACK_FROM_PROMPTS',
+        action: 'SHOW_FEEDBACK_FROM_PROMPTS',
         blocks: []
       },
       actions: [{
@@ -92,6 +89,7 @@ class TriggersEditorContainer extends Component {
 
   onEditTriggerClicked = (triggerId) => {
     const trigger = find(this.props.triggers.data, { _id: triggerId });
+    console.log(trigger);
     addModal({
       title: 'Edit trigger',
       schema: {
@@ -100,11 +98,15 @@ class TriggersEditorContainer extends Component {
           label: 'Action:',
           isInline: true,
           isDisabled: true,
-          options: []
+          options: [{
+            value: 'SHOW_FEEDBACK_FROM_PROMPTS',
+            text: 'Show feedback from prompts'
+          }]
         },
         blocks: {
           type: 'TriggerBlocksSelector',
           label: 'Selected blocks',
+          blockTypes: ['INPUT_PROMPT', 'ANSWERS_PROMPT']
         },
         conditions: {
           type: 'Conditions',
