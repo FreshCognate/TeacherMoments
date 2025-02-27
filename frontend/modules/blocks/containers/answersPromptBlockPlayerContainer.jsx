@@ -36,12 +36,13 @@ class AnswersPromptBlockPlayerContainer extends Component {
   }
 
   render() {
-    const { block, tracking } = this.props;
+    const { block, tracking, isResponseBlock } = this.props;
     return (
       <AnswersPromptBlockPlayer
         block={block}
         tracking={tracking}
         isSubmitButtonDisabled={this.getIsSubmitButtonDisabled()}
+        isResponseBlock={isResponseBlock}
         onSubmitButtonClicked={this.onSubmitButtonClicked}
         onAnswerClicked={this.onAnswerClicked}
       />

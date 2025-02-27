@@ -30,9 +30,9 @@ const ResponseSelector = ({
                 </div>
                 <div className="flex items-center mb-2">
                   <div className="text-xs w-1/3">Block type</div>
-                  <div className="">{response.blockType}</div>
+                  <div className="">{response.blockDisplayName}</div>
                 </div>
-                <div className="flex items-center mb-2">
+                <div className="flex items-center">
                   <div className="text-xs w-1/3">Prompt</div>
                   <div className="">
                     <Body body={response.blockPrompt} />

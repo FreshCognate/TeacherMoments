@@ -10,6 +10,7 @@ const AnswersPromptBlockPlayer = ({
   block,
   tracking,
   isSubmitButtonDisabled,
+  isResponseBlock,
   onSubmitButtonClicked,
   onAnswerClicked
 }) => {
@@ -30,6 +31,7 @@ const AnswersPromptBlockPlayer = ({
               isMultiSelect={block.isMultiSelect}
               isSelected={isSelected}
               isComplete={tracking.isComplete}
+              isResponseBlock={isResponseBlock}
               onAnswerClicked={onAnswerClicked}
             />
           );

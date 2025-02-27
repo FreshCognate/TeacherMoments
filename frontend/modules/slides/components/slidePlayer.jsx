@@ -1,28 +1,12 @@
 import React from 'react';
-import TextBlockPlayerContainer from '~/modules/blocks/containers/textBlockPlayerContainer';
 import Loading from '~/uikit/loaders/components/loading';
 import map from 'lodash/map';
-import AnswersPromptBlockPlayerContainer from '~/modules/blocks/containers/answersPromptBlockPlayerContainer';
-import ActionsPromptBlockPlayerContainer from '~/modules/blocks/containers/actionsPromptBlockPlayerContainer';
-import InputPromptBlockPlayerContainer from '~/modules/blocks/containers/inputPromptBlockPlayerContainer';
 import getBlockTracking from '~/modules/tracking/helpers/getBlockTracking';
 import find from 'lodash/find';
 import getCache from '~/core/cache/helpers/getCache';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
-import ImagesBlockPlayerContainer from '~/modules/blocks/containers/imagesBlockPlayerContainer';
-import MediaBlockPlayerContainer from '~/modules/blocks/containers/mediaBlockPlayerContainer';
-import SuggestionBlockPlayerContainer from '~/modules/blocks/containers/suggestionBlockPlayerContainer';
-
-const BLOCK_MAPPINGS = {
-  "TEXT": TextBlockPlayerContainer,
-  "IMAGES": ImagesBlockPlayerContainer,
-  "MEDIA": MediaBlockPlayerContainer,
-  "SUGGESTION": SuggestionBlockPlayerContainer,
-  "ANSWERS_PROMPT": AnswersPromptBlockPlayerContainer,
-  "INPUT_PROMPT": InputPromptBlockPlayerContainer,
-  "ACTIONS_PROMPT": ActionsPromptBlockPlayerContainer
-}
+import getBlockComponent from '~/modules/blocks/helpers/getBlockComponent';
 
 const SlidePlayer = ({
   activeSlide,
@@ -39,7 +23,7 @@ const SlidePlayer = ({
   return (
     <div className="w-full bg-lm-0 dark:bg-dm-1 border border-lm-2 dark:border-dm-2 rounded max-w-screen-sm p-4">
       {map(activeBlocks, (block) => {
-        let Block = BLOCK_MAPPINGS[block.blockType];
+        let Block = getBlockComponent({ blockType: block.blockType });
         if (!Block) return <div key={block._id} className="mb-4 last:mb-0 border p-2 border-lm-3 dark:border-dm-3 text-center">Block is unsupported</div>;
         const blockTracking = getBlockTracking({ blockRef: block.ref });
 
