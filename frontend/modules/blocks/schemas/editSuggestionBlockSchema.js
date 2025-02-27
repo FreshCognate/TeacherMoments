@@ -8,15 +8,15 @@ const body = buildLanguageSchema('body', {
 
 export default {
   ...body,
-  showSuggestionAs: {
+  suggestionType: {
     type: 'Toggle',
-    label: 'Default to visible?',
+    label: 'Suggestion type',
     options: [{
-      value: 'BUTTON',
-      text: 'Button'
+      value: 'INFO',
+      text: 'Info'
     }, {
-      value: 'VISIBLE',
-      text: 'Visible'
+      value: 'WARNING',
+      text: 'Warning'
     }]
   },
 }
