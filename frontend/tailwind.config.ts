@@ -31,7 +31,8 @@ export default {
         'dm-4': '#52525b'
       },
       spacing: {
-        micro: '2px'
+        micro: '2px',
+        "rem": "1rem"
       }
     },
   },
