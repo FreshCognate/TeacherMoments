@@ -6,8 +6,24 @@ import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import find from 'lodash/find';
 import blocks from '../../../../config/blocks.json';
+import cloneDeep from 'lodash/cloneDeep';
+import remove from 'lodash/remove';
 
 class BlockSelectorContainer extends Component {
+
+  getBlocks = () => {
+    const searchParams = new URLSearchParams(this.props.router.location.search);
+    const slideId = searchParams.get('slide');
+    const slides = getCache('slides');
+    const slide = find(slides.data, { _id: slideId });
+    const clonedBlocks = cloneDeep(blocks);
+    if (slide.isRoot) {
+      remove(clonedBlocks, (block) => {
+        if (block.blockType === 'RESPONSE') return true;
+      })
+    }
+    return clonedBlocks;
+  }
 
   onAddBlockTypeClicked = (blockType) => {
     this.props.actions.onCloseButtonClicked();
@@ -28,7 +44,7 @@ class BlockSelectorContainer extends Component {
   render() {
     return (
       <BlockSelector
-        blocks={blocks}
+        blocks={this.getBlocks()}
         onAddBlockTypeClicked={this.onAddBlockTypeClicked}
       />
     );
