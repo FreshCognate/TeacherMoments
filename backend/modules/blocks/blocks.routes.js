@@ -48,7 +48,7 @@ export default {
       mediaSrc: Joi.string().allow(''),
       responseType: Joi.string().valid('PROMPT'),
       responseRef: Joi.string().allow(null),
-      showSuggestionAs: Joi.string().valid('BUTTON', 'VISIBLE'),
+      suggestionType: Joi.string().valid('INFO', 'WARNING'),
       ...buildLanguageValidation('mediaAsset', [Joi.string().allow(null), Joi.object()]),
       items: Joi.array().items({
         _id: Joi.string(),
