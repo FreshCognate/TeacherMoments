@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ScenarioBuilderItem from '../components/scenarioBuilderItem';
-import openCreateSlideDialog from '../helpers/openCreateSlideDialog';
 import axios from 'axios';
 import WithRouter from '~/core/app/components/withRouter';
 import getCache from '~/core/cache/helpers/getCache';
@@ -193,37 +192,29 @@ class ScenarioBuilderItemContainer extends Component {
   }
 
   onAddChildSlideClicked = () => {
-    openCreateSlideDialog((state, { type, modal }) => {
-      if (state === 'ACTION') {
-        if (type === 'CREATE') {
-          const scenario = getCache('scenario').data;
-          if (!modal.slideRef) {
-            axios.post(`/api/slides`, {
-              name: modal.name,
-              scenarioId: scenario._id,
-              parentId: this.props.slide._id
-            }).then((response) => {
-              const newSlideId = get(response, 'data.slide._id');
-              const slides = getCache('slides');
-              slides.fetch().then(() => {
-                let slideSelection = getSlideSelectionFromQuery();
-                if (slideSelection[this.props.layerIndex + 1] === 0 || slideSelection[this.props.layerIndex + 1]) {
-                  slideSelection[this.props.layerIndex + 1] = this.props.slide.children.length;
-                } else {
-                  slideSelection.push(this.props.slide.children.length);
-                }
-                const scenarioId = getCache('scenario').data._id;
-                const { isEditing, layer, slide } = getEditingDetailsFromQuery();
-                let query = `slideSelection=${JSON.stringify(slideSelection)}`;
-                if (isEditing && layer === this.props.layerIndex + 1) {
-                  query += `&isEditing=${isEditing}&layer=${layer}&slide=${newSlideId}`;
-                }
-                this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true });
-              });
-            })
-          }
+    const scenario = getCache('scenario').data;
+
+    axios.post(`/api/slides`, {
+      scenarioId: scenario._id,
+      parentId: this.props.slide._id
+    }).then((response) => {
+      const newSlideId = get(response, 'data.slide._id');
+      const slides = getCache('slides');
+      slides.fetch().then(() => {
+        let slideSelection = getSlideSelectionFromQuery();
+        if (slideSelection[this.props.layerIndex + 1] === 0 || slideSelection[this.props.layerIndex + 1]) {
+          slideSelection[this.props.layerIndex + 1] = this.props.slide.children.length;
+        } else {
+          slideSelection.push(this.props.slide.children.length);
         }
-      }
+        const scenarioId = getCache('scenario').data._id;
+        const { isEditing, layer } = getEditingDetailsFromQuery();
+        let query = `slideSelection=${JSON.stringify(slideSelection)}`;
+        if (isEditing && layer === this.props.layerIndex + 1) {
+          query += `&isEditing=${isEditing}&layer=${layer}&slide=${newSlideId}`;
+        }
+        this.props.router.navigate(`/scenarios/${scenarioId}/create?${query}`, { replace: true });
+      });
     });
   }
 

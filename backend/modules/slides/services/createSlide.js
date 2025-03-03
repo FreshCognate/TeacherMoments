@@ -1,6 +1,6 @@
 export default async (props, options, context) => {
 
-  const { name, scenario, parentId } = props;
+  const { scenario, parentId } = props;
 
   const { models, user } = context;
 
@@ -11,7 +11,6 @@ export default async (props, options, context) => {
   const scenarioSlides = await models.Slide.find({ scenario: scenario, isDeleted: false });
 
   const newSlideObject = {
-    name,
     scenario,
     createdBy: user._id,
     isRoot: scenarioSlides.length === 0,
