@@ -19,7 +19,11 @@ class InputPromptBlockPlayerContainer extends Component {
   }
 
   onTextInputChanged = (event) => {
-    this.props.onUpdateTracking({ textValue: event.target.value });
+    let isAbleToComplete = false;
+    if (event.target.value.length > 0) {
+      isAbleToComplete = true;
+    }
+    this.props.onUpdateTracking({ textValue: event.target.value, isAbleToComplete });
   }
 
   onSubmitButtonClicked = () => {
@@ -31,7 +35,7 @@ class InputPromptBlockPlayerContainer extends Component {
   }
 
   onAudioRecorded = () => {
-    this.props.onUpdateTracking({ isComplete: true });
+    this.props.onUpdateTracking({ isComplete: true, isAbleToComplete: true });
   }
 
   onPermissionDenied = () => {
