@@ -4,6 +4,7 @@ import Button from '~/uikit/buttons/components/button';
 import Body from '~/uikit/content/components/body';
 import InputPromptTextBlockPlayer from './inputPromptTextBlockPlayer';
 import InputPromptAudioBlockPlayer from './inputPromptAudioBlockPlayer';
+import Required from '~/uikit/alerts/components/required';
 
 const InputPromptBlockPlayer = ({
   block,
@@ -18,8 +19,11 @@ const InputPromptBlockPlayer = ({
 }) => {
   return (
     <div>
-      <div className="mb-2">
+      <div className="mb-2 relative">
         <Body body={getString({ model: block, field: 'body' })} />
+        <div className="absolute -top-3 right-0">
+          <Required isComplete={tracking.isAbleToComplete} />
+        </div>
       </div>
 
       {(block.inputType === 'AUDIO' && !isAudioDisabled) && (

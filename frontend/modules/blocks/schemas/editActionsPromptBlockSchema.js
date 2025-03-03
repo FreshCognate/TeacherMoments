@@ -7,17 +7,6 @@ const text = buildLanguageSchema('text', {
 })
 
 export default {
-  isRequired: {
-    type: 'Toggle',
-    label: 'Required to complete slide',
-    options: [{
-      value: true,
-      icon: 'confirm'
-    }, {
-      value: false,
-      icon: 'cancel'
-    }]
-  },
   actions: {
     type: 'Array',
     label: 'Actions',

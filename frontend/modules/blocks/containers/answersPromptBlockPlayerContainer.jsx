@@ -20,7 +20,7 @@ class AnswersPromptBlockPlayerContainer extends Component {
       clonedAnswerValues = [value];
     }
     let isAbleToComplete = false;
-    if (answerValues.length > 0) {
+    if (clonedAnswerValues.length > 0) {
       isAbleToComplete = true;
     }
     this.props.onUpdateTracking({ answerValues: clonedAnswerValues, isAbleToComplete });
