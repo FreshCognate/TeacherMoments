@@ -1,6 +1,7 @@
 import FormContainer from "~/core/forms/containers/formContainer";
 import FlatButton from "~/uikit/buttons/components/flatButton";
 import map from 'lodash/map';
+import Button from "~/uikit/buttons/components/button";
 
 const ArrayFormField = ({
   value,
@@ -42,8 +43,8 @@ const ArrayFormField = ({
           );
         })}
       </div>
-      <div className="inline-flex pl-2">
-        <FlatButton icon="create" text={schema.addButtonText} onClick={onAddActionClicked} />
+      <div className="inline-flex">
+        <Button icon="create" color="primary" text={schema.addButtonText} onClick={onAddActionClicked} />
       </div>
     </div>
   );
