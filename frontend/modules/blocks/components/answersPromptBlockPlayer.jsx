@@ -9,9 +9,7 @@ import AnswersPromptBlockPlayerAnswer from './answersPromptBlockPlayerAnswer';
 const AnswersPromptBlockPlayer = ({
   block,
   tracking,
-  isSubmitButtonDisabled,
   isResponseBlock,
-  onSubmitButtonClicked,
   onAnswerClicked
 }) => {
   return (
@@ -36,10 +34,6 @@ const AnswersPromptBlockPlayer = ({
             />
           );
         })}
-      </div>
-
-      <div>
-        <Button isDisabled={isSubmitButtonDisabled} text="Submit" color="primary" onClick={onSubmitButtonClicked} />
       </div>
 
     </div >

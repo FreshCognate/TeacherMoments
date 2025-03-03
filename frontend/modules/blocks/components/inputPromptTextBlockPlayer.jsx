@@ -7,7 +7,6 @@ const InputPromptTextBlockPlayer = ({
   tracking,
   isResponseBlock,
   onTextInputChanged,
-  onSubmitButtonClicked
 }) => {
   return (
     <div>
@@ -18,9 +17,6 @@ const InputPromptTextBlockPlayer = ({
         className="w-full p-2 text-sm hover:border-lm-4 dark:hover:border-dm-4 focus:outline outline-2 -outline-offset-1 outline-lm-4 dark:outline-dm-4 rounded border border-lm-3 dark:border-dm-3"
         onChange={onTextInputChanged}
       />
-      <div>
-        <Button isDisabled={tracking.isComplete || isResponseBlock} text="Submit" color="primary" onClick={onSubmitButtonClicked} />
-      </div>
     </div>
   );
 };

@@ -6,15 +6,6 @@ import pull from 'lodash/pull';
 
 class AnswersPromptBlockPlayerContainer extends Component {
 
-  getIsSubmitButtonDisabled = () => {
-    const { answerValues, isComplete } = this.props.tracking;
-    if (isComplete) return true;
-    if (answerValues.length === 0) {
-      return true;
-    }
-    return false;
-  }
-
   onAnswerClicked = (value) => {
     const { answerValues } = this.props.tracking;
     const { isMultiSelect } = this.props.block;
@@ -35,19 +26,13 @@ class AnswersPromptBlockPlayerContainer extends Component {
     this.props.onUpdateTracking({ answerValues: clonedAnswerValues, isAbleToComplete });
   }
 
-  onSubmitButtonClicked = () => {
-    this.props.onUpdateTracking({ isComplete: true });
-  }
-
   render() {
     const { block, tracking, isResponseBlock } = this.props;
     return (
       <AnswersPromptBlockPlayer
         block={block}
         tracking={tracking}
-        isSubmitButtonDisabled={this.getIsSubmitButtonDisabled()}
         isResponseBlock={isResponseBlock}
-        onSubmitButtonClicked={this.onSubmitButtonClicked}
         onAnswerClicked={this.onAnswerClicked}
       />
     );
