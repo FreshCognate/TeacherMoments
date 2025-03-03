@@ -19,6 +19,7 @@ const ScenarioBuilderItem = ({
   isOptionsOpen,
   isDeleting,
   isDuplicating,
+  isAddingChild,
   isLockedFromEditing,
   childrenOffset,
   shouldRenderChildren,
@@ -70,6 +71,7 @@ const ScenarioBuilderItem = ({
               slide={slide}
               selectedSlide={selectedSlide}
               isDuplicating={isDuplicating}
+              isAddingChild={isAddingChild}
               shouldRenderChildren={shouldRenderChildren}
               onAddChildSlideClicked={onAddChildSlideClicked}
               onToggleChildSlidesClicked={onToggleChildSlidesClicked}

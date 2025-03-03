@@ -4,7 +4,8 @@ import classnames from 'classnames';
 
 const Loading = ({
   text,
-  size = "rg"
+  size = "rg",
+  className
 }) => {
 
   const textClassName = classnames({
@@ -12,12 +13,12 @@ const Loading = ({
     'ml-1 text-sm': size !== 'rg'
   });
 
-  const className = classnames("flex items-center w-full justify-center", {
+  const elementClassName = classnames("flex items-center w-full justify-center", {
     "p-4": size === 'rg'
-  })
+  }, className)
 
   return (
-    <div className={className}>
+    <div className={elementClassName}>
       <Icon icon="syncing" size={size === 'rg' ? 24 : 16} className="animate-spin" />
       {(text) && (
         <span className={textClassName}>
