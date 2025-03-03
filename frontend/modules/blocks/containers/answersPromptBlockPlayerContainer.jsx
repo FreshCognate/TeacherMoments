@@ -28,7 +28,11 @@ class AnswersPromptBlockPlayerContainer extends Component {
     } else {
       clonedAnswerValues = [value];
     }
-    this.props.onUpdateTracking({ answerValues: clonedAnswerValues });
+    let isAbleToComplete = false;
+    if (answerValues.length > 0) {
+      isAbleToComplete = true;
+    }
+    this.props.onUpdateTracking({ answerValues: clonedAnswerValues, isAbleToComplete });
   }
 
   onSubmitButtonClicked = () => {

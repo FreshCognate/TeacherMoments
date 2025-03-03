@@ -7,7 +7,7 @@ import resetScenario from '~/modules/tracking/helpers/resetScenario';
 class ActionsPromptBlockPlayerContainer extends Component {
 
   onActionClicked = (action) => {
-    this.props.onUpdateTracking({ isComplete: true });
+    this.props.onUpdateTracking({ isComplete: true, isAbleToComplete: true });
     switch (action.actionType) {
       case 'COMPLETE_SLIDE':
         setSlideToComplete({ slideRef: this.props.block.slideRef });
