@@ -382,6 +382,15 @@ export default {
       <path d="M5 10V11C5 14.866 8.13401 18 12 18V18V18C15.866 18 19 14.866 19 11V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />,
       <path d="M12 18V22M12 22H9M12 22H15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     ]
+  },
+
+  asterisk: {
+    viewBox: "0 0 24 24",
+    elements: [
+      <path d="M12 22L12 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />,
+      <path d="M20.5715 17.5498L3.42819 7.24904" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />,
+      <path d="M3.42822 17.5498L20.5716 7.24904" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    ]
   }
 
 };

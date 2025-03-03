@@ -5,6 +5,7 @@ import Body from '~/uikit/content/components/body';
 import map from 'lodash/map';
 import includes from 'lodash/includes';
 import AnswersPromptBlockPlayerAnswer from './answersPromptBlockPlayerAnswer';
+import Required from '~/uikit/alerts/components/required';
 
 const AnswersPromptBlockPlayer = ({
   block,
@@ -15,8 +16,11 @@ const AnswersPromptBlockPlayer = ({
   return (
     <div>
 
-      <div className="mb-2">
+      <div className="mb-2 relative">
         <Body body={getString({ model: block, field: 'body' })} />
+        <div className="absolute -top-3 right-0">
+          <Required isComplete={tracking.isAbleToComplete} />
+        </div>
       </div>
 
       <div className="mb-2">

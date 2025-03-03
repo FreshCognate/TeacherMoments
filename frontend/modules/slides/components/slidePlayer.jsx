@@ -32,7 +32,7 @@ const SlidePlayer = ({
         return (
           <div
             key={block._id}
-            className="mb-4 last:mb-0"
+            className="mb-8 last:mb-0"
           >
             <Block
               block={block}

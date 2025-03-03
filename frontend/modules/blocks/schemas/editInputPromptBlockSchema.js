@@ -23,6 +23,17 @@ const feedbackText = buildLanguageSchema('feedback', {
 })
 
 export default {
+  isRequired: {
+    type: 'Toggle',
+    label: 'Required to complete slide',
+    options: [{
+      value: true,
+      icon: 'confirm'
+    }, {
+      value: false,
+      icon: 'cancel'
+    }]
+  },
   inputType: {
     type: 'Toggle',
     label: 'Input type',
