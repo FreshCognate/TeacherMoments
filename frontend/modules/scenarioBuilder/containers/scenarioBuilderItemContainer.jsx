@@ -24,7 +24,8 @@ class ScenarioBuilderItemContainer extends Component {
 
   state = {
     isOptionsOpen: false,
-    isDeleting: false
+    isDeleting: false,
+    isAddingChild: false
   }
 
   getLocation = () => {
@@ -192,6 +193,7 @@ class ScenarioBuilderItemContainer extends Component {
   }
 
   onAddChildSlideClicked = () => {
+    this.setState({ isAddingChild: true });
     const scenario = getCache('scenario').data;
 
     axios.post(`/api/slides`, {
@@ -201,6 +203,7 @@ class ScenarioBuilderItemContainer extends Component {
       const newSlideId = get(response, 'data.slide._id');
       const slides = getCache('slides');
       slides.fetch().then(() => {
+        this.setState({ isAddingChild: false });
         let slideSelection = getSlideSelectionFromQuery();
         if (slideSelection[this.props.layerIndex + 1] === 0 || slideSelection[this.props.layerIndex + 1]) {
           slideSelection[this.props.layerIndex + 1] = this.props.slide.children.length;
@@ -479,6 +482,7 @@ class ScenarioBuilderItemContainer extends Component {
         isOptionsOpen={isOptionsOpen}
         isDeleting={isDeleting}
         isDuplicating={isDuplicating}
+        isAddingChild={this.state.isAddingChild}
         isLockedFromEditing={this.getIsLockedFromEditing()}
         childrenOffset={this.getChildrenOffset()}
         onAddChildSlideClicked={this.onAddChildSlideClicked}
