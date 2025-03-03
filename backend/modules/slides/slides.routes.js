@@ -18,10 +18,10 @@ export default {
   },
   create: {
     body: {
-      name: Joi.string().allow(''),
       scenarioId: Joi.string().required(),
       parentId: Joi.string(),
-      slideId: Joi.string()
+      slideId: Joi.string(),
+      sortOrder: Joi.number(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
