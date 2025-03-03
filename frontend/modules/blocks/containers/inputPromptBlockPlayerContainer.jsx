@@ -26,10 +26,6 @@ class InputPromptBlockPlayerContainer extends Component {
     this.props.onUpdateTracking({ textValue: event.target.value, isAbleToComplete });
   }
 
-  onSubmitButtonClicked = () => {
-    this.props.onUpdateTracking({ isComplete: true });
-  }
-
   onAudioLoaded = () => {
     this.setState({ hasAudioLoaded: true });
   }
@@ -53,7 +49,6 @@ class InputPromptBlockPlayerContainer extends Component {
         isAudioDisabled={isAudioDisabled}
         isResponseBlock={isResponseBlock}
         onTextInputChanged={this.onTextInputChanged}
-        onSubmitButtonClicked={this.onSubmitButtonClicked}
         onAudioLoaded={this.onAudioLoaded}
         onAudioRecorded={this.onAudioRecorded}
         onPermissionDenied={this.onPermissionDenied}
