@@ -21,6 +21,21 @@ class SlidePlayerContainer extends Component {
     }
   }
 
+  getNavigationDetails = () => {
+    let hasBackButton = true;
+    let hasNextButton = true;
+    if (this.props.activeSlide?.isRoot) {
+      hasBackButton = false;
+    }
+    if (this.props.activeSlide?.children.length === 0) {
+      hasNextButton = false;
+    }
+    return {
+      hasBackButton,
+      hasNextButton,
+    }
+  }
+
   onUpdateTracking = async ({ blockRef, update }) => {
     await updateTracking({ slideRef: this.props.activeSlide.ref, blockRef, update });
   }
@@ -43,6 +58,8 @@ class SlidePlayerContainer extends Component {
 
     const slideTracking = getSlideTracking();
 
+    const { hasBackButton, hasNextButton } = this.getNavigationDetails();
+
     return (
       <SlidePlayer
         activeSlide={activeSlide}
@@ -50,6 +67,8 @@ class SlidePlayerContainer extends Component {
         isLoading={this.state.isLoading}
         navigateTo={this.navigateTo}
         tracking={slideTracking}
+        hasBackButton={hasBackButton}
+        hasNextButton={hasNextButton}
         onUpdateTracking={this.onUpdateTracking}
         onPreviousSlideClicked={this.onPreviousSlideClicked}
         onNextSlideClicked={this.onNextSlideClicked}
