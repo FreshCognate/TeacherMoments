@@ -5,6 +5,7 @@ import navigateTo from '~/modules/tracking/helpers/navigateTo';
 import trigger from '~/modules/triggers/helpers/trigger';
 import getSlideTracking from '~/modules/tracking/helpers/getSlideTracking';
 import WithCache from '~/core/cache/containers/withCache';
+import navigateBack from '~/modules/tracking/helpers/navigateBack';
 
 class SlidePlayerContainer extends Component {
 
@@ -24,6 +25,14 @@ class SlidePlayerContainer extends Component {
     await updateTracking({ slideRef: this.props.activeSlide.ref, blockRef, update });
   }
 
+  onPreviousSlideClicked = () => {
+    return navigateBack();
+  }
+
+  onNextSlideClicked = () => {
+    return navigateTo({ slideRef: this.props.activeSlide.children[0] });
+  }
+
   navigateTo = ({ slideRef }) => {
     return navigateTo({ slideRef });
   }
@@ -39,9 +48,11 @@ class SlidePlayerContainer extends Component {
         activeSlide={activeSlide}
         activeBlocks={activeBlocks}
         isLoading={this.state.isLoading}
-        onUpdateTracking={this.onUpdateTracking}
         navigateTo={this.navigateTo}
         tracking={slideTracking}
+        onUpdateTracking={this.onUpdateTracking}
+        onPreviousSlideClicked={this.onPreviousSlideClicked}
+        onNextSlideClicked={this.onNextSlideClicked}
       />
     );
   }

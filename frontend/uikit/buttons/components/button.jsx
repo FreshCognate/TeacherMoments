@@ -18,9 +18,10 @@ export default function Button({
   onClick
 }) {
 
-  const classes = classnames('rounded-md px-4 py-1', {
-    'bg-primary-regular text-white dark:text-black hover:bg-primary-dark dark:bg-primary-light hover:dark:bg-primary-regular transition-colors': (color === 'primary'),
-    'bg-warning-regular text-white dark:text-black hover:bg-warning-dark dark:bg-warning-light hover:dark:bg-warning-regular transition-colors': (color === 'warning')
+  const classes = classnames('rounded-md px-4 py-1 transition-colors', {
+    'bg-lm-3/60 dark:bg-dm-3/60 hover:bg-lm-3/30 hover:dark:bg-dm-3/30': !color,
+    'bg-primary-regular text-white dark:text-black hover:bg-primary-dark dark:bg-primary-light hover:dark:bg-primary-regular': (color === 'primary'),
+    'bg-warning-regular text-white dark:text-black hover:bg-warning-dark dark:bg-warning-light hover:dark:bg-warning-regular': (color === 'warning')
   }, className);
 
   return (
