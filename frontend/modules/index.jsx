@@ -10,6 +10,7 @@ import '~/modules/triggers/containers/triggerBlocksSelectorContainer.formField';
 import '~/modules/assets/containers/assetSelectorContainer.formField';
 import '~/modules/blocks/containers/responseSelectorContainer.formField';
 import '~/core/app/conditions/modelValueIs';
+import '~/modules/slides/helpers/isRootSlide.condition';
 import '~/modules/ls/helpers/ls.condition'
 import '~/modules/slides/triggers/navigateFromPrompts.trigger';
 import '~/modules/slides/triggers/giveFeedbackFromPrompts.trigger';
