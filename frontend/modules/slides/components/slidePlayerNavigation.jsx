@@ -8,6 +8,8 @@ import Button from '~/uikit/buttons/components/button';
 const SlidePlayerNavigation = ({
   activeSlide,
   navigateTo,
+  hasBackButton,
+  hasNextButton,
   onPreviousSlideClicked,
   onNextSlideClicked
 }) => {
@@ -15,12 +17,14 @@ const SlidePlayerNavigation = ({
     <div>
       <div className="flex ">
         <div className="mr-2 w-full">
-          {(activeSlide.hasNavigateBack) && (
+          {(activeSlide.hasNavigateBack && hasBackButton) && (
             <Button text="Previous" isFullWidth onClick={onPreviousSlideClicked} />
           )}
         </div>
         <div className="ml-2 w-full">
-          <Button text="Next" isFullWidth color="primary" onClick={onNextSlideClicked} />
+          {(hasNextButton) && (
+            <Button text="Next" isFullWidth color="primary" onClick={onNextSlideClicked} />
+          )}
         </div>
       </div>
       {/* {(activeSlide.children.length > 0) && (

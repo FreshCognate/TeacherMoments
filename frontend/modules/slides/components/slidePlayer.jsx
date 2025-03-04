@@ -12,10 +12,12 @@ import SlidePlayerNavigation from './slidePlayerNavigation';
 const SlidePlayer = ({
   activeSlide,
   activeBlocks,
-  isLoading,
-  onUpdateTracking,
   navigateTo,
   tracking,
+  isLoading,
+  hasBackButton,
+  hasNextButton,
+  onUpdateTracking,
   onPreviousSlideClicked,
   onNextSlideClicked
 }) => {
@@ -60,6 +62,8 @@ const SlidePlayer = ({
       <SlidePlayerNavigation
         activeSlide={activeSlide}
         navigateTo={navigateTo}
+        hasBackButton={hasBackButton}
+        hasNextButton={hasNextButton}
         onPreviousSlideClicked={onPreviousSlideClicked}
         onNextSlideClicked={onNextSlideClicked}
       />
