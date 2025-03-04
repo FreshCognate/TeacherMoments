@@ -19,7 +19,7 @@ const AnswersPromptBlockPlayer = ({
       <div className="mb-2 relative">
         <Body body={getString({ model: block, field: 'body' })} />
         <div className="absolute -top-3 right-0">
-          <Required isComplete={tracking.isAbleToComplete} />
+          <Required isRequired={block.isRequired} isComplete={tracking.isAbleToComplete} />
         </div>
       </div>
 

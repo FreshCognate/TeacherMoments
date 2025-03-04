@@ -6,6 +6,7 @@ import trigger from '~/modules/triggers/helpers/trigger';
 import getSlideTracking from '~/modules/tracking/helpers/getSlideTracking';
 import WithCache from '~/core/cache/containers/withCache';
 import navigateBack from '~/modules/tracking/helpers/navigateBack';
+import getIsAbleToCompleteSlide from '~/modules/tracking/helpers/getIsAbleToCompleteSlide';
 
 class SlidePlayerContainer extends Component {
 
@@ -24,15 +25,23 @@ class SlidePlayerContainer extends Component {
   getNavigationDetails = () => {
     let hasBackButton = true;
     let hasNextButton = true;
+    let isNextButtonActive = false;
     if (this.props.activeSlide?.isRoot) {
       hasBackButton = false;
     }
     if (this.props.activeSlide?.children.length === 0) {
       hasNextButton = false;
     }
+
+    const isAbleToCompleteSlide = getIsAbleToCompleteSlide();
+
+    if (isAbleToCompleteSlide) {
+      isNextButtonActive = true;
+    }
     return {
       hasBackButton,
       hasNextButton,
+      isNextButtonActive
     }
   }
 
@@ -58,7 +67,7 @@ class SlidePlayerContainer extends Component {
 
     const slideTracking = getSlideTracking();
 
-    const { hasBackButton, hasNextButton } = this.getNavigationDetails();
+    const { hasBackButton, hasNextButton, isNextButtonActive } = this.getNavigationDetails();
 
     return (
       <SlidePlayer
@@ -69,6 +78,7 @@ class SlidePlayerContainer extends Component {
         tracking={slideTracking}
         hasBackButton={hasBackButton}
         hasNextButton={hasNextButton}
+        isNextButtonActive={isNextButtonActive}
         onUpdateTracking={this.onUpdateTracking}
         onPreviousSlideClicked={this.onPreviousSlideClicked}
         onNextSlideClicked={this.onNextSlideClicked}

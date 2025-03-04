@@ -17,6 +17,7 @@ const SlidePlayer = ({
   isLoading,
   hasBackButton,
   hasNextButton,
+  isNextButtonActive,
   onUpdateTracking,
   onPreviousSlideClicked,
   onNextSlideClicked
@@ -64,6 +65,7 @@ const SlidePlayer = ({
         navigateTo={navigateTo}
         hasBackButton={hasBackButton}
         hasNextButton={hasNextButton}
+        isNextButtonActive={isNextButtonActive}
         onPreviousSlideClicked={onPreviousSlideClicked}
         onNextSlideClicked={onNextSlideClicked}
       />

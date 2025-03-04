@@ -4,8 +4,12 @@ import Icon from '~/uikit/icons/components/icon';
 import classnames from 'classnames';
 
 const Required = ({
+  isRequired,
   isComplete
 }) => {
+
+  if (!isRequired) return null;
+
   const icon = isComplete ? "confirm" : "asterisk";
   const iconClassName = classnames({
     "text-warning-regular dark:text-warning-light": !isComplete,
