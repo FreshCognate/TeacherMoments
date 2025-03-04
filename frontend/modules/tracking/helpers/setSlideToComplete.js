@@ -1,12 +1,13 @@
 import getCache from "~/core/cache/helpers/getCache";
 import cloneDeep from 'lodash/cloneDeep';
 import trigger from "~/modules/triggers/helpers/trigger";
+import find from 'lodash/find';
 
 export default ({ slideRef }) => {
   const tracking = getCache('tracking');
 
   const stages = cloneDeep(tracking.data.stages);
-  const currentStage = stages[stages.length - 1];
+  const currentStage = find(stages, { slideRef: tracking.data.activeSlideRef });
 
 
   if (!currentStage.isComplete) {

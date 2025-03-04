@@ -7,6 +7,7 @@ import getCache from '~/core/cache/helpers/getCache';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
 import getBlockComponent from '~/modules/blocks/helpers/getBlockComponent';
+import SlidePlayerNavigation from './slidePlayerNavigation';
 
 const SlidePlayer = ({
   activeSlide,
@@ -15,6 +16,8 @@ const SlidePlayer = ({
   onUpdateTracking,
   navigateTo,
   tracking,
+  onPreviousSlideClicked,
+  onNextSlideClicked
 }) => {
   if (!activeSlide || isLoading) return (
     <Loading />
@@ -54,23 +57,12 @@ const SlidePlayer = ({
           })}
         </div>
       )}
-      {(activeSlide.children.length > 0) && (
-        <div className="mt-4">
-          {map(activeSlide.children, (childRef) => {
-            const childSlide = find(getCache('slides').data, { ref: childRef });
-            if (!childSlide) return null;
-            return (
-              <div key={childRef}>
-                <FlatButton
-                  text={childSlide.name}
-                  className="border bg-lm-2 dark:bg-dm-2 border-lm-2 dark:border-dm-2 p-2 w-full mb-2 rounded-md"
-                  onClick={() => navigateTo({ slideRef: childRef })}
-                />
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <SlidePlayerNavigation
+        activeSlide={activeSlide}
+        navigateTo={navigateTo}
+        onPreviousSlideClicked={onPreviousSlideClicked}
+        onNextSlideClicked={onNextSlideClicked}
+      />
     </div >
   );
 };

@@ -1,9 +1,10 @@
 import getCache from "~/core/cache/helpers/getCache";
+import find from 'lodash/find';
 
 export default () => {
   const tracking = getCache('tracking');
 
-  const currentStage = tracking.data.stages[tracking.data.stages.length - 1];
+  const currentStage = find(tracking.data.stages, { slideRef: tracking.data.activeSlideRef });
 
   return currentStage;
 
