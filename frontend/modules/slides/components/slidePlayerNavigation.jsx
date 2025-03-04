@@ -14,10 +14,16 @@ const SlidePlayerNavigation = ({
   return (
     <div>
       <div className="flex ">
-        <Button text="Previous" isFullWidth className="mr-2" onClick={onPreviousSlideClicked} />
-        <Button text="Next" isFullWidth color="primary" className="ml-2" onClick={onNextSlideClicked} />
+        <div className="mr-2 w-full">
+          {(activeSlide.hasNavigateBack) && (
+            <Button text="Previous" isFullWidth onClick={onPreviousSlideClicked} />
+          )}
+        </div>
+        <div className="ml-2 w-full">
+          <Button text="Next" isFullWidth color="primary" onClick={onNextSlideClicked} />
+        </div>
       </div>
-      {(activeSlide.children.length > 0) && (
+      {/* {(activeSlide.children.length > 0) && (
         <div className="mt-4">
           {map(activeSlide.children, (childRef) => {
             const childSlide = find(getCache('slides').data, { ref: childRef });
@@ -33,7 +39,7 @@ const SlidePlayerNavigation = ({
             );
           })}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

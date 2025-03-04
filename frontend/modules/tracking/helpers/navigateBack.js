@@ -9,7 +9,6 @@ export default async () => {
 
   const currentStageIndex = findIndex(stages, { slideRef: activeSlideRef });
 
-  console.log(currentStageIndex);
   if (currentStageIndex === 0) return;
 
   if (stages[currentStageIndex - 1]) {

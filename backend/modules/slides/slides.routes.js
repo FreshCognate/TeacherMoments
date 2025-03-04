@@ -34,6 +34,7 @@ export default {
     body: {
       name: Joi.string().allow(''),
       slideType: Joi.string().valid('STEP', 'SUMMARY'),
+      hasNavigateBack: Joi.boolean(),
       tags: Joi.array().items(Joi.string()),
       sourceIndex: Joi.number(),
       destinationIndex: Joi.number(),
