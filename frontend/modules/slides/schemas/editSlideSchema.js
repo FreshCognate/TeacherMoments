@@ -13,6 +13,10 @@ export default {
     }, {
       value: true,
       text: 'Yes'
+    }],
+    conditions: [{
+      type: 'isRootSlide',
+      shouldHideField: true
     }]
   }
   // slideType: {
