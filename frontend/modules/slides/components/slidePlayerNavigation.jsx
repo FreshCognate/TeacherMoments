@@ -10,6 +10,7 @@ const SlidePlayerNavigation = ({
   navigateTo,
   hasBackButton,
   hasNextButton,
+  isNextButtonActive,
   onPreviousSlideClicked,
   onNextSlideClicked
 }) => {
@@ -23,7 +24,7 @@ const SlidePlayerNavigation = ({
         </div>
         <div className="ml-2 w-full">
           {(hasNextButton) && (
-            <Button text="Next" isFullWidth color="primary" onClick={onNextSlideClicked} />
+            <Button text="Next" isDisabled={!isNextButtonActive} isFullWidth color="primary" onClick={onNextSlideClicked} />
           )}
         </div>
       </div>
