@@ -34,6 +34,18 @@ export default {
       icon: 'cancel'
     }]
   },
+  requiredLength: {
+    type: 'Text',
+    label: 'Minimum required length',
+    textType: 'number',
+    size: 'sm',
+    conditions: [{
+      type: 'modelValueIs',
+      field: 'isRequired',
+      values: [true],
+      shouldHideField: true
+    }]
+  },
   inputType: {
     type: 'Toggle',
     label: 'Input type',
