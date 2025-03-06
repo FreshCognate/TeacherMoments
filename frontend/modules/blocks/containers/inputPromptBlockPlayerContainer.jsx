@@ -20,7 +20,7 @@ class InputPromptBlockPlayerContainer extends Component {
 
   onTextInputChanged = (event) => {
     let isAbleToComplete = false;
-    if (event.target.value.length > 0) {
+    if (event.target.value.length >= this.props.block.requiredLength) {
       isAbleToComplete = true;
     }
     this.props.onUpdateTracking({ textValue: event.target.value, isAbleToComplete });
