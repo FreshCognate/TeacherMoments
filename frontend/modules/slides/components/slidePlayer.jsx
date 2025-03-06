@@ -17,10 +17,13 @@ const SlidePlayer = ({
   isLoading,
   hasBackButton,
   hasNextButton,
+  hasSubmitButton,
   isNextButtonActive,
+  isSubmitButtonActive,
   onUpdateTracking,
   onPreviousSlideClicked,
-  onNextSlideClicked
+  onNextSlideClicked,
+  onSubmitSlideClicked
 }) => {
   if (!activeSlide || isLoading) return (
     <Loading />
@@ -65,9 +68,12 @@ const SlidePlayer = ({
         navigateTo={navigateTo}
         hasBackButton={hasBackButton}
         hasNextButton={hasNextButton}
+        hasSubmitButton={hasSubmitButton}
         isNextButtonActive={isNextButtonActive}
+        isSubmitButtonActive={isSubmitButtonActive}
         onPreviousSlideClicked={onPreviousSlideClicked}
         onNextSlideClicked={onNextSlideClicked}
+        onSubmitSlideClicked={onSubmitSlideClicked}
       />
     </div >
   );
