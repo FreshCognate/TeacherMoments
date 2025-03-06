@@ -6,23 +6,28 @@ import getCache from '~/core/cache/helpers/getCache';
 import Button from '~/uikit/buttons/components/button';
 
 const SlidePlayerNavigation = ({
-  activeSlide,
   navigateTo,
   hasBackButton,
   hasNextButton,
+  hasSubmitButton,
   isNextButtonActive,
+  isSubmitButtonActive,
   onPreviousSlideClicked,
-  onNextSlideClicked
+  onNextSlideClicked,
+  onSubmitSlideClicked
 }) => {
   return (
     <div>
       <div className="flex ">
         <div className="mr-2 w-full">
-          {(activeSlide.hasNavigateBack && hasBackButton) && (
+          {(hasBackButton) && (
             <Button text="Previous" isFullWidth onClick={onPreviousSlideClicked} />
           )}
         </div>
         <div className="ml-2 w-full">
+          {(hasSubmitButton) && (
+            <Button text="Submit" isDisabled={!isSubmitButtonActive} isFullWidth color="primary" onClick={onSubmitSlideClicked} />
+          )}
           {(hasNextButton) && (
             <Button text="Next" isDisabled={!isNextButtonActive} isFullWidth color="primary" onClick={onNextSlideClicked} />
           )}

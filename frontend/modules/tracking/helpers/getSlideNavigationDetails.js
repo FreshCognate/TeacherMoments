@@ -4,6 +4,7 @@ import getBlockTracking from "./getBlockTracking";
 
 export default () => {
   let isAbleToCompleteSlide = true;
+  let hasRequiredPrompts = false;
   const slideTracking = getSlideTracking();
   if (slideTracking) {
 
@@ -12,7 +13,7 @@ export default () => {
     for (const block of blocks) {
 
       if (block.isRequired) {
-
+        hasRequiredPrompts = true;
         const blockTracking = getBlockTracking({ blockRef: block.ref });
 
         if (!blockTracking.isAbleToComplete) {
@@ -23,5 +24,5 @@ export default () => {
     }
 
   }
-  return isAbleToCompleteSlide;
+  return { isAbleToCompleteSlide, hasRequiredPrompts };
 }

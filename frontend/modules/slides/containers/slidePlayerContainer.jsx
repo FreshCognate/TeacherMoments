@@ -6,7 +6,8 @@ import trigger from '~/modules/triggers/helpers/trigger';
 import getSlideTracking from '~/modules/tracking/helpers/getSlideTracking';
 import WithCache from '~/core/cache/containers/withCache';
 import navigateBack from '~/modules/tracking/helpers/navigateBack';
-import getIsAbleToCompleteSlide from '~/modules/tracking/helpers/getIsAbleToCompleteSlide';
+import getSlideNavigationDetails from '~/modules/tracking/helpers/getSlideNavigationDetails';
+import setSlideToComplete from '~/modules/tracking/helpers/setSlideToComplete';
 
 class SlidePlayerContainer extends Component {
 
@@ -24,24 +25,38 @@ class SlidePlayerContainer extends Component {
 
   getNavigationDetails = () => {
     let hasBackButton = true;
-    let hasNextButton = true;
+    let hasNextButton = false;
+    let hasSubmitButton = false;
     let isNextButtonActive = false;
-    if (this.props.activeSlide?.isRoot) {
+    let isSubmitButtonActive = false;
+    const { activeSlide } = this.props;
+    if (activeSlide?.isRoot || !activeSlide?.hasNavigateBack) {
       hasBackButton = false;
     }
-    if (this.props.activeSlide?.children.length === 0) {
+
+    const { isAbleToCompleteSlide, hasRequiredPrompts } = getSlideNavigationDetails();
+
+    if (isAbleToCompleteSlide) {
+      isSubmitButtonActive = true;
+    }
+
+    if (!hasRequiredPrompts) {
+      hasNextButton = true;
+      isNextButtonActive = true;
+    } else {
+      hasSubmitButton = true;
+    }
+
+    if (activeSlide?.children.length === 0) {
       hasNextButton = false;
     }
 
-    const isAbleToCompleteSlide = getIsAbleToCompleteSlide();
-
-    if (isAbleToCompleteSlide) {
-      isNextButtonActive = true;
-    }
     return {
       hasBackButton,
       hasNextButton,
-      isNextButtonActive
+      hasSubmitButton,
+      isNextButtonActive,
+      isSubmitButtonActive
     }
   }
 
@@ -54,6 +69,12 @@ class SlidePlayerContainer extends Component {
   }
 
   onNextSlideClicked = () => {
+    setSlideToComplete({ slideRef: this.props.activeSlide.ref });
+    return navigateTo({ slideRef: this.props.activeSlide.children[0] });
+  }
+
+  onSubmitSlideClicked = () => {
+    setSlideToComplete({ slideRef: this.props.activeSlide.ref });
     return navigateTo({ slideRef: this.props.activeSlide.children[0] });
   }
 
@@ -67,7 +88,7 @@ class SlidePlayerContainer extends Component {
 
     const slideTracking = getSlideTracking();
 
-    const { hasBackButton, hasNextButton, isNextButtonActive } = this.getNavigationDetails();
+    const { hasBackButton, hasNextButton, hasSubmitButton, isNextButtonActive, isSubmitButtonActive } = this.getNavigationDetails();
 
     return (
       <SlidePlayer
@@ -78,10 +99,13 @@ class SlidePlayerContainer extends Component {
         tracking={slideTracking}
         hasBackButton={hasBackButton}
         hasNextButton={hasNextButton}
+        hasSubmitButton={hasSubmitButton}
         isNextButtonActive={isNextButtonActive}
+        isSubmitButtonActive={isSubmitButtonActive}
         onUpdateTracking={this.onUpdateTracking}
         onPreviousSlideClicked={this.onPreviousSlideClicked}
         onNextSlideClicked={this.onNextSlideClicked}
+        onSubmitSlideClicked={this.onSubmitSlideClicked}
       />
     );
   }
