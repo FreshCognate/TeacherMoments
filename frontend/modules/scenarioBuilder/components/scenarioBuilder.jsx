@@ -8,6 +8,7 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
 import Icon from '~/uikit/icons/components/icon';
 import Loading from '~/uikit/loaders/components/loading';
+import ActioningBar from '~/uikit/actionBars/components/actioningBar';
 
 const ScenarioBuilder = ({
   rootSlide,
@@ -15,11 +16,12 @@ const ScenarioBuilder = ({
   slideSelection,
   blockId,
   actionElement,
+  actionType,
   actionId,
   isEditingBlock,
   isActioning,
   isCreatingFromAction,
-  onCancelDuplicatingClicked
+  onCancelActioningClicked
 }) => {
   const isDarkMode = window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
   const backgroundDotColor = isDarkMode ? '#222' : '#ddd'
@@ -29,19 +31,12 @@ const ScenarioBuilder = ({
       "outline outline-2 -outline-offset-2 outline-blue-500": isActioning
     })}>
       {(isActioning) && (
-        <div className="text-white bg-blue-500 fixed w-full top-0 z-50 flex items-center justify-between px-4 py-4" style={{ top: '68px' }}>
-          <div className="flex items-center">
-            <Icon icon="paste" size={12} className="mr-2" /><Body body={`Pick a place to copy the ${actionElement} to`} size="sm" />
-          </div>
-          <div>
-            {(isCreatingFromAction) && (
-              <Loading text="Creating..." size="sm" />
-            )}
-            {(!isCreatingFromAction) && (
-              <FlatButton text="Cancel" onClick={onCancelDuplicatingClicked} />
-            )}
-          </div>
-        </div>
+        <ActioningBar
+          actionElement={actionElement}
+          actionType={actionType}
+          isCreatingFromAction={isCreatingFromAction}
+          onCancelActioningClicked={onCancelActioningClicked}
+        />
       )}
       <div className={"bg-lm-0 dark:bg-dm-0 min-h-screen"} style={{
         backgroundSize: "20px 20px",
