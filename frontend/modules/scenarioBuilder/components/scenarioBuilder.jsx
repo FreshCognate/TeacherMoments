@@ -29,7 +29,7 @@ const ScenarioBuilder = ({
       "outline outline-2 -outline-offset-2 outline-blue-500": isDuplicating
     })}>
       {(isDuplicating) && (
-        <div className="text-white bg-blue-500 fixed w-full top-0 z-40 flex items-center justify-between px-4 py-4" style={{ top: '68px' }}>
+        <div className="text-white bg-blue-500 fixed w-full top-0 z-50 flex items-center justify-between px-4 py-4" style={{ top: '68px' }}>
           <div className="flex items-center">
             <Icon icon="paste" size={12} className="mr-2" /><Body body={`Pick a place to copy the ${duplicateType} to`} size="sm" />
           </div>
