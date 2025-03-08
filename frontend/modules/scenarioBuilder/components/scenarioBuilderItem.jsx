@@ -30,7 +30,7 @@ const ScenarioBuilderItem = ({
   onCancelEditingClicked,
   onOptionsToggled,
   onOptionClicked,
-  onPasteSlideClicked,
+  onActionClicked,
   onRequestAccessClicked
 }) => {
   const newLayerIndex = layerIndex + 1;
@@ -41,10 +41,10 @@ const ScenarioBuilderItem = ({
           {(!slide.isRoot && isSelected && isActioning) && (
             <>
               <div className="absolute z-20 -left-8 top-1/2 -mt-3">
-                <FlatButton icon="paste" isCircular onClick={() => onPasteSlideClicked('BEFORE')} />
+                <FlatButton icon="paste" isCircular onClick={() => onActionClicked('BEFORE')} />
               </div>
               <div className="absolute z-20 -right-8 top-1/2 -mt-3">
-                <FlatButton icon="paste" isCircular onClick={() => onPasteSlideClicked('AFTER')} />
+                <FlatButton icon="paste" isCircular onClick={() => onActionClicked('AFTER')} />
               </div>
             </>
           )}
@@ -75,7 +75,7 @@ const ScenarioBuilderItem = ({
               shouldRenderChildren={shouldRenderChildren}
               onAddChildSlideClicked={onAddChildSlideClicked}
               onToggleChildSlidesClicked={onToggleChildSlidesClicked}
-              onPasteSlideClicked={onPasteSlideClicked}
+              onActionClicked={onActionClicked}
             />
           )}
         </div>

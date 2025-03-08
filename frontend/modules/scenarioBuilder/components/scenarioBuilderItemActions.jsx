@@ -11,7 +11,7 @@ const ScnarioBuilderItemActions = ({
   shouldRenderChildren,
   onAddChildSlideClicked,
   onToggleChildSlidesClicked,
-  onPasteSlideClicked
+  onActionClicked
 }) => {
   let prefix = '';
   if (selectedSlide > 0) {
@@ -21,7 +21,7 @@ const ScnarioBuilderItemActions = ({
     <div className="absolute z-10 -bottom-8 h-6 flex justify-center items-center w-full left-0">
       <div className="mx-1">
         {(isActioning) && (
-          <FlatButton icon="paste" isCircular color="primary" onClick={() => onPasteSlideClicked("CHILD")} />
+          <FlatButton icon="paste" isCircular color="primary" onClick={() => onActionClicked("CHILD")} />
         )}
       </div>
       {slide.children.length > 0 && (

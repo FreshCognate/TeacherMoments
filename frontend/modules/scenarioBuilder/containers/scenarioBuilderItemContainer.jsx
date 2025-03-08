@@ -341,7 +341,7 @@ class ScenarioBuilderItemContainer extends Component {
     this.setState({ isOptionsOpen: false });
   }
 
-  onPasteSlideClicked = (position) => {
+  onActionClicked = (position) => {
     const editor = getCache('editor');
     editor.set({ isCreatingFromAction: true });
     const scenarioId = getCache('scenario').data._id;
@@ -501,7 +501,7 @@ class ScenarioBuilderItemContainer extends Component {
         onCancelEditingClicked={this.onCancelEditingClicked}
         onOptionsToggled={this.onOptionsToggled}
         onOptionClicked={this.onOptionClicked}
-        onPasteSlideClicked={this.onPasteSlideClicked}
+        onActionClicked={this.onActionClicked}
         onRequestAccessClicked={this.onRequestAccessClicked}
       />
     );
