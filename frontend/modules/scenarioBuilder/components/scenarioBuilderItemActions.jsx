@@ -6,7 +6,7 @@ import Loading from '~/uikit/loaders/components/loading';
 const ScnarioBuilderItemActions = ({
   slide,
   selectedSlide,
-  isDuplicating,
+  isActioning,
   isAddingChild,
   shouldRenderChildren,
   onAddChildSlideClicked,
@@ -20,7 +20,7 @@ const ScnarioBuilderItemActions = ({
   return (
     <div className="absolute z-10 -bottom-8 h-6 flex justify-center items-center w-full left-0">
       <div className="mx-1">
-        {(isDuplicating) && (
+        {(isActioning) && (
           <FlatButton icon="paste" isCircular color="primary" onClick={() => onPasteSlideClicked("CHILD")} />
         )}
       </div>
@@ -38,7 +38,7 @@ const ScnarioBuilderItemActions = ({
         {(isAddingChild) && (
           <Loading className="!flex !w-auto !p-0" />
         )}
-        {(!isDuplicating && !isAddingChild) && (
+        {(!isActioning && !isAddingChild) && (
           <FlatButton icon="add" isCircular onClick={onAddChildSlideClicked} />
         )}
       </div>

@@ -14,11 +14,11 @@ const ScenarioBuilder = ({
   displayMode,
   slideSelection,
   blockId,
-  duplicateType,
-  duplicateId,
+  actionElement,
+  actionId,
   isEditingBlock,
-  isDuplicating,
-  isCreatingDuplicate,
+  isActioning,
+  isCreatingFromAction,
   onCancelDuplicatingClicked
 }) => {
   const isDarkMode = window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
@@ -26,18 +26,18 @@ const ScenarioBuilder = ({
 
   return (
     <div id="scenario-builder" style={{ height: 'calc(100vh - 68px', marginTop: '28px' }} className={classnames("relative overflow-x-hidden overflow-y-scroll", {
-      "outline outline-2 -outline-offset-2 outline-blue-500": isDuplicating
+      "outline outline-2 -outline-offset-2 outline-blue-500": isActioning
     })}>
-      {(isDuplicating) && (
+      {(isActioning) && (
         <div className="text-white bg-blue-500 fixed w-full top-0 z-50 flex items-center justify-between px-4 py-4" style={{ top: '68px' }}>
           <div className="flex items-center">
-            <Icon icon="paste" size={12} className="mr-2" /><Body body={`Pick a place to copy the ${duplicateType} to`} size="sm" />
+            <Icon icon="paste" size={12} className="mr-2" /><Body body={`Pick a place to copy the ${actionElement} to`} size="sm" />
           </div>
           <div>
-            {(isCreatingDuplicate) && (
+            {(isCreatingFromAction) && (
               <Loading text="Creating..." size="sm" />
             )}
-            {(!isCreatingDuplicate) && (
+            {(!isCreatingFromAction) && (
               <FlatButton text="Cancel" onClick={onCancelDuplicatingClicked} />
             )}
           </div>
@@ -58,10 +58,10 @@ const ScenarioBuilder = ({
               slide={rootSlide}
               slideSelection={slideSelection}
               layerIndex={-1}
-              duplicateId={duplicateId}
-              duplicateType={duplicateType}
+              actionId={actionId}
+              actionElement={actionElement}
               isSelected={true}
-              isDuplicating={isDuplicating}
+              isActioning={isActioning}
             />
           )}
           {(displayMode === 'PREVIEW') && (

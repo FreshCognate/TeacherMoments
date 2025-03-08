@@ -24,17 +24,17 @@ class ScenarionBuilderContainer extends Component {
   }
 
   onCancelDuplicatingClicked = () => {
-    this.props.editor.set({ isDuplicating: false, duplicateType: null, duplicateId: null });
+    this.props.editor.set({ isActioning: false, actionType: null, actionId: null, actionElement: null });
   }
 
   render() {
 
     const {
       displayMode,
-      duplicateType,
-      duplicateId,
-      isDuplicating,
-      isCreatingDuplicate,
+      actionElement,
+      actionId,
+      isActioning,
+      isCreatingFromAction,
     } = this.props.editor?.data;
     const { isEditing, blockId } = this.getEditingBlockDetails();
 
@@ -44,11 +44,11 @@ class ScenarionBuilderContainer extends Component {
         rootSlide={this.getRootSlide()}
         slideSelection={getSlideSelectionFromQuery()}
         blockId={blockId}
-        duplicateType={duplicateType}
-        duplicateId={duplicateId}
+        actionElement={actionElement}
+        actionId={actionId}
         isEditingBlock={isEditing}
-        isDuplicating={isDuplicating}
-        isCreatingDuplicate={isCreatingDuplicate}
+        isActioning={isActioning}
+        isCreatingFromAction={isCreatingFromAction}
         onCancelDuplicatingClicked={this.onCancelDuplicatingClicked}
       />
     );

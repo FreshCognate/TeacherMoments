@@ -164,7 +164,12 @@ class ScenarioBuilderItemContainer extends Component {
 
   duplicateSlide = () => {
     const editor = getCache('editor');
-    editor.set({ isDuplicating: true, duplicateId: this.props.slide._id, duplicateType: 'slide' });
+    editor.set({ isActioning: true, actionType: 'duplicate', actionId: this.props.slide._id, actionElement: 'slide' });
+  }
+
+  moveSlide = () => {
+    const editor = getCache('editor');
+    editor.set({ isActioning: true, actionType: 'move', actionId: this.props.slide._id, actionElement: 'slide' });
   }
 
   shouldRenderChildren = () => {
@@ -328,13 +333,17 @@ class ScenarioBuilderItemContainer extends Component {
         this.onCancelEditingClicked();
         this.duplicateSlide();
         break;
+      case 'MOVE':
+        this.onCancelEditingClicked();
+        this.moveSlide();
+        break;
     }
     this.setState({ isOptionsOpen: false });
   }
 
   onPasteSlideClicked = (position) => {
     const editor = getCache('editor');
-    editor.set({ isCreatingDuplicate: true });
+    editor.set({ isCreatingFromAction: true });
     const scenarioId = getCache('scenario').data._id;
 
     let sortOrder = 0;
@@ -360,7 +369,7 @@ class ScenarioBuilderItemContainer extends Component {
 
     axios.post(`/api/slides`, {
       scenarioId: scenarioId,
-      slideId: editor.data.duplicateId,
+      slideId: editor.data.actionId,
       parentId,
       sortOrder
     }).then(async () => {
@@ -378,18 +387,18 @@ class ScenarioBuilderItemContainer extends Component {
       this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`, { replace: true });
 
       editor.set({
-        isCreatingDuplicate: false,
-        isDuplicating: false,
-        duplicateId: null,
-        duplicateType: null
+        isCreatingFromAction: false,
+        isActioning: false,
+        actionId: null,
+        actionElement: null
       });
     }).catch((error) => {
       handleRequestError(error);
       editor.set({
-        isCreatingDuplicate: false,
-        isDuplicating: false,
-        duplicateId: null,
-        duplicateType: null
+        isCreatingFromAction: false,
+        isActioning: false,
+        actionId: null,
+        actionElement: null
       });
     });
   }
@@ -456,7 +465,7 @@ class ScenarioBuilderItemContainer extends Component {
       slideSelection,
       layerIndex,
       isSelected,
-      isDuplicating
+      isActioning,
     } = this.props;
 
     const {
@@ -481,7 +490,7 @@ class ScenarioBuilderItemContainer extends Component {
         isEditingSibling={this.getIsEditingSibling()}
         isOptionsOpen={isOptionsOpen}
         isDeleting={isDeleting}
-        isDuplicating={isDuplicating}
+        isActioning={isActioning}
         isAddingChild={this.state.isAddingChild}
         isLockedFromEditing={this.getIsLockedFromEditing()}
         childrenOffset={this.getChildrenOffset()}
