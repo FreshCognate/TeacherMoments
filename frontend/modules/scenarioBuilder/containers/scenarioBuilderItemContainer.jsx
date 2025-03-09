@@ -20,6 +20,7 @@ import getSockets from '~/core/sockets/helpers/getSockets';
 import ScenarioRequestAccessTimer from '../components/scenarioRequestAccessTimer';
 import addToast from '~/core/dialogs/helpers/addToast';
 import duplicateSlide from '../helpers/duplicateSlide';
+import moveSlide from '../helpers/moveSlide';
 
 class ScenarioBuilderItemContainer extends Component {
 
