@@ -466,6 +466,7 @@ class ScenarioBuilderItemContainer extends Component {
       layerIndex,
       isSelected,
       isActioning,
+      actionType,
     } = this.props;
 
     const {
@@ -483,6 +484,7 @@ class ScenarioBuilderItemContainer extends Component {
         triggersCount={this.getTriggersCount()}
         layerIndex={layerIndex}
         location={this.getLocation()}
+        actionType={actionType}
         shouldRenderChildren={this.shouldRenderChildren()}
         isSelected={isSelected}
         isEditing={this.getIsEditing()}

@@ -55,6 +55,7 @@ const ScenarioBuilder = ({
               layerIndex={-1}
               actionId={actionId}
               actionElement={actionElement}
+              actionType={actionType}
               isSelected={true}
               isActioning={isActioning}
             />

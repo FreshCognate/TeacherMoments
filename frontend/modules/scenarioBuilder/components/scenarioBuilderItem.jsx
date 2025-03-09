@@ -2,6 +2,7 @@ import ScenarioBuilderItemContent from './scenarioBuilderItemContent';
 import ScenarioBuilderItemActions from './scenarioBuilderItemActions';
 import ScenarioBuilderItemChildren from './scenarioBuilderItemChildren';
 import FlatButton from '~/uikit/buttons/components/flatButton';
+import ActioningButton from '~/uikit/buttons/components/actioningButton';
 
 const ScenarioBuilderItem = ({
   slide,
@@ -12,6 +13,7 @@ const ScenarioBuilderItem = ({
   triggersCount,
   layerIndex,
   location,
+  actionType,
   isSelected,
   isEditing,
   isEditingChildren,
@@ -34,6 +36,7 @@ const ScenarioBuilderItem = ({
   onRequestAccessClicked
 }) => {
   const newLayerIndex = layerIndex + 1;
+  console.log(actionType);
   return (
     <div className={isDeleting ? 'opacity-20' : ''} style={{ scrollMarginTop: "50px" }} id={`scenario-builder-slide-${slide._id}`}>
       <div className="flex justify-center">
@@ -41,10 +44,18 @@ const ScenarioBuilderItem = ({
           {(!slide.isRoot && isSelected && isActioning) && (
             <>
               <div className="absolute z-20 -left-8 top-1/2 -mt-3">
-                <FlatButton icon="paste" isCircular onClick={() => onActionClicked('BEFORE')} />
+                <ActioningButton
+                  actionType={actionType}
+                  position="BEFORE"
+                  onActionClicked={onActionClicked}
+                />
               </div>
               <div className="absolute z-20 -right-8 top-1/2 -mt-3">
-                <FlatButton icon="paste" isCircular onClick={() => onActionClicked('AFTER')} />
+                <ActioningButton
+                  actionType={actionType}
+                  position="AFTER"
+                  onActionClicked={onActionClicked}
+                />
               </div>
             </>
           )}
@@ -70,6 +81,7 @@ const ScenarioBuilderItem = ({
             <ScenarioBuilderItemActions
               slide={slide}
               selectedSlide={selectedSlide}
+              actionType={actionType}
               isActioning={isActioning}
               isAddingChild={isAddingChild}
               shouldRenderChildren={shouldRenderChildren}
@@ -87,6 +99,7 @@ const ScenarioBuilderItem = ({
           slideSelection={slideSelection}
           childrenOffset={childrenOffset}
           newLayerIndex={newLayerIndex}
+          actionType={actionType}
           isActioning={isActioning}
           isEditing={isEditing}
           isEditingChildren={isEditingChildren}
