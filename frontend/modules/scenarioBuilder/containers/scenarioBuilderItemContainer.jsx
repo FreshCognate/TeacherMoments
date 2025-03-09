@@ -19,6 +19,7 @@ import Timer from '~/uikit/loaders/components/timer';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import ScenarioRequestAccessTimer from '../components/scenarioRequestAccessTimer';
 import addToast from '~/core/dialogs/helpers/addToast';
+import duplicateSlide from '../helpers/duplicateSlide';
 
 class ScenarioBuilderItemContainer extends Component {
 
@@ -367,40 +368,15 @@ class ScenarioBuilderItemContainer extends Component {
         break;
     }
 
-    axios.post(`/api/slides`, {
-      scenarioId: scenarioId,
-      slideId: editor.data.actionId,
-      parentId,
-      sortOrder
-    }).then(async () => {
-      const slides = getCache('slides');
-      const blocks = getCache('blocks');
-      await blocks.fetch();
-      await slides.fetch();
-      // Navigate to duplicated slide
-      let slideSelection = getSlideSelectionFromQuery();
+    const { actionType, actionId } = editor.data;
 
-      slideSelection.splice(layerIndex, slideSelection.length - layerIndex);
-      slideSelection.push(sortOrder);
-
-      const scenarioId = getCache('scenario').data._id;
-      this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`, { replace: true });
-
-      editor.set({
-        isCreatingFromAction: false,
-        isActioning: false,
-        actionId: null,
-        actionElement: null
-      });
-    }).catch((error) => {
-      handleRequestError(error);
-      editor.set({
-        isCreatingFromAction: false,
-        isActioning: false,
-        actionId: null,
-        actionElement: null
-      });
-    });
+    switch (actionType) {
+      case 'duplicate':
+        duplicateSlide({ slideId: actionId, scenarioId, parentId, sortOrder, layerIndex, navigate: this.props.router.navigate })
+        break;
+      case 'move':
+        moveSlide({ slideId: actionId, scenarioId, parentId, sortOrder, layerIndex, navigate: this.props.router.navigate });
+    }
   }
 
   onRequestAccessClicked = async () => {

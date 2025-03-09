@@ -5,6 +5,11 @@ import Icon from '~/uikit/icons/components/icon';
 import Loading from '~/uikit/loaders/components/loading';
 import getActioningIcon from '../helpers/getActioningIcon';
 
+const LOADING_TEXT_MAPPINGS = {
+  duplicate: "Creating...",
+  move: "Moving..."
+}
+
 const ActioningBar = ({
   isCreatingFromAction,
   actionType,
@@ -18,7 +23,7 @@ const ActioningBar = ({
       </div>
       <div>
         {(isCreatingFromAction) && (
-          <Loading text="Creating..." size="sm" />
+          <Loading text={LOADING_TEXT_MAPPINGS[actionType]} size="sm" />
         )}
         {(!isCreatingFromAction) && (
           <FlatButton text="Cancel" onClick={onCancelActioningClicked} />
