@@ -1,3 +1,5 @@
+import setScenarioHasChanges from "../../scenarios/services/setScenarioHasChanges.js";
+
 export default async (props, options, context) => {
 
   const { scenario, slideRef, blockType } = props;
@@ -17,6 +19,8 @@ export default async (props, options, context) => {
   };
 
   const block = await models.Block.create(newBlockObject);
+
+  setScenarioHasChanges({ scenarioId: scenario }, {}, context);
 
   return block;
 

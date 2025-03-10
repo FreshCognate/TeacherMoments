@@ -1,3 +1,5 @@
+import setScenarioHasChanges from "../../scenarios/services/setScenarioHasChanges.js";
+
 export default async (props, options, context) => {
 
   const { slideId } = props;
@@ -19,6 +21,8 @@ export default async (props, options, context) => {
   await models.Slide.updateMany({ children: slide.ref }, { $pull: { children: slide.ref } });
 
   await models.Block.updateMany({ slideRef: slide.ref }, { isDeleted: true, deletedAt, deletedBy: user._id });
+
+  setScenarioHasChanges({ scenarioId: slide.scenario }, {}, context);
 
   return slide;
 

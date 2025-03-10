@@ -1,4 +1,5 @@
 import has from 'lodash/has.js';
+import setScenarioHasChanges from '../../scenarios/services/setScenarioHasChanges.js';
 export default async (props, options, context) => {
 
   if (has(props, 'sourceIndex') && has(props, 'destinationIndex')) {
@@ -30,6 +31,8 @@ export default async (props, options, context) => {
         await item.save();
         index++;
       }
+
+      setScenarioHasChanges({ scenarioId: trigger.scenario }, {}, context);
 
       return removed;
 

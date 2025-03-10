@@ -11,13 +11,18 @@ class ShareScenarioContainer extends Component {
     isPublishing: false,
   }
 
+  componentDidMount = () => {
+    this.props.scenario.fetch();
+  }
+
   onPublishScenarioClicked = () => {
     this.setState({ isPublishing: true });
     axios.post(`/api/publishes`, {
       scenarioId: this.props.scenario.data._id
     }).then(() => {
-      this.props.scenario.fetch();
-      this.setState({ isPublishing: false });
+      this.props.scenario.fetch().then(() => {
+        this.setState({ isPublishing: false });
+      });
     }).catch((error) => {
       handleRequestError(error);
       this.setState({ isPublishing: false });

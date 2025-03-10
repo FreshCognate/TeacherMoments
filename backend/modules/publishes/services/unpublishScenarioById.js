@@ -11,9 +11,9 @@ export default async (props, options, context) => {
 
   if (!scenario.isPublished) throw { message: 'This scenario is not publishd', statusCode: 400 };
 
-  await unpublishModelByScenarioId({ model: 'Slide', scenarioId }, context);
-  await unpublishModelByScenarioId({ model: 'Block', scenarioId }, context);
-  await unpublishModelByScenarioId({ model: 'Trigger', scenarioId }, context);
+  await unpublishModelByScenarioId({ model: 'Slide', scenarioId }, {}, context);
+  await unpublishModelByScenarioId({ model: 'Block', scenarioId }, {}, context);
+  await unpublishModelByScenarioId({ model: 'Trigger', scenarioId }, {}, context);
 
   await models.Published_Scenario.deleteOne({ _id: scenarioId });
 

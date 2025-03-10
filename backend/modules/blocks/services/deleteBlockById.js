@@ -1,3 +1,5 @@
+import setScenarioHasChanges from "../../scenarios/services/setScenarioHasChanges.js";
+
 export default async (props, options, context) => {
 
   const { blockId } = props;
@@ -20,6 +22,8 @@ export default async (props, options, context) => {
     sortOrder++;
     await slideBlock.save();
   }
+
+  setScenarioHasChanges({ scenarioId: block.scenario }, {}, context);
 
   return block;
 
