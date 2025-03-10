@@ -1,3 +1,4 @@
+import getPublishLink from "../helpers/getPublishLink.js";
 import publishModelByScenarioId from "./publishModelByScenarioId.js";
 
 export default async (props, options, context) => {
@@ -21,6 +22,9 @@ export default async (props, options, context) => {
   scenario.isPublished = true;
   scenario.publishedAt = new Date();
   scenario.publishedBy = user._id;
+  if (!scenario.publishLink) {
+    scenario.publishLink = await getPublishLink({ name: scenario.name, Model: models.Scenario });
+  }
   await scenario.save();
 
   return scenario;

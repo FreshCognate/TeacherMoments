@@ -9,10 +9,15 @@ class ShareScenarioContainer extends Component {
 
   state = {
     isPublishing: false,
+    hasCopied: false
   }
 
   componentDidMount = () => {
     this.props.scenario.fetch();
+  }
+
+  getPublishLink = () => {
+    return `mit-tm.com/play/${this.props.scenario.data.publishLink}`;
   }
 
   onPublishScenarioClicked = () => {
@@ -29,12 +34,24 @@ class ShareScenarioContainer extends Component {
     })
   }
 
+  onCopyLinkClicked = async () => {
+    await navigator.clipboard.writeText(this.getPublishLink());
+    this.setState({ hasCopied: true });
+    setTimeout(() => {
+      this.setState({ hasCopied: false });
+    }, 2000);
+  }
+
   render() {
+    const { hasCopied, isPublishing } = this.state;
     return (
       <ShareScenario
         scenario={this.props.scenario.data}
-        isPublishing={this.state.isPublishing}
+        publishLink={this.getPublishLink()}
+        isPublishing={isPublishing}
+        hasCopied={hasCopied}
         onPublishScenarioClicked={this.onPublishScenarioClicked}
+        onCopyLinkClicked={this.onCopyLinkClicked}
       />
     );
   }
