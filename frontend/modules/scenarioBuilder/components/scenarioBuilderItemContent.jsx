@@ -31,7 +31,7 @@ const ScenarioBuilderItemContent = ({
   const optionActions = [{ action: 'DUPLICATE', text: 'Copy', icon: 'copy' }];
 
   if (!slide.isRoot) {
-    optionActions.unshift({ action: 'MOVE', text: 'Move', icon: 'move' });
+    //optionActions.unshift({ action: 'MOVE', text: 'Move', icon: 'move' });
     optionActions.push({ action: 'DELETE', text: 'Delete', icon: 'delete', color: 'warning' });
   }
 
