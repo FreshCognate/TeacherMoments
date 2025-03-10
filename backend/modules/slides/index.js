@@ -9,4 +9,10 @@ registerModel({
   type: 'app'
 });
 
+registerModel({
+  name: 'Published_Slide',
+  model,
+  type: 'app'
+});
+
 registerRoutes(routes);
