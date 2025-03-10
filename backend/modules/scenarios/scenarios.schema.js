@@ -28,7 +28,10 @@ const schema = {
   updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   isDeleted: { type: Boolean, default: false },
   deletedAt: { type: Date },
-  deletedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  deletedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  isPublished: { type: Boolean, default: false },
+  publishedAt: { type: Date },
+  publishedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 };
 
 export default schema;

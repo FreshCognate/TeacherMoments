@@ -9,6 +9,12 @@ registerModel({
   type: 'app'
 });
 
+registerModel({
+  name: 'Published_Scenario',
+  model,
+  type: 'app'
+});
+
 registerRoutes(routes);
 
 
