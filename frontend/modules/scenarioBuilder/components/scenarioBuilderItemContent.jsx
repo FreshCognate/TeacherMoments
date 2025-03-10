@@ -18,7 +18,7 @@ const ScenarioBuilderItemContent = ({
   isEditing,
   isEditingSibling,
   isOptionsOpen,
-  isDuplicating,
+  isActioning,
   isLockedFromEditing,
   onSelectSlideClicked,
   onEditSlideClicked,
@@ -31,6 +31,7 @@ const ScenarioBuilderItemContent = ({
   const optionActions = [{ action: 'DUPLICATE', text: 'Copy', icon: 'copy' }];
 
   if (!slide.isRoot) {
+    optionActions.unshift({ action: 'MOVE', text: 'Move', icon: 'move' });
     optionActions.push({ action: 'DELETE', text: 'Delete', icon: 'delete', color: 'warning' });
   }
 
@@ -74,7 +75,7 @@ const ScenarioBuilderItemContent = ({
           </div>
         </div>
       )}
-      {(((isSelected && !isEditing) || (!isSelected && isEditingSibling)) && !isDuplicating && !isLockedFromEditing) && (
+      {(((isSelected && !isEditing) || (!isSelected && isEditingSibling)) && !isActioning && !isLockedFromEditing) && (
         <div
           className="group-hover:flex justify-center items-center hidden cursor-pointer absolute w-full h-full top-0 right-0 p-1 bg-opacity-40 bg-white dark:bg-black dark:bg-opacity-40 rounded-bl-lg rounded-tr-lg"
           onClick={onEditSlideClicked}
@@ -84,7 +85,7 @@ const ScenarioBuilderItemContent = ({
           </div>
         </div>
       )}
-      {(((isSelected && !isEditing) || (!isSelected && isEditingSibling)) && !isDuplicating && isLockedFromEditing) && (
+      {(((isSelected && !isEditing) || (!isSelected && isEditingSibling)) && !isActioning && isLockedFromEditing) && (
         <div
           className="flex justify-center items-center absolute w-full h-full top-0 right-0 p-1 bg-opacity-40 bg-white dark:bg-black dark:bg-opacity-80 rounded-bl-lg rounded-tr-lg"
         >

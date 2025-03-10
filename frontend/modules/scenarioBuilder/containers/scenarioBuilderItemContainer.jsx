@@ -19,6 +19,8 @@ import Timer from '~/uikit/loaders/components/timer';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import ScenarioRequestAccessTimer from '../components/scenarioRequestAccessTimer';
 import addToast from '~/core/dialogs/helpers/addToast';
+import duplicateSlide from '../helpers/duplicateSlide';
+import moveSlide from '../helpers/moveSlide';
 
 class ScenarioBuilderItemContainer extends Component {
 
@@ -164,7 +166,12 @@ class ScenarioBuilderItemContainer extends Component {
 
   duplicateSlide = () => {
     const editor = getCache('editor');
-    editor.set({ isDuplicating: true, duplicateId: this.props.slide._id, duplicateType: 'slide' });
+    editor.set({ isActioning: true, actionType: 'duplicate', actionId: this.props.slide._id, actionElement: 'slide' });
+  }
+
+  moveSlide = () => {
+    const editor = getCache('editor');
+    editor.set({ isActioning: true, actionType: 'move', actionId: this.props.slide._id, actionElement: 'slide' });
   }
 
   shouldRenderChildren = () => {
@@ -328,13 +335,17 @@ class ScenarioBuilderItemContainer extends Component {
         this.onCancelEditingClicked();
         this.duplicateSlide();
         break;
+      case 'MOVE':
+        this.onCancelEditingClicked();
+        this.moveSlide();
+        break;
     }
     this.setState({ isOptionsOpen: false });
   }
 
-  onPasteSlideClicked = (position) => {
+  onActionClicked = (position) => {
     const editor = getCache('editor');
-    editor.set({ isCreatingDuplicate: true });
+    editor.set({ isCreatingFromAction: true });
     const scenarioId = getCache('scenario').data._id;
 
     let sortOrder = 0;
@@ -358,40 +369,15 @@ class ScenarioBuilderItemContainer extends Component {
         break;
     }
 
-    axios.post(`/api/slides`, {
-      scenarioId: scenarioId,
-      slideId: editor.data.duplicateId,
-      parentId,
-      sortOrder
-    }).then(async () => {
-      const slides = getCache('slides');
-      const blocks = getCache('blocks');
-      await blocks.fetch();
-      await slides.fetch();
-      // Navigate to duplicated slide
-      let slideSelection = getSlideSelectionFromQuery();
+    const { actionType, actionId } = editor.data;
 
-      slideSelection.splice(layerIndex, slideSelection.length - layerIndex);
-      slideSelection.push(sortOrder);
-
-      const scenarioId = getCache('scenario').data._id;
-      this.props.router.navigate(`/scenarios/${scenarioId}/create?slideSelection=${JSON.stringify(slideSelection)}`, { replace: true });
-
-      editor.set({
-        isCreatingDuplicate: false,
-        isDuplicating: false,
-        duplicateId: null,
-        duplicateType: null
-      });
-    }).catch((error) => {
-      handleRequestError(error);
-      editor.set({
-        isCreatingDuplicate: false,
-        isDuplicating: false,
-        duplicateId: null,
-        duplicateType: null
-      });
-    });
+    switch (actionType) {
+      case 'duplicate':
+        duplicateSlide({ slideId: actionId, scenarioId, parentId, sortOrder, layerIndex, navigate: this.props.router.navigate })
+        break;
+      case 'move':
+        moveSlide({ slideId: actionId, scenarioId, parentId, sortOrder, layerIndex, navigate: this.props.router.navigate });
+    }
   }
 
   onRequestAccessClicked = async () => {
@@ -456,7 +442,8 @@ class ScenarioBuilderItemContainer extends Component {
       slideSelection,
       layerIndex,
       isSelected,
-      isDuplicating
+      isActioning,
+      actionType,
     } = this.props;
 
     const {
@@ -474,6 +461,7 @@ class ScenarioBuilderItemContainer extends Component {
         triggersCount={this.getTriggersCount()}
         layerIndex={layerIndex}
         location={this.getLocation()}
+        actionType={actionType}
         shouldRenderChildren={this.shouldRenderChildren()}
         isSelected={isSelected}
         isEditing={this.getIsEditing()}
@@ -481,7 +469,7 @@ class ScenarioBuilderItemContainer extends Component {
         isEditingSibling={this.getIsEditingSibling()}
         isOptionsOpen={isOptionsOpen}
         isDeleting={isDeleting}
-        isDuplicating={isDuplicating}
+        isActioning={isActioning}
         isAddingChild={this.state.isAddingChild}
         isLockedFromEditing={this.getIsLockedFromEditing()}
         childrenOffset={this.getChildrenOffset()}
@@ -492,7 +480,7 @@ class ScenarioBuilderItemContainer extends Component {
         onCancelEditingClicked={this.onCancelEditingClicked}
         onOptionsToggled={this.onOptionsToggled}
         onOptionClicked={this.onOptionClicked}
-        onPasteSlideClicked={this.onPasteSlideClicked}
+        onActionClicked={this.onActionClicked}
         onRequestAccessClicked={this.onRequestAccessClicked}
       />
     );

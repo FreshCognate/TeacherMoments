@@ -5,7 +5,7 @@ import restoreSlideById from './services/restoreSlideById.js';
 import updateSlideById from './services/updateSlideById.js';
 import deleteSlideById from './services/deleteSlideById.js';
 import createSlide from './services/createSlide.js';
-import reorderSlide from './services/reorderSlide.js';
+import moveSlideInScenario from './services/moveSlideInScenario.js';
 import duplicateSlideInScenario from './services/duplicateSlideInScenario.js';
 import lockSlide from './services/lockSlide.js';
 import unlockSlide from './services/unlockSlide.js';
@@ -48,14 +48,14 @@ export default {
 
   update: async function ({ param, body }, context) {
 
-    if (has(body, 'isDeleted')) {
-      const slide = await restoreSlideById({ slideId: param }, {}, context);
+    if (has(body, 'sortOrder')) {
+      const { scenarioId, parentId, sortOrder } = body;
+      const slide = await moveSlideInScenario({ scenario: scenarioId, parentId, slideId: param, sortOrder }, context);
       return { slide };
     }
 
-    if (has(body, 'sourceIndex') || has(body, 'destinationIndex')) {
-      const { sourceIndex, destinationIndex } = body;
-      const slide = await reorderSlide({ sourceIndex, destinationIndex, slideId: param }, {}, context);
+    if (has(body, 'isDeleted')) {
+      const slide = await restoreSlideById({ slideId: param }, {}, context);
       return { slide };
     }
 

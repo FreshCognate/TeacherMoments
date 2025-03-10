@@ -8,40 +8,35 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
 import Icon from '~/uikit/icons/components/icon';
 import Loading from '~/uikit/loaders/components/loading';
+import ActioningBar from '~/uikit/actionBars/components/actioningBar';
 
 const ScenarioBuilder = ({
   rootSlide,
   displayMode,
   slideSelection,
   blockId,
-  duplicateType,
-  duplicateId,
+  actionElement,
+  actionType,
+  actionId,
   isEditingBlock,
-  isDuplicating,
-  isCreatingDuplicate,
-  onCancelDuplicatingClicked
+  isActioning,
+  isCreatingFromAction,
+  onCancelActioningClicked
 }) => {
   const isDarkMode = window?.matchMedia?.('(prefers-color-scheme:dark)')?.matches ?? false;
   const backgroundDotColor = isDarkMode ? '#222' : '#ddd'
 
   return (
     <div id="scenario-builder" style={{ height: 'calc(100vh - 68px', marginTop: '28px' }} className={classnames("relative overflow-x-hidden overflow-y-scroll", {
-      "outline outline-2 -outline-offset-2 outline-blue-500": isDuplicating
+      "outline outline-2 -outline-offset-2 outline-blue-500": isActioning
     })}>
-      {(isDuplicating) && (
-        <div className="text-white bg-blue-500 fixed w-full top-0 z-40 flex items-center justify-between px-4 py-4" style={{ top: '68px' }}>
-          <div className="flex items-center">
-            <Icon icon="paste" size={12} className="mr-2" /><Body body={`Pick a place to copy the ${duplicateType} to`} size="sm" />
-          </div>
-          <div>
-            {(isCreatingDuplicate) && (
-              <Loading text="Creating..." size="sm" />
-            )}
-            {(!isCreatingDuplicate) && (
-              <FlatButton text="Cancel" onClick={onCancelDuplicatingClicked} />
-            )}
-          </div>
-        </div>
+      {(isActioning) && (
+        <ActioningBar
+          actionElement={actionElement}
+          actionType={actionType}
+          isCreatingFromAction={isCreatingFromAction}
+          onCancelActioningClicked={onCancelActioningClicked}
+        />
       )}
       <div className={"bg-lm-0 dark:bg-dm-0 min-h-screen"} style={{
         backgroundSize: "20px 20px",
@@ -58,10 +53,11 @@ const ScenarioBuilder = ({
               slide={rootSlide}
               slideSelection={slideSelection}
               layerIndex={-1}
-              duplicateId={duplicateId}
-              duplicateType={duplicateType}
+              actionId={actionId}
+              actionElement={actionElement}
+              actionType={actionType}
               isSelected={true}
-              isDuplicating={isDuplicating}
+              isActioning={isActioning}
             />
           )}
           {(displayMode === 'PREVIEW') && (

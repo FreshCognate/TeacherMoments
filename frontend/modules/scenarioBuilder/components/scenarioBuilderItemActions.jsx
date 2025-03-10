@@ -1,17 +1,19 @@
 import React from 'react';
+import ActioningButton from '~/uikit/buttons/components/actioningButton';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
 import Loading from '~/uikit/loaders/components/loading';
 
-const ScnarioBuilderItemActions = ({
+const ScenarioBuilderItemActions = ({
   slide,
   selectedSlide,
-  isDuplicating,
+  actionType,
+  isActioning,
   isAddingChild,
   shouldRenderChildren,
   onAddChildSlideClicked,
   onToggleChildSlidesClicked,
-  onPasteSlideClicked
+  onActionClicked
 }) => {
   let prefix = '';
   if (selectedSlide > 0) {
@@ -20,8 +22,12 @@ const ScnarioBuilderItemActions = ({
   return (
     <div className="absolute z-10 -bottom-8 h-6 flex justify-center items-center w-full left-0">
       <div className="mx-1">
-        {(isDuplicating) && (
-          <FlatButton icon="paste" isCircular color="primary" onClick={() => onPasteSlideClicked("CHILD")} />
+        {(isActioning) && (
+          <ActioningButton
+            actionType={actionType}
+            position="CHILD"
+            onActionClicked={onActionClicked}
+          />
         )}
       </div>
       {slide.children.length > 0 && (
@@ -38,7 +44,7 @@ const ScnarioBuilderItemActions = ({
         {(isAddingChild) && (
           <Loading className="!flex !w-auto !p-0" />
         )}
-        {(!isDuplicating && !isAddingChild) && (
+        {(!isActioning && !isAddingChild) && (
           <FlatButton icon="add" isCircular onClick={onAddChildSlideClicked} />
         )}
       </div>
@@ -46,4 +52,4 @@ const ScnarioBuilderItemActions = ({
   );
 };
 
-export default ScnarioBuilderItemActions;
+export default ScenarioBuilderItemActions;
