@@ -1,4 +1,5 @@
 import publishScenarioById from './services/publishScenarioById.js';
+import unpublishScenarioById from './services/unpublishScenarioById.js';
 
 export default {
 
@@ -10,6 +11,12 @@ export default {
 
     return { scenario }
 
+  },
+
+  delete: async function ({ param }, context) {
+    const scenario = await unpublishScenarioById({ scenarioId: param }, {}, context);
+
+    return { scenario };
   }
 
 };
