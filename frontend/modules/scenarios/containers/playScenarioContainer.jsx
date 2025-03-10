@@ -50,8 +50,9 @@ export default WithRouter(WithCache(PlayScenarioContainer, {
   scenario: {
     url: '/api/play/:publishLink',
     getParams: ({ props }) => {
-      console.log(props);
-      return {};
+      return {
+        publishLink: props.router.params.publishLink
+      };
     }
   },
   slides: {
