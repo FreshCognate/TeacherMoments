@@ -12,4 +12,5 @@ export default [
       route(":id/settings", "./modules/scenarios/routes/scenarioSettingsRoute.tsx"),
     ])
   ]),
+  route("/play/:publishLink", "./modules/scenarios/routes/playScenarioRoute.tsx")
 ] satisfies RouteConfig;
