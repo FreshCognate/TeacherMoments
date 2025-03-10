@@ -31,6 +31,7 @@ const schema = {
   deletedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   hasChanges: { type: Boolean, default: false },
   isPublished: { type: Boolean, default: false },
+  publishLink: { type: String },
   publishedAt: { type: Date },
   publishedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 };

@@ -17,6 +17,7 @@ export default async (props, options, context) => {
 
   await models.Published_Scenario.deleteOne({ _id: scenarioId });
 
+  scenario.hasChanges = true;
   scenario.isPublished = false;
   scenario.publishedAt = null;
   scenario.publishedBy = null;
