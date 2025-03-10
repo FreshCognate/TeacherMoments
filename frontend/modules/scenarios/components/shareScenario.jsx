@@ -11,7 +11,7 @@ const ShareScenario = ({
     <div style={{ marginTop: '28px' }} >
       <div className="p-2 flex items-center justify-end bg-lm-0 dark:bg-dm-2">
         <div>
-          {(!isPublishing) && (
+          {(!isPublishing && scenario.hasChanges) && (
             <Body className="text-black/60 dark:text-white/60" body="This scenario has draft changes that have not been published." size="sm" />
           )}
           {(isPublishing) && (

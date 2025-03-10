@@ -1,3 +1,5 @@
+import setScenarioHasChanges from "../../scenarios/services/setScenarioHasChanges.js";
+
 export default async (props, options, context) => {
 
   const { triggerId } = props;
@@ -26,6 +28,8 @@ export default async (props, options, context) => {
     sortOrder++;
     await elementTrigger.save();
   }
+
+  setScenarioHasChanges({ scenarioId: trigger.scenario }, {}, context);
 
   return trigger;
 

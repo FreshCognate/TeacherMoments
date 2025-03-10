@@ -1,3 +1,5 @@
+import setScenarioHasChanges from "../../scenarios/services/setScenarioHasChanges.js";
+
 export default async (props, options, context) => {
 
   const { scenario, triggerType, elementRef, event, action, blocks } = props;
@@ -20,6 +22,8 @@ export default async (props, options, context) => {
   };
 
   const trigger = await models.Trigger.create(newTriggerObject);
+
+  setScenarioHasChanges({ scenarioId: scenario }, {}, context);
 
   return trigger;
 

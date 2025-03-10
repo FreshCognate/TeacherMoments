@@ -1,3 +1,5 @@
+import setScenarioHasChanges from "../../scenarios/services/setScenarioHasChanges.js";
+
 export default async (props, options, context) => {
 
   const { scenario, parentId } = props;
@@ -24,6 +26,8 @@ export default async (props, options, context) => {
     parentSlide.children.push(slide.ref);
     await parentSlide.save();
   }
+
+  setScenarioHasChanges({ scenarioId: scenario }, {}, context);
 
   return slide;
 

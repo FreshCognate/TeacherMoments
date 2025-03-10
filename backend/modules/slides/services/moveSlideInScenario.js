@@ -1,5 +1,4 @@
-import omit from 'lodash/omit.js';
-import duplicateBlocks from '../../blocks/services/duplicateBlocks.js';
+import setScenarioHasChanges from '../../scenarios/services/setScenarioHasChanges.js';
 
 export default async ({ scenario, parentId, slideId, sortOrder }, context) => {
 
@@ -29,6 +28,8 @@ export default async ({ scenario, parentId, slideId, sortOrder }, context) => {
   }).catch(err => {
     throw { message: err, statusCode: 500 };
   });
+
+  setScenarioHasChanges({ scenarioId: existingSlide.scenario }, {}, context);
 
   return duplicatedSlide;
 
