@@ -5,6 +5,7 @@ import controller from './play.controller.js';
 import playSlidesController from './playSlides.controller.js';
 import playBlocksController from './playBlocks.controller.js'
 import playTriggersController from './playTriggers.controller.js'
+import playTrackingsController from './playTrackings.controller.js'
 
 export default [{
   route: '/play/slides',
@@ -31,6 +32,13 @@ export default [{
     query: {
       scenario: Joi.string().required()
     },
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])]
+  },
+}, {
+  route: '/play/trackings',
+  controller: playTrackingsController,
+  read: {
+    param: 'id',
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])]
   },
 }, {

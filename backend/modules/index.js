@@ -6,4 +6,5 @@ import './triggers/index.js';
 import './generate/index.js';
 import './assets/index.js';
 import './publishes/index.js';
+import './trackings/index.js';
 import './play/index.js';
