@@ -47,7 +47,7 @@ class PlayScenarioContainer extends Component {
     const activeBlocks = this.getActiveBlocks(activeSlide);
     console.log(activeSlide, activeBlocks);
     return (
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md mx-auto my-4">
         <SlidePlayerContainer activeSlide={activeSlide} activeBlocks={activeBlocks} />
       </div>
     );
