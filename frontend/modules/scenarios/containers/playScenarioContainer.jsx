@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 import SlidePlayerContainer from '~/modules/slides/containers/slidePlayerContainer';
+import get from 'lodash/get';
+import find from 'lodash/find';
+import filter from 'lodash/filter';
+import navigateTo from '~/modules/tracking/helpers/navigateTo';
+import { getCache } from '~/core/cache/helpers/cacheManager';
 
 class PlayScenarioContainer extends Component {
 
@@ -38,6 +43,7 @@ class PlayScenarioContainer extends Component {
   render() {
     const activeSlide = this.getActiveSlide();
     const activeBlocks = this.getActiveBlocks(activeSlide);
+    console.log(activeSlide, activeBlocks);
     return (
       <div className="w-full max-w-md">
         <SlidePlayerContainer activeSlide={activeSlide} activeBlocks={activeBlocks} />
@@ -46,27 +52,4 @@ class PlayScenarioContainer extends Component {
   }
 };
 
-export default WithRouter(WithCache(PlayScenarioContainer, {
-  scenario: {
-    url: '/api/play/:publishLink',
-    getParams: ({ props }) => {
-      return {
-        publishLink: props.router.params.publishLink
-      };
-    }
-  },
-  slides: {
-
-  },
-  blocks: {
-
-  },
-  tracking: {
-    getInitialData: () => {
-      return {
-        activeSlideRef: null,
-        stages: []
-      }
-    }
-  }
-}));
+export default WithRouter(WithCache(PlayScenarioContainer, null, ['scenario', 'slides', 'blocks', 'tracking']));

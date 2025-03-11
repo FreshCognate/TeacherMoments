@@ -1,8 +1,8 @@
 import React from 'react';
-import PlayScenarioContainer from '../containers/playScenarioContainer';
+import PlayScenarioLoaderContainer from '../containers/playScenarioLoaderContainer';
 
 export default function PlayScenarioRoute() {
   return (
-    <PlayScenarioContainer />
+    <PlayScenarioLoaderContainer />
   );
 }
