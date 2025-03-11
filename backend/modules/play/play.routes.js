@@ -44,7 +44,14 @@ export default [{
   update: {
     param: 'id',
     body: {
-      stages: Joi.array(),
+      activeSlideRef: Joi.string(),
+      stages: Joi.array().items({
+        slideRef: Joi.string(),
+        blocksByRef: Joi.object(),
+        isComplete: Joi.boolean(),
+        completedAt: Joi.date(),
+        feedbackItems: Joi.array()
+      }),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])]
   }

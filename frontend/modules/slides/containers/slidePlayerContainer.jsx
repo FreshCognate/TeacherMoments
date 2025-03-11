@@ -15,6 +15,10 @@ class SlidePlayerContainer extends Component {
     isLoading: true
   }
 
+  componentDidMount = () => {
+    this.setState({ isLoading: false });
+  }
+
   componentDidUpdate = (prevProps) => {
     if (this.props.activeSlide !== prevProps.activeSlide) {
       trigger({ triggerType: 'SLIDE', event: 'ON_ENTER', elementRef: this.props.activeSlide.ref }, {}).then(() => {
