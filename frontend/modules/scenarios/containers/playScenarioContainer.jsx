@@ -6,9 +6,6 @@ import get from 'lodash/get';
 import find from 'lodash/find';
 import filter from 'lodash/filter';
 import navigateTo from '~/modules/tracking/helpers/navigateTo';
-import { getCache } from '~/core/cache/helpers/cacheManager';
-import debounce from 'lodash/debounce';
-import getSlideTracking from '~/modules/tracking/helpers/getSlideTracking';
 
 class PlayScenarioContainer extends Component {
 
@@ -28,7 +25,15 @@ class PlayScenarioContainer extends Component {
 
   getActiveSlide = () => {
     let activeSlide = null;
-    const { tracking, slides } = this.props;
+    const { tracking, slides, scenario } = this.props;
+    if (!tracking.data.isConsentAcknowledged) {
+      return {
+        _id: 'CONSENT_SLIDE',
+        hasNavigateBack: false,
+        slideType: 'CONSENT',
+        children: []
+      };
+    }
     if (tracking.data.activeSlideRef) {
       activeSlide = find(slides.data, { ref: tracking.data.activeSlideRef });
     }
@@ -37,8 +42,9 @@ class PlayScenarioContainer extends Component {
 
   getActiveBlocks = (activeSlide) => {
     let activeBlocks = [];
+    const { blocks } = this.props;
     if (activeSlide) {
-      activeBlocks = filter(this.props.blocks.data, { slideRef: activeSlide.ref });
+      activeBlocks = filter(blocks.data, { slideRef: activeSlide.ref });
     }
 
     return activeBlocks;
@@ -52,7 +58,7 @@ class PlayScenarioContainer extends Component {
 
     return (
       <div className="w-full max-w-md mx-auto my-4">
-        <SlidePlayerContainer activeSlide={activeSlide} activeBlocks={activeBlocks} />
+        <SlidePlayerContainer scenario={this.props.scenario.data} activeSlide={activeSlide} activeBlocks={activeBlocks} />
       </div>
     );
   }

@@ -3,7 +3,7 @@ export default async (props, options, context) => {
 
   const { models } = context;
 
-  const scenario = await models.Scenario.findOne({ publishLink: publishLink, isDeleted: false });
+  const scenario = await models.Published_Scenario.findOne({ publishLink: publishLink, isDeleted: false });
 
   if (!scenario) throw { message: 'This scenario does not exist', statusCode: 404 };
 

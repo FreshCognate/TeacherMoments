@@ -88,7 +88,7 @@ class SlidePlayerContainer extends Component {
 
   render() {
 
-    const { activeSlide, activeBlocks } = this.props;
+    const { scenario, activeSlide, activeBlocks } = this.props;
 
     const slideTracking = getSlideTracking();
 
@@ -96,6 +96,7 @@ class SlidePlayerContainer extends Component {
 
     return (
       <SlidePlayer
+        scenario={scenario}
         activeSlide={activeSlide}
         activeBlocks={activeBlocks}
         isLoading={this.state.isLoading}
