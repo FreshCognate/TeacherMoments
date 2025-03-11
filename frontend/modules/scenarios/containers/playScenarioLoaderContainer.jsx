@@ -82,11 +82,16 @@ export default WithRouter(WithCache(PlayScenarioLoaderContainer, {
     }
   },
   tracking: {
-    getInitialData: () => {
+    url: '/api/play/trackings/:id',
+    getParams: ({ }) => {
       return {
-        activeSlideRef: null,
-        stages: []
+        id: getCache('scenario')?.data?._id
       }
+    },
+    transform: ({ data }) => data.tracking,
+    getDependencies: ({ props }) => {
+      const scenario = getCache('scenario');
+      return [scenario?.data?._id]
     }
   }
 }));

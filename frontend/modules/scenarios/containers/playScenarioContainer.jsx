@@ -17,8 +17,6 @@ class PlayScenarioContainer extends Component {
   }
 
   startScenario = () => {
-    console.log('starting');
-    console.log(this.props.slides.data);
     const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
     navigateTo({ slideRef: firstSlideRef });
   }
@@ -43,9 +41,10 @@ class PlayScenarioContainer extends Component {
   }
 
   render() {
+
     const activeSlide = this.getActiveSlide();
     const activeBlocks = this.getActiveBlocks(activeSlide);
-    console.log(activeSlide, activeBlocks);
+
     return (
       <div className="w-full max-w-md mx-auto my-4">
         <SlidePlayerContainer activeSlide={activeSlide} activeBlocks={activeBlocks} />
