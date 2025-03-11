@@ -7,6 +7,8 @@ import find from 'lodash/find';
 import filter from 'lodash/filter';
 import navigateTo from '~/modules/tracking/helpers/navigateTo';
 import { getCache } from '~/core/cache/helpers/cacheManager';
+import debounce from 'lodash/debounce';
+import getSlideTracking from '~/modules/tracking/helpers/getSlideTracking';
 
 class PlayScenarioContainer extends Component {
 
@@ -17,8 +19,11 @@ class PlayScenarioContainer extends Component {
   }
 
   startScenario = () => {
+    const { activeSlideRef } = this.props.tracking.data;
     const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
-    navigateTo({ slideRef: firstSlideRef });
+    if (!activeSlideRef) {
+      navigateTo({ slideRef: firstSlideRef });
+    }
   }
 
   getActiveSlide = () => {

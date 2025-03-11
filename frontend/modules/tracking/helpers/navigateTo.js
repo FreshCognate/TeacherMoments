@@ -3,6 +3,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import filter from 'lodash/filter';
 import each from 'lodash/each';
 import getIsSlideComplete from "./getIsSlideComplete";
+import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
 
 export default async ({ slideRef }) => {
 
@@ -39,6 +40,10 @@ export default async ({ slideRef }) => {
 
   stages.push({ slideRef: slideRef, blocksByRef, isComplete: isSlideComplete })
 
-  tracking.set({ activeSlideRef: slideRef, stages });
+  if (isScenarioInPlay()) {
+    tracking.mutate({ activeSlideRef: slideRef, stages }, { method: 'put' });
+  } else {
+    tracking.set({ activeSlideRef: slideRef, stages });
+  }
 
 }
