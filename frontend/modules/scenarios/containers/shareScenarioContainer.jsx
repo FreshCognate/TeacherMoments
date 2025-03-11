@@ -17,7 +17,11 @@ class ShareScenarioContainer extends Component {
   }
 
   getPublishLink = () => {
-    return `mit-tm.com/play/${this.props.scenario.data.publishLink}`;
+    if (typeof window !== "undefined") {
+      return `${window.location.origin}/play/${this.props.scenario.data.publishLink}`;
+    } else {
+      return '';
+    }
   }
 
   onPublishScenarioClicked = () => {

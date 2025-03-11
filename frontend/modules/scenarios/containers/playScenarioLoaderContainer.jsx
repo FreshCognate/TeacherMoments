@@ -31,7 +31,7 @@ export default WithRouter(WithCache(PlayScenarioLoaderContainer, {
     url: '/api/play/slides',
     getQuery: () => {
       return {
-        scenario: getCache('playScenario').data._id
+        scenario: getCache('scenario').data._id
       }
     },
     getParams: ({ props }) => {
@@ -41,12 +41,27 @@ export default WithRouter(WithCache(PlayScenarioLoaderContainer, {
     },
     transform: ({ data }) => data.slides,
     getDependencies: ({ props }) => {
-      const scenario = getCache('playScenario');
+      const scenario = getCache('scenario');
       return [scenario?.data?._id]
     }
   },
   blocks: {
-
+    url: '/api/play/blocks',
+    getQuery: () => {
+      return {
+        scenario: getCache('scenario').data._id
+      }
+    },
+    getParams: ({ props }) => {
+      return {
+        publishLink: props.router.params.publishLink
+      };
+    },
+    transform: ({ data }) => data.blocks,
+    getDependencies: ({ props }) => {
+      const scenario = getCache('scenario');
+      return [scenario?.data?._id]
+    }
   },
   tracking: {
     getInitialData: () => {

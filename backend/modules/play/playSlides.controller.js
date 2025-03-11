@@ -1,13 +1,12 @@
-import getPublishedSlidesByScenario from "../slides/services/getPublishedSlidesByScenario.js";
+import getPublishedSlidesByScenarioId from "../slides/services/getPublishedSlidesByScenarioId.js";
 
 export default {
 
   all: async function ({ query, body }, context) {
 
     const { scenario } = query;
-    let slides = await getPublishedSlidesByScenario({ scenarioId: scenario }, {}, context);
 
-    return { slides }
+    return await getPublishedSlidesByScenarioId({ scenarioId: scenario }, {}, context);
 
   },
 
