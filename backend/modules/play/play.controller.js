@@ -1,4 +1,4 @@
-import getScenarioByPublishLink from "../slides/services/getScenarioByPublishLink.js";
+import getScenarioByPublishLink from '../scenarios/services/getScenarioByPublishLink.js';
 
 export default {
 
