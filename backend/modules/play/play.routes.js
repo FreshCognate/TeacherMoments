@@ -41,6 +41,13 @@ export default [{
     param: 'id',
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])]
   },
+  update: {
+    param: 'id',
+    body: {
+      stages: Joi.array(),
+    },
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])]
+  }
 }, {
   route: '/play',
   controller,
