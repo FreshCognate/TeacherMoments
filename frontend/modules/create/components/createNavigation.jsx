@@ -3,7 +3,7 @@ import React from 'react';
 const CreateNavigation = ({
 }) => {
   return (
-    <div className="bg-lm-1 dark:bg-dm-1 w-64 h-full">
+    <div className="bg-lm-1 dark:bg-dm-1  w-full max-w-64 h-full">
       Navigation
     </div>
   );

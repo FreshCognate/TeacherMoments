@@ -1,5 +1,6 @@
 import React from 'react';
 import CreateNavigationContainer from '../containers/createNavigationContainer';
+import CreateWorkspaceContainer from '../containers/createWorkspaceContainer';
 import CreateSettingsContainer from '../containers/createSettingsContainer';
 
 const Create = ({
@@ -11,6 +12,7 @@ const Create = ({
       className="bg-lm-2 dark:bg-dm-2 flex"
     >
       <CreateNavigationContainer />
+      <CreateWorkspaceContainer />
       <CreateSettingsContainer />
     </div>
   );
