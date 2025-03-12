@@ -1,5 +1,6 @@
 import React from 'react';
 import CreateNavigationContainer from '../containers/createNavigationContainer';
+import CreateSettingsContainer from '../containers/createSettingsContainer';
 
 const Create = ({
 }) => {
@@ -7,9 +8,10 @@ const Create = ({
     <div
       id="scenario-builder"
       style={{ height: 'calc(100vh - 68px', marginTop: '28px' }}
-      className="bg-lm-2 dark:bg-dm-2"
+      className="bg-lm-2 dark:bg-dm-2 flex"
     >
       <CreateNavigationContainer />
+      <CreateSettingsContainer />
     </div>
   );
 };
