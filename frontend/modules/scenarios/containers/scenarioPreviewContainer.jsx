@@ -14,9 +14,10 @@ class ScenarioPreviewContainer extends Component {
     }, 0);
   }
 
-  startScenario = () => {
-    const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
-    navigateTo({ slideRef: firstSlideRef });
+  componentDidUpdate = (prevProps) => {
+    if (this.props.slideRef !== prevProps.slideRef) {
+      navigateTo({ slideRef: this.props.slideRef });
+    }
   }
 
   getActiveSlide = () => {

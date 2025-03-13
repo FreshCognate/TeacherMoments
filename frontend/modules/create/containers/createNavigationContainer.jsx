@@ -58,6 +58,7 @@ class CreateNavigationContainer extends Component {
       <CreateNavigation
         scenarioId={this.props.scenario.data._id}
         slides={this.getCurrentStemOfSlides()}
+        blocks={this.props.blocks.data}
         selectedSlideId={selectedSlideId}
         isCreating={isCreating}
         deletingId={deletingId}
@@ -68,4 +69,4 @@ class CreateNavigationContainer extends Component {
   }
 };
 
-export default WithRouter(WithCache(CreateNavigationContainer, null, ['slides', 'scenario']));
+export default WithRouter(WithCache(CreateNavigationContainer, null, ['slides', 'blocks', 'scenario']));

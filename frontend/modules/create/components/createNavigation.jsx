@@ -1,12 +1,13 @@
 import React from 'react';
-import map from 'lodash/map';
 import CreateNavigationActions from './createNavigationActions';
 import CreateNavigationSlide from './createNavigationSlide';
 import CreateDroppableContainer from '../containers/createDroppableContainer';
+import filter from 'lodash/filter';
 
 const CreateNavigation = ({
   scenarioId,
   slides,
+  blocks,
   selectedSlideId,
   isCreating,
   deletingId,
@@ -29,11 +30,13 @@ const CreateNavigation = ({
             let isDeletingSlide = false;
             if (item._id === selectedSlideId) isSelected = true;
             if (item._id === deletingId) isDeletingSlide = true;
+            const slideBlocks = filter(blocks, { slideRef: item.ref });
             return (
               <CreateNavigationSlide
                 key={item._id}
                 scenarioId={scenarioId}
                 slide={item}
+                slideBlocks={slideBlocks}
                 draggingOptions={draggingOptions}
                 isSelected={isSelected}
                 isDeleting={isDeletingSlide}
