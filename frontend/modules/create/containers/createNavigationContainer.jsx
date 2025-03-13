@@ -10,7 +10,9 @@ import getUrlDetails from '../helpers/getUrlDetails';
 class CreateNavigationContainer extends Component {
 
   state = {
-    isCreating: false
+    isCreating: false,
+    isDeleting: false,
+    deletingId: null
   }
 
   getCurrentStemOfSlides = () => {
@@ -30,13 +32,26 @@ class CreateNavigationContainer extends Component {
       this.props.slides.fetch();
       this.setState({ isCreating: false });
     }).catch((error) => {
+      this.props.slides.fetch();
       this.setState({ isCreating: false });
       handleRequestError(error);
     })
   }
 
+  onDeleteSlideClicked = (slideId) => {
+    this.setState({ deletingId: slideId });
+    axios.delete(`/api/slides/${slideId}`).then(() => {
+      this.props.slides.fetch();
+      this.setState({ deletingId: null });
+    }).catch((error) => {
+      this.props.slides.fetch();
+      this.setState({ deletingId: null });
+      handleRequestError(error);
+    })
+  }
+
   render() {
-    const { isCreating } = this.state;
+    const { isCreating, deletingId } = this.state;
     const { selectedSlideId } = getUrlDetails();
     return (
       <CreateNavigation
@@ -44,7 +59,9 @@ class CreateNavigationContainer extends Component {
         slides={this.getCurrentStemOfSlides()}
         selectedSlideId={selectedSlideId}
         isCreating={isCreating}
+        deletingId={deletingId}
         onAddSlideClicked={this.onAddSlideClicked}
+        onDeleteSlideClicked={this.onDeleteSlideClicked}
       />
     );
   }

@@ -8,7 +8,9 @@ const CreateNavigation = ({
   slides,
   selectedSlideId,
   isCreating,
-  onAddSlideClicked
+  deletingId,
+  onAddSlideClicked,
+  onDeleteSlideClicked
 }) => {
   return (
     <div className="bg-lm-1 dark:bg-dm-1 w-full max-w-64 h-full overflow-y-scroll">
@@ -16,13 +18,17 @@ const CreateNavigation = ({
       <div className="p-2">
         {(map(slides, (slide) => {
           let isSelected = false;
+          let isDeletingSlide = false;
           if (slide._id === selectedSlideId) isSelected = true;
+          if (slide._id === deletingId) isDeletingSlide = true;
           return (
             <CreateNavigationSlide
               key={slide._id}
               scenarioId={scenarioId}
               slide={slide}
               isSelected={isSelected}
+              isDeleting={isDeletingSlide}
+              onDeleteSlideClicked={onDeleteSlideClicked}
             />
           );
         }))}
