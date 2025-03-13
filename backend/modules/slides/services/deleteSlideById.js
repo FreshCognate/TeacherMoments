@@ -9,7 +9,6 @@ export default async (props, options, context) => {
   const deletedAt = new Date();
 
   const slide = await models.Slide.findByIdAndUpdate(slideId, {
-    isRoot: false,
     isDeleted: true,
     deletedAt,
     deletedBy: user._id
