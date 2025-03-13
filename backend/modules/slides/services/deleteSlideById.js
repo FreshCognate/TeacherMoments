@@ -19,8 +19,6 @@ export default async (props, options, context) => {
   // Update all sibling slides
   const siblingSlides = await models.Slide.find({ scenario: slide.scenario, parentRef: slide.parentRef, isDeleted: false }).sort('sortOrder');
 
-  console.log(siblingSlides);
-
   let sortOrder = 0;
   for (const siblingSlide of siblingSlides) {
     siblingSlide.sortOrder = sortOrder;
