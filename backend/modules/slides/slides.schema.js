@@ -10,6 +10,8 @@ const schema = {
   slideType: { type: String, enum: ['STEP', 'SUMMARY'], default: 'STEP' },
   hasNavigateBack: { type: Boolean, default: true },
   isRoot: { type: Boolean, default: false },
+  sortOrder: { type: Number, required: true },
+  parentRef: mongoose.Schema.Types.ObjectId,
   children: [mongoose.Schema.Types.ObjectId],
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
   isLocked: { type: Boolean, default: false },
