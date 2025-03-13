@@ -12,8 +12,6 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import getCache from '~/core/cache/helpers/getCache';
 import addModal from '~/core/dialogs/helpers/addModal';
 import BlockSelectorContainer from './blockSelectorContainer';
-import getSlideSelectionFromQuery from '~/modules/scenarioBuilder/helpers/getSlideSelectionFromQuery';
-import getEditingDetailsFromQuery from '~/modules/scenarioBuilder/helpers/getEditingDetailsFromQuery';
 
 class BlocksEditorContainer extends Component {
 
@@ -36,19 +34,6 @@ class BlocksEditorContainer extends Component {
       return [];
 
     }
-  }
-
-  getSelectedBlockId = () => {
-    const searchParams = new URLSearchParams(this.props.router.location.search);
-    return searchParams.get('block');
-  }
-
-  getIsEditingBlock = () => {
-    const searchParams = new URLSearchParams(this.props.router.location.search);
-    const slideId = searchParams.get('slide');
-    const blockId = searchParams.get('block');
-    const isEditing = searchParams.get('isEditing');
-    return (slideId && isEditing && blockId);
   }
 
   onDeleteBlockClicked = (blockId) => {
@@ -90,24 +75,6 @@ class BlocksEditorContainer extends Component {
 
   }
 
-  onCancelEditBlockClicked = (blockId) => {
-    const { router } = this.props;
-    const searchParams = new URLSearchParams(router.location.search);
-    const slideId = searchParams.get('slide');
-    const slideSelection = getSlideSelectionFromQuery();
-    const { isEditing, layer } = getEditingDetailsFromQuery();
-    router.navigate(`/scenarios/${router.params.id}/create?slideSelection=${JSON.stringify(slideSelection)}&isEditing=${isEditing}&layer=${layer}&slide=${slideId}`, { replace: true });
-  }
-
-  onEditBlockClicked = (blockId) => {
-    const { router } = this.props;
-    const searchParams = new URLSearchParams(router.location.search);
-    const slideId = searchParams.get('slide');
-    const slideSelection = getSlideSelectionFromQuery();
-    const { isEditing, layer } = getEditingDetailsFromQuery();
-    router.navigate(`/scenarios/${router.params.id}/create?slideSelection=${JSON.stringify(slideSelection)}&isEditing=${isEditing}&layer=${layer}&slide=${slideId}&block=${blockId}`, { replace: true });
-  }
-
   onCreateBlockClicked = () => {
     addModal({
       title: 'Choose a block type to add to your slide:',
@@ -123,13 +90,6 @@ class BlocksEditorContainer extends Component {
     return (
       <BlocksEditor
         blocks={this.getBlocksBySlide()}
-        selectedBlockId={this.getSelectedBlockId()}
-        isEditingBlock={this.getIsEditingBlock()}
-        onDeleteBlockClicked={this.onDeleteBlockClicked}
-        onSortUpClicked={this.onSortUpClicked}
-        onSortDownClicked={this.onSortDownClicked}
-        onCancelEditBlockClicked={this.onCancelEditBlockClicked}
-        onEditBlockClicked={this.onEditBlockClicked}
         onCreateBlockClicked={this.onCreateBlockClicked}
       />
     );
