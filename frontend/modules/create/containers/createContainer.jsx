@@ -5,11 +5,11 @@ import sortSlides from '../helpers/sortSlides';
 class CreateContainer extends Component {
 
   onDragOver = () => {
-    console.log('dragging.over');
+    return;
   }
 
   onDragStart = () => {
-    console.log('dragging');
+    return;
   }
 
   onDragEnd = async (event) => {
