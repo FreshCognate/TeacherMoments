@@ -1,10 +1,12 @@
 import React from 'react';
 import map from 'lodash/map';
-import CreateNavigationSlide from './createNavigationSlide';
 import CreateNavigationActions from './createNavigationActions';
+import CreateNavigationSlide from './createNavigationSlide';
 
 const CreateNavigation = ({
+  scenarioId,
   slides,
+  selectedSlideId,
   isCreating,
   onAddSlideClicked
 }) => {
@@ -13,10 +15,14 @@ const CreateNavigation = ({
       <CreateNavigationActions isCreating={isCreating} onAddSlideClicked={onAddSlideClicked} />
       <div className="p-2">
         {(map(slides, (slide) => {
+          let isSelected = false;
+          if (slide._id === selectedSlideId) isSelected = true;
           return (
             <CreateNavigationSlide
               key={slide._id}
+              scenarioId={scenarioId}
               slide={slide}
+              isSelected={isSelected}
             />
           );
         }))}
