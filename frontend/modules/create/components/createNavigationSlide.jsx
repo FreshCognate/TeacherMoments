@@ -4,7 +4,7 @@ const CreateNavigationSlide = ({
   slide
 }) => {
   return (
-    <div className="bg-lm-2 dark:bg-dm-2 rounded-md h-28">
+    <div className="bg-lm-2 dark:bg-dm-2 rounded-md h-28 mb-2">
 
     </div>
   );
