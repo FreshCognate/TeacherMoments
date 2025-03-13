@@ -6,9 +6,7 @@ const ScenarioPreview = ({
   activeBlocks,
 }) => {
   return (
-    <div className="w-full pt-4 pb-8 px-8 max-w-screen-sm mx-auto">
-      <SlidePlayerContainer activeSlide={activeSlide} activeBlocks={activeBlocks} />
-    </div>
+    <SlidePlayerContainer activeSlide={activeSlide} activeBlocks={activeBlocks} />
   );
 };
 

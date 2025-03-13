@@ -20,7 +20,9 @@ const CreateWorkspace = ({
       )}
       {(displayMode === 'PREVIEW') && (
         <div className="pt-10 w-full h-full overflow-y-auto">
-          <ScenarioPreviewContainer slideRef={activeSlideRef} />
+          <div className="w-full pt-4 pb-8 px-8 max-w-screen-sm mx-auto">
+            <ScenarioPreviewContainer slideRef={activeSlideRef} />
+          </div>
         </div>
       )}
     </div>
