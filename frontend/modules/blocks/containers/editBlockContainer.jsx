@@ -14,6 +14,7 @@ import editMediaBlockSchema from '../schemas/editMediaBlockSchema';
 import editSuggestionBlockSchema from '../schemas/editSuggestionBlockSchema';
 import editResponseBlockSchema from '../schemas/editResponseBlockSchema';
 import axios from 'axios';
+import handleRequestError from '~/core/app/helpers/handleRequestError';
 
 const SCHEMA_MAPPINGS = {
   TEXT: editTextBlockSchema,
@@ -27,6 +28,12 @@ const SCHEMA_MAPPINGS = {
 }
 
 class EditBlockContainer extends Component {
+
+  state = {
+    isOptionsOpen: false,
+    isDeleting: false
+  }
+
   isSaving = false;
 
   getSchema = () => {
@@ -47,7 +54,7 @@ class EditBlockContainer extends Component {
     axios.put(`/api/blocks/${this.props.block._id}`, update).then(() => {
       const blocks = getCache('blocks');
       blocks.fetch();
-    });
+    }).error(handleRequestError);
   }, 2000);
 
   onEditBlockUpdate = ({ update }) => {
@@ -57,12 +64,43 @@ class EditBlockContainer extends Component {
     this.debouncedSave({ update });
   }
 
+  onToggleActionsClicked = (isOptionsOpen) => {
+    this.setState({ isOptionsOpen })
+  }
+
+  onActionClicked = (action) => {
+    this.setState({ isOptionsOpen: false });
+
+    switch (action) {
+      case 'DELETE':
+        this.onDeleteBlockClicked();
+        break;
+    }
+  }
+
+  onDeleteBlockClicked = () => {
+    this.setState({ isDeleting: true });
+    axios.delete(`/api/blocks/${this.props.block._id}`).then(() => {
+      this.props.blocks.fetch().then(() => {
+        this.setState({ isDeleting: false });
+      });
+    }).catch((error) => {
+      this.props.blocks.fetch();
+      this.setState({ isDeleting: false });
+      handleRequestError(error);
+    })
+  }
+
   render() {
     return (
       <EditBlock
         block={this.props.block}
         schema={this.getSchema()}
+        isOptionsOpen={this.state.isOptionsOpen}
+        isDeleting={this.state.isDeleting}
         onEditBlockUpdate={this.onEditBlockUpdate}
+        onToggleActionsClicked={this.onToggleActionsClicked}
+        onActionClicked={this.onActionClicked}
       />
     );
   }

@@ -41,8 +41,9 @@ class CreateNavigationContainer extends Component {
   onDeleteSlideClicked = (slideId) => {
     this.setState({ deletingId: slideId });
     axios.delete(`/api/slides/${slideId}`).then(() => {
-      this.props.slides.fetch();
-      this.setState({ deletingId: null });
+      this.props.slides.fetch().then(() => {
+        this.setState({ deletingId: null });
+      });
     }).catch((error) => {
       this.props.slides.fetch();
       this.setState({ deletingId: null });
