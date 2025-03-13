@@ -21,8 +21,8 @@ export default async (props, options, context) => {
 
   // When creating a new scenario we should create the first slide too
   const newSlideObject = {
-    name: 'Introduction',
     scenario: scenario._id,
+    sortOrder: 0
   }
 
   await createSlide(newSlideObject, options, context);
