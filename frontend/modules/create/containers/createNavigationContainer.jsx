@@ -5,6 +5,7 @@ import WithCache from '~/core/cache/containers/withCache';
 import filter from 'lodash/filter';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
+import getUrlDetails from '../helpers/getUrlDetails';
 
 class CreateNavigationContainer extends Component {
 
@@ -36,9 +37,12 @@ class CreateNavigationContainer extends Component {
 
   render() {
     const { isCreating } = this.state;
+    const { selectedSlideId } = getUrlDetails();
     return (
       <CreateNavigation
+        scenarioId={this.props.scenario.data._id}
         slides={this.getCurrentStemOfSlides()}
+        selectedSlideId={selectedSlideId}
         isCreating={isCreating}
         onAddSlideClicked={this.onAddSlideClicked}
       />
