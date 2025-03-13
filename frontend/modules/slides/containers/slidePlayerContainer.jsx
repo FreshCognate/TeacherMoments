@@ -51,10 +51,6 @@ class SlidePlayerContainer extends Component {
       hasSubmitButton = true;
     }
 
-    if (activeSlide?.children.length === 0) {
-      hasNextButton = false;
-    }
-
     return {
       hasBackButton,
       hasNextButton,

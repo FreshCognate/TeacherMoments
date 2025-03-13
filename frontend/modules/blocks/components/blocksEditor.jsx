@@ -13,7 +13,7 @@ const BlocksEditor = ({
         return (
           <EditBlockContainer
             key={block._id}
-            blockId={block._id}
+            block={block}
           />
         )
       }))}

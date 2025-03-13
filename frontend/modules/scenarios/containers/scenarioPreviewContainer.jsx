@@ -10,7 +10,7 @@ class ScenarioPreviewContainer extends Component {
 
   componentDidMount = () => {
     setTimeout(() => {
-      this.startScenario();
+      navigateTo({ slideRef: this.props.slideRef });
     }, 0);
   }
 

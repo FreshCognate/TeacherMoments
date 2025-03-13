@@ -9,10 +9,10 @@ const CreateWorkspaceToolbar = ({
 }) => {
   return (
     <div className="fixed top-20 flex items-center justify-between z-40 bg-lm-1 dark:bg-dm-1 rounded-lg text-xs mx-2 ">
-      <div className="px-2">
+      <div className="pl-2 pr-3">
         <FlatButton text="Add block" icon="create" size="sm" onClick={onAddBlockClicked} />
       </div>
-      <div className="ml-2 pl-2 border-l border-lm-0 dark:border-dm-2">
+      <div className=" border-l border-lm-0 dark:border-dm-2">
         <div className="pl-1 pr-1 py-1 ">
           <Toggle
             size="sm"
