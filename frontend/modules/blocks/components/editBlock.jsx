@@ -9,7 +9,7 @@ const EditBlock = ({
 }) => {
   const random = Math.random();
   return (
-    <div className="w-full bg-lm-2 dark:bg-dm-1 p-10 rounded-lg"
+    <div className="w-full bg-lm-2 dark:bg-dm-1 p-10 rounded-lg mb-8"
     >
       <FormContainer
         renderKey={`${block._id}-${block.blockType}-${random}`}
