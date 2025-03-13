@@ -36,7 +36,7 @@ export default async (props, options, context) => {
 
   const totalPages = getTotalPages(count);
 
-  const slides = await models.Slide.find(search, null, searchOptions).sort('name');
+  const slides = await models.Slide.find(search, null, searchOptions).sort('sortOrder');
 
   return {
     slides,

@@ -26,14 +26,14 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { scenarioId, parentId, slideId, sortOrder } = body;
+    const { scenarioId, slideId, sortOrder } = body;
 
     let slide;
 
     if (slideId) {
-      slide = await duplicateSlideInScenario({ scenario: scenarioId, parentId, slideId, sortOrder }, context);
+      slide = await duplicateSlideInScenario({ scenario: scenarioId, slideId, sortOrder }, context);
     } else {
-      slide = await createSlide({ scenario: scenarioId, parentId, sortOrder }, {}, context);
+      slide = await createSlide({ scenario: scenarioId, sortOrder }, {}, context);
     }
 
     return { slide };
@@ -48,9 +48,9 @@ export default {
 
   update: async function ({ param, body }, context) {
 
-    if (has(body, 'sortOrder')) {
-      const { scenarioId, parentId, sortOrder } = body;
-      const slide = await moveSlideInScenario({ scenario: scenarioId, parentId, slideId: param, sortOrder }, context);
+    if (has(body, 'sourceIndex')) {
+      const { scenarioId, sourceIndex, destinationIndex } = body;
+      const slide = await moveSlideInScenario({ scenario: scenarioId, slideId: param, sourceIndex, destinationIndex }, context);
       return { slide };
     }
 
