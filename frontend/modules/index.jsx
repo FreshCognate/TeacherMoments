@@ -9,6 +9,7 @@ import '~/core/app/components/alert.formField';
 import '~/modules/triggers/containers/triggerBlocksSelectorContainer.formField';
 import '~/modules/assets/containers/assetSelectorContainer.formField';
 import '~/modules/blocks/containers/responseSelectorContainer.formField';
+import '~/modules/slides/containers/slideNavigationContainer.formField';
 import '~/core/app/conditions/modelValueIs';
 import '~/modules/slides/helpers/isRootSlide.condition';
 import '~/modules/ls/helpers/ls.condition'

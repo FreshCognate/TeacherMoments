@@ -34,7 +34,7 @@ class SlidePlayerContainer extends Component {
     let isNextButtonActive = false;
     let isSubmitButtonActive = false;
     const { activeSlide } = this.props;
-    if (activeSlide?.isRoot || !activeSlide?.hasNavigateBack) {
+    if (activeSlide?.isRoot) {
       hasBackButton = false;
     }
 

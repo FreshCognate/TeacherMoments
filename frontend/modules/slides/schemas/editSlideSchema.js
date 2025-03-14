@@ -3,32 +3,25 @@ export default {
     type: 'Text',
     label: 'Name'
   },
-  hasNavigateBack: {
-    type: 'Toggle',
-    label: 'Allow user to navigate back',
-    size: 'sm',
+  navigation: {
+    type: 'SlideNavigation',
+    label: 'Navigation',
     options: [{
-      value: false,
-      text: 'No'
+      value: 'BIDIRECTIONAL',
+      text: 'Back & Next',
+      description: 'This will include a back button and next button'
     }, {
-      value: true,
-      text: 'Yes'
-    }],
-    conditions: [{
-      type: 'isRootSlide',
-      shouldHideField: true
+      value: 'BACKWARD',
+      text: 'Back',
+      description: 'This forces the user to only go backwards'
+    }, {
+      value: 'FORWARD',
+      text: 'Next',
+      description: 'This forces the user to only move forwards'
+    }, {
+      value: 'SUBMIT',
+      text: 'Submit',
+      description: 'This allows the user to submit a slide and take actions'
     }]
   }
-  // slideType: {
-  //   type: 'Toggle',
-  //   label: 'Type',
-  //   size: 'sm',
-  //   options: [{
-  //     value: 'STEP',
-  //     text: 'Step'
-  //   }, {
-  //     value: 'SUMMARY',
-  //     text: 'Summary'
-  //   }]
-  // }
 }
