@@ -29,7 +29,6 @@ class PlayScenarioContainer extends Component {
     if (!tracking.data.isConsentAcknowledged) {
       return {
         _id: 'CONSENT_SLIDE',
-        hasNavigateBack: false,
         slideType: 'CONSENT',
         children: []
       };

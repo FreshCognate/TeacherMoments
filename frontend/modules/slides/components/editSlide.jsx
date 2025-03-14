@@ -4,7 +4,6 @@ import FormContainer from '~/core/forms/containers/formContainer';
 const EditSlide = ({
   schema,
   slide,
-  isLoading,
   onSlideFormUpdate
 }) => {
   return (

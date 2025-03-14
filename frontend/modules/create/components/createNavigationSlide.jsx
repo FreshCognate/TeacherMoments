@@ -19,8 +19,7 @@ const CreateNavigationSlide = ({
 
   const className = classnames("bg-lm-2 dark:bg-dm-2 rounded-md h-36 mb-2 relative", {
     "outline outline-blue-500": isSelected,
-    "opacity-50": isDeleting,
-    "opacity-50": isDragging
+    "opacity-50": isDeleting || isDragging
   });
 
   return (
