@@ -29,7 +29,7 @@ const SlidePlayer = ({
   );
 
   return (
-    <div className="w-full bg-lm-0 dark:bg-dm-1 border border-lm-2 dark:border-dm-2 rounded max-w-screen-sm p-4">
+    <div className="w-full bg-lm-0 dark:bg-dm-1 border border-lm-2 dark:border-dm-2 rounded p-4">
       {(activeSlide.slideType === 'CONSENT') && (
         <ConsentSlide scenario={scenario} />
       )}
