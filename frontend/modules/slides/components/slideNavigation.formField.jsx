@@ -26,7 +26,7 @@ const SlideNavigationFormField = ({
           <div>
             <Body body={selectedOptionText.text} size="sm" className="text-black/60 dark:text-white/60" />
             {(isEditing) && (
-              <Body body={selectedOptionText.description} size="xs" className="mt-1 text-black/30 dark:text-white/30" />
+              <Body body={selectedOptionText.description} size="xs" className="mt-1 text-black/30 dark:text-white/30 w-11/12" />
             )}
           </div>
           {(isEditing) && (
@@ -45,7 +45,7 @@ const SlideNavigationFormField = ({
                   className="border-b-2 border-lm-3 dark:border-dm-3 p-2 last:border-b-0 hover:bg-lm-2 dark:hover:bg-dm-2 cursor-pointer"
                   onClick={() => onNavigationOptionClicked(option.value)}>
                   <Body body={option.text} size="sm" className=" text-black/60 dark:text-white/60" />
-                  <Body body={option.description} size="xs" className="mt-1 text-black/30 dark:text-white/30" />
+                  <Body body={option.description} size="xs" className="mt-1 text-black/30 dark:text-white/30 pr-2 w-11/12" />
                 </div>
               )
             }))}

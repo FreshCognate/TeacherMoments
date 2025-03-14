@@ -28,27 +28,33 @@ class SlidePlayerContainer extends Component {
   }
 
   getNavigationDetails = () => {
-    let hasBackButton = true;
+    let hasBackButton = false;
     let hasNextButton = false;
     let hasSubmitButton = false;
     let isNextButtonActive = false;
     let isSubmitButtonActive = false;
+    let hasBranching = false;
     const { activeSlide } = this.props;
-    if (activeSlide?.isRoot) {
-      hasBackButton = false;
-    }
 
     const { isAbleToCompleteSlide, hasRequiredPrompts } = getSlideNavigationDetails();
 
-    if (isAbleToCompleteSlide) {
-      isSubmitButtonActive = true;
-    }
-
-    if (!hasRequiredPrompts) {
-      hasNextButton = true;
-      isNextButtonActive = true;
-    } else {
-      hasSubmitButton = true;
+    switch (activeSlide?.navigation) {
+      case 'BIDIRECTIONAL':
+        hasNextButton = true;
+        hasBackButton = true;
+        isNextButtonActive = !hasRequiredPrompts || isAbleToCompleteSlide;
+        break;
+      case 'BACKWARD':
+        hasBackButton = true;
+        break;
+      case 'FORWARD':
+        hasNextButton = true;
+        isNextButtonActive = !hasRequiredPrompts || isAbleToCompleteSlide;
+        break;
+      case 'SUBMIT':
+        hasSubmitButton = true;
+        isSubmitButtonActive = !hasRequiredPrompts || isAbleToCompleteSlide;;
+        break;
     }
 
     return {
@@ -56,7 +62,8 @@ class SlidePlayerContainer extends Component {
       hasNextButton,
       hasSubmitButton,
       isNextButtonActive,
-      isSubmitButtonActive
+      isSubmitButtonActive,
+      hasBranching
     }
   }
 
