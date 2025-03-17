@@ -31,12 +31,17 @@ class SlidePlayerContainer extends Component {
     let hasBackButton = false;
     let hasNextButton = false;
     let hasSubmitButton = false;
+    let hasConsentButtons = false;
     let isNextButtonActive = false;
     let isSubmitButtonActive = false;
     let hasBranching = false;
     const { activeSlide } = this.props;
 
     const { isAbleToCompleteSlide, hasRequiredPrompts } = getSlideNavigationDetails();
+
+    if (activeSlide.slideType === 'CONSENT') {
+      hasConsentButtons = true;
+    }
 
     switch (activeSlide?.navigation) {
       case 'BIDIRECTIONAL':
@@ -61,6 +66,7 @@ class SlidePlayerContainer extends Component {
       hasBackButton,
       hasNextButton,
       hasSubmitButton,
+      hasConsentButtons,
       isNextButtonActive,
       isSubmitButtonActive,
       hasBranching
@@ -95,7 +101,7 @@ class SlidePlayerContainer extends Component {
 
     const slideTracking = getSlideTracking();
 
-    const { hasBackButton, hasNextButton, hasSubmitButton, isNextButtonActive, isSubmitButtonActive } = this.getNavigationDetails();
+    const { hasBackButton, hasNextButton, hasSubmitButton, hasConsentButtons, isNextButtonActive, isSubmitButtonActive } = this.getNavigationDetails();
 
     return (
       <SlidePlayer
@@ -108,6 +114,7 @@ class SlidePlayerContainer extends Component {
         hasBackButton={hasBackButton}
         hasNextButton={hasNextButton}
         hasSubmitButton={hasSubmitButton}
+        hasConsentButtons={hasConsentButtons}
         isNextButtonActive={isNextButtonActive}
         isSubmitButtonActive={isSubmitButtonActive}
         onUpdateTracking={this.onUpdateTracking}

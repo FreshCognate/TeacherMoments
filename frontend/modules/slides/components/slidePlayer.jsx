@@ -18,6 +18,7 @@ const SlidePlayer = ({
   hasBackButton,
   hasNextButton,
   hasSubmitButton,
+  hasConsentButtons,
   isNextButtonActive,
   isSubmitButtonActive,
   onUpdateTracking,
@@ -81,6 +82,7 @@ const SlidePlayer = ({
         hasBackButton={hasBackButton}
         hasNextButton={hasNextButton}
         hasSubmitButton={hasSubmitButton}
+        hasConsentButtons={hasConsentButtons}
         isNextButtonActive={isNextButtonActive}
         isSubmitButtonActive={isSubmitButtonActive}
         onPreviousSlideClicked={onPreviousSlideClicked}

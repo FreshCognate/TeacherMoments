@@ -11,14 +11,6 @@ const ConsentSlide = ({
     <div>
       <Title title={"Consent Agreement"} className="text-xl mb-2" />
       <Body body={getString({ model: scenario, field: 'consent' })} className="text-sm text-black text-opacity-60 dark:text-white dark:text-opacity-60" />
-      <div className="flex justify-between mt-6">
-        <div className="mr-2 w-full">
-          <Button text="No, I do not consent" color="warning" isFullWidth />
-        </div>
-        <div className="ml-2 w-full">
-          <Button text="Yes, I consent" color="primary" isFullWidth />
-        </div>
-      </div>
     </div>
   );
 };
