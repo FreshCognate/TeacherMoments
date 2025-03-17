@@ -5,6 +5,8 @@ import EditBlockContainer from '../containers/editBlockContainer';
 
 const BlocksEditor = ({
   blocks,
+  onSortUpClicked,
+  onSortDownClicked,
   onCreateBlockClicked
 }) => {
   return (
@@ -14,12 +16,15 @@ const BlocksEditor = ({
           <EditBlockContainer
             key={block._id}
             block={block}
+            blocksLength={blocks.length}
+            onSortUpClicked={onSortUpClicked}
+            onSortDownClicked={onSortDownClicked}
           />
         )
       }))}
       <div className="pl-2">
         <FlatButton
-          text="Create block"
+          text="Add block"
           icon="create"
           onClick={onCreateBlockClicked}
         />

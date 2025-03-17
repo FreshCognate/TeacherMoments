@@ -50,9 +50,8 @@ class BlocksEditorContainer extends Component {
 
     each(clonedBlocks, (item, index) => {
       item.sortOrder = index;
+      blocks.set(item, { setType: 'itemExtend', setFind: { _id: item._id } });
     });
-
-    blocks.set(clonedBlocks, { setType: 'replace' });
 
     axios.put(`/api/blocks/${removed._id}`, { sourceIndex, destinationIndex }).then(() => {
       this.props.blocks.fetch();
@@ -91,6 +90,8 @@ class BlocksEditorContainer extends Component {
       <BlocksEditor
         blocks={this.getBlocksBySlide()}
         onCreateBlockClicked={this.onCreateBlockClicked}
+        onSortUpClicked={this.onSortUpClicked}
+        onSortDownClicked={this.onSortDownClicked}
       />
     );
   }

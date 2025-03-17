@@ -1,7 +1,6 @@
 import React from 'react';
 import BlocksEditorContainer from '~/modules/blocks/containers/blocksEditorContainer';
 import CreateWorkspaceToolbarContainer from '../containers/createWorkspaceToolbarContainer';
-import SlidePlayerContainer from '~/modules/slides/containers/slidePlayerContainer';
 import ScenarioPreviewContainer from '~/modules/scenarios/containers/scenarioPreviewContainer';
 
 const CreateWorkspace = ({

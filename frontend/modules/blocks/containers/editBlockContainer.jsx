@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import EditBlock from '../components/editBlock';
 import debounce from 'lodash/debounce';
 import WithCache from '~/core/cache/containers/withCache';
-import getCache from '~/core/cache/helpers/getCache';
 import editBlockSchema from '../schemas/editBlockSchema';
 import editTextBlockSchema from '../schemas/editTextBlockSchema';
 import editAnswersPromptBlockSchema from '../schemas/editAnswersPromptBlockSchema';
@@ -52,13 +51,31 @@ class EditBlockContainer extends Component {
   debouncedSave = debounce(({ update }) => {
     this.isSaving = true;
     axios.put(`/api/blocks/${this.props.block._id}`, update).then(() => {
-      const blocks = getCache('blocks');
+      const { blocks } = this.props;
       blocks.fetch();
     }).error(handleRequestError);
   }, 2000);
 
+  getSortingDetails = () => {
+    let canSortUp = false;
+    let canSortDown = false;
+
+    if (this.props.block.sortOrder !== 0) {
+      canSortUp = true;
+    }
+
+    if (this.props.block.sortOrder < this.props.blocksLength - 1) {
+      canSortDown = true;
+    }
+
+    return {
+      canSortUp,
+      canSortDown
+    }
+  }
+
   onEditBlockUpdate = ({ update }) => {
-    const blocks = getCache('blocks');
+    const { blocks } = this.props;
     blocks.setStatus('syncing');
     blocks.set(update, { setType: 'itemExtend', setFind: { _id: this.props.block._id } })
     this.debouncedSave({ update });
@@ -92,15 +109,20 @@ class EditBlockContainer extends Component {
   }
 
   render() {
+    const { canSortUp, canSortDown } = this.getSortingDetails();
     return (
       <EditBlock
         block={this.props.block}
         schema={this.getSchema()}
+        canSortUp={canSortUp}
+        canSortDown={canSortDown}
         isOptionsOpen={this.state.isOptionsOpen}
         isDeleting={this.state.isDeleting}
         onEditBlockUpdate={this.onEditBlockUpdate}
         onToggleActionsClicked={this.onToggleActionsClicked}
         onActionClicked={this.onActionClicked}
+        onSortUpClicked={this.props.onSortUpClicked}
+        onSortDownClicked={this.props.onSortDownClicked}
       />
     );
   }
