@@ -6,8 +6,10 @@ import trigger from '~/modules/triggers/helpers/trigger';
 import getSlideTracking from '~/modules/tracking/helpers/getSlideTracking';
 import WithCache from '~/core/cache/containers/withCache';
 import navigateBack from '~/modules/tracking/helpers/navigateBack';
+import navigateToNextSlide from '~/modules/tracking/helpers/navigateToNextSlide';
 import getSlideNavigationDetails from '~/modules/tracking/helpers/getSlideNavigationDetails';
 import setSlideToComplete from '~/modules/tracking/helpers/setSlideToComplete';
+import setScenarioConsent from '~/modules/tracking/helpers/setScenarioConsent';
 
 class SlidePlayerContainer extends Component {
 
@@ -39,7 +41,7 @@ class SlidePlayerContainer extends Component {
 
     const { isAbleToCompleteSlide, hasRequiredPrompts } = getSlideNavigationDetails();
 
-    if (activeSlide.slideType === 'CONSENT') {
+    if (activeSlide?.slideType === 'CONSENT') {
       hasConsentButtons = true;
     }
 
@@ -82,13 +84,20 @@ class SlidePlayerContainer extends Component {
   }
 
   onNextSlideClicked = () => {
-    setSlideToComplete({ slideRef: this.props.activeSlide.ref });
-    return navigateTo({ slideRef: this.props.activeSlide.children[0] });
+    return navigateToNextSlide();
   }
 
   onSubmitSlideClicked = () => {
     setSlideToComplete({ slideRef: this.props.activeSlide.ref });
     return navigateTo({ slideRef: this.props.activeSlide.children[0] });
+  }
+
+  onConsentAcceptedClicked = () => {
+    setScenarioConsent(true);
+  }
+
+  onConsentDeniedClicked = () => {
+    setScenarioConsent(false);
   }
 
   navigateTo = ({ slideRef }) => {
@@ -121,6 +130,8 @@ class SlidePlayerContainer extends Component {
         onPreviousSlideClicked={this.onPreviousSlideClicked}
         onNextSlideClicked={this.onNextSlideClicked}
         onSubmitSlideClicked={this.onSubmitSlideClicked}
+        onConsentAcceptedClicked={this.onConsentAcceptedClicked}
+        onConsentDeniedClicked={this.onConsentDeniedClicked}
       />
     );
   }

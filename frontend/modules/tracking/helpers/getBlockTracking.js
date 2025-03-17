@@ -5,6 +5,7 @@ export default ({ blockRef }) => {
   const tracking = getCache('tracking');
 
   const currentStage = find(tracking.data.stages, { slideRef: tracking.data.activeSlideRef })
-  return currentStage.blocksByRef[blockRef] || {};
+  const blocksByRef = currentStage.blocksByRef || {};
+  return blocksByRef[blockRef] || {};
 
 }
