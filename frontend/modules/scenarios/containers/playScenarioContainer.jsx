@@ -32,6 +32,12 @@ class PlayScenarioContainer extends Component {
         slideType: 'CONSENT'
       };
     }
+    if (tracking.data.isComplete) {
+      return {
+        _id: 'SUMMARY_SLIDE',
+        slideType: 'SUMMARY'
+      };
+    }
     if (tracking.data.activeSlideRef) {
       activeSlide = find(slides.data, { ref: tracking.data.activeSlideRef });
     }

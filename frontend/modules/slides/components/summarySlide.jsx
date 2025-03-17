@@ -1,0 +1,17 @@
+import React from 'react';
+import getString from '~/modules/ls/helpers/getString';
+import Body from '~/uikit/content/components/body';
+import Title from '~/uikit/content/components/title';
+
+const SummarySlide = ({
+  scenario
+}) => {
+  return (
+    <div>
+      <Title title={"Thanks for participating!"} className="text-xl mb-2" />
+      <Body body={getString({ model: scenario, field: 'summary' })} className="text-sm text-black text-opacity-60 dark:text-white dark:text-opacity-60" />
+    </div>
+  );
+};
+
+export default SummarySlide;
