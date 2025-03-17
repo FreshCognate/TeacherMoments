@@ -17,7 +17,7 @@ const SlidePlayerNavigation = ({
   onSubmitSlideClicked
 }) => {
   return (
-    <div>
+    <div className="pb-4 px-4">
       <div className="flex ">
         <div className="mr-2 w-full">
           {(hasBackButton) && (

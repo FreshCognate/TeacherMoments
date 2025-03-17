@@ -5,7 +5,7 @@ import useOnClickOutside from '~/core/app/hooks/useOnClickOutside';
 
 const Options = ({
   options,
-  icon = 'menu',
+  icon = 'options',
   isOpen,
   onToggle,
   onOptionClicked
