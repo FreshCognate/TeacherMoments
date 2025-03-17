@@ -39,7 +39,7 @@ class SlidePlayerContainer extends Component {
 
     const { isAbleToCompleteSlide, hasRequiredPrompts } = getSlideNavigationDetails();
 
-    if (activeSlide.slideType === 'CONSENT') {
+    if (activeSlide?.slideType === 'CONSENT') {
       hasConsentButtons = true;
     }
 
