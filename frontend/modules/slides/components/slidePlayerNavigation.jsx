@@ -10,6 +10,7 @@ const SlidePlayerNavigation = ({
   hasBackButton,
   hasNextButton,
   hasSubmitButton,
+  hasConsentButtons,
   isNextButtonActive,
   isSubmitButtonActive,
   onPreviousSlideClicked,
@@ -20,11 +21,17 @@ const SlidePlayerNavigation = ({
     <div className="pb-4 px-4">
       <div className="flex ">
         <div className="mr-2 w-full">
+          {(hasConsentButtons) && (
+            <Button text="No, I do not consent" color="warning" isFullWidth />
+          )}
           {(hasBackButton) && (
             <Button text="Previous" isFullWidth onClick={onPreviousSlideClicked} />
           )}
         </div>
         <div className="ml-2 w-full">
+          {(hasConsentButtons) && (
+            <Button text="Yes, I consent" color="primary" isFullWidth />
+          )}
           {(hasSubmitButton) && (
             <Button text="Submit" isDisabled={!isSubmitButtonActive} isFullWidth color="primary" onClick={onSubmitSlideClicked} />
           )}
