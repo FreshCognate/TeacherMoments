@@ -1,6 +1,5 @@
 import React from 'react';
 import getString from '~/modules/ls/helpers/getString';
-import Button from '~/uikit/buttons/components/button';
 import Body from '~/uikit/content/components/body';
 import Title from '~/uikit/content/components/title';
 

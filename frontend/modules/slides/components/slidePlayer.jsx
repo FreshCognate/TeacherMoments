@@ -6,6 +6,7 @@ import Body from '~/uikit/content/components/body';
 import getBlockComponent from '~/modules/blocks/helpers/getBlockComponent';
 import SlidePlayerNavigation from './slidePlayerNavigation';
 import SlidePlayerHeader from './slidePlayerHeader';
+import SummarySlide from './summarySlide';
 import ConsentSlide from './consentSlide';
 
 const SlidePlayer = ({
@@ -15,18 +16,10 @@ const SlidePlayer = ({
   navigateTo,
   tracking,
   isLoading,
-  hasBackButton,
-  hasNextButton,
-  hasSubmitButton,
-  hasConsentButtons,
-  isNextButtonActive,
-  isSubmitButtonActive,
+  primaryAction,
+  secondaryAction,
+  onActionClicked,
   onUpdateTracking,
-  onPreviousSlideClicked,
-  onNextSlideClicked,
-  onSubmitSlideClicked,
-  onConsentAcceptedClicked,
-  onConsentDeniedClicked
 }) => {
   if (!activeSlide || isLoading) return (
     <Loading />
@@ -35,12 +28,14 @@ const SlidePlayer = ({
   return (
     <div className="w-full bg-lm-0 dark:bg-dm-1 border border-lm-2 dark:border-dm-2 rounded ">
       <SlidePlayerHeader
-        hasBackButton={hasBackButton}
-        onPreviousSlideClicked={onPreviousSlideClicked}
+        hasBackButton={true}
       />
       <div className="px-4 pb-4">
         {(activeSlide.slideType === 'CONSENT') && (
           <ConsentSlide scenario={scenario} />
+        )}
+        {(activeSlide.slideType === 'SUMMARY') && (
+          <SummarySlide scenario={scenario} />
         )}
         {map(activeBlocks, (block) => {
           let Block = getBlockComponent({ blockType: block.blockType });
@@ -81,17 +76,9 @@ const SlidePlayer = ({
       <SlidePlayerNavigation
         activeSlide={activeSlide}
         navigateTo={navigateTo}
-        hasBackButton={hasBackButton}
-        hasNextButton={hasNextButton}
-        hasSubmitButton={hasSubmitButton}
-        hasConsentButtons={hasConsentButtons}
-        isNextButtonActive={isNextButtonActive}
-        isSubmitButtonActive={isSubmitButtonActive}
-        onPreviousSlideClicked={onPreviousSlideClicked}
-        onNextSlideClicked={onNextSlideClicked}
-        onSubmitSlideClicked={onSubmitSlideClicked}
-        onConsentAcceptedClicked={onConsentAcceptedClicked}
-        onConsentDeniedClicked={onConsentDeniedClicked}
+        primaryAction={primaryAction}
+        secondaryAction={secondaryAction}
+        onActionClicked={onActionClicked}
       />
     </div >
   );

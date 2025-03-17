@@ -10,6 +10,9 @@ import navigateToNextSlide from '~/modules/tracking/helpers/navigateToNextSlide'
 import getSlideNavigationDetails from '~/modules/tracking/helpers/getSlideNavigationDetails';
 import setSlideToComplete from '~/modules/tracking/helpers/setSlideToComplete';
 import setScenarioConsent from '~/modules/tracking/helpers/setScenarioConsent';
+import getNextSlide from '~/modules/tracking/helpers/getNextSlide';
+import setScenarioToComplete from '~/modules/tracking/helpers/setScenarioToComplete';
+import WithRouter from '~/core/app/components/withRouter';
 
 class SlidePlayerContainer extends Component {
 
@@ -30,49 +33,95 @@ class SlidePlayerContainer extends Component {
   }
 
   getNavigationDetails = () => {
-    let hasBackButton = false;
-    let hasNextButton = false;
-    let hasSubmitButton = false;
-    let hasConsentButtons = false;
-    let isNextButtonActive = false;
-    let isSubmitButtonActive = false;
-    let hasBranching = false;
+
+    let primaryAction;
+    let secondaryAction;
+
     const { activeSlide } = this.props;
 
     const { isAbleToCompleteSlide, hasRequiredPrompts } = getSlideNavigationDetails();
 
     if (activeSlide?.slideType === 'CONSENT') {
-      hasConsentButtons = true;
-    }
+      secondaryAction = {
+        action: 'CONSENT_DENIED',
+        color: 'warning',
+        text: 'No, I do not consent',
+        isActive: true
+      }
+      primaryAction = {
+        action: 'CONSENT_ACCEPTED',
+        color: 'primary',
+        text: 'Yes, I consent',
+        isActive: true
+      }
+    } else {
+      const nextSlide = getNextSlide();
 
-    switch (activeSlide?.navigation) {
-      case 'BIDIRECTIONAL':
-        hasNextButton = true;
-        hasBackButton = true;
-        isNextButtonActive = !hasRequiredPrompts || isAbleToCompleteSlide;
-        break;
-      case 'BACKWARD':
-        hasBackButton = true;
-        break;
-      case 'FORWARD':
-        hasNextButton = true;
-        isNextButtonActive = !hasRequiredPrompts || isAbleToCompleteSlide;
-        break;
-      case 'SUBMIT':
-        hasSubmitButton = true;
-        isSubmitButtonActive = !hasRequiredPrompts || isAbleToCompleteSlide;;
-        break;
+      if (nextSlide) {
+        switch (activeSlide?.navigation) {
+          case 'BIDIRECTIONAL':
+            primaryAction = {
+              action: 'NEXT',
+              color: 'primary',
+              text: 'Next',
+              isActive: hasRequiredPrompts && !isAbleToCompleteSlide
+            }
+            secondaryAction = {
+              action: 'BACK',
+              text: 'Back',
+              isActive: true
+            }
+            break;
+          case 'BACKWARD':
+            secondaryAction = {
+              action: 'BACK',
+              text: 'Back',
+              isActive: true
+            }
+            break;
+          case 'FORWARD':
+            primaryAction = {
+              action: 'NEXT',
+              color: 'primary',
+              text: 'Next',
+              isActive: hasRequiredPrompts && !isAbleToCompleteSlide
+            }
+            break;
+          case 'SUBMIT':
+            primaryAction = {
+              action: 'SUBMIT',
+              color: 'primary',
+              text: 'Submit',
+              isDisabled: hasRequiredPrompts && !isAbleToCompleteSlide
+            }
+            break;
+        }
+      } else {
+        if (this.props.tracking.data.isComplete) {
+          secondaryAction = {
+            action: 'RERUN_SCENARIO',
+            text: 'Rerun this scenario'
+          }
+          primaryAction = {
+            action: 'RETURN_TO_SCENARIOS',
+            color: 'primary',
+            text: 'Return to scenarios'
+          }
+        } else {
+          primaryAction = {
+            action: 'FINISH_SCENARIO',
+            color: 'primary',
+            text: 'Finish',
+          }
+        }
+      }
     }
 
     return {
-      hasBackButton,
-      hasNextButton,
-      hasSubmitButton,
-      hasConsentButtons,
-      isNextButtonActive,
-      isSubmitButtonActive,
-      hasBranching
+      primaryAction,
+      secondaryAction
     }
+
   }
 
   onUpdateTracking = async ({ blockRef, update }) => {
@@ -100,8 +149,36 @@ class SlidePlayerContainer extends Component {
     setScenarioConsent(false);
   }
 
+  onFinishScenarioClicked = () => {
+    setSlideToComplete({ slideRef: this.props.activeSlide.ref });
+    setScenarioToComplete();
+  }
+
   navigateTo = ({ slideRef }) => {
     return navigateTo({ slideRef });
+  }
+
+  onActionClicked = (action) => {
+    switch (action) {
+      case 'CONSENT_DENIED':
+        this.onConsentDeniedClicked();
+        break;
+      case 'CONSENT_ACCEPTED':
+        this.onConsentAcceptedClicked();
+        break;
+      case 'NEXT':
+        this.onNextSlideClicked();
+        break;
+      case 'FINISH_SCENARIO':
+        this.onFinishScenarioClicked();
+        break;
+      case 'SUBMIT':
+        this.onSubmitSlideClicked();
+        break;
+      case 'RETURN_TO_SCENARIOS':
+        this.props.router.navigate(`/scenarios`);
+        break;
+    }
   }
 
   render() {
@@ -110,7 +187,10 @@ class SlidePlayerContainer extends Component {
 
     const slideTracking = getSlideTracking();
 
-    const { hasBackButton, hasNextButton, hasSubmitButton, hasConsentButtons, isNextButtonActive, isSubmitButtonActive } = this.getNavigationDetails();
+    const {
+      primaryAction,
+      secondaryAction,
+    } = this.getNavigationDetails();
 
     return (
       <SlidePlayer
@@ -120,21 +200,13 @@ class SlidePlayerContainer extends Component {
         isLoading={this.state.isLoading}
         navigateTo={this.navigateTo}
         tracking={slideTracking}
-        hasBackButton={hasBackButton}
-        hasNextButton={hasNextButton}
-        hasSubmitButton={hasSubmitButton}
-        hasConsentButtons={hasConsentButtons}
-        isNextButtonActive={isNextButtonActive}
-        isSubmitButtonActive={isSubmitButtonActive}
+        primaryAction={primaryAction}
+        secondaryAction={secondaryAction}
+        onActionClicked={this.onActionClicked}
         onUpdateTracking={this.onUpdateTracking}
-        onPreviousSlideClicked={this.onPreviousSlideClicked}
-        onNextSlideClicked={this.onNextSlideClicked}
-        onSubmitSlideClicked={this.onSubmitSlideClicked}
-        onConsentAcceptedClicked={this.onConsentAcceptedClicked}
-        onConsentDeniedClicked={this.onConsentDeniedClicked}
       />
     );
   }
 };
 
-export default WithCache(SlidePlayerContainer, null, ['tracking']);
+export default WithRouter(WithCache(SlidePlayerContainer, null, ['tracking']));

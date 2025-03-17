@@ -6,39 +6,21 @@ import getCache from '~/core/cache/helpers/getCache';
 import Button from '~/uikit/buttons/components/button';
 
 const SlidePlayerNavigation = ({
-  navigateTo,
-  hasBackButton,
-  hasNextButton,
-  hasSubmitButton,
-  hasConsentButtons,
-  isNextButtonActive,
-  isSubmitButtonActive,
-  onPreviousSlideClicked,
-  onNextSlideClicked,
-  onSubmitSlideClicked,
-  onConsentAcceptedClicked,
-  onConsentDeniedClicked
+  primaryAction,
+  secondaryAction,
+  onActionClicked,
 }) => {
   return (
     <div className="pb-4 px-4">
       <div className="flex ">
         <div className="mr-2 w-full">
-          {(hasConsentButtons) && (
-            <Button text="No, I do not consent" color="warning" isFullWidth onClick={onConsentDeniedClicked} />
-          )}
-          {(hasBackButton) && (
-            <Button text="Previous" isFullWidth onClick={onPreviousSlideClicked} />
+          {(secondaryAction) && (
+            <Button text={secondaryAction.text} isDisabled={secondaryAction.isDisabled} color={secondaryAction.color} isFullWidth onClick={() => onActionClicked(secondaryAction.action)} />
           )}
         </div>
         <div className="ml-2 w-full">
-          {(hasConsentButtons) && (
-            <Button text="Yes, I consent" color="primary" isFullWidth onClick={onConsentAcceptedClicked} />
-          )}
-          {(hasSubmitButton) && (
-            <Button text="Submit" isDisabled={!isSubmitButtonActive} isFullWidth color="primary" onClick={onSubmitSlideClicked} />
-          )}
-          {(hasNextButton) && (
-            <Button text="Next" isDisabled={!isNextButtonActive} isFullWidth color="primary" onClick={onNextSlideClicked} />
+          {(primaryAction) && (
+            <Button text={primaryAction.text} isDisabled={primaryAction.isDisabled} color={primaryAction.color} isFullWidth onClick={() => onActionClicked(primaryAction.action)} />
           )}
         </div>
       </div>
