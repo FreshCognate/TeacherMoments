@@ -49,11 +49,26 @@ class CreateNavigationContainer extends Component {
   }
 
   onDeleteSlideClicked = (slideId) => {
+    const selectedSlideSortOrder = this.getSelectedSlideSortOrder();
     this.setState({ deletingId: slideId });
     axios.delete(`/api/slides/${slideId}`).then(() => {
+
       this.props.slides.fetch().then(() => {
-        this.setState({ deletingId: null });
+
+        this.setState({ deletingId: null }, () => {
+          const scenarioId = this.props.scenario.data._id;
+          const slideWithSameSortOrderAsDeleted = find(this.props.slides.data, { sortOrder: selectedSlideSortOrder });
+
+          if (slideWithSameSortOrderAsDeleted) {
+            this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideWithSameSortOrderAsDeleted._id}`)
+          } else {
+            const slideBeforeDeletedSlide = find(this.props.slides.data, { sortOrder: selectedSlideSortOrder - 1 });
+            this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideBeforeDeletedSlide._id}`)
+          }
+
+        });
       });
+
     }).catch((error) => {
       this.props.slides.fetch();
       this.setState({ deletingId: null });
