@@ -12,6 +12,13 @@ export default async (props, options, context) => {
 
   const scenarioSlides = await models.Slide.find({ scenario: scenario, isDeleted: false });
 
+  for (const scenarioSlide of scenarioSlides) {
+    if (scenarioSlide.sortOrder >= sortOrder) {
+      scenarioSlide.sortOrder = scenarioSlide.sortOrder + 1;
+      await scenarioSlide.save();
+    }
+  }
+
   const newSlideObject = {
     scenario,
     createdBy: user._id,
