@@ -24,7 +24,9 @@ const SlidePlayer = ({
   onUpdateTracking,
   onPreviousSlideClicked,
   onNextSlideClicked,
-  onSubmitSlideClicked
+  onSubmitSlideClicked,
+  onConsentAcceptedClicked,
+  onConsentDeniedClicked
 }) => {
   if (!activeSlide || isLoading) return (
     <Loading />
@@ -88,6 +90,8 @@ const SlidePlayer = ({
         onPreviousSlideClicked={onPreviousSlideClicked}
         onNextSlideClicked={onNextSlideClicked}
         onSubmitSlideClicked={onSubmitSlideClicked}
+        onConsentAcceptedClicked={onConsentAcceptedClicked}
+        onConsentDeniedClicked={onConsentDeniedClicked}
       />
     </div >
   );
