@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import EditBlock from '../components/editBlock';
 import debounce from 'lodash/debounce';
 import WithCache from '~/core/cache/containers/withCache';
-import editBlockSchema from '../schemas/editBlockSchema';
+import WithRouter from '~/core/app/components/withRouter';
 import editTextBlockSchema from '../schemas/editTextBlockSchema';
 import editAnswersPromptBlockSchema from '../schemas/editAnswersPromptBlockSchema';
 import editInputPromptBlockSchema from '../schemas/editInputPromptBlockSchema';
 import editActionsPromptBlockSchema from '../schemas/editActionsPromptBlockSchema';
-import WithRouter from '~/core/app/components/withRouter';
 import editImagesBlockSchema from '../schemas/editImagesBlockSchema';
 import editMediaBlockSchema from '../schemas/editMediaBlockSchema';
 import editSuggestionBlockSchema from '../schemas/editSuggestionBlockSchema';
@@ -35,17 +34,14 @@ class EditBlockContainer extends Component {
 
   isSaving = false;
 
-  getSchema = () => {
+  getSchemas = () => {
     let currentBlockSchema = {};
 
     if (this.props.block && SCHEMA_MAPPINGS[this.props.block.blockType]) {
       currentBlockSchema = SCHEMA_MAPPINGS[this.props.block.blockType];
     }
 
-    return {
-      ...editBlockSchema,
-      ...currentBlockSchema
-    }
+    return currentBlockSchema;
   }
 
   debouncedSave = debounce(({ update }) => {
@@ -110,10 +106,12 @@ class EditBlockContainer extends Component {
 
   render() {
     const { canSortUp, canSortDown } = this.getSortingDetails();
+    const { contentSchema, settingsSchema } = this.getSchemas()
     return (
       <EditBlock
         block={this.props.block}
-        schema={this.getSchema()}
+        contentSchema={contentSchema}
+        settingsSchema={settingsSchema}
         canSortUp={canSortUp}
         canSortDown={canSortDown}
         isOptionsOpen={this.state.isOptionsOpen}

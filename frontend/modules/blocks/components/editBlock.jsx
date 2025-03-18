@@ -7,7 +7,8 @@ import Badge from '~/uikit/badges/components/badge';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 
 const EditBlock = ({
-  schema,
+  contentSchema,
+  settingsSchema,
   block,
   canSortUp,
   canSortDown,
@@ -61,7 +62,13 @@ const EditBlock = ({
       <div className="p-6">
         <FormContainer
           renderKey={`${block._id}-${block.blockType}`}
-          schema={schema}
+          schema={contentSchema}
+          model={block}
+          onUpdate={onEditBlockUpdate}
+        />
+        <FormContainer
+          renderKey={`${block._id}-${block.blockType}`}
+          schema={settingsSchema}
           model={block}
           onUpdate={onEditBlockUpdate}
         />

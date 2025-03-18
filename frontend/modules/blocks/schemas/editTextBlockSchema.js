@@ -13,6 +13,9 @@ const body = buildLanguageSchema('body', {
 });
 
 export default {
-  ...title,
-  ...body
+  contentSchema: {
+    ...title,
+    ...body
+  },
+  settingsSchema: {}
 }

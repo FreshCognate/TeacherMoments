@@ -7,16 +7,20 @@ const body = buildLanguageSchema('body', {
 });
 
 export default {
-  ...body,
-  suggestionType: {
-    type: 'Toggle',
-    label: 'Suggestion type',
-    options: [{
-      value: 'INFO',
-      text: 'Info'
-    }, {
-      value: 'WARNING',
-      text: 'Warning'
-    }]
+  contentSchema: {
+    ...body,
   },
+  settingsSchema: {
+    suggestionType: {
+      type: 'Toggle',
+      label: 'Suggestion type',
+      options: [{
+        value: 'INFO',
+        text: 'Info'
+      }, {
+        value: 'WARNING',
+        text: 'Warning'
+      }]
+    },
+  }
 }

@@ -1,6 +1,9 @@
 export default {
-  responseRef: {
-    type: 'ResponseSelector',
-    label: 'Previous response',
+  contentSchema: {
+    responseRef: {
+      type: 'ResponseSelector',
+      label: 'Previous response',
+    },
   },
+  settingsSchema: {}
 }

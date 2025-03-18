@@ -12,46 +12,50 @@ const asset = buildLanguageSchema('asset', {
 });
 
 export default {
-  imagesShape: {
-    type: 'Toggle',
-    label: 'Image shape',
-    size: 'sm',
-    options: [{
-      value: 'CIRCLE',
-      text: 'Circle'
-    }, {
-      value: 'LANDSCAPE',
-      text: 'Landscape'
-    }, {
-      value: 'PORTRAIT',
-      text: 'Portrait'
-    }, {
-      value: 'SQUARE',
-      text: 'Square'
-    }, {
-      value: 'NONE',
-      text: 'None'
-    }]
-  },
-  imagesBorderRadius: {
-    type: 'Toggle',
-    size: 'sm',
-    label: 'Image corners',
-    options: [{
-      value: 8,
-      text: 'Rounded'
-    }, {
-      value: 0,
-      text: 'Square'
-    }]
-  },
-  items: {
-    type: 'Array',
-    label: 'Images',
-    addButtonText: "Add image",
-    subSchema: {
-      ...asset,
-      ...caption,
+  contentSchema: {
+    items: {
+      type: 'Array',
+      label: 'Images',
+      addButtonText: "Add image",
+      subSchema: {
+        ...asset,
+        ...caption,
+      }
     }
+  },
+  settingsSchema: {
+    imagesShape: {
+      type: 'Toggle',
+      label: 'Image shape',
+      size: 'sm',
+      options: [{
+        value: 'CIRCLE',
+        text: 'Circle'
+      }, {
+        value: 'LANDSCAPE',
+        text: 'Landscape'
+      }, {
+        value: 'PORTRAIT',
+        text: 'Portrait'
+      }, {
+        value: 'SQUARE',
+        text: 'Square'
+      }, {
+        value: 'NONE',
+        text: 'None'
+      }]
+    },
+    imagesBorderRadius: {
+      type: 'Toggle',
+      size: 'sm',
+      label: 'Image corners',
+      options: [{
+        value: 8,
+        text: 'Rounded'
+      }, {
+        value: 0,
+        text: 'Square'
+      }]
+    },
   }
 }
