@@ -49,7 +49,8 @@ export default [{
         slideRef: Joi.string(),
         blocksByRef: Joi.object(),
         isComplete: Joi.boolean(),
-        completedAt: Joi.date(),
+        isConsentAcknowledged: Joi.boolean(),
+        hasGivenConsent: Joi.boolean(),
         feedbackItems: Joi.array()
       }),
     },
