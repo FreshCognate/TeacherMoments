@@ -23,66 +23,70 @@ const feedbackText = buildLanguageSchema('feedback', {
 })
 
 export default {
-  isRequired: {
-    type: 'Toggle',
-    label: 'Required to complete slide',
-    options: [{
-      value: true,
-      icon: 'confirm'
-    }, {
-      value: false,
-      icon: 'cancel'
-    }]
-  },
-  requiredLength: {
-    type: 'Text',
-    label: 'Minimum required length',
-    textType: 'number',
-    size: 'sm',
-    conditions: [{
-      type: 'modelValueIs',
-      field: 'isRequired',
-      values: [true],
-      shouldHideField: true
-    }]
-  },
-  inputType: {
-    type: 'Toggle',
-    label: 'Input type',
-    help: 'Decide which input type the learner is presented with.',
-    size: 'sm',
-    options: [{
-      value: 'AUDIO',
-      text: 'Audio'
-    }, {
-      value: 'TEXT',
-      text: 'Text'
-    }]
-  },
-  inputTypeWarning: {
-    type: 'Alert',
-    alertType: 'info',
-    alertText: 'A text element will display if the users browser does not support audio.',
-    conditions: [{
-      type: 'modelValueIs',
-      field: 'inputType',
-      values: ['AUDIO', 'AUDIO_AND_TEXT'],
-      shouldHideField: true
-    }]
-  },
-  ...body,
-  ...placeholder,
-  options: {
-    type: 'Array',
-    label: 'Feedback',
-    addButtonText: 'Add feedback',
-    subSchema: {
-      ...feedbackText,
-      ...answerText,
-      value: {
-        type: 'Text',
-        label: 'Value'
+  contentSchema: {
+    ...body,
+    ...placeholder,
+    options: {
+      type: 'Array',
+      label: 'Feedback',
+      addButtonText: 'Add feedback',
+      subSchema: {
+        ...feedbackText,
+        ...answerText,
+        value: {
+          type: 'Text',
+          label: 'Value'
+        }
       }
     }
+  },
+  settingsSchema: {
+    isRequired: {
+      type: 'Toggle',
+      label: 'Required to complete slide',
+      options: [{
+        value: true,
+        icon: 'confirm'
+      }, {
+        value: false,
+        icon: 'cancel'
+      }]
+    },
+    requiredLength: {
+      type: 'Text',
+      label: 'Minimum required length',
+      textType: 'number',
+      size: 'sm',
+      conditions: [{
+        type: 'modelValueIs',
+        field: 'isRequired',
+        values: [true],
+        shouldHideField: true
+      }]
+    },
+    inputType: {
+      type: 'Toggle',
+      label: 'Input type',
+      help: 'Decide which input type the learner is presented with.',
+      size: 'sm',
+      options: [{
+        value: 'AUDIO',
+        text: 'Audio'
+      }, {
+        value: 'TEXT',
+        text: 'Text'
+      }]
+    },
+    inputTypeWarning: {
+      type: 'Alert',
+      alertType: 'info',
+      alertText: 'A text element will display if the users browser does not support audio.',
+      conditions: [{
+        type: 'modelValueIs',
+        field: 'inputType',
+        values: ['AUDIO', 'AUDIO_AND_TEXT'],
+        shouldHideField: true
+      }]
+    },
   }
 }

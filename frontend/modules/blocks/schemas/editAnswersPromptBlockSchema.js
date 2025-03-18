@@ -23,41 +23,45 @@ const feedbackText = buildLanguageSchema('feedback', {
 })
 
 export default {
-  isRequired: {
-    type: 'Toggle',
-    label: 'Required to complete slide',
-    options: [{
-      value: true,
-      icon: 'confirm'
-    }, {
-      value: false,
-      icon: 'cancel'
-    }]
-  },
-  ...body,
-  isMultiSelect: {
-    type: 'Toggle',
-    label: 'Mutliple answers can be selected',
-    size: 'sm',
-    options: [{
-      value: false,
-      text: 'No'
-    }, {
-      value: true,
-      text: 'Yes'
-    }]
-  },
-  options: {
-    type: 'Array',
-    label: 'Answers',
-    addButtonText: "Add answer",
-    subSchema: {
-      ...answerText,
-      ...feedbackText,
-      value: {
-        type: 'Text',
-        label: 'Value'
+  contentSchema: {
+    ...body,
+    options: {
+      type: 'Array',
+      label: 'Answers',
+      addButtonText: "Add answer",
+      subSchema: {
+        ...answerText,
+        ...feedbackText,
+        value: {
+          type: 'Text',
+          label: 'Value'
+        }
       }
     }
+  },
+  settingsSchema: {
+    isRequired: {
+      type: 'Toggle',
+      label: 'Required to complete slide',
+      options: [{
+        value: true,
+        icon: 'confirm'
+      }, {
+        value: false,
+        icon: 'cancel'
+      }]
+    },
+    isMultiSelect: {
+      type: 'Toggle',
+      label: 'Mutliple answers can be selected',
+      size: 'sm',
+      options: [{
+        value: false,
+        text: 'No'
+      }, {
+        value: true,
+        text: 'Yes'
+      }]
+    },
   }
 }

@@ -14,46 +14,50 @@ const mediaAsset = buildLanguageSchema('mediaAsset', {
 });
 
 export default {
-  mediaCompleteOn: {
-    type: 'Toggle',
-    label: 'Media is complete when',
-    size: 'sm',
-    options: [{
-      value: 'START',
-      text: 'Started'
-    }, {
-      value: 'END',
-      text: 'Finished'
-    }]
+  contentSchema: {
+    mediaSrc: {
+      type: 'Text',
+      label: 'YouTube link',
+      conditions: [{
+        type: 'modelValueIs',
+        values: ['YOUTUBE'],
+        field: 'mediaType',
+        shouldHideField: true
+      }]
+    },
+    ...mediaAsset
   },
-  mediaType: {
-    type: 'Toggle',
-    label: 'Media type',
-    size: 'sm',
-    options: [{
-      value: 'ASSET',
-      text: 'Upload'
-    }, {
-      value: 'YOUTUBE',
-      text: 'YouTube'
-    }],
-    onUpdate: ({ value, update }) => {
-      if (value === 'ASSET') {
-        update.mediaSrc = "";
-      } else if (value === 'YOUTUBE') {
-        setContent({ model: update, field: 'mediaAsset', content: null });
+  settingsSchema: {
+    mediaCompleteOn: {
+      type: 'Toggle',
+      label: 'Media is complete when',
+      size: 'sm',
+      options: [{
+        value: 'START',
+        text: 'Started'
+      }, {
+        value: 'END',
+        text: 'Finished'
+      }]
+    },
+    mediaType: {
+      type: 'Toggle',
+      label: 'Media type',
+      size: 'sm',
+      options: [{
+        value: 'ASSET',
+        text: 'Upload'
+      }, {
+        value: 'YOUTUBE',
+        text: 'YouTube'
+      }],
+      onUpdate: ({ value, update }) => {
+        if (value === 'ASSET') {
+          update.mediaSrc = "";
+        } else if (value === 'YOUTUBE') {
+          setContent({ model: update, field: 'mediaAsset', content: null });
+        }
       }
-    }
-  },
-  mediaSrc: {
-    type: 'Text',
-    label: 'YouTube link',
-    conditions: [{
-      type: 'modelValueIs',
-      values: ['YOUTUBE'],
-      field: 'mediaType',
-      shouldHideField: true
-    }]
-  },
-  ...mediaAsset
+    },
+  }
 }

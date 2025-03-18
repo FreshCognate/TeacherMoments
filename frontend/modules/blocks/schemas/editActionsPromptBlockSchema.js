@@ -7,23 +7,28 @@ const text = buildLanguageSchema('text', {
 })
 
 export default {
-  actions: {
-    type: 'Array',
-    label: 'Actions',
-    addButtonText: "Add another action",
-    subSchema: {
-      ...text,
-      actionType: {
-        type: 'Select',
-        label: 'On click',
-        options: [{
-          value: 'COMPLETE_SLIDE',
-          text: 'complete slide'
-        }, {
-          value: 'RESET_SCENARIO',
-          text: 'Reset scenario'
-        }]
+  contentSchema: {
+    actions: {
+      type: 'Array',
+      label: 'Actions',
+      addButtonText: "Add another action",
+      subSchema: {
+        ...text,
+        actionType: {
+          type: 'Select',
+          label: 'On click',
+          options: [{
+            value: 'COMPLETE_SLIDE',
+            text: 'complete slide'
+          }, {
+            value: 'RESET_SCENARIO',
+            text: 'Reset scenario'
+          }]
+        }
       }
     }
+  },
+  settingsSchema: {
+
   }
 }
