@@ -1,5 +1,5 @@
 import React from 'react';
-import Timer from '~/uikit/loaders/components/timer';
+import Countdown from '~/uikit/timers/components/countdown';
 
 const ScenarioRequestAccessTimer = ({
   value,
@@ -7,7 +7,7 @@ const ScenarioRequestAccessTimer = ({
 }) => {
   return (
     <div className="px-4 pb-4">
-      <Timer value={value} onFinish={onFinish} />
+      <Countdown value={value} onFinish={onFinish} />
     </div>
   );
 };

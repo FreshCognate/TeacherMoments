@@ -15,7 +15,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import WithCache from '~/core/cache/containers/withCache';
 import getIsCurrentUser from '~/modules/authentication/helpers/getIsCurrentUser';
-import Timer from '~/uikit/loaders/components/timer';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import ScenarioRequestAccessTimer from '../components/scenarioRequestAccessTimer';
 import addToast from '~/core/dialogs/helpers/addToast';

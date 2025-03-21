@@ -1,6 +1,5 @@
 import React from 'react';
 import getString from '~/modules/ls/helpers/getString';
-import Button from '~/uikit/buttons/components/button';
 import Body from '~/uikit/content/components/body';
 import InputPromptTextBlockPlayer from './inputPromptTextBlockPlayer';
 import InputPromptAudioBlockPlayer from './inputPromptAudioBlockPlayer';
@@ -9,11 +8,11 @@ import Required from '~/uikit/alerts/components/required';
 const InputPromptBlockPlayer = ({
   block,
   tracking,
-  hasAudioLoaded,
   isAudioDisabled,
   isResponseBlock,
+  isUploadingAudio,
+  uploadProgress,
   onTextInputChanged,
-  onAudioLoaded,
   onAudioRecorded,
   onPermissionDenied
 }) => {
@@ -31,8 +30,8 @@ const InputPromptBlockPlayer = ({
           block={block}
           tracking={tracking}
           isResponseBlock={isResponseBlock}
-          hasAudioLoaded={hasAudioLoaded}
-          onAudioLoaded={onAudioLoaded}
+          isUploadingAudio={isUploadingAudio}
+          uploadProgress={uploadProgress}
           onAudioRecorded={onAudioRecorded}
           onPermissionDenied={onPermissionDenied}
         />

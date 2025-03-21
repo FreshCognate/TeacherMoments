@@ -2,11 +2,16 @@ import React, { Component } from 'react';
 import InputPromptBlockPlayer from '../components/inputPromptBlockPlayer';
 import setUserPreferences from '~/modules/tracking/helpers/setUserPreferences';
 import getUserPreferences from '~/modules/tracking/helpers/getUserPreferences';
+import axios from 'axios';
+import uploadAsset from '~/modules/assets/helpers/uploadAsset';
+import handleRequestError from '~/core/app/helpers/handleRequestError';
 
 class InputPromptBlockPlayerContainer extends Component {
 
   state = {
-    hasAudioLoaded: false
+    isUploadingAudio: false,
+    uploadProgress: 0,
+    uploadAssetId: null
   }
 
   componentDidMount = async () => {
@@ -26,12 +31,28 @@ class InputPromptBlockPlayerContainer extends Component {
     this.props.onUpdateTracking({ textValue: event.target.value, isAbleToComplete });
   }
 
-  onAudioLoaded = () => {
-    this.setState({ hasAudioLoaded: true });
-  }
+  onAudioRecorded = (mediaBlobUrl) => {
+    this.setState({ isUploadingAudio: true });
 
-  onAudioRecorded = () => {
-    this.props.onUpdateTracking({ isComplete: true, isAbleToComplete: true });
+    const file = new File([mediaBlobUrl], "audio-recording", { type: 'audio/mpeg' });
+
+    uploadAsset({ file }, async (state, payload) => {
+      if (state === 'INIT') {
+        const { asset } = payload;
+        this.setState({ uploadAssetId: asset._id })
+      }
+      if (state === 'PROGRESS') {
+        this.setState({ uploadProgress: payload.progress });
+      }
+      if (state === 'FINISH') {
+        const { data } = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
+        this.props.onUpdateTracking({ audio: data.asset, isComplete: true, isAbleToComplete: true });
+        this.setState({ isUploadingAudio: false });
+      }
+      if (state === 'ERROR') {
+        handleRequestError(error);
+      }
+    });
   }
 
   onPermissionDenied = () => {
@@ -40,16 +61,17 @@ class InputPromptBlockPlayerContainer extends Component {
 
   render() {
     const { block, tracking, isResponseBlock } = this.props;
+    const { isUploadingAudio, uploadProgress } = this.state;
     const { isAudioDisabled } = getUserPreferences();
     return (
       <InputPromptBlockPlayer
         block={block}
         tracking={tracking}
-        hasAudioLoaded={this.state.hasAudioLoaded}
         isAudioDisabled={isAudioDisabled}
         isResponseBlock={isResponseBlock}
+        isUploadingAudio={isUploadingAudio}
+        uploadProgress={uploadProgress}
         onTextInputChanged={this.onTextInputChanged}
-        onAudioLoaded={this.onAudioLoaded}
         onAudioRecorded={this.onAudioRecorded}
         onPermissionDenied={this.onPermissionDenied}
       />
