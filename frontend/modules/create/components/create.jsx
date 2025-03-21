@@ -1,7 +1,7 @@
 import React from 'react';
 import CreateNavigationContainer from '../containers/createNavigationContainer';
 import CreateWorkspaceContainer from '../containers/createWorkspaceContainer';
-import CreateSettingsContainer from '../containers/createSettingsContainer';
+
 import {
   DndContext,
   PointerSensor,
@@ -42,7 +42,6 @@ const Create = ({
       >
         <CreateNavigationContainer />
         <CreateWorkspaceContainer />
-        <CreateSettingsContainer />
       </div>
     </DndContext>
   );
