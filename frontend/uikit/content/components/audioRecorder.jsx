@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import classnames from 'classnames';
+import Timer from '~/uikit/timers/components/timer';
 
 const AudioRecorder = ({
   status,
@@ -8,20 +9,31 @@ const AudioRecorder = ({
   startRecording,
   stopRecording,
   clearBlobUrl,
-  mediaBlobUrl,
-  hasAudioLoaded,
-  onAudioLoaded,
+  audioSrc,
+  isUploadingAudio,
+  uploadProgress,
   onPermissionDenied
 }) => {
+
   let recordButtonIcon = status === 'recording' ? 'recording' : 'record';
   const recordButtonClassName = classnames("rounded-full p-2 bg-lm-3 dark:bg-dm-3", {
     "animate-pulse": status === 'recording'
   });
+
   let statusText = "Press microphone to start recording...";
   let hasRemoveAudioButton = false;
-  if (mediaBlobUrl) {
+
+  if (audioSrc) {
     statusText = "Audio has been saved!";
     hasRemoveAudioButton = true;
+  }
+
+  if (status === 'recording') {
+    statusText = "To stop recording, press microphone.";
+  }
+
+  if (isUploadingAudio) {
+    statusText = "Uploading audio";
   }
 
   useEffect(() => {
@@ -47,6 +59,16 @@ const AudioRecorder = ({
               }
             }}
           />
+          {(isUploadingAudio) && (
+            <div className="ml-2 text-sm text-black/60 dark:text-white/60">
+              {`${uploadProgress}%`}
+            </div>
+          )}
+          {(status === 'recording') && (
+            <div className="ml-2 text-sm text-black/60 dark:text-white/60">
+              <Timer />
+            </div>
+          )}
           <div className="ml-2 text-sm text-black/60 dark:text-white/60">
             {statusText}
           </div>
@@ -57,10 +79,9 @@ const AudioRecorder = ({
           )}
         </div>
       </div>
-      {(mediaBlobUrl) && (
+      {(audioSrc) && (
         <div className="mt-2 w-full">
-          <audio className="w-full" controls controlsList="nodownload" onCanPlayThrough={onAudioLoaded}>
-            <source src={mediaBlobUrl} />
+          <audio className="w-full" key={audioSrc} src={audioSrc} controls controlsList="nodownload">
           </audio>
         </div>
       )}
