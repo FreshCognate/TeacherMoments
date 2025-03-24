@@ -6,6 +6,7 @@ export default () => [
   'image/svg+xml',
   'image/webp',
   'audio/mpeg',
+  'audio/wav',
   'video/mpeg',
   'video/mp4'
 ];
