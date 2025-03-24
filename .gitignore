@@ -4,6 +4,7 @@
 !/public/static/
 
 /tmp
+/workers/tmp
 
 # dependencies
 /node_modules

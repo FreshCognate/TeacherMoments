@@ -37,7 +37,7 @@ class InputPromptBlockPlayerContainer extends Component {
     const response = await fetch(mediaBlobUrl);
     const blob = await response.blob();
 
-    const file = new File([blob], "audio-recording.wav", { type: blob.type });
+    const file = new File([blob], "recording.wav", { type: blob.type });
 
     uploadAsset({ file }, async (state, payload) => {
       if (state === 'INIT') {

@@ -15,8 +15,11 @@ export default async (props, options, context) => {
 
   const sanitizedFileName = sanitizeFileName(name);
 
+  const sanitizedFileNameSplit = sanitizedFileName.split('.');
+  const assetFileName = sanitizedFileNameSplit.slice(0, sanitizedFileNameSplit.length - 1).join(".");
+
   const newAssetObject = {
-    name: sanitizedFileName,
+    name: assetFileName,
     fileType,
     extension,
     createdBy: user._id,
