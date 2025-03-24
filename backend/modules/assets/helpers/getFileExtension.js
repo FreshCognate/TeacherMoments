@@ -8,6 +8,7 @@ const FILE_TYPES = {
   'audio/mpeg': 'mp3',
   'audio/m4a': 'm4a',
   'audio/ogg': 'ogg',
+  'audio/wav': 'wav',
   'video/mpeg': 'mp4',
   'video/mp4': 'mp4'
 };

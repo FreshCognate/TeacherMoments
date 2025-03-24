@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const Timer = ({
+const Countdown = ({
   value,
   onFinish
 }) => {
@@ -30,4 +30,4 @@ const Timer = ({
   );
 };
 
-export default Timer;
+export default Countdown;

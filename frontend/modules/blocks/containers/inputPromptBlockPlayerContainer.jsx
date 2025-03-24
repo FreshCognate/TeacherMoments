@@ -31,10 +31,13 @@ class InputPromptBlockPlayerContainer extends Component {
     this.props.onUpdateTracking({ textValue: event.target.value, isAbleToComplete });
   }
 
-  onAudioRecorded = (mediaBlobUrl) => {
+  onAudioRecorded = async (mediaBlobUrl) => {
     this.setState({ isUploadingAudio: true });
 
-    const file = new File([mediaBlobUrl], "audio-recording", { type: 'audio/mpeg' });
+    const response = await fetch(mediaBlobUrl);
+    const blob = await response.blob();
+
+    const file = new File([blob], "audio-recording.wav", { type: blob.type });
 
     uploadAsset({ file }, async (state, payload) => {
       if (state === 'INIT') {

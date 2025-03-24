@@ -81,7 +81,7 @@ const AudioRecorder = ({
       </div>
       {(audioSrc) && (
         <div className="mt-2 w-full">
-          <audio className="w-full" key={audioSrc} src={audioSrc} controls controlsList="nodownload">
+          <audio className="w-full" key={audioSrc} src={audioSrc} preload='true' controls controlsList="nodownload">
           </audio>
         </div>
       )}

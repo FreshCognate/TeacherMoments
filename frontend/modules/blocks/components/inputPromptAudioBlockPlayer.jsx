@@ -20,7 +20,7 @@ const InputPromptAudioBlockPlayer = ({
 }) => {
   let audioSrc;
   if (tracking.audio) {
-    audioSrc = getAssetUrl(tracking.audio);
+    audioSrc = getAssetUrl(tracking.audio, "original");
   }
   return (
     <div>
@@ -29,10 +29,10 @@ const InputPromptAudioBlockPlayer = ({
         render={({ error, status, startRecording, stopRecording, mediaBlobUrl, clearBlobUrl }) => {
 
           useEffect(() => {
-            if (mediaBlobUrl) {
+            if (mediaBlobUrl && status === 'stopped') {
               onAudioRecorded(mediaBlobUrl);
             }
-          }, [mediaBlobUrl]);
+          }, [mediaBlobUrl, status]);
 
           return (
             <AudioRecorder
