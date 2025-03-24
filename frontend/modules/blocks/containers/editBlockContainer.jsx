@@ -49,7 +49,7 @@ class EditBlockContainer extends Component {
     axios.put(`/api/blocks/${this.props.block._id}`, update).then(() => {
       const { blocks } = this.props;
       blocks.fetch();
-    }).error(handleRequestError);
+    }).catch(handleRequestError);
   }, 2000);
 
   getSortingDetails = () => {

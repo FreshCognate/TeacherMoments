@@ -18,6 +18,6 @@ export default ({ fileType, _id, name, extension }, size = 'preview') => {
     }
   }
 
-  return `${urlRoot}/assets/${fileType}s/${_id}/${size}/${name}`;
+  return `${urlRoot}/assets/${fileType}s/${_id}/${size}/${name}.${extension}`;
 
 };
