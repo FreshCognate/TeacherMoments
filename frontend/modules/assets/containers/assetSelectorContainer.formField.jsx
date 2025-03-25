@@ -34,15 +34,15 @@ class AssetSelectorFormFieldContainer extends Component {
     }, () => {
       each(files, (file, index) => {
         uploadAsset({ file }, (state, payload) => {
-          if (state === 'INIT') {
+          if (state === 'ASSET_UPLOADING') {
             const { asset } = payload;
             this.props.updateField(asset._id);
           }
-          if (state === 'PROGRESS') {
+          if (state === 'ASSET_UPLOADING_PROGRESS') {
             this.state.acceptedFile.progress = payload.progress;
             this.setState({ acceptedFile: this.state.acceptedFile });
           }
-          if (state === 'FINISH') {
+          if (state === 'ASSET_UPLOADED') {
             const block = getCache('block');
             block.fetch().then(() => {
               setTimeout(() => {
