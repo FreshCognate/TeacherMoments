@@ -40,20 +40,20 @@ class InputPromptBlockPlayerContainer extends Component {
     const file = new File([blob], "recording.wav", { type: blob.type });
 
     uploadAsset({ file }, async (state, payload) => {
-      if (state === 'INIT') {
+      if (state === 'ASSET_UPLOADING') {
         const { asset } = payload;
         this.setState({ uploadAssetId: asset._id })
       }
-      if (state === 'PROGRESS') {
+      if (state === 'ASSET_UPLOADING_PROGRESS') {
         this.setState({ uploadProgress: payload.progress });
       }
-      if (state === 'FINISH') {
+      if (state === 'ASSET_UPLOADED') {
         const { data } = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
         this.props.onUpdateTracking({ audio: data.asset, isComplete: true, isAbleToComplete: true });
         this.setState({ isUploadingAudio: false });
       }
-      if (state === 'ERROR') {
-        handleRequestError(error);
+      if (state === 'ASSET_ERRORED') {
+        handleRequestError(payload);
       }
     });
   }

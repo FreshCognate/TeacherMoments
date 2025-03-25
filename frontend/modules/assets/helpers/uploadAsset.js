@@ -1,5 +1,6 @@
 import axios from 'axios';
 import getFileDimensions from './getFileDimensions';
+import getSockets from '~/core/sockets/helpers/getSockets';
 
 export default async ({ file }, callback = () => { }) => {
   try {
@@ -10,7 +11,7 @@ export default async ({ file }, callback = () => { }) => {
 
     const { signedUrl, asset } = assetResponse.data;
 
-    callback('INIT', { asset });
+    callback('ASSET_UPLOADING', { asset });
 
     await axios.put(signedUrl, file, {
       headers: {
@@ -18,15 +19,21 @@ export default async ({ file }, callback = () => { }) => {
         "Content-Type": file.type
       },
       onUploadProgress: (event) => {
-        callback('PROGRESS', { progress: Math.round(event.progress * 100) });
+        callback('ASSET_UPLOADING_PROGRESS', { progress: Math.round(event.progress * 100) });
       }
     });
 
-    await axios.put(`/api/assets/${asset._id}`, { isUploading: false });
+    const uploadedResponse = await axios.put(`/api/assets/${asset._id}`, { isUploading: false });
 
-    callback('FINISH');
+    const sockets = await getSockets();
+
+    sockets.on(`workers:assets:${uploadedResponse.data.jobId}`, (payload) => {
+      callback(payload.event, payload.message)
+    })
+
+    callback('ASSET_UPLOADED');
   } catch (error) {
-    callback('ERROR', error);
+    callback('ASSET_ERRORED', error);
   }
 
 }
