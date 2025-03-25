@@ -46,7 +46,7 @@ export default async (props, options, context) => {
     });
   }
 
-  createJob({
+  const job = await createJob({
     queue: 'assets',
     name: 'PROCESS_ASSET',
     job: {
@@ -55,6 +55,6 @@ export default async (props, options, context) => {
     children: childrenJobs
   });
 
-  return asset;
+  return { asset, jobId: job.id };
 
 };
