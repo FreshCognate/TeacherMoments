@@ -6,7 +6,7 @@ import QUEUES from '../queues.js';
 
 
 
-export default ({ queue, name, repeat, job, children }) => {
+export default async ({ queue, name, repeat, job, children }) => {
 
   if (children) {
     const urlRedis = new Redis(process.env.REDIS_URL, {
@@ -25,8 +25,8 @@ export default ({ queue, name, repeat, job, children }) => {
         }
       })
     };
-    flowProducer.add(flow);
-    return;
+    const flowTree = await flowProducer.add(flow);
+    return flowTree.job;
   }
 
   const queueItem = getQueue(queue);

@@ -37,8 +37,8 @@ export default {
   update: async function ({ param, body }, context) {
 
     if (has(body, 'isUploading')) {
-      const asset = await setAssetToUploaded({ assetId: param }, {}, context);
-      return { asset };
+      const { asset, jobId } = await setAssetToUploaded({ assetId: param }, {}, context);
+      return { asset, jobId };
     }
 
     if (has(body, 'isDeleted')) {
