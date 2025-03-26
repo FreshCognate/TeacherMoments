@@ -11,7 +11,8 @@ class InputPromptBlockPlayerContainer extends Component {
   state = {
     isUploadingAudio: false,
     uploadProgress: 0,
-    uploadAssetId: null
+    uploadAssetId: null,
+    uploadStatus: ''
   }
 
   componentDidMount = async () => {
@@ -51,10 +52,16 @@ class InputPromptBlockPlayerContainer extends Component {
         case 'ASSET_UPLOADED':
           this.setState({ uploadProgress: 100 });
           break;
+        case 'AUDIO_PROCESSING':
+          this.setState({ uploadStatus: 'Converting audio' });
         case 'AUDIO_PROCESSED':
           const { data } = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
           this.props.onUpdateTracking({ audio: data.asset, isComplete: true, isAbleToComplete: true });
           this.setState({ isUploadingAudio: false });
+        case 'TRANSCRIPT_PROCESSING':
+          this.setState({ uploadStatus: 'Creating transcript' });
+        case 'TRANSCRIPT_PROCESSED':
+          this.setState({ uploadStatus: 'Created transcript' });
         case 'ASSET_ERRORED':
           handleRequestError(payload);
           break;
@@ -68,7 +75,7 @@ class InputPromptBlockPlayerContainer extends Component {
 
   render() {
     const { block, tracking, isResponseBlock } = this.props;
-    const { isUploadingAudio, uploadProgress } = this.state;
+    const { isUploadingAudio, uploadProgress, uploadStatus } = this.state;
     const { isAudioDisabled } = getUserPreferences();
     return (
       <InputPromptBlockPlayer
@@ -78,6 +85,7 @@ class InputPromptBlockPlayerContainer extends Component {
         isResponseBlock={isResponseBlock}
         isUploadingAudio={isUploadingAudio}
         uploadProgress={uploadProgress}
+        uploadStatus={uploadStatus}
         onTextInputChanged={this.onTextInputChanged}
         onAudioRecorded={this.onAudioRecorded}
         onPermissionDenied={this.onPermissionDenied}

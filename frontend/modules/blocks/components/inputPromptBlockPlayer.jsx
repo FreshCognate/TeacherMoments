@@ -12,6 +12,7 @@ const InputPromptBlockPlayer = ({
   isResponseBlock,
   isUploadingAudio,
   uploadProgress,
+  uploadStatus,
   onTextInputChanged,
   onAudioRecorded,
   onPermissionDenied
@@ -32,6 +33,7 @@ const InputPromptBlockPlayer = ({
           isResponseBlock={isResponseBlock}
           isUploadingAudio={isUploadingAudio}
           uploadProgress={uploadProgress}
+          uploadStatus={uploadStatus}
           onAudioRecorded={onAudioRecorded}
           onPermissionDenied={onPermissionDenied}
         />
