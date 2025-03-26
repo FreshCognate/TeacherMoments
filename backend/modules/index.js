@@ -8,3 +8,4 @@ import './assets/index.js';
 import './publishes/index.js';
 import './trackings/index.js';
 import './play/index.js';
+import './transcripts/index.js';
