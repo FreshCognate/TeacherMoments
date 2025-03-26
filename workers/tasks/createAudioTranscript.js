@@ -9,9 +9,10 @@ export default async ({ assetId }) => {
 
   const transcript = await getAudioTranscription({ asset });
 
-  asset.set('transcript', transcript.text);
+  const transcriptVerbose = await createTranscript({ ...transcript, assetId: asset._id, createdBy: asset.createdBy }, {}, { models });
 
-  await createTranscript({ ...transcript, assetId: asset._id, createdBy: asset.createdBy }, {}, { models })
+  asset.set('transcript', transcript.text);
+  asset.set('transcriptVerbose', transcriptVerbose._id);
 
   await asset.save();
 

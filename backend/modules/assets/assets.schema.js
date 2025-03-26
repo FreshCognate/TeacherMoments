@@ -16,6 +16,7 @@ const schema = {
   width: { type: Number },
   height: { type: Number },
   transcript: { type: String },
+  transcriptVerbose: { type: mongoose.Schema.Types.ObjectId, ref: 'Transcript' },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
   isUploading: { type: Boolean, default: false },
   isProcessing: { type: Boolean, default: false },
