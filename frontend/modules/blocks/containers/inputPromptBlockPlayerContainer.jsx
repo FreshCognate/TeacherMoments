@@ -40,20 +40,24 @@ class InputPromptBlockPlayerContainer extends Component {
     const file = new File([blob], "recording.wav", { type: blob.type });
 
     uploadAsset({ file }, async (state, payload) => {
-      if (state === 'ASSET_UPLOADING') {
-        const { asset } = payload;
-        this.setState({ uploadAssetId: asset._id })
-      }
-      if (state === 'ASSET_UPLOADING_PROGRESS') {
-        this.setState({ uploadProgress: payload.progress });
-      }
-      if (state === 'ASSET_UPLOADED') {
-        const { data } = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
-        this.props.onUpdateTracking({ audio: data.asset, isComplete: true, isAbleToComplete: true });
-        this.setState({ isUploadingAudio: false });
-      }
-      if (state === 'ASSET_ERRORED') {
-        handleRequestError(payload);
+      switch (state) {
+        case 'ASSET_UPLOADING':
+          const { asset } = payload;
+          this.setState({ uploadAssetId: asset._id })
+          break;
+        case 'ASSET_UPLOADING_PROGRESS':
+          this.setState({ uploadProgress: payload.progress });
+          break;
+        case 'ASSET_UPLOADED':
+          this.setState({ uploadProgress: 100 });
+          break;
+        case 'AUDIO_PROCESSED':
+          const { data } = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
+          this.props.onUpdateTracking({ audio: data.asset, isComplete: true, isAbleToComplete: true });
+          this.setState({ isUploadingAudio: false });
+        case 'ASSET_ERRORED':
+          handleRequestError(payload);
+          break;
       }
     });
   }
