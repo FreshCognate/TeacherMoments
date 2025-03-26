@@ -12,6 +12,7 @@ const AudioRecorder = ({
   audioSrc,
   isUploadingAudio,
   uploadProgress,
+  uploadStatus,
   onPermissionDenied
 }) => {
 
@@ -34,6 +35,10 @@ const AudioRecorder = ({
 
   if (isUploadingAudio) {
     statusText = "Uploading audio";
+  }
+
+  if (uploadStatus) {
+    statusText = uploadStatus;
   }
 
   useEffect(() => {

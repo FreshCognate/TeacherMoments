@@ -15,6 +15,7 @@ const InputPromptAudioBlockPlayer = ({
   tracking,
   isUploadingAudio,
   uploadProgress,
+  uploadStatus,
   onAudioRecorded,
   onPermissionDenied
 }) => {
@@ -44,6 +45,7 @@ const InputPromptAudioBlockPlayer = ({
               audioSrc={audioSrc}
               isUploadingAudio={isUploadingAudio}
               uploadProgress={uploadProgress}
+              uploadStatus={uploadStatus}
               onPermissionDenied={onPermissionDenied}
             />
 
