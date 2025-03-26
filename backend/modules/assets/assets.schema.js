@@ -15,6 +15,7 @@ const schema = {
   orientation: { type: String, enum: ['landscape', 'portrait'] },
   width: { type: Number },
   height: { type: Number },
+  transcript: { type: String },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
   isUploading: { type: Boolean, default: false },
   isProcessing: { type: Boolean, default: false },
