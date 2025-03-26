@@ -1,4 +1,5 @@
 import convertAudioToMP3 from '../tasks/convertAudioToMP3.js';
+import createAudioTranscript from '../tasks/createAudioTranscript.js';
 import createAssetSizes from "../tasks/createAssetSizes.js";
 import updateAssetToProcessed from '../tasks/updateAssetToProcessed.js';
 import getSockets from '../getSockets.js';
@@ -9,42 +10,73 @@ export default async (job) => {
 
     let sockets;
 
-    if (job.name === 'PROCESS_ASSET_TO_MP3') {
+    switch (job.name) {
+      case 'PROCESS_ASSET_TO_MP3':
 
-      sockets = await getSockets();
-      sockets.emit(`workers:assets:${job.parent.id}`, {
-        event: 'AUDIO_PROCESSING'
-      });
+        sockets = await getSockets();
 
-      await convertAudioToMP3({ assetId: job.data.assetId });
+        sockets.emit(`workers:assets:${job.parent.id}`, {
+          event: 'AUDIO_PROCESSING'
+        });
 
-      sockets = await getSockets();
-      sockets.emit(`workers:assets:${job.parent.id}`, {
-        event: 'AUDIO_PROCESSED'
-      });
+        await convertAudioToMP3({ assetId: job.data.assetId });
 
-    }
-    if (job.name === 'PROCESS_ASSET_SIZES') {
+        sockets = await getSockets();
 
-      sockets = await getSockets();
-      sockets.emit(`workers:assets:${job.parent.id}`, {
-        event: 'IMAGES_PROCESSING'
-      });
+        sockets.emit(`workers:assets:${job.parent.id}`, {
+          event: 'AUDIO_PROCESSED'
+        });
 
-      await createAssetSizes({ assetId: job.data.assetId });
+        break;
 
-      sockets = await getSockets();
-      sockets.emit(`workers:assets:${job.parent.id}`, {
-        event: 'IMAGES_PROCESSED'
-      });
+      case 'PROCESS_ASSET_TRANSCRIPT':
 
-    }
-    if (job.name === 'PROCESS_ASSET') {
-      await updateAssetToProcessed({ assetId: job.data.assetId });
-      sockets = await getSockets();
-      sockets.emit(`workers:assets:${job.id}`, {
-        event: 'ASSET_PROCESSED'
-      });
+        sockets = await getSockets();
+
+        sockets.emit(`workers:assets:${job.parent.id}`, {
+          event: 'TRANSCRIPT_PROCESSING'
+        });
+
+        await createAudioTranscript({ assetId: job.data.assetId });
+
+        sockets = await getSockets();
+
+        sockets.emit(`workers:assets:${job.parent.id}`, {
+          event: 'TRANSCRIPT_PROCESSED'
+        });
+
+        break;
+
+      case 'PROCESS_ASSET_SIZES':
+
+        sockets = await getSockets();
+
+        sockets.emit(`workers:assets:${job.parent.id}`, {
+          event: 'IMAGES_PROCESSING'
+        });
+
+        await createAssetSizes({ assetId: job.data.assetId });
+
+        sockets = await getSockets();
+
+        sockets.emit(`workers:assets:${job.parent.id}`, {
+          event: 'IMAGES_PROCESSED'
+        });
+
+        break;
+
+      case 'PROCESS_ASSET':
+
+        await updateAssetToProcessed({ assetId: job.data.assetId });
+
+        sockets = await getSockets();
+
+        sockets.emit(`workers:assets:${job.id}`, {
+          event: 'ASSET_PROCESSED'
+        });
+
+        break;
+
     }
   } catch (error) {
     console.log(error);
