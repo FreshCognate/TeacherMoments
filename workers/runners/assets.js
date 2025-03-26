@@ -1,9 +1,10 @@
+import '../../backend/modules/assets/index.js';
+import '../../backend/modules/transcripts/index.js';
 import convertAudioToMP3 from '../tasks/convertAudioToMP3.js';
 import createAudioTranscript from '../tasks/createAudioTranscript.js';
 import createAssetSizes from "../tasks/createAssetSizes.js";
 import updateAssetToProcessed from '../tasks/updateAssetToProcessed.js';
 import getSockets from '../getSockets.js';
-import '../../backend/modules/assets/index.js';
 
 export default async (job) => {
   try {
