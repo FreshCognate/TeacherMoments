@@ -21,7 +21,8 @@ export default {
       width: Joi.number(),
       height: Joi.number(),
       orientation: Joi.string().valid('portrait', 'landscape'),
-      mimetype: Joi.string().required().valid(...getMimeTypes())
+      mimetype: Joi.string().required().valid(...getMimeTypes()),
+      isTemporary: Joi.boolean()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
