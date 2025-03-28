@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import classnames from 'classnames';
 import Timer from '~/uikit/timers/components/timer';
+import addModal from '~/core/dialogs/helpers/addModal';
 
 const AudioRecorder = ({
   status,
@@ -13,7 +14,8 @@ const AudioRecorder = ({
   isUploadingAudio,
   uploadProgress,
   uploadStatus,
-  onPermissionDenied
+  onPermissionDenied,
+  onRemoveAudioClicked
 }) => {
 
   let recordButtonIcon = status === 'recording' ? 'recording' : 'record';
@@ -80,7 +82,25 @@ const AudioRecorder = ({
         </div>
         <div>
           {(hasRemoveAudioButton) && (
-            <FlatButton icon="delete" onClick={clearBlobUrl} />
+            <FlatButton icon="delete" onClick={() => {
+              addModal({
+                title: 'Are you sure you want to remove this audio?',
+                body: 'This cannot be undone',
+                actions: [{
+                  type: 'CANCEL',
+                  text: 'Cancel'
+                }, {
+                  type: 'REMOVE',
+                  text: 'Remove',
+                  color: 'warning'
+                }]
+              }, (type, payload) => {
+                if (payload.type === 'REMOVE') {
+                  clearBlobUrl();
+                  onRemoveAudioClicked();
+                }
+              })
+            }} />
           )}
         </div>
       </div>

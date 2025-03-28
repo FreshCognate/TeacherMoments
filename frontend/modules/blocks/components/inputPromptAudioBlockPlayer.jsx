@@ -17,7 +17,8 @@ const InputPromptAudioBlockPlayer = ({
   uploadProgress,
   uploadStatus,
   onAudioRecorded,
-  onPermissionDenied
+  onPermissionDenied,
+  onRemoveAudioClicked
 }) => {
   let audioSrc;
   if (tracking.audio) {
@@ -47,6 +48,7 @@ const InputPromptAudioBlockPlayer = ({
               uploadProgress={uploadProgress}
               uploadStatus={uploadStatus}
               onPermissionDenied={onPermissionDenied}
+              onRemoveAudioClicked={onRemoveAudioClicked}
             />
 
           )
