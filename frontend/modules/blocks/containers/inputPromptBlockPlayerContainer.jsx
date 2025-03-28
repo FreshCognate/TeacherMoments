@@ -54,14 +54,18 @@ class InputPromptBlockPlayerContainer extends Component {
           break;
         case 'AUDIO_PROCESSING':
           this.setState({ uploadStatus: 'Converting audio' });
+          break;
         case 'AUDIO_PROCESSED':
           const { data } = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
           this.props.onUpdateTracking({ audio: data.asset, isComplete: true, isAbleToComplete: true });
           this.setState({ isUploadingAudio: false });
+          break;
         case 'TRANSCRIPT_PROCESSING':
           this.setState({ uploadStatus: 'Creating transcript' });
+          break;
         case 'TRANSCRIPT_PROCESSED':
           this.setState({ uploadStatus: 'Created transcript' });
+          break;
         case 'ASSET_ERRORED':
           handleRequestError(payload);
           break;
@@ -71,6 +75,10 @@ class InputPromptBlockPlayerContainer extends Component {
 
   onPermissionDenied = () => {
     setUserPreferences({ isAudioDisabled: true });
+  }
+
+  onRemoveAudioClicked = () => {
+    this.props.onUpdateTracking({ audio: null, isComplete: false, isAbleToComplete: false });
   }
 
   render() {
@@ -89,6 +97,7 @@ class InputPromptBlockPlayerContainer extends Component {
         onTextInputChanged={this.onTextInputChanged}
         onAudioRecorded={this.onAudioRecorded}
         onPermissionDenied={this.onPermissionDenied}
+        onRemoveAudioClicked={this.onRemoveAudioClicked}
       />
     );
   }

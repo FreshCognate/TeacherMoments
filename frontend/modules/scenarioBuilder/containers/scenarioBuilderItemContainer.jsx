@@ -376,6 +376,7 @@ class ScenarioBuilderItemContainer extends Component {
         break;
       case 'move':
         moveSlide({ slideId: actionId, scenarioId, parentId, sortOrder, layerIndex, navigate: this.props.router.navigate });
+        break;
     }
   }
 
