@@ -13,6 +13,7 @@ const AssetSelectorFormField = ({
   acceptedFile,
   error,
   isUploading,
+  isProcessing,
   hasError,
   onDrop,
   onDropRejected,
@@ -25,6 +26,7 @@ const AssetSelectorFormField = ({
         asset={value}
         file={acceptedFile}
         isUploading={isUploading}
+        isProcessing={isProcessing}
         onRemoveAssetClicked={onRemoveAssetClicked}
       />
       {(!acceptedFile && !value) && (

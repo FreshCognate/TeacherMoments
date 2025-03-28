@@ -8,6 +8,7 @@ const AssetSelectorDisplayFormField = ({
   asset,
   file,
   isUploading,
+  isProcessing,
   onRemoveAssetClicked
 }) => {
   let preview;
@@ -16,6 +17,14 @@ const AssetSelectorDisplayFormField = ({
   let progress;
   let size = 'original';
   let fileType;
+
+  if (file) {
+    preview = file.preview;
+    title = 'Uploading';
+    progress = `${file.progress}%`
+    fileType = getFileType(file);
+  }
+
   if (asset && asset._id && !isUploading) {
     fileType = asset.fileType;
     if (!asset.isUploading) {
@@ -32,11 +41,10 @@ const AssetSelectorDisplayFormField = ({
     }
     hasRemoveButton = true;
   }
-  if (file) {
-    preview = file.preview;
-    title = 'Uploading';
-    progress = `${file.progress}%`
-    fileType = getFileType(file);
+
+  if (isProcessing) {
+    title = 'Processing';
+    progress = null;
   }
 
   if (!preview) return null;
