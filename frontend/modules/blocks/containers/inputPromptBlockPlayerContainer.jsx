@@ -5,6 +5,7 @@ import getUserPreferences from '~/modules/tracking/helpers/getUserPreferences';
 import axios from 'axios';
 import uploadAsset from '~/modules/assets/helpers/uploadAsset';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
+import isScenarioInPlay from '~/modules/scenarios/helpers/isScenarioInPlay';
 
 class InputPromptBlockPlayerContainer extends Component {
 
@@ -40,7 +41,7 @@ class InputPromptBlockPlayerContainer extends Component {
 
     const file = new File([blob], "recording.wav", { type: blob.type });
 
-    uploadAsset({ file }, async (state, payload) => {
+    uploadAsset({ file, isTemporary: !isScenarioInPlay() }, async (state, payload) => {
       switch (state) {
         case 'ASSET_UPLOADING':
           const { asset } = payload;

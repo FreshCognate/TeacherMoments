@@ -2,12 +2,12 @@ import axios from 'axios';
 import getFileDimensions from './getFileDimensions';
 import getSockets from '~/core/sockets/helpers/getSockets';
 
-export default async ({ file }, callback = () => { }) => {
+export default async ({ file, isTemporary = false }, callback = () => { }) => {
   try {
 
     const { width, height, orientation } = await getFileDimensions(file);
 
-    const assetResponse = await axios.post('/api/assets', { name: file.name, width, height, orientation, mimetype: file.type });
+    const assetResponse = await axios.post('/api/assets', { name: file.name, width, height, orientation, mimetype: file.type, isTemporary });
 
     const { signedUrl, asset } = assetResponse.data;
 

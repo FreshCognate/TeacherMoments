@@ -5,7 +5,7 @@ import sanitizeFileName from "../helpers/sanitizeFileName.js";
 
 export default async (props, options, context) => {
 
-  const { name, width, height, orientation, mimetype } = props;
+  const { name, width, height, orientation, mimetype, isTemporary } = props;
 
   const { models, user } = context;
 
@@ -28,6 +28,7 @@ export default async (props, options, context) => {
     height,
     orientation,
     mimetype,
+    isTemporary
   };
 
   const asset = await models.Asset.create(newAssetObject);
