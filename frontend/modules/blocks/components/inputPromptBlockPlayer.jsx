@@ -16,7 +16,8 @@ const InputPromptBlockPlayer = ({
   onTextInputChanged,
   onAudioRecorded,
   onPermissionDenied,
-  onRemoveAudioClicked
+  onRemoveAudioClicked,
+  onAudioRecording
 }) => {
   return (
     <div>
@@ -38,6 +39,7 @@ const InputPromptBlockPlayer = ({
           onAudioRecorded={onAudioRecorded}
           onPermissionDenied={onPermissionDenied}
           onRemoveAudioClicked={onRemoveAudioClicked}
+          onAudioRecording={onAudioRecording}
         />
       )}
 

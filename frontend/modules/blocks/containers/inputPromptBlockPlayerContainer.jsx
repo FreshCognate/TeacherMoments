@@ -74,6 +74,12 @@ class InputPromptBlockPlayerContainer extends Component {
     });
   }
 
+  onAudioRecording = () => {
+    if (this.props.tracking.audio) {
+      this.props.onUpdateTracking({ audio: null, isComplete: false, isAbleToComplete: false });
+    }
+  }
+
   onPermissionDenied = () => {
     setUserPreferences({ isAudioDisabled: true });
   }
@@ -99,6 +105,7 @@ class InputPromptBlockPlayerContainer extends Component {
         onAudioRecorded={this.onAudioRecorded}
         onPermissionDenied={this.onPermissionDenied}
         onRemoveAudioClicked={this.onRemoveAudioClicked}
+        onAudioRecording={this.onAudioRecording}
       />
     );
   }

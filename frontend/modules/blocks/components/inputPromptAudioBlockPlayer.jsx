@@ -19,7 +19,8 @@ const InputPromptAudioBlockPlayer = ({
   uploadStatus,
   onAudioRecorded,
   onPermissionDenied,
-  onRemoveAudioClicked
+  onRemoveAudioClicked,
+  onAudioRecording
 }) => {
   let audioSrc;
   let transcript;
@@ -27,8 +28,6 @@ const InputPromptAudioBlockPlayer = ({
     audioSrc = getAssetUrl(tracking.audio, "original");
     transcript = tracking.audio.transcript;
   }
-
-
 
   return (
     <div>
@@ -39,6 +38,9 @@ const InputPromptAudioBlockPlayer = ({
           useEffect(() => {
             if (mediaBlobUrl && status === 'stopped') {
               onAudioRecorded(mediaBlobUrl);
+            }
+            if (status === 'recording') {
+              onAudioRecording();
             }
           }, [mediaBlobUrl, status]);
 
