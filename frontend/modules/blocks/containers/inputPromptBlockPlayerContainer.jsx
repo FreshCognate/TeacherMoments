@@ -50,21 +50,22 @@ class InputPromptBlockPlayerContainer extends Component {
           this.setState({ uploadProgress: payload.progress });
           break;
         case 'ASSET_UPLOADED':
-          this.setState({ uploadProgress: 100 });
+          this.setState({ uploadProgress: 100, isUploadingAudio: false });
           break;
         case 'AUDIO_PROCESSING':
           this.setState({ uploadStatus: 'Converting audio' });
           break;
         case 'AUDIO_PROCESSED':
-          const { data } = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
-          this.props.onUpdateTracking({ audio: data.asset, isComplete: true, isAbleToComplete: true });
-          this.setState({ isUploadingAudio: false });
+          const assetProcessedResponse = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
+          this.props.onUpdateTracking({ audio: assetProcessedResponse.data.asset });
           break;
         case 'TRANSCRIPT_PROCESSING':
           this.setState({ uploadStatus: 'Creating transcript' });
           break;
         case 'TRANSCRIPT_PROCESSED':
-          this.setState({ uploadStatus: 'Created transcript' });
+          const assetTranscribedResponse = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
+          this.props.onUpdateTracking({ audio: assetTranscribedResponse.data.asset, isComplete: true, isAbleToComplete: true });
+          this.setState({ uploadStatus: null });
           break;
         case 'ASSET_ERRORED':
           handleRequestError(payload);

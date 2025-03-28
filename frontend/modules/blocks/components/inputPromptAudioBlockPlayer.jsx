@@ -3,6 +3,7 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import classnames from 'classnames';
 import AudioRecorder from '~/uikit/content/components/audioRecorder';
 import getAssetUrl from '~/core/app/helpers/getAssetUrl';
+import Body from '~/uikit/content/components/body';
 let ReactMediaRecorder = null;
 if (typeof window !== 'undefined') {
   await import('react-media-recorder').then((mod) => {
@@ -21,9 +22,14 @@ const InputPromptAudioBlockPlayer = ({
   onRemoveAudioClicked
 }) => {
   let audioSrc;
+  let transcript;
   if (tracking.audio) {
     audioSrc = getAssetUrl(tracking.audio, "original");
+    transcript = tracking.audio.transcript;
   }
+
+
+
   return (
     <div>
       <ReactMediaRecorder
@@ -54,6 +60,16 @@ const InputPromptAudioBlockPlayer = ({
           )
         }}
       />
+      {(transcript) && (
+        <div className="p-4 bg-lm-2/20 dark:bg-dm-1/60 rounded-md mt-4">
+          <div>
+            <Body body="Transcript" size="xs" />
+          </div>
+          <div>
+            <Body body={transcript} size="sm" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
