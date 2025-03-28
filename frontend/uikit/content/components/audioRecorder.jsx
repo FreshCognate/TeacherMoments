@@ -27,7 +27,7 @@ const AudioRecorder = ({
   let hasRemoveAudioButton = false;
 
   if (audioSrc) {
-    statusText = "Audio has been saved!";
+    statusText = "Audio saved. Press record to try again.";
     hasRemoveAudioButton = true;
   }
 
