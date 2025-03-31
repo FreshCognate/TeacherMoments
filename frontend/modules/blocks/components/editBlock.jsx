@@ -21,7 +21,7 @@ const EditBlock = ({
   onSortDownClicked,
 }) => {
 
-  const className = classnames("w-full bg-lm-2 dark:bg-dm-1 rounded-lg mb-8", {
+  const className = classnames("w-full bg-lm-0 shadow dark:bg-dm-0 rounded-lg mb-8", {
     "opacity-50": isDeleting
   })
   return (
