@@ -12,11 +12,10 @@ export default async ({ asset }) => {
   const transcription = await openai.audio.transcriptions.create({
     file: fs.createReadStream(assetPath),
     model: "whisper-1",
+    prompt: "If the transcription is empty, return an empty string.",
     response_format: "verbose_json",
     timestamp_granularities: ["segment"]
   });
-
-  console.log(transcription);
 
   return transcription;
 

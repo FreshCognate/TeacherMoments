@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import AudioRecorder from '~/uikit/content/components/audioRecorder';
 import getAssetUrl from '~/core/app/helpers/getAssetUrl';
 import Body from '~/uikit/content/components/body';
+import Alert from '~/uikit/alerts/components/alert';
 let ReactMediaRecorder = null;
 if (typeof window !== 'undefined') {
   await import('react-media-recorder').then((mod) => {
@@ -62,6 +63,11 @@ const InputPromptAudioBlockPlayer = ({
           )
         }}
       />
+      {(audioSrc && !transcript) && (
+        <div className="mt-4">
+          <Alert type="warning" text="Audio is empty. Try re-recording your audio." />
+        </div>
+      )}
       {(transcript) && (
         <div className="p-4 bg-lm-2/20 dark:bg-dm-1/60 rounded-md mt-4">
           <div>
