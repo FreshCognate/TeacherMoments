@@ -3,7 +3,7 @@ import ImagesBlockPlayerContainer from '~/modules/blocks/containers/imagesBlockP
 import MediaBlockPlayerContainer from '~/modules/blocks/containers/mediaBlockPlayerContainer';
 import SuggestionBlockPlayerContainer from '~/modules/blocks/containers/suggestionBlockPlayerContainer';
 import ResponseBlockPlayerContainer from '~/modules/blocks/containers/responseBlockPlayerContainer';
-import AnswersPromptBlockPlayerContainer from '~/modules/blocks/containers/answersPromptBlockPlayerContainer';
+import MultipleChoicePromptBlockPlayerContainer from '~/modules/blocks/containers/multipleChoicePromptBlockPlayerContainer';
 import ActionsPromptBlockPlayerContainer from '~/modules/blocks/containers/actionsPromptBlockPlayerContainer';
 import InputPromptBlockPlayerContainer from '~/modules/blocks/containers/inputPromptBlockPlayerContainer';
 
@@ -13,7 +13,7 @@ const BLOCK_MAPPINGS = {
   "MEDIA": MediaBlockPlayerContainer,
   "SUGGESTION": SuggestionBlockPlayerContainer,
   "RESPONSE": ResponseBlockPlayerContainer,
-  "ANSWERS_PROMPT": AnswersPromptBlockPlayerContainer,
+  "MULTIPLE_CHOICE_PROMPT": MultipleChoicePromptBlockPlayerContainer,
   "INPUT_PROMPT": InputPromptBlockPlayerContainer,
   "ACTIONS_PROMPT": ActionsPromptBlockPlayerContainer
 }

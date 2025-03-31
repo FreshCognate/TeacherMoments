@@ -4,7 +4,7 @@ import debounce from 'lodash/debounce';
 import WithCache from '~/core/cache/containers/withCache';
 import WithRouter from '~/core/app/components/withRouter';
 import editTextBlockSchema from '../schemas/editTextBlockSchema';
-import editAnswersPromptBlockSchema from '../schemas/editAnswersPromptBlockSchema';
+import editMultipleChoicePromptBlockSchema from '../schemas/editMultipleChoicePromptBlockSchema';
 import editInputPromptBlockSchema from '../schemas/editInputPromptBlockSchema';
 import editActionsPromptBlockSchema from '../schemas/editActionsPromptBlockSchema';
 import editImagesBlockSchema from '../schemas/editImagesBlockSchema';
@@ -20,7 +20,7 @@ const SCHEMA_MAPPINGS = {
   MEDIA: editMediaBlockSchema,
   SUGGESTION: editSuggestionBlockSchema,
   RESPONSE: editResponseBlockSchema,
-  ANSWERS_PROMPT: editAnswersPromptBlockSchema,
+  MULTIPLE_CHOICE_PROMPT: editMultipleChoicePromptBlockSchema,
   INPUT_PROMPT: editInputPromptBlockSchema,
   ACTIONS_PROMPT: editActionsPromptBlockSchema
 }

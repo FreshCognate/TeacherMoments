@@ -9,28 +9,34 @@ const body = buildLanguageSchema('body', {
   type: 'TextArea',
   label: 'Question',
   features: ['bold', 'italic', 'underline', 'strikethrough', 'code', 'blockquote', 'link', 'leftAlign', 'centerAlign', 'rightAlign', 'justifyAlign', 'bulletedList', 'numberedList']
-})
+});
 
-const answerText = buildLanguageSchema('text', {
+const optionText = buildLanguageSchema('text', {
   type: 'Text',
   label: 'Text'
-})
+});
 
 const feedbackText = buildLanguageSchema('feedback', {
   type: 'TextArea',
   label: 'Feedback',
-  features: ['bold', 'italic', 'underline', 'strikethrough', 'code', 'blockquote', 'link', 'leftAlign', 'centerAlign', 'rightAlign', 'justifyAlign', 'bulletedList', 'numberedList']
-})
+  features: ['bold', 'italic', 'underline', 'strikethrough', 'code', 'blockquote', 'link', 'leftAlign', 'centerAlign', 'rightAlign', 'justifyAlign', 'bulletedList', 'numberedList'],
+  conditions: [{
+    type: 'modelValueIs',
+    field: 'inputType',
+    values: ['AUDIO', 'AUDIO_AND_TEXT'],
+    shouldHideField: true
+  }]
+});
 
 export default {
   contentSchema: {
     ...body,
     options: {
       type: 'Array',
-      label: 'Answers',
-      addButtonText: "Add answer",
+      label: 'Response options',
+      addButtonText: "Add option",
       subSchema: {
-        ...answerText,
+        ...optionText,
         ...feedbackText,
         value: {
           type: 'Text',
@@ -53,7 +59,7 @@ export default {
     },
     isMultiSelect: {
       type: 'Toggle',
-      label: 'Mutliple answers can be selected',
+      label: 'Mutliple options can be selected',
       size: 'sm',
       options: [{
         value: false,
