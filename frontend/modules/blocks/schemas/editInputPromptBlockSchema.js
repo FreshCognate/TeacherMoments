@@ -2,7 +2,8 @@ import buildLanguageSchema from "~/core/app/helpers/buildLanguageSchema";
 
 const placeholder = buildLanguageSchema('placeholder', {
   type: 'Text',
-  label: 'Placeholder'
+  label: 'Placeholder',
+  help: "Placeholder is only used when the user's device does not support audio or the input type is set to text."
 });
 
 const body = buildLanguageSchema('body', {
