@@ -91,17 +91,20 @@ class ScenarioEditorContainer extends Component {
 
   render() {
 
-    const { slides, router } = this.props;
+    const { scenario, slides, router } = this.props;
 
     const pathnameSplit = router.location.pathname.split('/');
 
     const pathValue = pathnameSplit[pathnameSplit.length - 1];
 
+    const isScenarioLoading = scenario.status === 'loading' || scenario.status === 'unresolved';
+    const isSlidesLoading = slides.status === 'loading' || slides.status === 'unresolved';
+
     return (
       <ScenarioEditor
         scenario={this.props.scenario.data}
         pathValue={pathValue}
-        isLoading={slides.status === 'loading' || slides.status === 'unresolved'}
+        isLoading={isScenarioLoading || isSlidesLoading}
         onToggleClicked={this.onToggleClicked}
       />
     );
