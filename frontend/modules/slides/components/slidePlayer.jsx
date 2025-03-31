@@ -14,7 +14,7 @@ const SlidePlayer = ({
   activeSlide,
   activeBlocks,
   navigateTo,
-  tracking,
+  tracking = {},
   isLoading,
   primaryAction,
   secondaryAction,

@@ -45,11 +45,11 @@ export default [{
     param: 'id',
     body: {
       activeSlideRef: Joi.string(),
-      blocksByRef: Joi.object(),
       isComplete: Joi.boolean(),
       isConsentAcknowledged: Joi.boolean(),
       hasGivenConsent: Joi.boolean(),
       stages: Joi.array().items({
+        blocksByRef: Joi.object(),
         isComplete: Joi.boolean(),
         slideRef: Joi.string(),
         feedbackItems: Joi.array()
