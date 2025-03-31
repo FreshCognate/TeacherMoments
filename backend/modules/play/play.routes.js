@@ -49,7 +49,13 @@ export default [{
       isConsentAcknowledged: Joi.boolean(),
       hasGivenConsent: Joi.boolean(),
       stages: Joi.array().items({
-        blocksByRef: Joi.object(),
+        blocksByRef: Joi.object().pattern(/./, Joi.object({
+          audio: Joi.alternatives().try(Joi.object(), Joi.string(), null),
+          isAbleToComplete: Joi.boolean(),
+          isComplete: Joi.boolean(),
+          textValue: Joi.string().allow(''),
+          answerValues: Joi.array()
+        })),
         isComplete: Joi.boolean(),
         slideRef: Joi.string(),
         feedbackItems: Joi.array()

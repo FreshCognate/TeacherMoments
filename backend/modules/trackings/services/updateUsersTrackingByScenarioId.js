@@ -1,3 +1,5 @@
+import populateTracking from "../helpers/populateTracking.js";
+
 export default async (props, options, context) => {
 
   const {
@@ -23,7 +25,9 @@ export default async (props, options, context) => {
     update.givenConsentAt = new Date();
   }
 
-  let tracking = await models.Tracking.findOneAndUpdate(search, { ...update, updatedAt: new Date(), updatedBy: user._id }, { new: true });
+  let tracking = await models.Tracking.findOneAndUpdate(search, { ...update, updatedAt: new Date(), updatedBy: user._id }, { new: true }).lean();
+
+  tracking = await populateTracking({ tracking }, context);
 
   return tracking;
 
