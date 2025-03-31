@@ -21,7 +21,7 @@ export default async ({ slideRef }) => {
     switch (block.blockType) {
       case 'MULTIPLE_CHOICE_PROMPT':
         defaultTracking = {
-          answerValues: [],
+          selectedOptions: [],
           isComplete: false
         }
         break;
