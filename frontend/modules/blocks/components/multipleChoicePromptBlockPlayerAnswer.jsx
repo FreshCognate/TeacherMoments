@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import getString from '~/modules/ls/helpers/getString';
 import Body from '~/uikit/content/components/body';
 
-const AnswerPromptBlockPlayerAnswer = ({
+const MultipleChoicePromptBlockPlayerAnswer = ({
   option,
   isMultiSelect,
   isSelected,
@@ -35,4 +35,4 @@ const AnswerPromptBlockPlayerAnswer = ({
   );
 };
 
-export default AnswerPromptBlockPlayerAnswer;
+export default MultipleChoicePromptBlockPlayerAnswer;

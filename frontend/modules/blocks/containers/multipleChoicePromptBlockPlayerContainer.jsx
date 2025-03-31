@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import AnswersPromptBlockPlayer from '../components/answersPromptBlockPlayer';
+import MultipleChoicePromptBlockPlayer from '../components/multipleChoicePromptBlockPlayer';
 import cloneDeep from 'lodash/cloneDeep';
 import includes from 'lodash/includes';
 import pull from 'lodash/pull';
 
-class AnswersPromptBlockPlayerContainer extends Component {
+class MultipleChoicePromptBlockPlayerContainer extends Component {
 
   onAnswerClicked = (value) => {
     const { answerValues } = this.props.tracking;
@@ -29,7 +29,7 @@ class AnswersPromptBlockPlayerContainer extends Component {
   render() {
     const { block, tracking, isResponseBlock } = this.props;
     return (
-      <AnswersPromptBlockPlayer
+      <MultipleChoicePromptBlockPlayer
         block={block}
         tracking={tracking}
         isResponseBlock={isResponseBlock}
@@ -39,4 +39,4 @@ class AnswersPromptBlockPlayerContainer extends Component {
   }
 };
 
-export default AnswersPromptBlockPlayerContainer;
+export default MultipleChoicePromptBlockPlayerContainer;

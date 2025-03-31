@@ -4,10 +4,10 @@ import Button from '~/uikit/buttons/components/button';
 import Body from '~/uikit/content/components/body';
 import map from 'lodash/map';
 import includes from 'lodash/includes';
-import AnswersPromptBlockPlayerAnswer from './answersPromptBlockPlayerAnswer';
+import MultipleChoicePromptBlockPlayerAnswer from './multipleChoicePromptBlockPlayerAnswer';
 import Required from '~/uikit/alerts/components/required';
 
-const AnswersPromptBlockPlayer = ({
+const MultipleChoicePromptBlockPlayer = ({
   block,
   tracking,
   isResponseBlock,
@@ -27,7 +27,7 @@ const AnswersPromptBlockPlayer = ({
         {map(block.options, (option) => {
           const isSelected = includes(tracking.answerValues, option.value);
           return (
-            <AnswersPromptBlockPlayerAnswer
+            <MultipleChoicePromptBlockPlayerAnswer
               key={option._id}
               option={option}
               isMultiSelect={block.isMultiSelect}
@@ -44,4 +44,4 @@ const AnswersPromptBlockPlayer = ({
   );
 };
 
-export default AnswersPromptBlockPlayer;
+export default MultipleChoicePromptBlockPlayer;

@@ -49,7 +49,7 @@ class TriggersEditorContainer extends Component {
         blocks: {
           type: 'TriggerBlocksSelector',
           label: 'Selected blocks:',
-          blockTypes: ['INPUT_PROMPT', 'ANSWERS_PROMPT']
+          blockTypes: ['INPUT_PROMPT', 'MULTIPLE_CHOICE_PROMPT']
         },
         conditions: {
           type: 'Conditions',
@@ -106,7 +106,7 @@ class TriggersEditorContainer extends Component {
         blocks: {
           type: 'TriggerBlocksSelector',
           label: 'Selected blocks',
-          blockTypes: ['INPUT_PROMPT', 'ANSWERS_PROMPT']
+          blockTypes: ['INPUT_PROMPT', 'MULTIPLE_CHOICE_PROMPT']
         },
         conditions: {
           type: 'Conditions',

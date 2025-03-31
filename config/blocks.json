@@ -30,10 +30,10 @@
     "description": "Embed a response from a previous slide."
   },
   {
-    "blockType": "ANSWERS_PROMPT",
+    "blockType": "MULTIPLE_CHOICE_PROMPT",
     "displayType": "PROMPT",
-    "displayName": "Answers prompt",
-    "description": "A prompt with predefined answers for the user to select."
+    "displayName": "Multiple choice prompt",
+    "description": "A prompt with predefined options for the user to select."
   },
   {
     "blockType": "INPUT_PROMPT",

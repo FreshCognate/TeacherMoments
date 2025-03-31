@@ -18,7 +18,7 @@ registerTrigger('SHOW_FEEDBACK_FROM_PROMPTS', {
       const block = getBlockByRef({ ref: blockRef });
       const blockTracking = getBlockTracking({ blockRef });
 
-      if (block.blockType === 'ANSWERS_PROMPT') {
+      if (block.blockType === 'MULTIPLE_CHOICE_PROMPT') {
 
         for (const answerValue of blockTracking.answerValues) {
 
