@@ -12,7 +12,7 @@ const ScenarioSettings = ({
 }) => {
   if (isLoading) return null;
   return (
-    <div className="p-4 bg-lm-2 dark:bg-dm-2" style={{ marginTop: '28px' }}>
+    <div className="p-4 bg-lm-0 dark:bg-dm-0" style={{ marginTop: '28px' }}>
       <Title title="Scenario settings" />
       <div className="w-1/3">
         <FormContainer

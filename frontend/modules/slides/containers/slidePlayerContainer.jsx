@@ -58,43 +58,24 @@ class SlidePlayerContainer extends Component {
       const nextSlide = getNextSlide();
 
       if (nextSlide) {
-        switch (activeSlide?.navigation) {
-          case 'BIDIRECTIONAL':
-            primaryAction = {
-              action: 'NEXT',
-              color: 'primary',
-              text: 'Next',
-              isActive: hasRequiredPrompts && !isAbleToCompleteSlide
-            }
-            secondaryAction = {
-              action: 'BACK',
-              text: 'Back',
-              isActive: true
-            }
-            break;
-          case 'BACKWARD':
-            secondaryAction = {
-              action: 'BACK',
-              text: 'Back',
-              isActive: true
-            }
-            break;
-          case 'FORWARD':
-            primaryAction = {
-              action: 'NEXT',
-              color: 'primary',
-              text: 'Next',
-              isActive: hasRequiredPrompts && !isAbleToCompleteSlide
-            }
-            break;
-          case 'SUBMIT':
-            primaryAction = {
-              action: 'SUBMIT',
-              color: 'primary',
-              text: 'Submit',
-              isDisabled: hasRequiredPrompts && !isAbleToCompleteSlide
-            }
-            break;
+        primaryAction = {
+          action: 'NEXT',
+          color: 'primary',
+          text: 'Next',
+          isActive: hasRequiredPrompts && !isAbleToCompleteSlide
+        }
+        secondaryAction = {
+          action: 'BACK',
+          text: 'Back',
+          isActive: true
+        }
+        if (true) {
+          primaryAction = {
+            action: 'SUBMIT',
+            color: 'primary',
+            text: 'Submit',
+            isDisabled: hasRequiredPrompts && !isAbleToCompleteSlide
+          }
         }
       } else {
         if (this.props.tracking.data.isComplete) {
@@ -138,7 +119,7 @@ class SlidePlayerContainer extends Component {
 
   onSubmitSlideClicked = () => {
     setSlideToComplete({ slideRef: this.props.activeSlide.ref });
-    return navigateTo({ slideRef: this.props.activeSlide.children[0] });
+    return navigateToNextSlide();
   }
 
   onConsentAcceptedClicked = () => {

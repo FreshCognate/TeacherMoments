@@ -34,7 +34,6 @@ export default {
     body: {
       name: Joi.string().allow(''),
       slideType: Joi.string().valid('STEP', 'SUMMARY'),
-      navigation: Joi.string().valid('BIDIRECTIONAL', 'BACKWARD', 'FORWARD', 'SUBMIT', 'BRANCHING'),
       tags: Joi.array().items(Joi.string()),
       scenarioId: Joi.string(),
       sourceIndex: Joi.number(),

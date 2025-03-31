@@ -28,7 +28,6 @@ const SlidePlayer = ({
   return (
     <div className="w-full bg-lm-0 dark:bg-dm-1 border border-lm-2 dark:border-dm-2 rounded ">
       <SlidePlayerHeader
-        hasBackButton={true}
       />
       <div className="px-4 pb-4">
         {(activeSlide.slideType === 'CONSENT') && (
