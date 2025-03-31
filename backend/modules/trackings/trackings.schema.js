@@ -5,7 +5,23 @@ const schema = {
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   activeSlideRef: { type: String },
-  stages: [],
+  stages: [{
+    _id: false,
+    isComplete: { type: Boolean, default: false },
+    slideRef: { type: String, required: true },
+    feedbackItems: [],
+    blocksByRef: {
+      type: Map,
+      of: {
+        audio: { type: mongoose.Schema.Types.ObjectId, ref: 'Asset' },
+        isAbleToComplete: { type: Boolean, default: false },
+        isComplete: { type: Boolean, default: false },
+        textValue: { type: String, default: "" },
+        answerValues: [{ type: String }],
+        _id: false,
+      }
+    },
+  }],
   isComplete: { type: Boolean, default: false },
   completedAt: { type: Date },
   isConsentAcknowledged: { type: Boolean, default: false },

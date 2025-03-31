@@ -4,6 +4,17 @@ import extend from 'lodash/extend';
 import getIsSlideComplete from './getIsSlideComplete';
 import trigger from "~/modules/triggers/helpers/trigger";
 import find from 'lodash/find';
+import debounce from 'lodash/debounce';
+import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
+
+const debouncedSave = debounce(() => {
+  if (isScenarioInPlay()) {
+    const tracking = getCache('tracking');
+
+    const stages = cloneDeep(tracking.data.stages);
+    tracking.mutate({ stages }, { method: 'put' });
+  }
+}, 1000);
 
 export default async ({ slideRef, blockRef, update }) => {
 
@@ -29,6 +40,8 @@ export default async ({ slideRef, blockRef, update }) => {
       }, 0);
     }
   }
+
+  debouncedSave({ tracking, stages });
 
   return tracking.set({ stages });
 

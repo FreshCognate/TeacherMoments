@@ -1,3 +1,5 @@
+import populateTracking from "../helpers/populateTracking.js";
+
 export default async (props, options, context) => {
 
   const {
@@ -8,7 +10,7 @@ export default async (props, options, context) => {
 
   const search = { scenario: scenarioId, user: user._id, isDeleted: false };
 
-  let tracking = await models.Tracking.findOne(search);
+  let tracking = await models.Tracking.findOne(search).lean();
 
   if (!tracking) {
     tracking = await models.Tracking.create({
@@ -17,6 +19,8 @@ export default async (props, options, context) => {
       createdAt: new Date(),
       createdBy: user._id
     })
+  } else {
+    tracking = await populateTracking({ tracking }, context);
   }
 
   return tracking;
