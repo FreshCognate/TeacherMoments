@@ -6,6 +6,7 @@ import axios from 'axios';
 import uploadAsset from '~/modules/assets/helpers/uploadAsset';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import isScenarioInPlay from '~/modules/scenarios/helpers/isScenarioInPlay';
+import { v4 as uuidv4 } from 'uuid';
 
 class InputPromptBlockPlayerContainer extends Component {
 
@@ -39,7 +40,7 @@ class InputPromptBlockPlayerContainer extends Component {
     const response = await fetch(mediaBlobUrl);
     const blob = await response.blob();
 
-    const file = new File([blob], "recording.wav", { type: blob.type });
+    const file = new File([blob], `${uuidv4()}.wav`, { type: blob.type });
 
     uploadAsset({ file, isTemporary: !isScenarioInPlay() }, async (state, payload) => {
       switch (state) {
