@@ -78,6 +78,9 @@ class InputPromptBlockPlayerContainer extends Component {
 
   onAudioRecording = () => {
     if (this.props.tracking.audio) {
+      if (this.props.tracking.audio._id) {
+        axios.delete(`/api/assets/${this.props.tracking.audio._id}`);
+      }
       this.props.onUpdateTracking({ audio: null, isComplete: false, isAbleToComplete: false });
     }
   }
@@ -87,6 +90,9 @@ class InputPromptBlockPlayerContainer extends Component {
   }
 
   onRemoveAudioClicked = () => {
+    if (this.props.tracking.audio._id) {
+      axios.delete(`/api/assets/${this.props.tracking.audio._id}`);
+    }
     this.props.onUpdateTracking({ audio: null, isComplete: false, isAbleToComplete: false });
   }
 
