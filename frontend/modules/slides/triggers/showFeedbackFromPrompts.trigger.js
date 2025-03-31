@@ -20,9 +20,9 @@ registerTrigger('SHOW_FEEDBACK_FROM_PROMPTS', {
 
       if (block.blockType === 'MULTIPLE_CHOICE_PROMPT') {
 
-        for (const answerValue of blockTracking.answerValues) {
+        for (const selectedOption of blockTracking.selectedOptions) {
 
-          const feedbackOption = find(block.options, { value: answerValue });
+          const feedbackOption = find(block.options, { _id: selectedOption._id });
           const feedbackText = getString({ model: feedbackOption, field: 'feedback' });
           feedbackItems.push(feedbackText);
 

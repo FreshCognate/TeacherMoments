@@ -17,7 +17,10 @@ const schema = {
         isAbleToComplete: { type: Boolean, default: false },
         isComplete: { type: Boolean, default: false },
         textValue: { type: String, default: "" },
-        answerValues: [{ type: String }],
+        selectedOptions: [{
+          text: { type: String },
+          value: { type: String },
+        }],
         _id: false,
       }
     },

@@ -1,29 +1,40 @@
 import React, { Component } from 'react';
 import MultipleChoicePromptBlockPlayer from '../components/multipleChoicePromptBlockPlayer';
 import cloneDeep from 'lodash/cloneDeep';
-import includes from 'lodash/includes';
-import pull from 'lodash/pull';
+import find from 'lodash/find';
+import remove from 'lodash/remove';
+import getString from '~/modules/ls/helpers/getString';
 
 class MultipleChoicePromptBlockPlayerContainer extends Component {
 
-  onAnswerClicked = (value) => {
-    const { answerValues } = this.props.tracking;
-    const { isMultiSelect } = this.props.block;
-    let clonedAnswerValues = cloneDeep(answerValues);
+  onAnswerClicked = (selectedOptionId) => {
+    const { selectedOptions } = this.props.tracking;
+    const { isMultiSelect, options } = this.props.block;
+    const currentOption = find(options, { _id: selectedOptionId });
+
+    let usersSelectedOption = {
+      _id: currentOption._id,
+      text: getString({ model: currentOption, field: 'text' }),
+      value: currentOption.value,
+    }
+
+    let clonedSelectedOptions = cloneDeep(selectedOptions);
     if (isMultiSelect) {
-      if (includes(clonedAnswerValues, value)) {
-        pull(clonedAnswerValues, value);
+      if (find(clonedSelectedOptions, { _id: selectedOptionId })) {
+        remove(clonedSelectedOptions, (item) => {
+          if (item._id === selectedOptionId) return true;
+        });
       } else {
-        clonedAnswerValues.push(value);
+        clonedSelectedOptions.push(usersSelectedOption);
       }
     } else {
-      clonedAnswerValues = [value];
+      clonedSelectedOptions = [usersSelectedOption];
     }
     let isAbleToComplete = false;
-    if (clonedAnswerValues.length > 0) {
+    if (clonedSelectedOptions.length > 0) {
       isAbleToComplete = true;
     }
-    this.props.onUpdateTracking({ answerValues: clonedAnswerValues, isAbleToComplete });
+    this.props.onUpdateTracking({ selectedOptions: clonedSelectedOptions, isAbleToComplete });
   }
 
   render() {

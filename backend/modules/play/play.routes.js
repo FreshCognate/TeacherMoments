@@ -54,7 +54,11 @@ export default [{
           isAbleToComplete: Joi.boolean(),
           isComplete: Joi.boolean(),
           textValue: Joi.string().allow(''),
-          answerValues: Joi.array()
+          selectedOptions: Joi.array().items({
+            _id: Joi.string(),
+            text: Joi.string().allow(''),
+            value: Joi.string().allow('')
+          })
         })),
         isComplete: Joi.boolean(),
         slideRef: Joi.string(),

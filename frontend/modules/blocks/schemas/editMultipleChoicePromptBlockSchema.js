@@ -13,7 +13,8 @@ const body = buildLanguageSchema('body', {
 
 const optionText = buildLanguageSchema('text', {
   type: 'Text',
-  label: 'Text'
+  label: 'Option text',
+  help: 'This is the text that is displayed within an option for the user to select'
 });
 
 const feedbackText = buildLanguageSchema('feedback', {
@@ -40,7 +41,8 @@ export default {
         ...feedbackText,
         value: {
           type: 'Text',
-          label: 'Value'
+          label: 'Option value',
+          help: 'This is the value that is stored for tracking purposes.'
         }
       }
     }

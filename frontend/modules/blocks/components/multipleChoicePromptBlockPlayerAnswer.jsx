@@ -26,7 +26,12 @@ const MultipleChoicePromptBlockPlayerAnswer = ({
       )}
     >
       <div className="mr-4">
-        <input type={inputType} disabled={isComplete || isResponseBlock} checked={isSelected} className=" accent-primary-regular dark:accent-primary-light disabled:accent-primary-regular dark:disabled:accent-primary-light" onChange={() => onAnswerClicked(option.value)} />
+        <input
+          type={inputType}
+          disabled={isComplete || isResponseBlock}
+          checked={isSelected}
+          className=" accent-primary-regular dark:accent-primary-light disabled:accent-primary-regular dark:disabled:accent-primary-light"
+          onChange={() => onAnswerClicked(option._id)} />
       </div>
       <div>
         <Body body={getString({ model: option, field: "text" })} />
