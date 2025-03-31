@@ -16,7 +16,9 @@ class CreateContainer extends Component {
       const firstSlide = this.props.slides.data[0];
 
       setTimeout(() => {
-        this.props.router.navigate(`/scenarios/${this.props.scenario.data._id}/create?slide=${firstSlide._id}`)
+        this.props.router.navigate(`/scenarios/${this.props.scenario.data._id}/create?slide=${firstSlide._id}`, {
+          replace: true
+        })
       }, 0);
 
     }
