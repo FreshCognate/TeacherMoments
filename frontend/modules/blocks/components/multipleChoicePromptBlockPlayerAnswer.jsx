@@ -16,7 +16,7 @@ const MultipleChoicePromptBlockPlayerAnswer = ({
   return (
     <label
       key={option._id}
-      className={classnames("flex items-center rounded-md mb-2 cursor-pointer -outline-offset-2 outline outline-2 outline-transparent",
+      className={classnames("flex items-center bg-lm-3/60 dark:bg-dm-3/60 rounded-md mb-2 cursor-pointer -outline-offset-2 outline outline-2 outline-transparent",
         "border-2 border-lm-2 dark:border-dm-2 p-4",
         "last:mb-0",
         {

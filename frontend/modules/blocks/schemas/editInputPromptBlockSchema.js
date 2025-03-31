@@ -56,6 +56,7 @@ export default {
     requiredLength: {
       type: 'Text',
       label: 'Minimum required length',
+      help: 'This is used to make sure a user fills out a minimum number of characters.',
       textType: 'number',
       size: 'sm',
       conditions: [{
