@@ -69,7 +69,7 @@ export default {
     inputType: {
       type: 'Toggle',
       label: 'Input type',
-      help: 'Decide which input type the learner is presented with.',
+      help: 'Decide which input type the participant is presented with.',
       size: 'sm',
       options: [{
         value: 'AUDIO',
