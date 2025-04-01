@@ -8,7 +8,7 @@ export default async (props, options, context) => {
 
   const { models, user } = context;
 
-  const search = { scenario: scenarioId, user: user._id, isDeleted: false };
+  const search = { scenario: scenarioId, user: user._id, isDeleted: false, isComplete: false };
 
   let run = await models.Run.findOne(search).lean();
 
