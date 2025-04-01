@@ -114,6 +114,7 @@ class SlidePlayerContainer extends Component {
   }
 
   onNextSlideClicked = () => {
+    setSlideToComplete({ slideRef: this.props.activeSlide.ref });
     return navigateToNextSlide();
   }
 
