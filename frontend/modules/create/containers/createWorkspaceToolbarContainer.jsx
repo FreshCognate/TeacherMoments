@@ -65,8 +65,11 @@ export default WithCache(CreateWorkspaceToolbarContainer, {
       const slides = getCache('slides');
       const currentSlide = find(slides.data, { ref: props.activeSlideRef });
       return {
-        id: currentSlide._id
+        id: currentSlide?._id
       }
+    },
+    getDependencies: ({ props }) => {
+      return [props.activeSlideRef]
     }
   }
 }, ['editor']);

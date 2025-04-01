@@ -4,6 +4,7 @@ import filter from 'lodash/filter';
 import each from 'lodash/each';
 import getIsSlideComplete from "./getIsSlideComplete";
 import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
+import findSlideTracking from "./findSlideTracking";
 
 export default async ({ slideRef }) => {
 
@@ -11,34 +12,40 @@ export default async ({ slideRef }) => {
 
   const stages = cloneDeep(tracking.data.stages || []);
 
-  const slideBlocks = filter(getCache('blocks').data, { slideRef });
+  const slideTracking = findSlideTracking({ slideRef });
 
-  let blocksByRef = {};
+  if (!slideTracking) {
 
-  each(slideBlocks, (block) => {
-    let defaultTracking = {};
+    const slideBlocks = filter(getCache('blocks').data, { slideRef });
 
-    switch (block.blockType) {
-      case 'MULTIPLE_CHOICE_PROMPT':
-        defaultTracking = {
-          selectedOptions: [],
-          isComplete: false
-        }
-        break;
-      case 'INPUT_PROMPT':
-        defaultTracking = {
-          textValue: "",
-          isComplete: false
-        }
-        break;
-    }
+    let blocksByRef = {};
 
-    blocksByRef[block.ref] = defaultTracking;
-  });
+    each(slideBlocks, (block) => {
+      let defaultTracking = {};
 
-  let isSlideComplete = getIsSlideComplete({ blocksByRef });
+      switch (block.blockType) {
+        case 'MULTIPLE_CHOICE_PROMPT':
+          defaultTracking = {
+            selectedOptions: [],
+            isComplete: false
+          }
+          break;
+        case 'INPUT_PROMPT':
+          defaultTracking = {
+            textValue: "",
+            isComplete: false
+          }
+          break;
+      }
 
-  stages.push({ slideRef: slideRef, blocksByRef, isComplete: isSlideComplete })
+      blocksByRef[block.ref] = defaultTracking;
+    });
+
+    let isSlideComplete = getIsSlideComplete({ blocksByRef });
+
+    stages.push({ slideRef: slideRef, blocksByRef, isComplete: isSlideComplete })
+
+  }
 
   if (isScenarioInPlay()) {
     tracking.mutate({ activeSlideRef: slideRef, stages }, { method: 'put' });

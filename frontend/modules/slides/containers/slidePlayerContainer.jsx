@@ -148,6 +148,9 @@ class SlidePlayerContainer extends Component {
       case 'CONSENT_ACCEPTED':
         this.onConsentAcceptedClicked();
         break;
+      case 'BACK':
+        this.onPreviousSlideClicked();
+        break;
       case 'NEXT':
         this.onNextSlideClicked();
         break;
