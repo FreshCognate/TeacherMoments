@@ -10,3 +10,12 @@ body {
     color-scheme: dark;
   }
 }
+
+a.underline {
+  @apply text-primary-regular dark:text-primary-light;
+}
+
+blockquote {
+  @apply bg-lm-1 dark:bg-dm-1 border-l-4 border-l-lm-4 dark:border-l-dm-4;
+  padding: 12px 12px;
+}
