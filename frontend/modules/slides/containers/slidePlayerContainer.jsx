@@ -13,11 +13,13 @@ import setScenarioConsent from '~/modules/run/helpers/setScenarioConsent';
 import getNextSlide from '~/modules/run/helpers/getNextSlide';
 import setScenarioToComplete from '~/modules/run/helpers/setScenarioToComplete';
 import WithRouter from '~/core/app/components/withRouter';
+import addModal from '~/core/dialogs/helpers/addModal';
 
 class SlidePlayerContainer extends Component {
 
   state = {
-    isLoading: true
+    isLoading: true,
+    isMenuOpen: false
   }
 
   componentDidMount = () => {
@@ -163,12 +165,47 @@ class SlidePlayerContainer extends Component {
       case 'RETURN_TO_SCENARIOS':
         this.props.router.navigate(`/scenarios`);
         break;
+      case 'RERUN_SCENARIO':
+        this.props.router.navigate(0);
+        break;
+    }
+  }
+
+  onMenuClicked = (isMenuOpen) => {
+    this.setState({ isMenuOpen });
+  }
+
+  onMenuActionClicked = (action) => {
+    if (action === 'END_SCENARIO_RUN') {
+      addModal({
+        title: 'End this scenario?',
+        body: 'Are you sure you want to end this scenario run?',
+        actions: [{
+          type: 'NO',
+          text: 'No'
+        }, {
+          type: 'YES',
+          text: 'Yes',
+          color: 'primary'
+        }]
+      }, (state, { type, modal }) => {
+        if (state === 'ACTION') {
+          if (type === 'YES') {
+            this.onActionClicked('FINISH_SCENARIO');
+            setTimeout(() => {
+              this.props.router.navigate(`/scenarios`);
+            }, 1000);
+          }
+        }
+      })
     }
   }
 
   render() {
 
     const { scenario, activeSlide, activeBlocks } = this.props;
+
+    const { isMenuOpen } = this.state;
 
     const slideStage = getSlideStage();
 
@@ -183,12 +220,15 @@ class SlidePlayerContainer extends Component {
         activeSlide={activeSlide}
         activeBlocks={activeBlocks}
         isLoading={this.state.isLoading}
+        isMenuOpen={isMenuOpen}
         navigateTo={this.navigateTo}
         slideStage={slideStage}
         primaryAction={primaryAction}
         secondaryAction={secondaryAction}
         onActionClicked={this.onActionClicked}
         onUpdateBlockTracking={this.onUpdateBlockTracking}
+        onMenuClicked={this.onMenuClicked}
+        onMenuActionClicked={this.onMenuActionClicked}
       />
     );
   }
