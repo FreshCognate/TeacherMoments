@@ -16,8 +16,7 @@ const CreateWorkspaceToolbar = ({
           type="text"
           value={slide.name}
           placeholder="Slide title"
-          className="p-1 rounded-md text-sm text-black/80 dark:text-white/80 bg-lm-4/50 dark:bg-dm-4/50 focus:outline-2 outline-lm-4 dark:outline-dm-4 outline-offset-0"
-          //className="py-3 px-3 text-sm text-black/80 dark:text-white/80 bg-lm-4/50 dark:bg-dm-4/50 rounded w-full focus:outline-2 outline-lm-4 dark:outline-dm-4 outline-offset-2"
+          className="py-1 px-2 rounded-md text-sm text-black/80 dark:text-white/80 bg-lm-3/50 dark:bg-dm-3/50 focus:outline-2 outline-lm-4 dark:outline-dm-4 outline-offset-0"
           onChange={onSlideNameChanged}
         />
       </div>
