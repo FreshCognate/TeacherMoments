@@ -9,19 +9,19 @@ import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
 
 const debouncedSave = debounce(() => {
   if (isScenarioInPlay()) {
-    const tracking = getCache('tracking');
+    const run = getCache('run');
 
-    const stages = cloneDeep(tracking.data.stages);
-    tracking.mutate({ stages }, { method: 'put' });
+    const stages = cloneDeep(run.data.stages);
+    run.mutate({ stages }, { method: 'put' });
   }
 }, 1000);
 
 export default async ({ slideRef, blockRef, update }) => {
 
-  const tracking = getCache('tracking');
+  const run = getCache('run');
 
-  const stages = cloneDeep(tracking.data.stages);
-  const currentStage = find(stages, { slideRef: tracking.data.activeSlideRef });
+  const stages = cloneDeep(run.data.stages);
+  const currentStage = find(stages, { slideRef: run.data.activeSlideRef });
 
   const currentBlockTracking = currentStage.blocksByRef[blockRef] ? cloneDeep(currentStage.blocksByRef[blockRef]) : {};
 
@@ -41,8 +41,8 @@ export default async ({ slideRef, blockRef, update }) => {
     }
   }
 
-  debouncedSave({ tracking, stages });
+  debouncedSave({ run, stages });
 
-  return tracking.set({ stages });
+  return run.set({ stages });
 
 }

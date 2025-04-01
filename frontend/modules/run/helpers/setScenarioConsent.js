@@ -2,10 +2,10 @@ import getCache from "~/core/cache/helpers/getCache";
 import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
 
 export default (hasGivenConsent) => {
-  const tracking = getCache('tracking');
+  const run = getCache('run');
   if (isScenarioInPlay()) {
-    tracking.mutate({ isConsentAcknowledged: true, hasGivenConsent }, { method: 'put' });
+    run.mutate({ isConsentAcknowledged: true, hasGivenConsent }, { method: 'put' });
   } else {
-    tracking.set({ isConsentAcknowledged: true, hasGivenConsent });
+    run.set({ isConsentAcknowledged: true, hasGivenConsent });
   }
 }

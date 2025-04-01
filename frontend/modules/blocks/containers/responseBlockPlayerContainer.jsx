@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ResponseBlockPlayer from '../components/responseBlockPlayer';
 import getCache from '~/core/cache/helpers/getCache';
 import find from 'lodash/find';
-import findSlideTracking from '~/modules/tracking/helpers/findSlideTracking';
+import findSlideStage from '~/modules/run/helpers/findSlideStage';
 
 class ResponseBlockPlayerContainer extends Component {
 
@@ -20,14 +20,14 @@ class ResponseBlockPlayerContainer extends Component {
 
       const blocks = getCache('blocks');
       block = find(blocks.data, { ref: this.props.block.responseRef });
-      const slideTracking = findSlideTracking({ slideRef: block.slideRef });
+      const slideStage = findSlideStage({ slideRef: block.slideRef });
 
-      if (slideTracking) {
-        blockTracking = slideTracking.blocksByRef[this.props.block.responseRef];
+      if (slideStage) {
+        blockTracking = slideStage.blocksByRef[this.props.block.responseRef];
         blockType = block.blockType;
       } else {
         hasError = true;
-        error = "Slide tracking is missing.";
+        error = "Slide run is missing.";
       }
     }
     return { hasError, error, block, blockTracking, blockType };

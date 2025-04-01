@@ -7,7 +7,7 @@ import Required from '~/uikit/alerts/components/required';
 
 const InputPromptBlockPlayer = ({
   block,
-  tracking,
+  blockTracking,
   isAudioDisabled,
   isResponseBlock,
   isUploadingAudio,
@@ -24,14 +24,14 @@ const InputPromptBlockPlayer = ({
       <div className="mb-2 relative">
         <Body body={getString({ model: block, field: 'body' })} />
         <div className="absolute -top-3 right-0">
-          <Required isRequired={block.isRequired} isComplete={tracking.isAbleToComplete} />
+          <Required isRequired={block.isRequired} isComplete={blockTracking.isAbleToComplete} />
         </div>
       </div>
 
       {(block.inputType === 'AUDIO' && !isAudioDisabled) && (
         <InputPromptAudioBlockPlayer
           block={block}
-          tracking={tracking}
+          blockTracking={blockTracking}
           isResponseBlock={isResponseBlock}
           isUploadingAudio={isUploadingAudio}
           uploadProgress={uploadProgress}
@@ -46,7 +46,7 @@ const InputPromptBlockPlayer = ({
       {(block.inputType === 'TEXT' || isAudioDisabled) && (
         <InputPromptTextBlockPlayer
           block={block}
-          tracking={tracking}
+          blockTracking={blockTracking}
           isResponseBlock={isResponseBlock}
           onTextInputChanged={onTextInputChanged}
         />

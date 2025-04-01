@@ -3,16 +3,16 @@ import findIndex from 'lodash/findIndex';
 
 export default async () => {
 
-  const tracking = getCache('tracking');
+  const run = getCache('run');
 
-  const { activeSlideRef, stages } = tracking.data;
+  const { activeSlideRef, stages } = run.data;
 
   const currentStageIndex = findIndex(stages, { slideRef: activeSlideRef });
 
   if (currentStageIndex === 0) return;
 
   if (stages[currentStageIndex - 1]) {
-    tracking.set({ activeSlideRef: stages[currentStageIndex - 1].slideRef });
+    run.set({ activeSlideRef: stages[currentStageIndex - 1].slideRef });
   }
 
 }

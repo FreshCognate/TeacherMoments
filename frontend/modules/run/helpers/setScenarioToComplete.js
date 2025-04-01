@@ -2,10 +2,10 @@ import getCache from "~/core/cache/helpers/getCache";
 import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
 
 export default () => {
-  const tracking = getCache('tracking');
+  const run = getCache('run');
   if (isScenarioInPlay()) {
-    tracking.mutate({ isComplete: true }, { method: 'put' });
+    run.mutate({ isComplete: true }, { method: 'put' });
   } else {
-    tracking.set({ isComplete: true });
+    run.set({ isComplete: true });
   }
 }

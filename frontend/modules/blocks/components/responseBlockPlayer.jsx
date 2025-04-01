@@ -23,7 +23,7 @@ const ResponseBlockPlayer = ({
       {(Block && !hasError) && (
         <Block
           block={block}
-          tracking={blockTracking}
+          blockTracking={blockTracking}
           isResponseBlock
         />
       )}

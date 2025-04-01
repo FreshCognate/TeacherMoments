@@ -4,10 +4,10 @@ import trigger from "~/modules/triggers/helpers/trigger";
 import find from 'lodash/find';
 
 export default ({ slideRef }) => {
-  const tracking = getCache('tracking');
+  const run = getCache('run');
 
-  const stages = cloneDeep(tracking.data.stages);
-  const currentStage = find(stages, { slideRef: tracking.data.activeSlideRef });
+  const stages = cloneDeep(run.data.stages);
+  const currentStage = find(stages, { slideRef: run.data.activeSlideRef });
 
 
   if (!currentStage.isComplete) {
@@ -15,7 +15,7 @@ export default ({ slideRef }) => {
     setTimeout(() => {
       trigger({ triggerType: 'SLIDE', event: 'ON_COMPLETE', elementRef: slideRef }, {});
     }, 0);
-    return tracking.set({ stages });
+    return run.set({ stages });
   }
 
 }

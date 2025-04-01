@@ -1,4 +1,4 @@
-import populateTracking from "../helpers/populateTracking.js";
+import populateRun from "../helpers/populateRun.js";
 
 export default async (props, options, context) => {
 
@@ -10,19 +10,19 @@ export default async (props, options, context) => {
 
   const search = { scenario: scenarioId, user: user._id, isDeleted: false };
 
-  let tracking = await models.Tracking.findOne(search).lean();
+  let run = await models.Run.findOne(search).lean();
 
-  if (!tracking) {
-    tracking = await models.Tracking.create({
+  if (!run) {
+    run = await models.Run.create({
       scenario: scenarioId,
       user: user._id,
       createdAt: new Date(),
       createdBy: user._id
     })
   } else {
-    tracking = await populateTracking({ tracking }, context);
+    run = await populateRun({ run }, context);
   }
 
-  return tracking;
+  return run;
 
 };

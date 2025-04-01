@@ -8,7 +8,7 @@ import Required from '~/uikit/alerts/components/required';
 
 const MultipleChoicePromptBlockPlayer = ({
   block,
-  tracking,
+  blockTracking,
   isResponseBlock,
   onAnswerClicked
 }) => {
@@ -18,20 +18,20 @@ const MultipleChoicePromptBlockPlayer = ({
       <div className="mb-2 relative">
         <Body body={getString({ model: block, field: 'body' })} />
         <div className="absolute -top-3 right-0">
-          <Required isRequired={block.isRequired} isComplete={tracking.isAbleToComplete} />
+          <Required isRequired={block.isRequired} isComplete={blockTracking.isAbleToComplete} />
         </div>
       </div>
 
       <div className="mb-2">
         {map(block.options, (option) => {
-          const isSelected = find(tracking.selectedOptions, { _id: option._id });
+          const isSelected = !!find(blockTracking.selectedOptions, { _id: option._id });
           return (
             <MultipleChoicePromptBlockPlayerAnswer
               key={option._id}
               option={option}
               isMultiSelect={block.isMultiSelect}
               isSelected={isSelected}
-              isComplete={tracking.isComplete}
+              isComplete={blockTracking.isComplete}
               isResponseBlock={isResponseBlock}
               onAnswerClicked={onAnswerClicked}
             />
