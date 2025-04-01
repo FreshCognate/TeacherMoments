@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Schema from './trackings.schema.js';
+import Schema from './runs.schema.js';
 
 const ModelSchema = mongoose.Schema(Schema, { usePushEach: true });
 

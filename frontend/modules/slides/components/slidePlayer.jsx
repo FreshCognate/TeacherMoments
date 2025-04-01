@@ -1,7 +1,7 @@
 import React from 'react';
 import Loading from '~/uikit/loaders/components/loading';
 import map from 'lodash/map';
-import getBlockTracking from '~/modules/tracking/helpers/getBlockTracking';
+import getBlockTracking from '~/modules/run/helpers/getBlockTracking';
 import Body from '~/uikit/content/components/body';
 import getBlockComponent from '~/modules/blocks/helpers/getBlockComponent';
 import SlidePlayerNavigation from './slidePlayerNavigation';
@@ -14,12 +14,12 @@ const SlidePlayer = ({
   activeSlide,
   activeBlocks,
   navigateTo,
-  tracking = {},
+  run = {},
   isLoading,
   primaryAction,
   secondaryAction,
   onActionClicked,
-  onUpdateTracking,
+  onUpdateBlockTracking,
 }) => {
   if (!activeSlide || isLoading) return (
     <Loading />
@@ -54,18 +54,18 @@ const SlidePlayer = ({
             >
               <Block
                 block={block}
-                tracking={blockTracking}
-                onUpdateTracking={(update) => {
-                  onUpdateTracking({ update, blockRef: block.ref });
+                blockTracking={blockTracking}
+                onUpdateBlockTracking={(update) => {
+                  onUpdateBlockTracking({ update, blockRef: block.ref });
                 }}
                 navigateTo={navigateTo}
               />
             </div>
           );
         })}
-        {(tracking.feedbackItems && tracking.feedbackItems.length > 0) && (
+        {(run.feedbackItems && run.feedbackItems.length > 0) && (
           <div className="bg-blue-200 bg-opacity-30 border border-blue-200 p-2 rounded-md dark:text-gray-200 text-gray-800">
-            {map(tracking.feedbackItems, (feedbackItem, index) => {
+            {map(run.feedbackItems, (feedbackItem, index) => {
               return (
                 <Body key={index} body={feedbackItem} />
               )

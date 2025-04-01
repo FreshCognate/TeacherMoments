@@ -12,7 +12,7 @@ if (typeof window !== 'undefined') {
 
 const InputPromptAudioBlockPlayer = ({
   block,
-  tracking,
+  blockTracking,
   isUploadingAudio,
   uploadProgress,
   uploadStatus,
@@ -23,9 +23,9 @@ const InputPromptAudioBlockPlayer = ({
 }) => {
   let audioSrc;
   let transcript;
-  if (tracking.audio) {
-    audioSrc = getAssetUrl(tracking.audio, "original");
-    transcript = tracking.audio.transcript;
+  if (blockTracking.audio) {
+    audioSrc = getAssetUrl(blockTracking.audio, "original");
+    transcript = blockTracking.audio.transcript;
   }
 
   return (

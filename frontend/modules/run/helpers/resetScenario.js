@@ -4,8 +4,8 @@ import navigateTo from "./navigateTo";
 
 export default () => {
   const slides = getCache('slides');
-  const tracking = getCache('tracking');
-  tracking.set({});
+  const run = getCache('run');
+  run.set({});
   const firstSlideRef = get(slides, 'data.0.ref', null);
   navigateTo({ slideRef: firstSlideRef });
 }

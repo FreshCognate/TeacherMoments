@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import SlidePlayer from '../components/slidePlayer';
-import updateTracking from '~/modules/tracking/helpers/updateTracking';
-import navigateTo from '~/modules/tracking/helpers/navigateTo';
+import updateRun from '~/modules/run/helpers/updateRun';
+import navigateTo from '~/modules/run/helpers/navigateTo';
 import trigger from '~/modules/triggers/helpers/trigger';
-import getSlideTracking from '~/modules/tracking/helpers/getSlideTracking';
+import getSlideStage from '~/modules/run/helpers/getSlideStage';
 import WithCache from '~/core/cache/containers/withCache';
-import navigateBack from '~/modules/tracking/helpers/navigateBack';
-import navigateToNextSlide from '~/modules/tracking/helpers/navigateToNextSlide';
-import getSlideNavigationDetails from '~/modules/tracking/helpers/getSlideNavigationDetails';
-import setSlideToComplete from '~/modules/tracking/helpers/setSlideToComplete';
-import setScenarioConsent from '~/modules/tracking/helpers/setScenarioConsent';
-import getNextSlide from '~/modules/tracking/helpers/getNextSlide';
-import setScenarioToComplete from '~/modules/tracking/helpers/setScenarioToComplete';
+import navigateBack from '~/modules/run/helpers/navigateBack';
+import navigateToNextSlide from '~/modules/run/helpers/navigateToNextSlide';
+import getSlideNavigationDetails from '~/modules/run/helpers/getSlideNavigationDetails';
+import setSlideToComplete from '~/modules/run/helpers/setSlideToComplete';
+import setScenarioConsent from '~/modules/run/helpers/setScenarioConsent';
+import getNextSlide from '~/modules/run/helpers/getNextSlide';
+import setScenarioToComplete from '~/modules/run/helpers/setScenarioToComplete';
 import WithRouter from '~/core/app/components/withRouter';
 
 class SlidePlayerContainer extends Component {
@@ -78,7 +78,7 @@ class SlidePlayerContainer extends Component {
           }
         }
       } else {
-        if (this.props.tracking.data.isComplete) {
+        if (this.props.run.data.isComplete) {
           secondaryAction = {
             action: 'RERUN_SCENARIO',
             text: 'Rerun this scenario'
@@ -105,8 +105,8 @@ class SlidePlayerContainer extends Component {
 
   }
 
-  onUpdateTracking = async ({ blockRef, update }) => {
-    await updateTracking({ slideRef: this.props.activeSlide.ref, blockRef, update });
+  onUpdateBlockTracking = async ({ blockRef, update }) => {
+    await updateRun({ slideRef: this.props.activeSlide.ref, blockRef, update });
   }
 
   onPreviousSlideClicked = () => {
@@ -170,7 +170,7 @@ class SlidePlayerContainer extends Component {
 
     const { scenario, activeSlide, activeBlocks } = this.props;
 
-    const slideTracking = getSlideTracking();
+    const slideStage = getSlideStage();
 
     const {
       primaryAction,
@@ -184,14 +184,14 @@ class SlidePlayerContainer extends Component {
         activeBlocks={activeBlocks}
         isLoading={this.state.isLoading}
         navigateTo={this.navigateTo}
-        tracking={slideTracking}
+        slideStage={slideStage}
         primaryAction={primaryAction}
         secondaryAction={secondaryAction}
         onActionClicked={this.onActionClicked}
-        onUpdateTracking={this.onUpdateTracking}
+        onUpdateBlockTracking={this.onUpdateBlockTracking}
       />
     );
   }
 };
 
-export default WithRouter(WithCache(SlidePlayerContainer, null, ['tracking']));
+export default WithRouter(WithCache(SlidePlayerContainer, null, ['run']));

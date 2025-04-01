@@ -7,8 +7,8 @@ import Loading from '~/uikit/loaders/components/loading';
 
 class PlayScenarioLoaderContainer extends Component {
   render() {
-    const { scenario, slides, blocks, triggers, tracking } = this.props;
-    if (scenario.data && slides.data && blocks.data && triggers.data && tracking.data) {
+    const { scenario, slides, blocks, triggers, run } = this.props;
+    if (scenario.data && slides.data && blocks.data && triggers.data && run.data) {
       return (
         <PlayScenarioContainer />
       );
@@ -81,14 +81,14 @@ export default WithRouter(WithCache(PlayScenarioLoaderContainer, {
       return [scenario?.data?._id]
     }
   },
-  tracking: {
-    url: '/api/play/trackings/:id',
+  run: {
+    url: '/api/play/runs/:id',
     getParams: ({ }) => {
       return {
         id: getCache('scenario')?.data?._id
       }
     },
-    transform: ({ data }) => data.tracking,
+    transform: ({ data }) => data.run,
     getDependencies: ({ props }) => {
       const scenario = getCache('scenario');
       return [scenario?.data?._id]

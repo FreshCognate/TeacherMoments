@@ -4,18 +4,18 @@ import Body from '~/uikit/content/components/body';
 
 const InputPromptTextBlockPlayer = ({
   block,
-  tracking,
+  blockTracking,
   isResponseBlock,
   onTextInputChanged,
 }) => {
-  const textValueLength = tracking.textValue?.length || 0;
+  const textValueLength = blockTracking.textValue?.length || 0;
   const requiredCharactersRemaining = Math.max(block.requiredLength - textValueLength, 0);
   return (
     <div>
       <textarea
         placeholder={getString({ model: block, field: 'placeholder' })}
-        value={tracking.textValue}
-        disabled={tracking.isComplete || isResponseBlock}
+        value={blockTracking.textValue}
+        disabled={blockTracking.isComplete || isResponseBlock}
         className="w-full p-2 text-sm hover:border-lm-4 dark:hover:border-dm-4 focus:outline outline-2 -outline-offset-1 outline-lm-4 dark:outline-dm-4 rounded border border-lm-3 dark:border-dm-3"
         onChange={onTextInputChanged}
       />

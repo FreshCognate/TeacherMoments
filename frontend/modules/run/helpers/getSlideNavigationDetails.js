@@ -1,14 +1,14 @@
 import getBlocksBySlideRef from "~/modules/blocks/helpers/getBlocksBySlideRef";
-import getSlideTracking from "./getSlideTracking"
+import getSlideStage from "./getSlideStage"
 import getBlockTracking from "./getBlockTracking";
 
 export default () => {
   let isAbleToCompleteSlide = true;
   let hasRequiredPrompts = false;
-  const slideTracking = getSlideTracking();
-  if (slideTracking) {
+  const slideStage = getSlideStage();
+  if (slideStage) {
 
-    const blocks = getBlocksBySlideRef({ slideRef: slideTracking.slideRef });
+    const blocks = getBlocksBySlideRef({ slideRef: slideStage.slideRef });
 
     for (const block of blocks) {
 

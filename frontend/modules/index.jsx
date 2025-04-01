@@ -13,9 +13,6 @@ import '~/modules/slides/containers/slideNavigationContainer.formField';
 import '~/core/app/conditions/modelValueIs';
 import '~/modules/slides/helpers/isRootSlide.condition';
 import '~/modules/ls/helpers/ls.condition'
-import '~/modules/slides/triggers/navigateFromPrompts.trigger';
-import '~/modules/slides/triggers/giveFeedbackFromPrompts.trigger';
-import '~/modules/slides/triggers/showFeedbackFromPrompts.trigger';
 
 axios.interceptors.response.use(function (response) {
   return response;

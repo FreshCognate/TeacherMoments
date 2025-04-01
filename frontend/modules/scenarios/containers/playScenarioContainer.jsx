@@ -5,7 +5,7 @@ import SlidePlayerContainer from '~/modules/slides/containers/slidePlayerContain
 import get from 'lodash/get';
 import find from 'lodash/find';
 import filter from 'lodash/filter';
-import navigateTo from '~/modules/tracking/helpers/navigateTo';
+import navigateTo from '~/modules/run/helpers/navigateTo';
 
 class PlayScenarioContainer extends Component {
 
@@ -16,7 +16,7 @@ class PlayScenarioContainer extends Component {
   }
 
   startScenario = () => {
-    const { activeSlideRef } = this.props.tracking.data;
+    const { activeSlideRef } = this.props.run.data;
     const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
     if (!activeSlideRef) {
       navigateTo({ slideRef: firstSlideRef });
@@ -25,21 +25,21 @@ class PlayScenarioContainer extends Component {
 
   getActiveSlide = () => {
     let activeSlide = null;
-    const { tracking, slides, scenario } = this.props;
-    if (!tracking.data.isConsentAcknowledged) {
+    const { run, slides, scenario } = this.props;
+    if (!run.data.isConsentAcknowledged) {
       return {
         _id: 'CONSENT_SLIDE',
         slideType: 'CONSENT'
       };
     }
-    if (tracking.data.isComplete) {
+    if (run.data.isComplete) {
       return {
         _id: 'SUMMARY_SLIDE',
         slideType: 'SUMMARY'
       };
     }
-    if (tracking.data.activeSlideRef) {
-      activeSlide = find(slides.data, { ref: tracking.data.activeSlideRef });
+    if (run.data.activeSlideRef) {
+      activeSlide = find(slides.data, { ref: run.data.activeSlideRef });
     }
     return activeSlide;
   }
@@ -68,4 +68,4 @@ class PlayScenarioContainer extends Component {
   }
 };
 
-export default WithRouter(WithCache(PlayScenarioContainer, null, ['scenario', 'slides', 'blocks', 'tracking']));
+export default WithRouter(WithCache(PlayScenarioContainer, null, ['scenario', 'slides', 'blocks', 'run']));

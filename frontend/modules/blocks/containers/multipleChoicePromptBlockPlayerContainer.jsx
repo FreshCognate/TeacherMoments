@@ -8,7 +8,7 @@ import getString from '~/modules/ls/helpers/getString';
 class MultipleChoicePromptBlockPlayerContainer extends Component {
 
   onAnswerClicked = (selectedOptionId) => {
-    const { selectedOptions } = this.props.tracking;
+    const { selectedOptions } = this.props.blockTracking;
     const { isMultiSelect, options } = this.props.block;
     const currentOption = find(options, { _id: selectedOptionId });
 
@@ -34,15 +34,15 @@ class MultipleChoicePromptBlockPlayerContainer extends Component {
     if (clonedSelectedOptions.length > 0) {
       isAbleToComplete = true;
     }
-    this.props.onUpdateTracking({ selectedOptions: clonedSelectedOptions, isAbleToComplete });
+    this.props.onUpdateBlockTracking({ selectedOptions: clonedSelectedOptions, isAbleToComplete });
   }
 
   render() {
-    const { block, tracking, isResponseBlock } = this.props;
+    const { block, blockTracking, isResponseBlock } = this.props;
     return (
       <MultipleChoicePromptBlockPlayer
         block={block}
-        tracking={tracking}
+        blockTracking={blockTracking}
         isResponseBlock={isResponseBlock}
         onAnswerClicked={this.onAnswerClicked}
       />

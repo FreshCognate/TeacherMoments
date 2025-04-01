@@ -44,7 +44,7 @@ const CreateNavigationSlide = ({
                       >
                         <Block
                           block={block}
-                          tracking={{}}
+                          blockTracking={{}}
                         />
                       </div>
                     );

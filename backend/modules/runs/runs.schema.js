@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const schema = {
-  type: { type: String, default: 'tracking' },
+  type: { type: String, default: 'run' },
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   activeSlideRef: { type: String },

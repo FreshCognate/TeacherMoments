@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import InputPromptBlockPlayer from '../components/inputPromptBlockPlayer';
-import setUserPreferences from '~/modules/tracking/helpers/setUserPreferences';
-import getUserPreferences from '~/modules/tracking/helpers/getUserPreferences';
+import setUserPreferences from '~/modules/run/helpers/setUserPreferences';
+import getUserPreferences from '~/modules/run/helpers/getUserPreferences';
 import axios from 'axios';
 import uploadAsset from '~/modules/assets/helpers/uploadAsset';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
@@ -31,7 +31,7 @@ class InputPromptBlockPlayerContainer extends Component {
     if (event.target.value.length >= this.props.block.requiredLength) {
       isAbleToComplete = true;
     }
-    this.props.onUpdateTracking({ textValue: event.target.value, isAbleToComplete });
+    this.props.onUpdateBlockTracking({ textValue: event.target.value, isAbleToComplete });
   }
 
   onAudioRecorded = async (mediaBlobUrl) => {
@@ -59,7 +59,7 @@ class InputPromptBlockPlayerContainer extends Component {
           break;
         case 'AUDIO_PROCESSED':
           const assetProcessedResponse = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
-          this.props.onUpdateTracking({ audio: assetProcessedResponse.data.asset });
+          this.props.onUpdateBlockTracking({ audio: assetProcessedResponse.data.asset });
           break;
         case 'TRANSCRIPT_PROCESSING':
           this.setState({ uploadStatus: 'Creating transcript' });
@@ -67,7 +67,7 @@ class InputPromptBlockPlayerContainer extends Component {
         case 'TRANSCRIPT_PROCESSED':
           const assetTranscribedResponse = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
           const isAbleToComplete = assetTranscribedResponse.data.asset.transcript.length > 0;
-          this.props.onUpdateTracking({ audio: assetTranscribedResponse.data.asset, isAbleToComplete });
+          this.props.onUpdateBlockTracking({ audio: assetTranscribedResponse.data.asset, isAbleToComplete });
           this.setState({ uploadStatus: null });
           break;
         case 'ASSET_ERRORED':
@@ -78,11 +78,11 @@ class InputPromptBlockPlayerContainer extends Component {
   }
 
   onAudioRecording = () => {
-    if (this.props.tracking.audio) {
-      if (this.props.tracking.audio._id) {
-        axios.delete(`/api/assets/${this.props.tracking.audio._id}`);
+    if (this.props.blockTracking.audio) {
+      if (this.props.blockTracking.audio._id) {
+        axios.delete(`/api/assets/${this.props.blockTracking.audio._id}`);
       }
-      this.props.onUpdateTracking({ audio: null, isComplete: false, isAbleToComplete: false });
+      this.props.onUpdateBlockTracking({ audio: null, isComplete: false, isAbleToComplete: false });
     }
   }
 
@@ -91,20 +91,20 @@ class InputPromptBlockPlayerContainer extends Component {
   }
 
   onRemoveAudioClicked = () => {
-    if (this.props.tracking.audio._id) {
-      axios.delete(`/api/assets/${this.props.tracking.audio._id}`);
+    if (this.props.blockTracking.audio._id) {
+      axios.delete(`/api/assets/${this.props.blockTracking.audio._id}`);
     }
-    this.props.onUpdateTracking({ audio: null, isComplete: false, isAbleToComplete: false });
+    this.props.onUpdateBlockTracking({ audio: null, isComplete: false, isAbleToComplete: false });
   }
 
   render() {
-    const { block, tracking, isResponseBlock } = this.props;
+    const { block, blockTracking, isResponseBlock } = this.props;
     const { isUploadingAudio, uploadProgress, uploadStatus } = this.state;
     const { isAudioDisabled } = getUserPreferences();
     return (
       <InputPromptBlockPlayer
         block={block}
-        tracking={tracking}
+        blockTracking={blockTracking}
         isAudioDisabled={isAudioDisabled}
         isResponseBlock={isResponseBlock}
         isUploadingAudio={isUploadingAudio}

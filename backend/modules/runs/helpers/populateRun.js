@@ -1,5 +1,5 @@
-export default async ({ tracking }, { models }) => {
-  for (const stage of tracking.stages) {
+export default async ({ run }, { models }) => {
+  for (const stage of run.stages) {
     const blockRefs = Object.values(stage.blocksByRef);
     const audioIds = blockRefs.map(block => block.audio).filter(id => id);
 
@@ -9,5 +9,5 @@ export default async ({ tracking }, { models }) => {
       block.audio = audioDocs.find(audio => audio._id.equals(block.audio));
     });
   }
-  return tracking;
+  return run;
 }

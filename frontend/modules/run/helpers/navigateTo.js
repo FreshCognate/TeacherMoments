@@ -4,41 +4,41 @@ import filter from 'lodash/filter';
 import each from 'lodash/each';
 import getIsSlideComplete from "./getIsSlideComplete";
 import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
-import findSlideTracking from "./findSlideTracking";
+import findSlideStage from "./findSlideStage";
 
 export default async ({ slideRef }) => {
 
-  const tracking = getCache('tracking');
+  const run = getCache('run');
 
-  const stages = cloneDeep(tracking.data.stages || []);
+  const stages = cloneDeep(run.data.stages || []);
 
-  const slideTracking = findSlideTracking({ slideRef });
+  const slideStage = findSlideStage({ slideRef });
 
-  if (!slideTracking) {
+  if (!slideStage) {
 
     const slideBlocks = filter(getCache('blocks').data, { slideRef });
 
     let blocksByRef = {};
 
     each(slideBlocks, (block) => {
-      let defaultTracking = {};
+      let defaultBlockTracking = {};
 
       switch (block.blockType) {
         case 'MULTIPLE_CHOICE_PROMPT':
-          defaultTracking = {
+          defaultBlockTracking = {
             selectedOptions: [],
             isComplete: false
           }
           break;
         case 'INPUT_PROMPT':
-          defaultTracking = {
+          defaultBlockTracking = {
             textValue: "",
             isComplete: false
           }
           break;
       }
 
-      blocksByRef[block.ref] = defaultTracking;
+      blocksByRef[block.ref] = defaultBlockTracking;
     });
 
     let isSlideComplete = getIsSlideComplete({ blocksByRef });
@@ -48,9 +48,9 @@ export default async ({ slideRef }) => {
   }
 
   if (isScenarioInPlay()) {
-    tracking.mutate({ activeSlideRef: slideRef, stages }, { method: 'put' });
+    run.mutate({ activeSlideRef: slideRef, stages }, { method: 'put' });
   } else {
-    tracking.set({ activeSlideRef: slideRef, stages });
+    run.set({ activeSlideRef: slideRef, stages });
   }
 
 }

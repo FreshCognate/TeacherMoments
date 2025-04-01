@@ -34,7 +34,7 @@ class CreateWorkspaceContainer extends Component {
 };
 
 export default WithRouter(WithCache(CreateWorkspaceContainer, {
-  tracking: {
+  run: {
     getInitialData: () => {
       return {
         activeSlideRef: null,

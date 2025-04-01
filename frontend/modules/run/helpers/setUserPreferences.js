@@ -3,8 +3,8 @@ import cloneDeep from 'lodash/cloneDeep';
 import extend from 'lodash/extend';
 
 export default (preferences) => {
-  const tracking = getCache('tracking');
-  const clonedPreferences = cloneDeep(tracking.data.preferences || {});
+  const run = getCache('run');
+  const clonedPreferences = cloneDeep(run.data.preferences || {});
   extend(clonedPreferences, preferences);
-  tracking.set({ preferences: clonedPreferences });
+  run.set({ preferences: clonedPreferences });
 }

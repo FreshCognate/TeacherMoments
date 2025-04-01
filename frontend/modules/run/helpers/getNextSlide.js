@@ -2,9 +2,9 @@ import getCache from "~/core/cache/helpers/getCache";
 import find from 'lodash/find';
 
 export default () => {
-  const tracking = getCache('tracking');
+  const run = getCache('run');
 
-  const activeSlideRef = tracking.data.activeSlideRef;
+  const activeSlideRef = run.data.activeSlideRef;
 
   const currentSlide = find(getCache('slides').data, { ref: activeSlideRef });
 

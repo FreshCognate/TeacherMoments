@@ -4,7 +4,7 @@ import get from 'lodash/get';
 import find from 'lodash/find';
 import filter from 'lodash/filter';
 import WithCache from '~/core/cache/containers/withCache';
-import navigateTo from '~/modules/tracking/helpers/navigateTo';
+import navigateTo from '~/modules/run/helpers/navigateTo';
 
 class ScenarioPreviewContainer extends Component {
 
@@ -22,9 +22,9 @@ class ScenarioPreviewContainer extends Component {
 
   getActiveSlide = () => {
     let activeSlide = null;
-    const { tracking, slides } = this.props;
-    if (tracking.data.activeSlideRef) {
-      activeSlide = find(slides.data, { ref: tracking.data.activeSlideRef });
+    const { run, slides } = this.props;
+    if (run.data.activeSlideRef) {
+      activeSlide = find(slides.data, { ref: run.data.activeSlideRef });
     }
     return activeSlide;
   }
@@ -51,7 +51,7 @@ class ScenarioPreviewContainer extends Component {
 };
 
 export default WithCache(ScenarioPreviewContainer, {
-  tracking: {
+  run: {
     getInitialData: () => {
       return {
         activeSlideRef: null,

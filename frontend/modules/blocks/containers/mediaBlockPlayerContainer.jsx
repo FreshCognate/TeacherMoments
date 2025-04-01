@@ -6,13 +6,13 @@ class MediaBlockPlayerContainer extends Component {
 
   onVideoStarted = () => {
     if (this.props.block.mediaCompleteOn === 'START') {
-      this.props.onUpdateTracking({ isComplete: true });
+      this.props.onUpdateBlockTracking({ isComplete: true });
     }
   }
 
   onVideoEnded = () => {
     if (this.props.block.mediaCompleteOn === 'END') {
-      this.props.onUpdateTracking({ isComplete: true });
+      this.props.onUpdateBlockTracking({ isComplete: true });
     }
   }
 

@@ -1,8 +1,8 @@
 import { registerModel } from '#core/databases/helpers/registerModel.js';
-import model from './trackings.model.js';
+import model from './runs.model.js';
 
 registerModel({
-  name: 'Tracking',
+  name: 'Run',
   model,
   type: 'app'
 });
