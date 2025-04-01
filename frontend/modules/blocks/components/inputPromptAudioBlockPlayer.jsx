@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-import FlatButton from '~/uikit/buttons/components/flatButton';
-import classnames from 'classnames';
 import AudioRecorder from '~/uikit/content/components/audioRecorder';
 import getAssetUrl from '~/core/app/helpers/getAssetUrl';
 import Body from '~/uikit/content/components/body';
