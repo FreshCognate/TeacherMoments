@@ -24,6 +24,7 @@ class CreateNavigationSlideActionsContainer extends Component {
   render() {
     return (
       <CreateNavigationSlideActions
+        slideNumber={this.props.slideNumber}
         isOptionsOpen={this.state.isOptionsOpen}
         onSlideActionsToggle={this.onSlideActionsToggle}
         onSlideActionClicked={this.onSlideActionClicked}
