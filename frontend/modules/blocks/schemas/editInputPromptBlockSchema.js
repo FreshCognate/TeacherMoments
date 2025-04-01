@@ -82,7 +82,7 @@ export default {
     inputTypeWarning: {
       type: 'Alert',
       alertType: 'info',
-      alertText: 'A text element will display if the users browser does not support audio.',
+      alertText: "A text element will display if the participant's browser does not support audio.",
       conditions: [{
         type: 'modelValueIs',
         field: 'inputType',
