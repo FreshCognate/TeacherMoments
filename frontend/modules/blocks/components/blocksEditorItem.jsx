@@ -33,7 +33,7 @@ const BlocksEditorItem = ({
         </div>
       </div>
 
-      <div className="flex items-center justify-between bg-lm-3 dark:bg-dm-3 cursor-auto dark:bg-dm-2 px-2 py-1 opacity-0 group-hover/block:opacity-100">
+      <div className="flex items-center justify-between bg-lm-3 dark:bg-dm-3 cursor-auto px-2 py-1 opacity-0 group-hover/block:opacity-100">
         <div className="flex items-center">
           <FlatButton icon="delete" color="warning" onClick={() => onDeleteBlockClicked(block._id)} />
         </div>

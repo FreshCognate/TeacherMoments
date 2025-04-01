@@ -27,19 +27,19 @@ export default {
   contentSchema: {
     ...body,
     ...placeholder,
-    options: {
-      type: 'Array',
-      label: 'Feedback',
-      addButtonText: 'Add feedback',
-      subSchema: {
-        ...feedbackText,
-        ...answerText,
-        value: {
-          type: 'Text',
-          label: 'Value'
-        }
-      }
-    }
+    // options: {
+    //   type: 'Array',
+    //   label: 'Feedback',
+    //   addButtonText: 'Add feedback',
+    //   subSchema: {
+    //     ...feedbackText,
+    //     ...answerText,
+    //     value: {
+    //       type: 'Text',
+    //       label: 'Value'
+    //     }
+    //   }
+    // }
   },
   settingsSchema: {
     isRequired: {

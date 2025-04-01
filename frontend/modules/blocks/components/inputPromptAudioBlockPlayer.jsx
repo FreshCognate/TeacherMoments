@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-import FlatButton from '~/uikit/buttons/components/flatButton';
-import classnames from 'classnames';
 import AudioRecorder from '~/uikit/content/components/audioRecorder';
 import getAssetUrl from '~/core/app/helpers/getAssetUrl';
 import Body from '~/uikit/content/components/body';
@@ -65,7 +63,7 @@ const InputPromptAudioBlockPlayer = ({
       />
       {(audioSrc && !transcript) && (
         <div className="mt-4">
-          <Alert type="warning" text="Audio is empty. Try re-recording your audio." />
+          <Alert type="warning" text="Transcription process completed, however it appears your audio recording is empty. Please try recording your response again." />
         </div>
       )}
       {(transcript) && (
