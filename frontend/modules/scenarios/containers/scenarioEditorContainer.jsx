@@ -86,7 +86,12 @@ class ScenarioEditorContainer extends Component {
 
   onToggleClicked = (value) => {
     const { navigate, params } = this.props.router;
-    navigate(`/scenarios/${params.id}/${value}`, { viewTransition: true, replace: true });
+    const firstSlide = this.props.slides.data[0];
+    let query = '';
+    if (value === 'create') {
+      query = `?slide=${firstSlide._id}`;
+    }
+    navigate(`/scenarios/${params.id}/${value}${query}`, { viewTransition: true, replace: true });
   }
 
   render() {
