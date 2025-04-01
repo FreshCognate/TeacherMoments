@@ -10,7 +10,9 @@ const CreateWorkspace = ({
   return (
     <div className="w-full h-full">
       <div className="flex justify-center">
-        <CreateWorkspaceToolbarContainer />
+        <CreateWorkspaceToolbarContainer
+          activeSlideRef={activeSlideRef}
+        />
       </div>
       {(displayMode === 'EDITING') && (
         <div className="pt-10 w-full h-full overflow-y-auto">
