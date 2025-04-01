@@ -69,7 +69,7 @@ class SlidePlayerContainer extends Component {
           text: 'Back',
           isActive: true
         }
-        if (true) {
+        if (hasRequiredPrompts) {
           primaryAction = {
             action: 'SUBMIT',
             color: 'primary',
