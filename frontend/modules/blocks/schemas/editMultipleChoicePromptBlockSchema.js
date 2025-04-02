@@ -42,7 +42,7 @@ export default {
         value: {
           type: 'Text',
           label: 'Option value',
-          help: 'This is the value that is stored for analytics purposes.'
+          help: "This value is stored for analytics purposes. This can be left blank but it's a good idea to fill this out if you would like another value other than the option text to be saved."
         }
       }
     }
