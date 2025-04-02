@@ -11,30 +11,26 @@ import getString from '~/modules/ls/helpers/getString';
 
 class ResponseSelectorContainerFormField extends Component {
 
-  getAvailablePromptResponses = (slide) => {
+  getAvailablePromptResponses = () => {
     let responses = [];
+    const slides = getCache('slides');
+    const currentSlide = find(slides.data, { ref: this.props.model.slideRef });
+    const currentSlideSortOrder = currentSlide.sortOrder;
 
-    const getResponsesBySlide = (slide) => {
-      const blocks = getPromptBlocksBySlideRef({ slideRef: slide.ref });
-      for (const block of blocks) {
-        const blockDisplayName = getBlockDisplayName(block);
-        responses.push({
-          slideName: slide.name,
-          slideRef: slide.ref,
-          blockType: block.blockType,
-          blockRef: block.ref,
-          blockDisplayName,
-          blockPrompt: getString({ model: block, field: 'body' })
-        })
-      }
-    }
-    getResponsesBySlide(slide);
-    const doesSlideContainCurrentBlocksSlide = includes(slide.children, this.props.model.slideRef);
-    if (!doesSlideContainCurrentBlocksSlide) {
-      for (const childSlideRef of slide.children) {
-        const slides = getCache('slides');
-        const slide = find(slides.data, { ref: childSlideRef });
-        getResponsesBySlide(slide);
+    for (const slide of slides.data) {
+      if (slide.sortOrder < currentSlideSortOrder) {
+        const blocks = getPromptBlocksBySlideRef({ slideRef: slide.ref });
+        for (const block of blocks) {
+          const blockDisplayName = getBlockDisplayName(block);
+          responses.push({
+            slideName: slide.name,
+            slideRef: slide.ref,
+            blockType: block.blockType,
+            blockRef: block.ref,
+            blockDisplayName,
+            blockPrompt: getString({ model: block, field: 'body' })
+          })
+        }
       }
     }
     return responses;
@@ -44,20 +40,18 @@ class ResponseSelectorContainerFormField extends Component {
     let hasError = false;
     let error;
     let responses = [];
-    if (this.props.model.responseType === 'PROMPT') {
 
-      const slides = getCache('slides');
+    const slides = getCache('slides');
 
-      const rootSlide = find(slides.data, { isRoot: true });
+    const rootSlide = find(slides.data, { sortOrder: 0 });
 
-      if (rootSlide.ref === this.props.model.slideRef) {
-        hasError = true;
-        error = 'Cannot use a response block on the first slide.';
-      } else {
-        responses = this.getAvailablePromptResponses(rootSlide);
-      }
+    if (rootSlide.ref === this.props.model.slideRef) {
+      hasError = true;
+      error = 'Cannot use a response block on the first slide.';
+    } else {
+      responses = this.getAvailablePromptResponses();
     }
-    console.log(responses);
+
     return { hasError, error, responses };
   }
 

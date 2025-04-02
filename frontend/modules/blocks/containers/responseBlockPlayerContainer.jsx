@@ -16,7 +16,7 @@ class ResponseBlockPlayerContainer extends Component {
     if (!this.props.block.responseRef) {
       hasError = true;
       error = "A response has not been chosen.";
-    } else if (this.props.block.responseType === 'PROMPT') {
+    } else {
 
       const blocks = getCache('blocks');
       block = find(blocks.data, { ref: this.props.block.responseRef });
