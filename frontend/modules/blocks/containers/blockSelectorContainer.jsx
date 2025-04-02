@@ -22,6 +22,9 @@ class BlockSelectorContainer extends Component {
         if (block.blockType === 'RESPONSE') return true;
       })
     }
+    remove(clonedBlocks, (block) => {
+      if (block.blockType === 'ACTIONS_PROMPT') return true;
+    })
     return clonedBlocks;
   }
 
