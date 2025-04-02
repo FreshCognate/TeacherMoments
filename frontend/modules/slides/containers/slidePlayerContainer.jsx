@@ -41,7 +41,7 @@ class SlidePlayerContainer extends Component {
 
     const { activeSlide } = this.props;
 
-    const { isAbleToCompleteSlide, hasRequiredPrompts } = getSlideNavigationDetails();
+    const { isAbleToCompleteSlide, hasRequiredPrompts, hasPrompts } = getSlideNavigationDetails();
 
     if (activeSlide?.slideType === 'CONSENT') {
       secondaryAction = {
@@ -71,7 +71,7 @@ class SlidePlayerContainer extends Component {
           text: 'Back',
           isActive: true
         }
-        if (hasRequiredPrompts) {
+        if (hasPrompts) {
           primaryAction = {
             action: 'SUBMIT',
             color: 'primary',
