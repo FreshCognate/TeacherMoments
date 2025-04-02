@@ -1,11 +1,15 @@
 import mongoose from 'mongoose';
 import textAreaSchema from '#core/app/textArea.schema.js';
 import buildLanguageSchema from '#core/app/helpers/buildLanguageSchema.js';
+import getDefaultScenarioSummaryText from './helpers/getDefaultScenarioSummaryText.js';
+import getDefaultScenarioConsentText from './helpers/getDefaultScenarioConsentText.js';
 
 const title = buildLanguageSchema('title', { type: String, default: '' });
 const description = buildLanguageSchema('description', textAreaSchema);
-const consent = buildLanguageSchema('consent', textAreaSchema);
-const summary = buildLanguageSchema('summary', textAreaSchema);
+const consent = buildLanguageSchema('consent', {
+  ...textAreaSchema, default: getDefaultScenarioConsentText()
+});
+const summary = buildLanguageSchema('summary', { ...textAreaSchema, default: getDefaultScenarioSummaryText() });
 
 const schema = {
   type: { type: String, default: 'scenario' },
