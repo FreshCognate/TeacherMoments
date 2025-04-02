@@ -48,7 +48,6 @@ export default {
       mediaCompleteOn: Joi.string().valid('START', 'END'),
       mediaType: Joi.string().valid('YOUTUBE', 'ASSET'),
       mediaSrc: Joi.string().allow(''),
-      responseType: Joi.string().valid('PROMPT'),
       responseRef: Joi.string().allow(null),
       suggestionType: Joi.string().valid('INFO', 'WARNING'),
       ...buildLanguageValidation('mediaAsset', [Joi.string().allow(null), Joi.object()]),
