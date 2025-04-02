@@ -24,10 +24,10 @@ const SlateMarkButton = ({
         event.preventDefault();
         toggleMark(editor, format);
       }}
-      style={{ width: '26px', height: '26px' }}
+      style={{ width: '30px', height: '30px' }}
     >
       {(icon) && (
-        <Icon icon={icon} size={16} />
+        <Icon icon={icon} size={20} />
       )}
       {(text) && (
         text
