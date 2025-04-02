@@ -48,7 +48,7 @@ const EditBlock = ({
           </div>
           <Options
             options={[{
-              text: 'Delete',
+              text: 'Delete block',
               icon: 'delete',
               color: 'warning',
               action: 'DELETE'
