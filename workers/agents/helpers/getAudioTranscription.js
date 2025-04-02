@@ -1,6 +1,5 @@
 import fs from "fs";
 import getOpenAI from "./getOpenAI.js";
-import getAssetUrl from '../../helpers/getAssetUrl.js';
 import downloadAsset from "../../helpers/downloadAsset.js";
 
 export default async ({ asset }) => {

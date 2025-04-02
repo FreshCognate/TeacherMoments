@@ -1,9 +1,7 @@
-import Sharp from 'sharp';
 import connectDatabase from '../../backend/core/databases/helpers/connectDatabase.js';
 import { S3Client, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import getAssetKey from '../helpers/getAssetKey.js';
-import { PassThrough } from 'stream';
 import ffmpeg from 'fluent-ffmpeg';
 import fse from 'fs-extra';
 
