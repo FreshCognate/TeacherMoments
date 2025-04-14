@@ -1,6 +1,7 @@
 import React from 'react';
 import getAssetUrl from '~/core/app/helpers/getAssetUrl';
 import classnames from 'classnames';
+import getAvailableImageSize from '~/core/app/helpers/getAvailableImageSize';
 
 const Image = ({
   asset,
@@ -12,8 +13,9 @@ const Image = ({
 
   let imageSrc = src;
 
-  if (asset) {
-    imageSrc = getAssetUrl(asset, size);
+  if (asset && asset._id) {
+    const assetSize = getAvailableImageSize({ asset, size });
+    imageSrc = getAssetUrl(asset, assetSize);
   }
 
   const className = classnames("object-cover", {

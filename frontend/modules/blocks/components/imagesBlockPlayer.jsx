@@ -20,16 +20,19 @@ const ImagesBlockPlayer = ({
       "grid-cols-3": items.length > 2
     })}>
       {map(items, (item) => {
-        return (
-          <div key={item._id}>
-            <Image
-              asset={getContent({ model: item, field: 'asset' })}
-              size={imageSize}
-              shape={imagesShape}
-              borderRadius={imagesBorderRadius}
-            />
-          </div>
-        );
+        const asset = getContent({ model: item, field: 'asset' });
+        if (asset && asset._id) {
+          return (
+            <div key={item._id}>
+              <Image
+                asset={asset}
+                size={imageSize}
+                shape={imagesShape}
+                borderRadius={imagesBorderRadius}
+              />
+            </div>
+          );
+        }
       })}
     </div>
   );
