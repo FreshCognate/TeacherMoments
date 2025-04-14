@@ -26,11 +26,13 @@ const CreateNavigation = ({
           }}
           renderItem={({ item, index, items, draggingOptions }) => {
 
+            const canDeleteSlides = items.length > 1;
             let isSelected = false;
             let isDeletingSlide = false;
             if (item._id === selectedSlideId) isSelected = true;
             if (item._id === deletingId) isDeletingSlide = true;
             const slideBlocks = filter(blocks, { slideRef: item.ref });
+
             return (
               <CreateNavigationSlide
                 key={item._id}
@@ -40,6 +42,7 @@ const CreateNavigation = ({
                 draggingOptions={draggingOptions}
                 isSelected={isSelected}
                 isDeleting={isDeletingSlide}
+                canDeleteSlides={canDeleteSlides}
                 onDeleteSlideClicked={onDeleteSlideClicked}
               />
             );

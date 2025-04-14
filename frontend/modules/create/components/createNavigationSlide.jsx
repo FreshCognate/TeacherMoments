@@ -12,6 +12,7 @@ const CreateNavigationSlide = ({
   draggingOptions = {},
   isSelected,
   isDeleting,
+  canDeleteSlides,
   onDeleteSlideClicked
 }) => {
 
@@ -27,6 +28,7 @@ const CreateNavigationSlide = ({
       <div className={className} style={style} ref={setNodeRef} {...listeners} {...attributes}>
         <CreateNavigationSlideActionsContainer
           slideNumber={slide.sortOrder + 1}
+          canDeleteSlides={canDeleteSlides}
           onDeleteSlideClicked={() => onDeleteSlideClicked(slide._id)}
         />
         <div>

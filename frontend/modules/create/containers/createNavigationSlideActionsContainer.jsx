@@ -7,6 +7,18 @@ class CreateNavigationSlideActionsContainer extends Component {
     isOptionsOpen: false
   }
 
+  getOptions = () => {
+    const options = [];
+    if (this.props.canDeleteSlides) {
+      options.push({
+        icon: 'delete',
+        text: 'Delete slide',
+        color: 'warning',
+        action: 'DELETE'
+      });
+    }
+    return options;
+  }
 
   onSlideActionsToggle = (isOptionsOpen) => {
     this.setState({ isOptionsOpen })
@@ -26,6 +38,7 @@ class CreateNavigationSlideActionsContainer extends Component {
       <CreateNavigationSlideActions
         slideNumber={this.props.slideNumber}
         isOptionsOpen={this.state.isOptionsOpen}
+        options={this.getOptions()}
         onSlideActionsToggle={this.onSlideActionsToggle}
         onSlideActionClicked={this.onSlideActionClicked}
       />
