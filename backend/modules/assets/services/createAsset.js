@@ -35,7 +35,7 @@ export default async (props, options, context) => {
 
   // When creating a new asset we should create a signing url.
   const signedUrl = await getUploadSignedUrl({
-    assetPath: `assets/${fileType}s/${asset._id}/original/${sanitizedFileName}`,
+    assetPath: `assets/${fileType}s/${asset._id}/original/${assetFileName}.${extension}`,
     ACL: 'public-read',
     ContentType: mimetype
   });
