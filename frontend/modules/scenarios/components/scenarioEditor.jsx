@@ -4,6 +4,7 @@ import NavigationToggle from '~/uikit/toggles/components/navigationToggle';
 import Toggle from '~/uikit/toggles/components/toggle';
 import ScenarioSyncStatusContainer from '../containers/scenarioSyncStatusContainer';
 import Loading from '~/uikit/loaders/components/loading';
+import truncate from 'lodash/truncate';
 
 const ScenarioEditor = ({
   scenario,
@@ -28,7 +29,7 @@ const ScenarioEditor = ({
 
               className="text-black/60 dark:text-white/60"
             >
-              {scenario?.name}
+              {truncate(scenario?.name, { length: 60 })}
             </span>
           </div>
         </div>
