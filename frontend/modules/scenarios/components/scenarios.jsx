@@ -9,6 +9,7 @@ import Body from '~/uikit/content/components/body';
 import CardContent from '~/uikit/cards/components/cardContent';
 import CardActions from '~/uikit/cards/components/cardActions';
 import FlatButton from '~/uikit/buttons/components/flatButton';
+import truncate from 'lodash/truncate';
 
 const Scenarios = ({
   scenarios,
@@ -61,9 +62,7 @@ const Scenarios = ({
             return (
               <Card key={scenario._id}>
                 <CardContent>
-                  <Title title={scenario.name} />
-                  <Body body={scenario.title} />
-                  <Body body={scenario.description} />
+                  <Title title={truncate(scenario.name, { length: 60 })} />
                 </CardContent>
                 <CardActions>
                   <Link to={`/scenarios/${scenario._id}/create`}>

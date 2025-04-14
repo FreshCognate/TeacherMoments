@@ -15,7 +15,6 @@ const CreateNavigationSlideActions = ({
       </div>
       <div>
         {(options.length > 0) && (
-
           <Options
             options={options}
             isOpen={isOptionsOpen}
