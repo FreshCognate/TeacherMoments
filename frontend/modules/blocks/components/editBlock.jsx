@@ -7,6 +7,7 @@ import Badge from '~/uikit/badges/components/badge';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 
 const EditBlock = ({
+  renderKey,
   contentSchema,
   settingsSchema,
   block,
@@ -66,7 +67,7 @@ const EditBlock = ({
 
         <div className="p-6 flex-grow">
           <FormContainer
-            renderKey={`${block._id}-${block.blockType}`}
+            renderKey={`${block._id}-${block.blockType}-${renderKey}`}
             schema={contentSchema}
             model={block}
             onUpdate={onEditBlockUpdate}
@@ -74,7 +75,7 @@ const EditBlock = ({
         </div>
         <div className="p-6  bg-lm-2/60 dark:bg-dm-2/60 w-80 min-w-80">
           <FormContainer
-            renderKey={`${block._id}-${block.blockType}`}
+            renderKey={`${block._id}-${block.blockType}-${renderKey}`}
             schema={settingsSchema}
             model={block}
             onUpdate={onEditBlockUpdate}

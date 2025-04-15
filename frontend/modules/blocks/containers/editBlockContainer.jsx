@@ -29,7 +29,8 @@ class EditBlockContainer extends Component {
 
   state = {
     isOptionsOpen: false,
-    isDeleting: false
+    isDeleting: false,
+    renderKey: 0,
   }
 
   isSaving = false;
@@ -73,7 +74,8 @@ class EditBlockContainer extends Component {
   onEditBlockUpdate = ({ update }) => {
     const { blocks } = this.props;
     blocks.setStatus('syncing');
-    blocks.set(update, { setType: 'itemExtend', setFind: { _id: this.props.block._id } })
+    blocks.set(update, { setType: 'itemExtend', setFind: { _id: this.props.block._id } });
+    this.setState({ renderKey: this.state.renderKey + 1 });
     this.debouncedSave({ update });
   }
 
@@ -107,8 +109,10 @@ class EditBlockContainer extends Component {
   render() {
     const { canSortUp, canSortDown } = this.getSortingDetails();
     const { contentSchema, settingsSchema } = this.getSchemas()
+    const { renderKey } = this.state;
     return (
       <EditBlock
+        renderKey={renderKey}
         block={this.props.block}
         contentSchema={contentSchema}
         settingsSchema={settingsSchema}
