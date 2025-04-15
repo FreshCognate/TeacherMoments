@@ -36,12 +36,14 @@ const EditBlock = ({
             <FlatButton
               icon="sortUp"
               className="p-2"
+              title="Sort up"
               isDisabled={!canSortUp}
               onClick={() => onSortUpClicked(block.sortOrder)}
             />
             <FlatButton
               icon="sortDown"
               className=" p-2"
+              title="Sort down"
               isDisabled={!canSortDown}
               onClick={() => onSortDownClicked(block.sortOrder)}
             />
@@ -53,6 +55,7 @@ const EditBlock = ({
               color: 'warning',
               action: 'DELETE'
             }]}
+            title="Block options"
             isOpen={isOptionsOpen}
             onToggle={onToggleActionsClicked}
             onOptionClicked={onActionClicked}

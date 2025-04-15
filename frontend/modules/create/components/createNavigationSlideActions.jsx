@@ -17,6 +17,7 @@ const CreateNavigationSlideActions = ({
         {(options.length > 0) && (
           <Options
             options={options}
+            title="Slide options"
             isOpen={isOptionsOpen}
             onToggle={onSlideActionsToggle}
             onOptionClicked={onSlideActionClicked}

@@ -11,6 +11,7 @@ export default {
     actions: {
       type: 'Array',
       label: 'Actions',
+      deleteTitleText: "Delete action",
       addButtonText: "Add another action",
       subSchema: {
         ...text,

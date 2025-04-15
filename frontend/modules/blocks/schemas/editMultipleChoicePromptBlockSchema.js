@@ -35,6 +35,7 @@ export default {
     options: {
       type: 'Array',
       label: 'Response options',
+      deleteTitleText: "Delete option",
       addButtonText: "Add option",
       subSchema: {
         ...optionText,

@@ -28,14 +28,14 @@ const ArrayFormField = ({
               </div>
               <div className="bg-lm-3 dark:bg-dm-2 px-2 py-2 flex justify-between group-hover/actionItem:opacity-100">
                 <div>
-                  <FlatButton icon="delete" color="warning" onClick={() => onRemoveActionClicked(action._id)} />
+                  <FlatButton icon="delete" title={schema.deleteTitleText} color="warning" onClick={() => onRemoveActionClicked(action._id)} />
                 </div>
                 <div className="flex items-center">
                   {(index !== 0) && (
-                    <FlatButton icon="sortUp" onClick={() => onSortActionUpClicked(index)} />
+                    <FlatButton icon="sortUp" title="Sort up" onClick={() => onSortActionUpClicked(index)} />
                   )}
                   {(index !== value.length - 1) && (
-                    <FlatButton icon="sortDown" className="ml-3" onClick={() => onSortActionDownClicked(index)} />
+                    <FlatButton icon="sortDown" title="Sort down" className="ml-3" onClick={() => onSortActionDownClicked(index)} />
                   )}
                 </div>
               </div>

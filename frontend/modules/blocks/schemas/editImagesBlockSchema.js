@@ -16,6 +16,7 @@ export default {
     items: {
       type: 'Array',
       label: 'Images',
+      deleteTitleText: "Delete image",
       addButtonText: "Add image",
       subSchema: {
         ...asset,

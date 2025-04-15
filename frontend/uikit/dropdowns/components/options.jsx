@@ -5,6 +5,7 @@ import useOnClickOutside from '~/core/app/hooks/useOnClickOutside';
 
 const Options = ({
   options,
+  title,
   icon = 'options',
   isOpen,
   onToggle,
@@ -15,7 +16,7 @@ const Options = ({
   useOnClickOutside(ref, () => onToggle(false));
   return (
     <div className="relative" ref={ref}>
-      <FlatButton icon={icon} onClick={() => onToggle(!isOpen)} />
+      <FlatButton icon={icon} title={title} onClick={() => onToggle(!isOpen)} />
       {(isOpen) && (
         <div className="absolute right-0 top-full w-40 z-10 bg-lm-0 dark:bg-dm-0 rounded shadow">
           {map(options, (option) => {
