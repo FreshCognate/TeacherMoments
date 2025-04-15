@@ -52,9 +52,7 @@ export default {
         text: 'YouTube'
       }],
       onUpdate: ({ value, update }) => {
-        if (value === 'ASSET') {
-          update.mediaSrc = "";
-        } else if (value === 'YOUTUBE') {
+        if (value === 'YOUTUBE') {
           setContent({ model: update, field: 'mediaAsset', content: null });
         }
       }
