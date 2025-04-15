@@ -14,10 +14,6 @@ export default async (props, options, context) => {
   await publishModelByScenarioId({ model: 'Block', scenarioId }, {}, context);
   await publishModelByScenarioId({ model: 'Trigger', scenarioId }, {}, context);
 
-  await models.Published_Scenario.deleteOne({ _id: scenarioId });
-
-  await models.Published_Scenario.create(scenario.toJSON());
-
   scenario.hasChanges = false;
   scenario.isPublished = true;
   scenario.publishedAt = new Date();
@@ -25,7 +21,11 @@ export default async (props, options, context) => {
   if (!scenario.publishLink) {
     scenario.publishLink = await getPublishLink({ name: scenario.name, Model: models.Scenario });
   }
+
   await scenario.save();
+
+  await models.Published_Scenario.deleteOne({ _id: scenarioId });
+  await models.Published_Scenario.create(scenario.toJSON());
 
   return scenario;
 

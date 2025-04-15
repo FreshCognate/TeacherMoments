@@ -38,7 +38,7 @@ export default ({ param, bodyArguments, queryArguments, filesArguments, props, m
 
     } catch (error) {
 
-      const { statusCode, message } = error;
+      const { statusCode } = error;
 
       if (!statusCode) {
         console.warn(error);
@@ -47,9 +47,7 @@ export default ({ param, bodyArguments, queryArguments, filesArguments, props, m
         });
       }
 
-      return res.status(statusCode).json({
-        message
-      });
+      return res.status(statusCode).json(error);
     }
 
   } catch (error) {

@@ -18,15 +18,22 @@ axios.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   const data = get(error, 'response.data', {});
+
   if (data.statusCode === 401 && data.isLoginRequired) {
     if (typeof window !== 'undefined') {
       window.location = '/';
       return;
     }
   }
-  if (data.statusCode === 401 && data.shouldRedirectToPortal) {
+  if (data.statusCode === 401 && data.shouldRedirectToDashboard) {
     if (typeof window !== 'undefined') {
       window.location = `/`;
+      return;
+    }
+  }
+  if ((data.statusCode === 401 || data.statusCode === 404) && data.shouldRedirectToScenarios) {
+    if (typeof window !== 'undefined') {
+      window.location = `/scenarios`;
       return;
     }
   }
