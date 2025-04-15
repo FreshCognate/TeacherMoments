@@ -38,7 +38,7 @@ export default {
       destinationIndex: Joi.number(),
       ...buildLanguageValidation('title', Joi.array()),
       ...buildLanguageValidation('body', Joi.array()),
-      ...buildLanguageValidation('placeholder', Joi.string()),
+      ...buildLanguageValidation('placeholder', Joi.string().allow('')),
       isRequired: Joi.boolean(),
       requiredLength: Joi.number(),
       isMultiSelect: Joi.boolean(),
