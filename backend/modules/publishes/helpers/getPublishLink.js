@@ -16,7 +16,7 @@ const checkPublishLinkUniqueness = async function ({ publishLink, Model, suffix 
 
 export default async function ({ name, Model }) {
 
-  const tempPublishLink = slugify(name, { lower: true, strict: true });
+  const tempPublishLink = slugify(name.substring(0, 38), { lower: true, strict: true });
 
   const suffix = null;
 
