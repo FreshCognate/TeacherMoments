@@ -93,7 +93,7 @@ const AssetSelectorDisplayFormField = ({
       </div>
       <div className="p-2">
         {(hasRemoveButton) && (
-          <FlatButton icon="delete" onClick={onRemoveAssetClicked} />
+          <FlatButton icon="delete" color="warning" onClick={onRemoveAssetClicked} />
         )}
       </div>
     </div>

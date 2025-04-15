@@ -79,6 +79,7 @@ const FormField = ({
       {(mediaQueriesInfo && mediaQueriesInfo.hasValue && isMediaStateSelected) && (
         <FlatButton
           icon="delete"
+          color="warning"
           size={16}
           className="absolute top-0 right-0 opacity-0 group-hover:opacity-100"
           onClick={() => updateFields(mediaQueriesInfo.resetData)
