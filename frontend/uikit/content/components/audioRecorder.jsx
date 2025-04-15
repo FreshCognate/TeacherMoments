@@ -82,7 +82,7 @@ const AudioRecorder = ({
         </div>
         <div>
           {(hasRemoveAudioButton) && (
-            <FlatButton icon="delete" onClick={() => {
+            <FlatButton icon="delete" color="warning" onClick={() => {
               addModal({
                 title: 'Are you sure you want to remove this audio?',
                 body: 'This cannot be undone',
