@@ -14,84 +14,99 @@ const FEATURES = {
   bold: {
     format: 'bold',
     icon: 'bold',
-    type: 'mark'
+    type: 'mark',
+    title: 'Bold'
   },
   italic: {
     format: 'italic',
     icon: 'italic',
-    type: 'mark'
+    type: 'mark',
+    title: 'Italic'
   },
   underline: {
     format: 'underline',
     icon: 'underline',
-    type: 'mark'
+    type: 'mark',
+    title: 'Underline'
   },
   strikethrough: {
     format: 'strikethrough',
     icon: 'strikethrough',
-    type: 'mark'
+    type: 'mark',
+    title: 'Strikethrough'
   },
   code: {
     format: 'code',
     icon: 'codeblock',
-    type: 'mark'
+    type: 'mark',
+    title: 'Code block'
   },
   blockquote: {
     format: 'blockquote',
     icon: 'blockquote',
-    type: 'block'
+    type: 'block',
+    title: 'Blockquote'
   },
   link: {
     format: 'link',
     icon: 'link',
-    type: 'block'
+    type: 'block',
+    title: 'Link'
   },
   numberedList: {
     format: 'numberedList',
     icon: 'numberedList',
-    type: 'block'
+    type: 'block',
+    title: 'Numbered list'
   },
   bulletedList: {
     format: 'bulletedList',
     icon: 'bulletedList',
-    type: 'block'
+    type: 'block',
+    title: 'Bulleted list'
   },
   indent: {
     format: 'indent',
     icon: 'indent',
-    type: 'block'
+    type: 'block',
+    title: 'Indent'
   },
   outdent: {
     format: 'outdent',
     icon: 'outdent',
-    type: 'block'
+    type: 'block',
+    title: 'Outdent'
   },
   leftAlign: {
     format: 'left',
     icon: 'leftAlign',
-    type: 'block'
+    type: 'block',
+    title: 'Left align'
   },
   centerAlign: {
     format: 'center',
     icon: 'centerAlign',
-    type: 'block'
+    type: 'block',
+    title: 'Center align'
   },
   rightAlign: {
     format: 'right',
     icon: 'rightAlign',
-    type: 'block'
+    type: 'block',
+    title: 'Right align'
   },
   justifyAlign: {
     format: 'justify',
     icon: 'justifyAlign',
-    type: 'block'
+    type: 'block',
+    title: 'Justify'
   }
 };
 
 const getFeature = (feature, editor) => {
-  const { type, format, icon } = FEATURES[feature];
+  const { type, format, icon, title } = FEATURES[feature];
   const Component = type === 'mark' ? SlateMarkButton : SlateBlockButton;
-  return (<Component key={feature} editor={editor} format={format} icon={icon} />);
+  return (<Component key={feature} editor={editor} format={format} icon={icon} title={title} />);
 };
 
 const SlateEditor = ({

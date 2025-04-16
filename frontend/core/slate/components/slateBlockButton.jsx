@@ -9,7 +9,8 @@ const SlateBlockButton = ({
   editor,
   format,
   text,
-  icon
+  icon,
+  title
 }) => {
   const isButtonActive = isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type');
 
@@ -26,6 +27,7 @@ const SlateBlockButton = ({
         toggleBlock(editor, format);
       }}
       style={{ width: '30px', height: '30px' }}
+      title={title}
     >
       {(icon) && (
         <Icon icon={icon} size={20} />
