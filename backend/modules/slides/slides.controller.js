@@ -31,7 +31,7 @@ export default {
     let slide;
 
     if (slideId) {
-      slide = await duplicateSlideInScenario({ scenario: scenarioId, slideId, sortOrder }, context);
+      slide = await duplicateSlideInScenario({ scenario: scenarioId, slideId }, context);
     } else {
       slide = await createSlide({ scenario: scenarioId, sortOrder }, {}, context);
     }
