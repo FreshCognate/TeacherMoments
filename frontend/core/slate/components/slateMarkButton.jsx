@@ -7,7 +7,8 @@ const SlateMarkButton = ({
   editor,
   format,
   icon,
-  text
+  text,
+  title
 }) => {
 
   const isButtonActive = isMarkActive(editor, format);
@@ -24,6 +25,7 @@ const SlateMarkButton = ({
         event.preventDefault();
         toggleMark(editor, format);
       }}
+      title={title}
       style={{ width: '30px', height: '30px' }}
     >
       {(icon) && (
