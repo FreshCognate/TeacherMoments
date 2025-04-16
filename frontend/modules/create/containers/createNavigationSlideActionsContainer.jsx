@@ -8,7 +8,12 @@ class CreateNavigationSlideActionsContainer extends Component {
   }
 
   getOptions = () => {
-    const options = [];
+    const options = [{
+      icon: 'copy',
+      text: 'Duplicate slide',
+      color: 'primary',
+      action: 'DUPLICATE'
+    }];
     if (this.props.canDeleteSlides) {
       options.push({
         icon: 'delete',
@@ -30,6 +35,8 @@ class CreateNavigationSlideActionsContainer extends Component {
       case 'DELETE':
         this.props.onDeleteSlideClicked();
         break;
+      case 'DUPLICATE':
+        this.props.onDuplicateSlideClicked();
     }
   }
 

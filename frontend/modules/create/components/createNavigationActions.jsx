@@ -4,6 +4,7 @@ import Body from '~/uikit/content/components/body';
 
 const CreateNavigationActions = ({
   isCreating,
+  isDuplicating,
   onAddSlideClicked
 }) => {
   return (
@@ -11,6 +12,9 @@ const CreateNavigationActions = ({
       <FlatButton isCircular isDisabled={isCreating} title="Add new slide" icon="create" onClick={onAddSlideClicked} />
       {(isCreating) && (
         <Body body="Creating slide..." size="xs" className="ml-2 text-black/60 dark:text-white/60" />
+      )}
+      {(isDuplicating) && (
+        <Body body="Duplicating slide..." size="xs" className="ml-2 text-black/60 dark:text-white/60" />
       )}
     </div>
   );

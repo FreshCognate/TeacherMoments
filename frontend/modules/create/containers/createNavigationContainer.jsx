@@ -12,7 +12,7 @@ class CreateNavigationContainer extends Component {
 
   state = {
     isCreating: false,
-    isDeleting: false,
+    isDuplicating: false,
     deletingId: null
   }
 
@@ -48,6 +48,26 @@ class CreateNavigationContainer extends Component {
     })
   }
 
+  onDuplicateSlideClicked = (slideId) => {
+    this.setState({ isDuplicating: true });
+    const scenarioId = this.props.scenario.data._id;
+    axios.post(`/api/slides`, {
+      scenarioId,
+      slideId,
+    }).then((response) => {
+      const slideId = response.data.slide._id;
+      this.props.blocks.fetch();
+      this.props.slides.fetch().then(() => {
+        this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideId}`)
+        this.setState({ isDuplicating: false });
+      });
+    }).catch((error) => {
+      this.props.slides.fetch();
+      this.setState({ isDuplicating: false });
+      handleRequestError(error);
+    })
+  }
+
   onDeleteSlideClicked = (slideId) => {
     const selectedSlideSortOrder = this.getSelectedSlideSortOrder();
     this.setState({ deletingId: slideId });
@@ -77,7 +97,7 @@ class CreateNavigationContainer extends Component {
   }
 
   render() {
-    const { isCreating, deletingId } = this.state;
+    const { isCreating, deletingId, isDuplicating } = this.state;
     const { selectedSlideId } = getUrlDetails();
     return (
       <CreateNavigation
@@ -87,7 +107,9 @@ class CreateNavigationContainer extends Component {
         selectedSlideId={selectedSlideId}
         isCreating={isCreating}
         deletingId={deletingId}
+        isDuplicating={isDuplicating}
         onAddSlideClicked={this.onAddSlideClicked}
+        onDuplicateSlideClicked={this.onDuplicateSlideClicked}
         onDeleteSlideClicked={this.onDeleteSlideClicked}
       />
     );

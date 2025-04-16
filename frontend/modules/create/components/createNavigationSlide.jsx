@@ -12,7 +12,9 @@ const CreateNavigationSlide = ({
   draggingOptions = {},
   isSelected,
   isDeleting,
+  isDuplicating,
   canDeleteSlides,
+  onDuplicateSlideClicked,
   onDeleteSlideClicked
 }) => {
 
@@ -20,7 +22,7 @@ const CreateNavigationSlide = ({
 
   const className = classnames("bg-lm-2 dark:bg-dm-2 rounded-md h-36 mb-2 relative", {
     "outline outline-blue-500": isSelected,
-    "opacity-50": isDeleting || isDragging
+    "opacity-50": isDeleting || isDragging || isDuplicating
   });
 
   return (
@@ -29,6 +31,7 @@ const CreateNavigationSlide = ({
         <CreateNavigationSlideActionsContainer
           slideNumber={slide.sortOrder + 1}
           canDeleteSlides={canDeleteSlides}
+          onDuplicateSlideClicked={() => onDuplicateSlideClicked(slide._id)}
           onDeleteSlideClicked={() => onDeleteSlideClicked(slide._id)}
         />
         <div>
