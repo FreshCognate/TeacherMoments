@@ -14,6 +14,7 @@ const InputPromptAudioBlockPlayer = ({
   block,
   blockTracking,
   isUploadingAudio,
+  isTranscribingAudio,
   uploadProgress,
   uploadStatus,
   onAudioRecorded,
@@ -61,7 +62,7 @@ const InputPromptAudioBlockPlayer = ({
           )
         }}
       />
-      {(audioSrc && !transcript) && (
+      {(audioSrc && !isTranscribingAudio && !transcript) && (
         <div className="mt-4">
           <Alert type="warning" text="Transcription process completed, however it appears your audio recording is empty. Please try recording your response again." />
         </div>
