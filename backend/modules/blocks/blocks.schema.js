@@ -46,7 +46,7 @@ const schema = {
     type: [{
       ...text,
       ...feedback,
-      value: { type: String },
+      value: { type: String, default: '' },
     }], default: [{ "en-US-text": "" }]
   },
   actions: {
@@ -59,7 +59,7 @@ const schema = {
   feedbackItems: {
     type: [{
       ...text,
-      value: { type: String }
+      value: { type: String, default: "" }
     }],
     default: [{ "en-US-text": "" }]
   },
