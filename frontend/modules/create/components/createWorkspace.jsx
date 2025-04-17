@@ -5,6 +5,7 @@ import ScenarioPreviewContainer from '~/modules/scenarios/containers/scenarioPre
 
 const CreateWorkspace = ({
   activeSlideRef,
+  activeSlideId,
   displayMode
 }) => {
   return (
@@ -16,7 +17,11 @@ const CreateWorkspace = ({
       </div>
       {(displayMode === 'EDITING') && (
         <div className="pt-10 w-full h-full overflow-y-auto">
-          <BlocksEditorContainer />
+          {(activeSlideRef) && (
+            <BlocksEditorContainer
+              slideId={activeSlideId}
+            />
+          )}
         </div>
       )}
       {(displayMode === 'PREVIEW') && (
