@@ -13,7 +13,5 @@ export default ({ model, fields }) => {
     })
   })
 
-  console.log(returnedFields);
-
   return returnedFields;
 }

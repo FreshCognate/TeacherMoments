@@ -21,12 +21,18 @@ class CreateWorkspaceContainer extends Component {
 
   }
 
+  getActiveSlideId = () => {
+    const searchParams = new URLSearchParams(this.props.router.location.search);
+    return searchParams.get('slide');
+  }
+
   render() {
     const { displayMode } = this.props.editor.data;
     const activeSlideRef = this.getActiveSlideRef();
     return (
       <CreateWorkspace
         activeSlideRef={activeSlideRef}
+        activeSlideId={this.getActiveSlideId()}
         displayMode={displayMode}
       />
     );
