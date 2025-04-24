@@ -2,9 +2,30 @@ import Joi from 'joi';
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
 import controller from './scenarios.controller.js';
+import scenarioCollaboratorsController from './scenarioCollaborators.controller.js';
 import buildLanguageValidation from '#core/app/helpers/buildLanguageValidation.js';
 
-export default {
+export default [{
+  route: '/scenarioCollaborators',
+  controller: scenarioCollaboratorsController,
+  all: {
+    query: {
+      searchValue: Joi.string().allow('').default(''),
+      currentPage: Joi.number().default(1),
+      scenarioId: Joi.string().required(),
+      isDeleted: Joi.boolean()
+    },
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+  },
+  update: {
+    body: {
+      scenarioId: Joi.string().optional(),
+      setType: Joi.string().valid("ADD", "REMOVE"),
+      collaborators: Joi.array().items(Joi.string()),
+    },
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+  },
+}, {
   route: '/scenarios',
   controller,
   all: {
@@ -52,4 +73,4 @@ export default {
     param: 'id',
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   }
-};
+}];
