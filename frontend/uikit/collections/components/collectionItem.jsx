@@ -1,0 +1,30 @@
+import React from 'react';
+import Badge from '~/uikit/badges/components/badge';
+import map from 'lodash/map';
+
+const CollectionItem = ({
+  id,
+  name,
+  meta,
+}) => {
+  return (
+    <div className="bg-lm-1 dark:bg-dm-1 p-4 rounded-md">
+      <div className="text-black/80 dark:text-white/80 text-lg">
+        {name}
+      </div>
+      {(meta && meta.length > 0) && (
+        <div className="flex mt-2">
+          {map(meta, (metaItem) => {
+            return (
+              <div className="mr-1">
+                <Badge text={`${metaItem.name}: ${metaItem.value}`} />
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CollectionItem;
