@@ -8,7 +8,7 @@ const CollectionItem = ({
   meta,
 }) => {
   return (
-    <div className="bg-lm-1 dark:bg-dm-1 p-4 rounded-md">
+    <div className="bg-lm-1 dark:bg-dm-1 p-4 rounded-md mb-2">
       <div className="text-black/80 dark:text-white/80 text-lg">
         {name}
       </div>

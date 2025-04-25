@@ -23,6 +23,7 @@ const schema = {
   isExample: { type: Boolean, default: false },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
   collaborators: [{
+    _id: false,
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     role: { type: String, enum: ['AUTHOR', 'OWNER'] }
   }],

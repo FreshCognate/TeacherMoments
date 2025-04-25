@@ -18,8 +18,8 @@ export default [{
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
   update: {
+    param: 'id',
     body: {
-      scenarioId: Joi.string().optional(),
       setType: Joi.string().valid("ADD", "REMOVE"),
       collaborators: Joi.array().items(Joi.string()),
     },
