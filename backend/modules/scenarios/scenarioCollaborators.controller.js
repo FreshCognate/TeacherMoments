@@ -1,3 +1,4 @@
+import addCollaboratorsToScenario from './services/addCollaboratorsToScenario.js';
 import getAvailableCollaboratorsByScenarioId from './services/getAvailableCollaboratorsByScenarioId.js';
 import has from 'lodash/has.js';
 
@@ -10,16 +11,18 @@ export default {
 
   },
 
-  // update: async function ({ param, body }, context) {
+  update: async function ({ param, body }, context) {
 
-  //   if (has(body, 'isDeleted')) {
-  //     const scenario = await restoreScenarioById({ scenarioId: param }, {}, context);
-  //     return { scenario };
-  //   }
 
-  //   const scenario = await updateScenarioById({ scenarioId: param, update: body }, {}, context);
+    const { setType, collaborators } = body;
 
-  //   return { scenario };
+    if (setType === 'ADD') {
+      await addCollaboratorsToScenario({ scenarioId: param, collaborators }, {}, context);
+    }
 
-  // },
+    if (setType === 'REMOVE') {
+      console.log('should remove');
+    }
+    return {};
+  },
 };
