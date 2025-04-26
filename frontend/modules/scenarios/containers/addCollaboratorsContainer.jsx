@@ -10,10 +10,6 @@ import find from 'lodash/find';
 
 class AddCollaboratorsContainer extends Component {
 
-  state = {
-    selectedCollaborators: []
-  }
-
   getItemAttributes = (item) => {
     return {
       id: item._id,
@@ -26,7 +22,7 @@ class AddCollaboratorsContainer extends Component {
   }
 
   getItemActions = (item) => {
-    if (find(this.state.selectedCollaborators, { _id: item._id })) {
+    if (find(this.props.modal.data.selectedCollaborators, { _id: item._id })) {
       return [{
         text: 'Deselect',
         action: 'SELECT'
@@ -63,7 +59,7 @@ class AddCollaboratorsContainer extends Component {
 
   onItemActionClicked = ({ itemId, action }) => {
     if (action === "SELECT") {
-      const selectedCollaborators = cloneDeep(this.state.selectedCollaborators);
+      const selectedCollaborators = cloneDeep(this.props.modal.data.selectedCollaborators);
       const currentCollaborator = find(this.props.availableCollaborators.data, { _id: itemId });
 
       if (find(selectedCollaborators, { _id: itemId })) {
@@ -71,7 +67,7 @@ class AddCollaboratorsContainer extends Component {
       } else {
         selectedCollaborators.push(currentCollaborator);
       }
-      this.setState({ selectedCollaborators });
+      this.props.modal.set({ selectedCollaborators });
     }
   }
 
@@ -80,8 +76,7 @@ class AddCollaboratorsContainer extends Component {
     const { data, status, response } = this.props.availableCollaborators;
     const { searchValue, currentPage } = this.props.availableCollaborators.query;
     const totalPages = response?.totalPages || 1;
-    const { selectedCollaborators } = this.state;
-
+    const { selectedCollaborators } = this.props.modal.data;
     return (
       <AddCollaborators
         availableCollaborators={data}
@@ -114,4 +109,4 @@ export default WithCache(AddCollaboratorsContainer, {
       }
     }
   }
-});
+}, ['modal']);

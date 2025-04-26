@@ -5,6 +5,7 @@ const ScenarioCollaborators = ({
   collaborators,
   getItemAttributes,
   actions,
+  isSyncing,
   onActionClicked,
 }) => {
   return (
@@ -13,6 +14,7 @@ const ScenarioCollaborators = ({
         items={collaborators}
         getItemAttributes={getItemAttributes}
         actions={actions}
+        isSyncing={isSyncing}
         onActionClicked={onActionClicked}
       />
     </div>

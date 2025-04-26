@@ -21,7 +21,7 @@ const CollectionItem = ({
           <div className="flex mt-2">
             {map(meta, (metaItem) => {
               return (
-                <div className="mr-1">
+                <div className="mr-1" key={metaItem.value}>
                   <Badge text={`${metaItem.name}: ${metaItem.value}`} />
                 </div>
               )
