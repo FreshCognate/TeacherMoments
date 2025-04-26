@@ -5,6 +5,10 @@ import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import getUserRole from '~/modules/users/helpers/getUserRole';
 import addModal from '~/core/dialogs/helpers/addModal';
 import AddCollaboratorsContainer from './addCollaboratorsContainer';
+import map from 'lodash/map';
+import axios from 'axios';
+import handleRequestError from '~/core/app/helpers/handleRequestError';
+import WithRouter from '~/core/app/components/withRouter';
 
 class ScenarioCollaboratorsContainer extends Component {
 
@@ -14,6 +18,7 @@ class ScenarioCollaboratorsContainer extends Component {
         title: 'Add collaborators',
         isFullScreen: true,
         component: <AddCollaboratorsContainer />,
+        model: { selectedCollaborators: [] },
         actions: [{
           type: 'CANCEL',
           text: 'Cancel'
@@ -22,6 +27,19 @@ class ScenarioCollaboratorsContainer extends Component {
           text: 'Add',
           color: 'primary'
         }]
+      }, (state, { type, modal }) => {
+        if (state === 'ACTION' && type === 'ADD' && modal.selectedCollaborators.length > 0) {
+
+          this.props.scenario.setStatus('syncing');
+
+          axios.put(`/api/scenarioCollaborators/${this.props.scenario.data._id}`, {
+            setType: 'ADD',
+            collaborators: map(modal.selectedCollaborators, '_id')
+          }).then(() => {
+            this.props.scenario.fetch();
+          }).catch(handleRequestError);
+
+        }
       })
     }
   }
@@ -30,12 +48,14 @@ class ScenarioCollaboratorsContainer extends Component {
 
     const { collaborators } = this.props.scenario.data;
 
+    const { status } = this.props.scenario;
+
     return (
       <ScenarioCollaborators
         collaborators={collaborators}
         getItemAttributes={(item) => {
           return {
-            id: item._id,
+            id: item.user._id,
             name: getUserDisplayName(item.user),
             meta: [{
               name: 'Email',
@@ -50,10 +70,11 @@ class ScenarioCollaboratorsContainer extends Component {
           action: 'ADD_COLLABORATOR',
           text: 'Add collaborators'
         }]}
+        isSyncing={status === 'syncing'}
         onActionClicked={this.onActionClicked}
       />
     );
   }
 };
 
-export default WithCache(ScenarioCollaboratorsContainer, null, ['scenario']);
+export default WithRouter(WithCache(ScenarioCollaboratorsContainer, null, ['scenario']));
