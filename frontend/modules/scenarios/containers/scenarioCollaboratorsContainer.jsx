@@ -3,11 +3,27 @@ import ScenarioCollaborators from '../components/scenarioCollaborators';
 import WithCache from '~/core/cache/containers/withCache';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import getUserRole from '~/modules/users/helpers/getUserRole';
+import addModal from '~/core/dialogs/helpers/addModal';
+import AddCollaboratorsContainer from './addCollaboratorsContainer';
 
 class ScenarioCollaboratorsContainer extends Component {
 
   onActionClicked = ({ action }) => {
-    console.log(action);
+    if (action === 'ADD_COLLABORATOR') {
+      addModal({
+        title: 'Add collaborators',
+        isFullScreen: true,
+        component: <AddCollaboratorsContainer />,
+        actions: [{
+          type: 'CANCEL',
+          text: 'Cancel'
+        }, {
+          type: 'ADD',
+          text: 'Add',
+          color: 'primary'
+        }]
+      })
+    }
   }
 
   render() {
