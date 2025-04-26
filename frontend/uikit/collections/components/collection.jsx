@@ -9,6 +9,7 @@ const Collection = ({
   getItemAttributes,
   actions,
   searchValue,
+  searchPlaceholder,
   currentPage,
   totalPages,
   filter,
@@ -31,8 +32,9 @@ const Collection = ({
   return (
     <div>
       <ActionBar
-        //actions={actions}
+        actions={actions}
         searchValue={searchValue}
+        searchPlaceholder={searchPlaceholder}
         currentPage={currentPage}
         totalPages={totalPages}
         filter={filter}

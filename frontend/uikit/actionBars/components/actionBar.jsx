@@ -9,6 +9,7 @@ import Toggle from '~/uikit/toggles/components/toggle';
 const ActionBar = ({
   actions,
   searchValue,
+  searchPlaceholder,
   currentPage,
   totalPages,
   filter,
@@ -29,14 +30,14 @@ const ActionBar = ({
   onSortByChanged
 }) => {
   return (
-    <div className="relative py-2 px-4">
+    <div className="relative py-2">
       <div className="flex items-center">
         <div className="flex-1 flex items-center">
           {hasSearch && (
             <Search
               shouldAutoFocus={shouldAutoFocus}
               value={searchValue}
-              placeholder="Search scenarios..."
+              placeholder={searchPlaceholder}
               onChange={onSearchValueChange}
             />
           )}

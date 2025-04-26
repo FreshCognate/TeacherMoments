@@ -35,9 +35,10 @@ const Scenarios = ({
         <Button text="Create scenario" color="primary" isFullWidth onClick={onCreateScenarioClicked} />
       </div>
       <div className="flex-1">
-        <div className="bg-lm-1 dark:bg-dm-1">
+        <div className="bg-lm-1 dark:bg-dm-1 px-4">
           <ActionBar
             searchValue={searchValue}
+            searchPlaceholder="Search scenarios..."
             currentPage={currentPage}
             totalPages={totalPages}
             filter={filter}
