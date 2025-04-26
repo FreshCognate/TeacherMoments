@@ -6,6 +6,7 @@ import CollectionItem from './collectionItem';
 
 const Collection = ({
   items,
+  getItemActions,
   getItemAttributes,
   actions,
   searchValue,
@@ -23,6 +24,7 @@ const Collection = ({
   isSyncing,
   isLoading,
   shouldAutoFocus,
+  onItemActionClicked,
   onSearchValueChange,
   onActionClicked,
   onPaginationClicked,
@@ -57,12 +59,15 @@ const Collection = ({
       <div>
         {map(items, (item) => {
           const { id, name, meta } = getItemAttributes(item);
+          const itemActions = getItemActions ? getItemActions(item) : {};
           return (
             <CollectionItem
               key={id}
               id={id}
               name={name}
               meta={meta}
+              actions={itemActions}
+              onActionClicked={onItemActionClicked}
             />
           );
         })}
