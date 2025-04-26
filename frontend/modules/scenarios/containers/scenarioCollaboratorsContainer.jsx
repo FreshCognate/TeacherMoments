@@ -44,6 +44,18 @@ class ScenarioCollaboratorsContainer extends Component {
     }
   }
 
+  onItemActionClicked = ({ action, itemId }) => {
+    if (action === 'REMOVE') {
+      this.props.scenario.setStatus('syncing');
+      axios.put(`/api/scenarioCollaborators/${this.props.scenario.data._id}`, {
+        setType: 'REMOVE',
+        collaborators: [itemId]
+      }).then(() => {
+        this.props.scenario.fetch();
+      }).catch(handleRequestError);
+    }
+  }
+
   render() {
 
     const { collaborators } = this.props.scenario.data;
@@ -66,12 +78,20 @@ class ScenarioCollaboratorsContainer extends Component {
             }]
           }
         }}
+        getItemActions={(item) => {
+          if (item.role === 'OWNER') return [];
+          return [{
+            action: 'REMOVE',
+            text: 'Remove'
+          }]
+        }}
         actions={[{
           action: 'ADD_COLLABORATOR',
           text: 'Add collaborators'
         }]}
         isSyncing={status === 'syncing'}
         onActionClicked={this.onActionClicked}
+        onItemActionClicked={this.onItemActionClicked}
       />
     );
   }
