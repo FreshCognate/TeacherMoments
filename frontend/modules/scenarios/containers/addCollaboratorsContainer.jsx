@@ -4,8 +4,15 @@ import getCache from '~/core/cache/helpers/getCache';
 import WithCache from '~/core/cache/containers/withCache';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import debounce from 'lodash/debounce';
+import cloneDeep from 'lodash/cloneDeep';
+import remove from 'lodash/remove';
+import find from 'lodash/find';
 
 class AddCollaboratorsContainer extends Component {
+
+  state = {
+    selectedCollaborators: []
+  }
 
   getItemAttributes = (item) => {
     return {
@@ -14,6 +21,21 @@ class AddCollaboratorsContainer extends Component {
       meta: [{
         name: 'Email',
         value: item.email
+      }]
+    }
+  }
+
+  getItemActions = (item) => {
+    if (find(this.state.selectedCollaborators, { _id: item._id })) {
+      return [{
+        text: 'Deselect',
+        action: 'SELECT'
+      }]
+    } else {
+
+      return [{
+        text: 'Select',
+        action: 'SELECT'
       }]
     }
   }
@@ -39,14 +61,33 @@ class AddCollaboratorsContainer extends Component {
     fetch();
   }
 
+  onItemActionClicked = ({ itemId, action }) => {
+    if (action === "SELECT") {
+      const selectedCollaborators = cloneDeep(this.state.selectedCollaborators);
+      const currentCollaborator = find(this.props.availableCollaborators.data, { _id: itemId });
+
+      if (find(selectedCollaborators, { _id: itemId })) {
+        remove(selectedCollaborators, { _id: itemId });
+      } else {
+        selectedCollaborators.push(currentCollaborator);
+      }
+      this.setState({ selectedCollaborators });
+    }
+  }
+
   render() {
+
     const { data, status, response } = this.props.availableCollaborators;
     const { searchValue, currentPage } = this.props.availableCollaborators.query;
     const totalPages = response?.totalPages || 1;
+    const { selectedCollaborators } = this.state;
+
     return (
       <AddCollaborators
         availableCollaborators={data}
+        selectedCollaborators={selectedCollaborators}
         getItemAttributes={this.getItemAttributes}
+        getItemActions={this.getItemActions}
         isLoading={status === 'loading'}
         isSyncing={status === 'syncing'}
         searchValue={searchValue}
@@ -54,6 +95,7 @@ class AddCollaboratorsContainer extends Component {
         totalPages={totalPages}
         onSearchValueChange={this.onSearchValueChange}
         onPaginationClicked={this.onPaginationClicked}
+        onItemActionClicked={this.onItemActionClicked}
       />
     );
   }
