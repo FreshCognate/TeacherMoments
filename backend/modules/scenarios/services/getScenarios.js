@@ -15,7 +15,7 @@ export default async (props, options, context) => {
     isDeleted = false,
   } = options;
 
-  const { models } = context;
+  const { models, user } = context;
 
   let search = { isDeleted };
   let searchOptions = {};
@@ -39,6 +39,13 @@ export default async (props, options, context) => {
     sort = '-createdAt';
   } else if (sortBy === 'OLDEST') {
     sort = 'createdAt';
+  }
+
+  search.collaborators = {
+    $elemMatch: {
+      user: user._id,
+      role: { $in: ['OWNER', 'AUTHOR'] }
+    }
   }
 
   const count = await models.Scenario.countDocuments(search);
