@@ -109,7 +109,8 @@ class ScenarioEditorContainer extends Component {
 export default WithRouter(WithCache(ScenarioEditorContainer, {
   editor: {
     getInitialData: () => ({
-      displayMode: 'EDITING'
+      displayMode: 'EDITING',
+      navigationMode: 'SLIDES'
     }),
     lifeTime: 0
   },

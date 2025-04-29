@@ -6,7 +6,8 @@ import ScenarioPreviewContainer from '~/modules/scenarios/containers/scenarioPre
 const CreateWorkspace = ({
   activeSlideRef,
   activeSlideId,
-  displayMode
+  displayMode,
+  navigationMode
 }) => {
   return (
     <div className="w-full h-full">
@@ -15,19 +16,33 @@ const CreateWorkspace = ({
           activeSlideRef={activeSlideRef}
         />
       </div>
-      {(displayMode === 'EDITING') && (
-        <div className="pt-10 w-full h-full overflow-y-auto">
-          {(activeSlideRef) && (
-            <BlocksEditorContainer
-              slideId={activeSlideId}
-            />
+      {(navigationMode === 'SLIDES') && (
+
+        <>
+          {(displayMode === 'EDITING') && (
+            <div className="pt-10 w-full h-full overflow-y-auto">
+              {(activeSlideRef) && (
+                <BlocksEditorContainer
+                  slideId={activeSlideId}
+                />
+              )}
+            </div>
           )}
-        </div>
+          {(displayMode === 'PREVIEW') && (
+            <div className="pt-10 w-full h-full overflow-y-auto">
+              <div className="w-full pt-4 pb-8 px-8 max-w-lg mx-auto">
+                <ScenarioPreviewContainer slideRef={activeSlideRef} />
+              </div>
+            </div>
+          )}
+        </>
       )}
-      {(displayMode === 'PREVIEW') && (
+      {(navigationMode === 'STEM') && (
         <div className="pt-10 w-full h-full overflow-y-auto">
           <div className="w-full pt-4 pb-8 px-8 max-w-lg mx-auto">
-            <ScenarioPreviewContainer slideRef={activeSlideRef} />
+            <div className="text-center">
+              Navigation settings coming soon...
+            </div>
           </div>
         </div>
       )}
