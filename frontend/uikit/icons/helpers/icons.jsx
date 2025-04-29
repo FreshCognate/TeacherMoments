@@ -413,6 +413,26 @@ export default {
       <path d="M20.5715 17.5498L3.42819 7.24904" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />,
       <path d="M3.42822 17.5498L20.5716 7.24904" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     ]
+  },
+
+  finish: {
+    viewBox: "0 0 24 24",
+    elements: [
+      <path d="M2 18V6C2 4.34315 3.34315 3 5 3H7C8.65685 3 10 4.34315 10 6V18C10 19.6569 8.65685 21 7 21H5C3.34315 21 2 19.6569 2 18Z" stroke="currentColor" strokeWidth="1.5" />,
+      <path d="M16 3H18C20.2091 3 22 4.79086 22 7V17C22 19.2091 20.2091 21 18 21H16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />,
+      <path d="M10 12H18M18 12L15 9M18 12L15 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    ]
+  },
+
+  branching: {
+    viewBox: "0 0 24 24",
+    elements: [
+      <rect width="7" height="5" rx="0.6" transform="matrix(0 -1 -1 0 22 21)" stroke="currentColor" strokeWidth="1.5" />,
+      <rect width="7" height="5" rx="0.6" transform="matrix(0 -1 -1 0 7 15.5)" stroke="currentColor" strokeWidth="1.5" />,
+      <rect width="7" height="5" rx="0.6" transform="matrix(0 -1 -1 0 22 10)" stroke="currentColor" strokeWidth="1.5" />,
+      <path d="M17 17.5H13.5C12.3954 17.5 11.5 16.6046 11.5 15.5V8.5C11.5 7.39543 12.3954 6.5 13.5 6.5H17" stroke="currentColor" strokeWidth="1.5" />,
+      <path d="M11.5 12H7" stroke="currentColor" strokeWidth="1.5" />
+    ]
   }
 
 };
