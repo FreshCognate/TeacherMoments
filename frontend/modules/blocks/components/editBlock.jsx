@@ -73,7 +73,7 @@ const EditBlock = ({
             onUpdate={onEditBlockUpdate}
           />
         </div>
-        <div className="p-6  bg-lm-2/60 dark:bg-dm-2/60 w-80 min-w-80">
+        <div className="p-6  bg-lm-2/60 dark:bg-dm-2/60 w-96 min-w-96">
           <FormContainer
             renderKey={`${block._id}-${block.blockType}-${renderKey}`}
             schema={settingsSchema}
