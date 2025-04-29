@@ -13,6 +13,7 @@ class CreateNavigationContainer extends Component {
   state = {
     isCreating: false,
     isDuplicating: false,
+    navigationType: 'SLIDES',
     deletingId: null
   }
 
@@ -96,24 +97,31 @@ class CreateNavigationContainer extends Component {
     })
   }
 
+  onToggleNavigationTypeClicked = () => {
+    this.props.editor.set({ navigationMode: this.props.editor.data.navigationMode === 'SLIDES' ? 'STEM' : 'SLIDES' })
+  }
+
   render() {
     const { isCreating, deletingId, isDuplicating } = this.state;
     const { selectedSlideId } = getUrlDetails();
+    const { navigationMode } = this.props.editor.data;
     return (
       <CreateNavigation
         scenarioId={this.props.scenario.data._id}
         slides={this.getCurrentStemOfSlides()}
         blocks={this.props.blocks.data}
         selectedSlideId={selectedSlideId}
+        navigationMode={navigationMode}
         isCreating={isCreating}
         deletingId={deletingId}
         isDuplicating={isDuplicating}
         onAddSlideClicked={this.onAddSlideClicked}
         onDuplicateSlideClicked={this.onDuplicateSlideClicked}
         onDeleteSlideClicked={this.onDeleteSlideClicked}
+        onToggleNavigationTypeClicked={this.onToggleNavigationTypeClicked}
       />
     );
   }
 };
 
-export default WithRouter(WithCache(CreateNavigationContainer, null, ['slides', 'blocks', 'scenario']));
+export default WithRouter(WithCache(CreateNavigationContainer, null, ['slides', 'blocks', 'scenario', 'editor']));
