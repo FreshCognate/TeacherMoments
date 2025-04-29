@@ -3,6 +3,8 @@ import CreateNavigationActions from './createNavigationActions';
 import CreateNavigationSlide from './createNavigationSlide';
 import CreateDroppableContainer from '../containers/createDroppableContainer';
 import filter from 'lodash/filter';
+import FlatButton from '~/uikit/buttons/components/flatButton';
+import Button from '~/uikit/buttons/components/button';
 
 const CreateNavigation = ({
   scenarioId,
@@ -17,9 +19,9 @@ const CreateNavigation = ({
   onDeleteSlideClicked
 }) => {
   return (
-    <div className="bg-lm-1 dark:bg-dm-1 w-full max-w-64 h-full overflow-y-scroll">
+    <div className="bg-lm-1 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col">
       <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} onAddSlideClicked={onAddSlideClicked} />
-      <div className="p-2">
+      <div className="p-2 overflow-y-scroll">
         <CreateDroppableContainer
           id={`slides`}
           items={slides}
@@ -53,6 +55,9 @@ const CreateNavigation = ({
 
           }}
         />
+      </div>
+      <div className="p-2 border-t border-t-lm-2 dark:border-t-dm-2">
+        <Button icon="finish" text="Navigation" className="bg-lm-2  dark:bg-dm-2" isFullWidth />
       </div>
     </div>
   );
