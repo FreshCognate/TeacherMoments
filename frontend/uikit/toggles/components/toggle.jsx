@@ -16,13 +16,12 @@ const Toggle = ({
       {map(options, (option) => {
         const isSelected = value === option.value;
 
-        let className = classnames("rounded-md", {
+        let className = classnames("rounded-md border-2 border-transparent", {
           'p-2': size !== 'sm',
           'py-1 px-2 text-xs': size === 'sm',
           'opacity-100': !isSelected,
-          'opacity-100 shadow-sm bg-lm-0 dark:bg-dm-0 border-2 border-lm-3 dark:border-dm-3': isSelected,
+          'opacity-100 shadow-sm bg-lm-0 dark:bg-dm-0 border-lm-3 dark:border-dm-3 text-black/100 dark:text-white/100': isSelected,
         });
-
 
         return (
           <FlatButton size={size} isDisabled={isDisabled} className={className} key={option.value} {...option} onClick={(event) => {
