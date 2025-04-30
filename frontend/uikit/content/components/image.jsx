@@ -18,7 +18,7 @@ const Image = ({
     imageSrc = getAssetUrl(asset, assetSize);
   }
 
-  const className = classnames("object-cover", {
+  const className = classnames("object-cover w-full", {
     "aspect-square rounded-full": shape === 'CIRCLE',
     "aspect-[3/2]": shape === 'LANDSCAPE',
     "aspect-[2/3]": shape === 'PORTRAIT',
