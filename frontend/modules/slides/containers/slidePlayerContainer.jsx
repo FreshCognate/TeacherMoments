@@ -59,7 +59,7 @@ class SlidePlayerContainer extends Component {
     } else {
       const nextSlide = getNextSlide();
 
-      if (nextSlide) {
+      if (nextSlide || (!nextSlide && this.props.isPreview)) {
         primaryAction = {
           action: 'NEXT',
           color: 'primary',

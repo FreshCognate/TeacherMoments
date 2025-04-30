@@ -6,7 +6,7 @@ const ScenarioPreview = ({
   activeBlocks,
 }) => {
   return (
-    <SlidePlayerContainer activeSlide={activeSlide} activeBlocks={activeBlocks} />
+    <SlidePlayerContainer activeSlide={activeSlide} activeBlocks={activeBlocks} isPreview />
   );
 };
 
