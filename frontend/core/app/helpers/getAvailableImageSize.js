@@ -14,8 +14,8 @@ export default ({ asset, size }) => {
       }
     });
 
-    if (asset.sizes.length) {
-      if (!responsiveSize) responsiveSize = asset.sizes[asset.sizes.length - 1];
+    if (assetSizes.length > 0) {
+      if (!responsiveSize) responsiveSize = assetSizes[assetSizes.length - 1];
     }
 
     if (!responsiveSize) return "original";
