@@ -2,7 +2,7 @@ import buildLanguageSchema from "~/core/app/helpers/buildLanguageSchema";
 
 const title = buildLanguageSchema('title', {
   type: 'TextArea',
-  label: 'Title',
+  label: 'Header',
   features: ['bold', 'italic', 'underline']
 });
 
