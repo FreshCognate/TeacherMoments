@@ -12,6 +12,7 @@ const ArrayFormField = ({
   onSortActionUpClicked,
   onSortActionDownClicked
 }) => {
+
   return (
     <div>
 
@@ -26,19 +27,22 @@ const ArrayFormField = ({
                   onUpdate={(formUpdate) => onUpdateAction(action._id, formUpdate)}
                 />
               </div>
-              <div className="bg-lm-3 dark:bg-dm-2 px-2 py-2 flex justify-between group-hover/actionItem:opacity-100">
-                <div>
-                  <FlatButton icon="delete" title={schema.deleteTitleText} color="warning" onClick={() => onRemoveActionClicked(action._id)} />
-                </div>
-                <div className="flex items-center">
-                  {(index !== 0) && (
-                    <FlatButton icon="sortUp" title="Sort up" onClick={() => onSortActionUpClicked(index)} />
-                  )}
-                  {(index !== value.length - 1) && (
-                    <FlatButton icon="sortDown" title="Sort down" className="ml-3" onClick={() => onSortActionDownClicked(index)} />
-                  )}
-                </div>
-              </div>
+              {(schema.shouldStopLastItemDelete && value.length === 1)
+                ? null : (
+                  <div className="bg-lm-3 dark:bg-dm-2 px-2 py-2 flex justify-between group-hover/actionItem:opacity-100">
+                    <div>
+                      <FlatButton icon="delete" title={schema.deleteTitleText} color="warning" onClick={() => onRemoveActionClicked(action._id)} />
+                    </div>
+                    <div className="flex items-center">
+                      {(index !== 0) && (
+                        <FlatButton icon="sortUp" title="Sort up" onClick={() => onSortActionUpClicked(index)} />
+                      )}
+                      {(index !== value.length - 1) && (
+                        <FlatButton icon="sortDown" title="Sort down" className="ml-3" onClick={() => onSortActionDownClicked(index)} />
+                      )}
+                    </div>
+                  </div>
+                )}
             </div>
           );
         })}

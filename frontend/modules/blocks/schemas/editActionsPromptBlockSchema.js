@@ -13,6 +13,7 @@ export default {
       label: 'Actions',
       deleteTitleText: "Delete action",
       addButtonText: "Add another action",
+      shouldStopLastItemDelete: true,
       subSchema: {
         ...text,
         actionType: {
