@@ -40,7 +40,7 @@ const schema = {
     type: [{
       ...asset,
       ...caption
-    }]
+    }], default: [{}]
   },
   options: {
     type: [{
