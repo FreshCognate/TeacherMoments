@@ -5,6 +5,8 @@ export default async ({ modelId, modelType }, { user, models }) => {
       scenarioId = modelId;
       break;
     case 'Slide':
+      const slide = await models.Slide.findById(modelId, 'scenario');
+      scenarioId = slide.scenario;
       break;
     case 'Block':
       break;

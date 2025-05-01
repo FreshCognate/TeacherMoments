@@ -1,4 +1,3 @@
-import getSlides from './services/getSlides.js';
 import getSlidesByScenarioId from './services/getSlidesByScenarioId.js';
 import getSlideById from './services/getSlideById.js';
 import restoreSlideById from './services/restoreSlideById.js';
@@ -16,11 +15,7 @@ export default {
 
     const { searchValue, currentPage, scenarioId, isDeleted } = query;
 
-    if (scenarioId) {
-      return await getSlidesByScenarioId({ scenarioId }, { isDeleted }, context);
-    }
-
-    return await getSlides({}, { searchValue, currentPage, isDeleted }, context);
+    return await getSlidesByScenarioId({ scenarioId }, { isDeleted }, context);
 
   },
 

@@ -1,8 +1,12 @@
+import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
+
 export default async (props, options, context) => {
 
   const { slideId } = props;
 
   const { models, user } = context;
+
+  await checkHasAccessToScenario({ modelId: slideId, modelType: 'Slide' }, context);
 
   const update = {
     isDeleted: false,
