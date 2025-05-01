@@ -1,7 +1,11 @@
+import checkHasAccessToScenario from '../helpers/checkHasAccessToScenario.js';
+
 export default async (props, options, context) => {
 
   const { scenarioId } = props;
   const { models, user } = context;
+
+  await checkHasAccessToScenario({ modelId: scenarioId, modelType: 'Scenario' }, context);
 
   const scenario = await models.Scenario.findByIdAndUpdate(scenarioId, {
     isDeleted: true,

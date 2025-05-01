@@ -1,3 +1,4 @@
+import checkHasAccessToScenario from '../helpers/checkHasAccessToScenario.js';
 import getModelPaginationByCurrentPage from "#core/app/helpers/getModelPaginationByCurrentPage.js";
 import getSearchFromSearchValue from "#core/app/helpers/getSearchFromSearchValue.js";
 import getTotalPages from "#core/app/helpers/getTotalPages.js";
@@ -10,10 +11,11 @@ export default async (props, options, context) => {
 
   let { searchValue = '', currentPage = 1 } = options;
 
+  await checkHasAccessToScenario({ modelId: scenarioId, modelType: 'Scenario' }, context);
+
   const scenario = await models.Scenario.findById(scenarioId);
 
   if (!scenario) throw { message: 'This scenario does not exist', statusCode: 404 };
-
 
   const currentScenarioCollaborators = map(scenario.collaborators, 'user');
 

@@ -1,10 +1,13 @@
 import omit from 'lodash/omit.js';
 import duplicateSlides from '../../slides/services/duplicateSlides.js';
+import checkHasAccessToScenario from '../helpers/checkHasAccessToScenario.js';
 
 export default async (props, options, context) => {
 
   const { scenarioId } = props;
   const { models, user, connection } = context;
+
+  await checkHasAccessToScenario({ modelId: scenarioId, modelType: 'Scenario' }, context);
 
   const existingScenario = await models.Scenario.findById(scenarioId);
 
