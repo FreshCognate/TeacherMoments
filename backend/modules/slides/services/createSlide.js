@@ -1,10 +1,13 @@
 import setScenarioHasChanges from "../../scenarios/services/setScenarioHasChanges.js";
+import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
 
 export default async (props, options, context) => {
 
   const { scenario, sortOrder } = props;
 
   const { models, user } = context;
+
+  await checkHasAccessToScenario({ modelId: scenario, modelType: 'Scenario' }, context);
 
   const scenarioModel = await models.Scenario.findById(scenario);
 

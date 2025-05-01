@@ -11,7 +11,7 @@ export default {
       searchValue: Joi.string().allow('').default(''),
       currentPage: Joi.number().default(1),
       slideType: Joi.string(),
-      scenarioId: Joi.string(),
+      scenarioId: Joi.string().required(),
       isDeleted: Joi.boolean()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
