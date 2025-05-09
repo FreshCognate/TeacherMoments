@@ -1,9 +1,11 @@
 import has from 'lodash/has.js';
 import setScenarioHasChanges from '../../scenarios/services/setScenarioHasChanges.js';
+import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
 export default async (props, options, context) => {
 
   if (has(props, 'sourceIndex') && has(props, 'destinationIndex')) {
     const { sourceIndex, destinationIndex, triggerId } = props;
+    await checkHasAccessToScenario({ modelId: triggerId, modelType: 'Trigger' }, context);
     if (sourceIndex !== destinationIndex) {
 
       const { models, user } = context;

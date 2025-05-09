@@ -1,3 +1,4 @@
+import checkHasAccessToScenario from "../../scenarios/helpers/checkHasAccessToScenario.js";
 import setScenarioHasChanges from "../../scenarios/services/setScenarioHasChanges.js";
 
 export default async (props, options, context) => {
@@ -5,6 +6,8 @@ export default async (props, options, context) => {
   const { triggerId, update } = props;
 
   const { models } = context;
+
+  await checkHasAccessToScenario({ modelId: triggerId, modelType: 'Trigger' }, context);
 
   const trigger = await models.Trigger.findByIdAndUpdate(triggerId, update, { new: true });
 
