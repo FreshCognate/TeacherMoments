@@ -1,10 +1,13 @@
 import setScenarioHasChanges from "../../scenarios/services/setScenarioHasChanges.js";
+import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
 
 export default async (props, options, context) => {
 
   const { scenario, slideRef, blockType } = props;
 
   const { models, user } = context;
+
+  await checkHasAccessToScenario({ modelId: scenario, modelType: 'Scenario' }, context);
 
   const slideBlocks = await models.Block.find({ scenario, slideRef, isDeleted: false });
 

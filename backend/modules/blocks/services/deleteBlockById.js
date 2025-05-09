@@ -1,3 +1,4 @@
+import checkHasAccessToScenario from "../../scenarios/helpers/checkHasAccessToScenario.js";
 import setScenarioHasChanges from "../../scenarios/services/setScenarioHasChanges.js";
 
 export default async (props, options, context) => {
@@ -5,6 +6,8 @@ export default async (props, options, context) => {
   const { blockId } = props;
 
   const { models, user } = context;
+
+  await checkHasAccessToScenario({ modelId: blockId, modelType: 'Block' }, context);
 
   const block = await models.Block.findByIdAndUpdate(blockId, {
     isDeleted: true,

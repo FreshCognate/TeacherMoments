@@ -1,5 +1,6 @@
 import getBlockPopulate from "../helpers/getBlockPopulate.js";
 import getBlockItemsPopulate from "../helpers/getBlockItemsPopulate.js";
+import checkHasAccessToScenario from "../../scenarios/helpers/checkHasAccessToScenario.js";
 
 export default async (props, options, context) => {
 
@@ -7,6 +8,8 @@ export default async (props, options, context) => {
     scenarioId,
     slideRef,
   } = props;
+
+  await checkHasAccessToScenario({ modelId: scenarioId, modelType: 'Scenario' }, context);
 
   let {
     isDeleted = false
