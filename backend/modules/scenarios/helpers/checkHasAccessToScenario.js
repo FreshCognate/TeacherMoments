@@ -13,6 +13,8 @@ export default async ({ modelId, modelType }, { user, models }) => {
       scenarioId = block?.scenario;
       break;
     case 'Trigger':
+      const trigger = await models.Trigger.findById(modelId, 'scenario');
+      scenarioId = trigger?.scenario;
       break;
   }
 

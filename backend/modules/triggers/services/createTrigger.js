@@ -1,8 +1,11 @@
 import setScenarioHasChanges from "../../scenarios/services/setScenarioHasChanges.js";
+import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
 
 export default async (props, options, context) => {
 
   const { scenario, triggerType, elementRef, event, action, blocks } = props;
+
+  await checkHasAccessToScenario({ modelId: scenario, modelType: 'Scenario' }, context);
 
   const { models, user } = context;
 
