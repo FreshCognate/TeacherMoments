@@ -27,7 +27,7 @@ const schema = {
   isRequired: { type: Boolean, default: false },
   requiredLength: { type: Number, default: 50 },
   isMultiSelect: { type: Boolean, default: false },
-  imagesShape: { type: String, enum: ['CIRCLE', 'LANDSCAPE', 'PORTRAIT', 'SQUARE', 'NONE'], default: 'LANDSCAPE' },
+  imagesShape: { type: String, enum: ['CIRCLE', 'LANDSCAPE', 'PORTRAIT', 'SQUARE', 'NONE'], default: 'NONE' },
   imagesBorderRadius: { type: Number, default: 0, enum: [0, 8] },
   inputType: { type: String, enum: ['AUDIO', 'TEXT', 'AUDIO_AND_TEXT'], default: 'AUDIO' },
   mediaCompleteOn: { type: String, enum: ['START', 'END'], default: 'END' },
