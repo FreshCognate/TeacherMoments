@@ -78,9 +78,10 @@ class TriggerDisplayContainer extends Component {
   }
 
   onEditTriggerClicked = (triggerId) => {
+
     const trigger = find(this.props.triggers.data, { _id: triggerId });
-    console.log(trigger);
     const triggers = getTriggers();
+
     addModal({
       title: 'Edit trigger',
       schema: {
