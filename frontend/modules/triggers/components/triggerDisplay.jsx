@@ -10,7 +10,9 @@ const TriggerDisplay = ({
   triggers,
   onAddTriggerClicked,
   onEditTriggerClicked,
-  onDeleteTriggerClicked
+  onDeleteTriggerClicked,
+  onSortUpClicked,
+  onSortDownClicked
 }) => {
   return (
     <div className="w-full pt-4 pb-8 px-8 max-w-screen-lg mx-auto">
@@ -31,6 +33,8 @@ const TriggerDisplay = ({
                   trigger={trigger}
                   onEditTriggerClicked={onEditTriggerClicked}
                   onDeleteTriggerClicked={onDeleteTriggerClicked}
+                  onSortUpClicked={onSortUpClicked}
+                  onSortDownClicked={onSortDownClicked}
                 />
               </div>
             );

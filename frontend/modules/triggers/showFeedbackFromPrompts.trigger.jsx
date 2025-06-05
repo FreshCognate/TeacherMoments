@@ -9,6 +9,15 @@ const ShowFeedbackFromPrompts = {
   },
   getDescription: (trigger) => {
     return `Show feedback based upon the selected prompts in this slide.`
+  },
+  getSchema: (trigger) => {
+    return {
+      blocks: {
+        type: 'TriggerBlocksSelector',
+        label: 'Selected blocks:',
+        blockTypes: ['INPUT_PROMPT', 'MULTIPLE_CHOICE_PROMPT']
+      }
+    }
   }
 }
 

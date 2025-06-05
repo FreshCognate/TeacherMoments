@@ -11,6 +11,9 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import getTriggers from '../helpers/getTriggers';
 import pick from 'lodash/pick';
 import find from 'lodash/find';
+import cloneDeep from 'lodash/cloneDeep';
+import each from 'lodash/each';
+import EditTriggerContainer from './editTriggerContainer';
 
 class TriggerDisplayContainer extends Component {
 
@@ -37,19 +40,7 @@ class TriggerDisplayContainer extends Component {
 
     addModal({
       title: 'Add new trigger',
-      schema: {
-        action: {
-          type: 'Select',
-          label: 'Action:',
-          isInline: true,
-          options: triggers
-        },
-        blocks: {
-          type: 'TriggerBlocksSelector',
-          label: 'Selected blocks:',
-          blockTypes: ['INPUT_PROMPT', 'MULTIPLE_CHOICE_PROMPT']
-        }
-      },
+      component: <EditTriggerContainer isEditing={false} />,
       model: {
         action: triggers[0].value,
         blocks: []
@@ -81,20 +72,7 @@ class TriggerDisplayContainer extends Component {
 
     addModal({
       title: 'Edit trigger',
-      schema: {
-        action: {
-          type: 'Select',
-          label: 'Action:',
-          isInline: true,
-          isDisabled: true,
-          options: triggers
-        },
-        blocks: {
-          type: 'TriggerBlocksSelector',
-          label: 'Selected blocks',
-          blockTypes: ['INPUT_PROMPT', 'MULTIPLE_CHOICE_PROMPT']
-        }
-      },
+      component: <EditTriggerContainer isEditing={true} />,
       model: trigger,
       actions: [{
         type: 'CANCEL',
@@ -121,11 +99,36 @@ class TriggerDisplayContainer extends Component {
     }).catch(handleRequestError);
   }
 
-  onOpenTriggerPanelClicked = () => {
-    addSidePanel({
-      position: 'right',
-      component: <TriggersEditorContainer elementRef={this.props.elementRef} event={this.props.event} triggerType={this.props.triggerType} />
-    })
+  sortTriggers = ({ sourceIndex, destinationIndex }) => {
+    const clonedTriggers = cloneDeep(this.getTriggers());
+    const [removed] = clonedTriggers.splice(sourceIndex, 1);
+    clonedTriggers.splice(destinationIndex, 0, removed);
+
+    each(clonedTriggers, (item, index) => {
+      item.sortOrder = index;
+    });
+
+    this.props.triggers.set(clonedTriggers, { setType: 'replace' });
+
+    axios.put(`/api/triggers/${removed._id}`, { sourceIndex, destinationIndex }).then(() => {
+      this.props.triggers.fetch();
+    }).catch(handleRequestError);
+  }
+
+  onSortUpClicked = (sortOrder) => {
+    const sourceIndex = sortOrder;
+    const destinationIndex = sortOrder - 1;
+
+    this.sortTriggers({ sourceIndex, destinationIndex });
+  }
+
+  onSortDownClicked = (sortOrder) => {
+
+    const sourceIndex = sortOrder;
+    const destinationIndex = sortOrder + 1;
+
+    this.sortTriggers({ sourceIndex, destinationIndex });
+
   }
 
   render() {
@@ -135,6 +138,8 @@ class TriggerDisplayContainer extends Component {
         onAddTriggerClicked={this.onAddTriggerClicked}
         onEditTriggerClicked={this.onEditTriggerClicked}
         onDeleteTriggerClicked={this.onDeleteTriggerClicked}
+        onSortUpClicked={this.onSortUpClicked}
+        onSortDownClicked={this.onSortDownClicked}
       />
     );
   }
