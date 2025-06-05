@@ -9,7 +9,7 @@ export default (modal: any, callback: any) => {
   const modalCache = getCache('modal');
   const dialogsCache = getCache('dialogs');
   const dialogProgressItems = getCache('dialogProgressItems');
-  modalCache.set(modal.model || {});
+  modalCache.set(modal.model || {}, { setType: 'replace' });
   dialogsCache.set({
     isModalOpen: true,
     modal,

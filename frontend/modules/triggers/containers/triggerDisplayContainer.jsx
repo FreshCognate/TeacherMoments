@@ -9,6 +9,8 @@ import WithRouter from '~/core/app/components/withRouter';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import getTriggers from '../helpers/getTriggers';
+import pick from 'lodash/pick';
+import find from 'lodash/find';
 
 class TriggerDisplayContainer extends Component {
 
@@ -46,11 +48,6 @@ class TriggerDisplayContainer extends Component {
           type: 'TriggerBlocksSelector',
           label: 'Selected blocks:',
           blockTypes: ['INPUT_PROMPT', 'MULTIPLE_CHOICE_PROMPT']
-        },
-        conditions: {
-          type: 'Conditions',
-          label: 'Conditions',
-          isInline: true,
         }
       },
       model: {
@@ -96,11 +93,6 @@ class TriggerDisplayContainer extends Component {
           type: 'TriggerBlocksSelector',
           label: 'Selected blocks',
           blockTypes: ['INPUT_PROMPT', 'MULTIPLE_CHOICE_PROMPT']
-        },
-        conditions: {
-          type: 'Conditions',
-          label: 'Conditions',
-          isInline: true,
         }
       },
       model: trigger,
