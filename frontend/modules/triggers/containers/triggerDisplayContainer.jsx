@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
 import TriggersEditorContainer from './triggersEditorContainer';
-import getEventDescription from '../helpers/getEventDescription';
 import TriggerDisplay from '../components/triggerDisplay';
 import WithCache from '~/core/cache/containers/withCache';
 import filter from 'lodash/filter';
@@ -9,6 +8,7 @@ import addModal from '~/core/dialogs/helpers/addModal';
 import WithRouter from '~/core/app/components/withRouter';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
+import getTriggers from '../helpers/getTriggers';
 
 class TriggerDisplayContainer extends Component {
 
@@ -30,6 +30,9 @@ class TriggerDisplayContainer extends Component {
   }
 
   onAddTriggerClicked = () => {
+
+    const triggers = getTriggers();
+
     addModal({
       title: 'Add new trigger',
       schema: {
@@ -37,10 +40,7 @@ class TriggerDisplayContainer extends Component {
           type: 'Select',
           label: 'Action:',
           isInline: true,
-          options: [{
-            value: 'SHOW_FEEDBACK_FROM_PROMPTS',
-            text: 'Show feedback from prompts'
-          }]
+          options: triggers
         },
         blocks: {
           type: 'TriggerBlocksSelector',
@@ -54,7 +54,7 @@ class TriggerDisplayContainer extends Component {
         }
       },
       model: {
-        action: 'SHOW_FEEDBACK_FROM_PROMPTS',
+        action: triggers[0].value,
         blocks: []
       },
       actions: [{
