@@ -2,6 +2,7 @@ import React from 'react';
 import BlocksEditorContainer from '~/modules/blocks/containers/blocksEditorContainer';
 import CreateWorkspaceToolbarContainer from '../containers/createWorkspaceToolbarContainer';
 import ScenarioPreviewContainer from '~/modules/scenarios/containers/scenarioPreviewContainer';
+import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
 
 const CreateWorkspace = ({
   activeSlideRef,
@@ -25,6 +26,9 @@ const CreateWorkspace = ({
                 <BlocksEditorContainer
                   slideId={activeSlideId}
                 />
+              )}
+              {(activeSlideRef) && (
+                <TriggerDisplayContainer />
               )}
             </div>
           )}
