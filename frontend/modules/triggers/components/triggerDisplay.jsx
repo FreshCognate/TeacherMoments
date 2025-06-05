@@ -4,12 +4,11 @@ import map from 'lodash/map';
 import Body from '~/uikit/content/components/body';
 import Icon from '~/uikit/icons/components/icon';
 import Button from '~/uikit/buttons/components/button';
-import TriggerItem from './triggerItem';
+import TriggerItemContainer from '../containers/triggerItemContainer';
 
 const TriggerDisplay = ({
   triggers,
   onAddTriggerClicked,
-  onEditTriggerClicked,
   onDeleteTriggerClicked,
   onSortUpClicked,
   onSortDownClicked
@@ -26,12 +25,12 @@ const TriggerDisplay = ({
       </div>
       <div className="bg-lm-0 dark:bg-dm-0 p-2 rounded-md">
         <div>
-          {map(triggers, (trigger) => {
+          {map(triggers, (trigger, index) => {
             return (
               <div key={trigger._id} className="mb-2">
-                <TriggerItem
+                <TriggerItemContainer
                   trigger={trigger}
-                  onEditTriggerClicked={onEditTriggerClicked}
+                  isLastTrigger={index === triggers.length - 1}
                   onDeleteTriggerClicked={onDeleteTriggerClicked}
                   onSortUpClicked={onSortUpClicked}
                   onSortDownClicked={onSortDownClicked}
