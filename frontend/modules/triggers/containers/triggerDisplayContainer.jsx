@@ -77,6 +77,52 @@ class TriggerDisplayContainer extends Component {
     })
   }
 
+  onEditTriggerClicked = (triggerId) => {
+
+    const trigger = find(this.props.triggers.data, { _id: triggerId });
+    const triggers = getTriggers();
+
+    addModal({
+      title: 'Edit trigger',
+      schema: {
+        action: {
+          type: 'Select',
+          label: 'Action:',
+          isInline: true,
+          isDisabled: true,
+          options: triggers
+        },
+        blocks: {
+          type: 'TriggerBlocksSelector',
+          label: 'Selected blocks',
+          blockTypes: ['INPUT_PROMPT', 'MULTIPLE_CHOICE_PROMPT']
+        },
+        conditions: {
+          type: 'Conditions',
+          label: 'Conditions',
+          isInline: true,
+        }
+      },
+      model: trigger,
+      actions: [{
+        type: 'CANCEL',
+        text: 'Cancel'
+      }, {
+        type: 'SAVE',
+        text: 'Save',
+        color: 'primary'
+      }]
+    }, (state, { type, modal }) => {
+      if (state === 'ACTION') {
+        if (type === 'SAVE') {
+          axios.put(`/api/triggers/${triggerId}`, pick(modal, ['blocks', 'conditions'])).then(() => {
+            this.props.triggers.fetch();
+          }).catch(handleRequestError);
+        }
+      }
+    })
+  }
+
   onDeleteTriggerClicked = (triggerId) => {
     axios.delete(`/api/triggers/${triggerId}`).then(() => {
       this.props.triggers.fetch();
@@ -95,6 +141,7 @@ class TriggerDisplayContainer extends Component {
       <TriggerDisplay
         triggers={this.getTriggers()}
         onAddTriggerClicked={this.onAddTriggerClicked}
+        onEditTriggerClicked={this.onEditTriggerClicked}
         onDeleteTriggerClicked={this.onDeleteTriggerClicked}
       />
     );
