@@ -8,7 +8,8 @@ import TriggerItem from './triggerItem';
 
 const TriggerDisplay = ({
   triggers,
-  onAddTriggerClicked
+  onAddTriggerClicked,
+  onDeleteTriggerClicked
 }) => {
   return (
     <div className="w-full pt-4 pb-8 px-8 max-w-screen-lg mx-auto">
@@ -27,6 +28,7 @@ const TriggerDisplay = ({
               <div key={trigger._id} className="mb-2">
                 <TriggerItem
                   trigger={trigger}
+                  onDeleteTriggerClicked={onDeleteTriggerClicked}
                 />
               </div>
             );
