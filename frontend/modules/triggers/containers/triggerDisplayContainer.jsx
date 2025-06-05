@@ -77,6 +77,12 @@ class TriggerDisplayContainer extends Component {
     })
   }
 
+  onDeleteTriggerClicked = (triggerId) => {
+    axios.delete(`/api/triggers/${triggerId}`).then(() => {
+      this.props.triggers.fetch();
+    }).catch(handleRequestError);
+  }
+
   onOpenTriggerPanelClicked = () => {
     addSidePanel({
       position: 'right',
@@ -89,6 +95,7 @@ class TriggerDisplayContainer extends Component {
       <TriggerDisplay
         triggers={this.getTriggers()}
         onAddTriggerClicked={this.onAddTriggerClicked}
+        onDeleteTriggerClicked={this.onDeleteTriggerClicked}
       />
     );
   }
