@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
-import TriggersEditorContainer from './triggersEditorContainer';
 import TriggerDisplay from '../components/triggerDisplay';
 import WithCache from '~/core/cache/containers/withCache';
 import filter from 'lodash/filter';
@@ -9,11 +7,9 @@ import WithRouter from '~/core/app/components/withRouter';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import getTriggers from '../helpers/getTriggers';
-import pick from 'lodash/pick';
-import find from 'lodash/find';
 import cloneDeep from 'lodash/cloneDeep';
 import each from 'lodash/each';
-import EditTriggerContainer from './editTriggerContainer';
+import AddTriggerContainer from './addTriggerContainer';
 
 class TriggerDisplayContainer extends Component {
 
@@ -40,52 +36,16 @@ class TriggerDisplayContainer extends Component {
 
     addModal({
       title: 'Add new trigger',
-      component: <EditTriggerContainer isEditing={false} />,
-      model: {
-        action: triggers[0].value,
-        blocks: []
-      },
+      component: <AddTriggerContainer />,
       actions: [{
         type: 'CANCEL',
         text: 'Cancel'
-      }, {
-        type: 'CREATE',
-        text: 'Create',
-        color: 'primary'
       }]
     }, (state, { type, modal }) => {
       if (state === 'ACTION') {
         if (type === 'CREATE') {
           const triggerBaseModel = this.getTriggerBaseModel();
-          axios.post('/api/triggers', { ...triggerBaseModel, ...modal }).then(() => {
-            this.props.triggers.fetch();
-          }).catch(handleRequestError);
-        }
-      }
-    })
-  }
-
-  onEditTriggerClicked = (triggerId) => {
-
-    const trigger = find(this.props.triggers.data, { _id: triggerId });
-    const triggers = getTriggers();
-
-    addModal({
-      title: 'Edit trigger',
-      component: <EditTriggerContainer isEditing={true} />,
-      model: trigger,
-      actions: [{
-        type: 'CANCEL',
-        text: 'Cancel'
-      }, {
-        type: 'SAVE',
-        text: 'Save',
-        color: 'primary'
-      }]
-    }, (state, { type, modal }) => {
-      if (state === 'ACTION') {
-        if (type === 'SAVE') {
-          axios.put(`/api/triggers/${triggerId}`, pick(modal, ['blocks', 'conditions'])).then(() => {
+          axios.post('/api/triggers', { ...triggerBaseModel, ...modal }).then((response) => {
             this.props.triggers.fetch();
           }).catch(handleRequestError);
         }
@@ -136,7 +96,6 @@ class TriggerDisplayContainer extends Component {
       <TriggerDisplay
         triggers={this.getTriggers()}
         onAddTriggerClicked={this.onAddTriggerClicked}
-        onEditTriggerClicked={this.onEditTriggerClicked}
         onDeleteTriggerClicked={this.onDeleteTriggerClicked}
         onSortUpClicked={this.onSortUpClicked}
         onSortDownClicked={this.onSortDownClicked}

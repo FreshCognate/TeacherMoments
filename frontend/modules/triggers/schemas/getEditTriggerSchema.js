@@ -1,6 +1,6 @@
 import getTriggers from "../helpers/getTriggers";
 
-export default (isEditing) => {
+export default () => {
 
   const triggers = getTriggers();
 
@@ -9,7 +9,7 @@ export default (isEditing) => {
       type: 'Select',
       label: 'Action:',
       isInline: true,
-      isDisabled: isEditing,
+      isDisabled: true,
       options: triggers
     }
   }

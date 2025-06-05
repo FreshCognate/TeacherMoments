@@ -16,6 +16,16 @@ const ShowFeedbackFromPrompts = {
         type: 'TriggerBlocksSelector',
         label: 'Selected blocks:',
         blockTypes: ['INPUT_PROMPT', 'MULTIPLE_CHOICE_PROMPT']
+      },
+      items: {
+        type: 'Array',
+        label: 'Feedback items',
+        deleteTitleText: "Delete feedback item",
+        addButtonText: "Add feedback item",
+        shouldStopLastItemDelete: true,
+        subSchema: {
+
+        }
       }
     }
   }
