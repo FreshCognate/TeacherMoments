@@ -4,6 +4,7 @@ import Body from '~/uikit/content/components/body';
 import includes from 'lodash/includes';
 import getString from '~/modules/ls/helpers/getString';
 import getBlockDisplayName from '~/modules/blocks/helpers/getBlockDisplayName';
+import Alert from '~/uikit/alerts/components/alert';
 
 
 const triggerBlocksSelector = ({
@@ -13,6 +14,11 @@ const triggerBlocksSelector = ({
 }) => {
   return (
     <div>
+      {(blocks.length === 0) && (
+        <div>
+          <Alert type="warning" text="No available prompt blocks" />
+        </div>
+      )}
       {map(blocks, (block) => {
         const isSelected = includes(value, block.ref);
         const blockDisplayName = getBlockDisplayName(block);

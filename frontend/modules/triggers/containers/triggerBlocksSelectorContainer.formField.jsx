@@ -30,7 +30,7 @@ class TriggerBlocksSelectorContainer extends Component {
   }
 
   onBlockToggled = (blockRef) => {
-    const clonedBlocks = cloneDeep(this.props.value);
+    const clonedBlocks = cloneDeep(this.props.value) || [];
     if (includes(clonedBlocks, blockRef)) {
       pull(clonedBlocks, blockRef);
     } else {
