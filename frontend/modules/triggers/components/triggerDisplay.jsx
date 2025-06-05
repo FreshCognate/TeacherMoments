@@ -9,6 +9,7 @@ import TriggerItem from './triggerItem';
 const TriggerDisplay = ({
   triggers,
   onAddTriggerClicked,
+  onEditTriggerClicked,
   onDeleteTriggerClicked
 }) => {
   return (
@@ -28,6 +29,7 @@ const TriggerDisplay = ({
               <div key={trigger._id} className="mb-2">
                 <TriggerItem
                   trigger={trigger}
+                  onEditTriggerClicked={onEditTriggerClicked}
                   onDeleteTriggerClicked={onDeleteTriggerClicked}
                 />
               </div>
