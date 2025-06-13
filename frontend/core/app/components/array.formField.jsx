@@ -1,5 +1,6 @@
 import FormContainer from "~/core/forms/containers/formContainer";
 import FlatButton from "~/uikit/buttons/components/flatButton";
+import ConfirmButton from '~/uikit/buttons/components/confirmButton';
 import map from 'lodash/map';
 import Button from "~/uikit/buttons/components/button";
 
@@ -31,7 +32,7 @@ const ArrayFormField = ({
                 ? null : (
                   <div className="bg-lm-3 dark:bg-dm-2 px-2 py-2 flex justify-between group-hover/actionItem:opacity-100">
                     <div>
-                      <FlatButton icon="delete" title={schema.deleteTitleText} color="warning" onClick={() => onRemoveActionClicked(action._id)} />
+                      <ConfirmButton icon="delete" title={schema.deleteTitleText} color="warning" onClick={() => onRemoveActionClicked(action._id)} />
                     </div>
                     <div className="flex items-center">
                       {(index !== 0) && (
