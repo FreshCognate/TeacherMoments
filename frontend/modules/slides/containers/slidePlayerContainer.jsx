@@ -14,12 +14,16 @@ import getNextSlide from '~/modules/run/helpers/getNextSlide';
 import setScenarioToComplete from '~/modules/run/helpers/setScenarioToComplete';
 import WithRouter from '~/core/app/components/withRouter';
 import addModal from '~/core/dialogs/helpers/addModal';
+import filter from 'lodash/filter';
+import getCache from '~/core/cache/helpers/getCache';
+import getTrigger from '~/modules/triggers/helpers/getTrigger';
 
 class SlidePlayerContainer extends Component {
 
   state = {
     isLoading: true,
-    isMenuOpen: false
+    isMenuOpen: false,
+    isSubmitting: false
   }
 
   componentDidMount = () => {
@@ -40,6 +44,8 @@ class SlidePlayerContainer extends Component {
     let secondaryAction;
 
     const { activeSlide } = this.props;
+
+    const { isSubmitting } = this.state;
 
     const { isAbleToCompleteSlide, hasRequiredPrompts, hasPrompts } = getSlideNavigationDetails();
 
@@ -69,14 +75,15 @@ class SlidePlayerContainer extends Component {
         secondaryAction = {
           action: 'BACK',
           text: 'Back',
-          isActive: true
+          isActive: true,
+          isDisabled: isSubmitting
         }
         if (hasPrompts) {
           primaryAction = {
             action: 'SUBMIT',
             color: 'primary',
-            text: 'Submit',
-            isDisabled: hasRequiredPrompts && !isAbleToCompleteSlide
+            text: isSubmitting ? 'Submitting' : 'Submit',
+            isDisabled: (hasRequiredPrompts && !isAbleToCompleteSlide) || isSubmitting
           }
         }
       } else {
@@ -120,8 +127,16 @@ class SlidePlayerContainer extends Component {
     return navigateToNextSlide();
   }
 
-  onSubmitSlideClicked = () => {
+  onSubmitSlideClicked = async () => {
+    this.setState({ isSubmitting: true });
     setSlideToComplete({ slideRef: this.props.activeSlide.ref });
+    const triggers = filter(getCache('triggers').data, (trigger) => trigger.elementRef === this.props.activeSlide.ref && trigger.event === 'ON_EXIT');
+    for (const trigger of triggers) {
+      const triggerItem = getTrigger(trigger.action);
+      console.log(`Triggering: ${triggerItem.getText()}`);
+      await triggerItem.trigger(trigger);
+      console.log(`Triggered: ${triggerItem.getText()}`)
+    }
     return navigateToNextSlide();
   }
 

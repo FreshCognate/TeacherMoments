@@ -8,6 +8,13 @@ const body = buildLanguageSchema('body', {
 });
 
 const ShowFeedbackFromPrompts = {
+  trigger: async () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, 4000);
+    })
+  },
   getAction: () => {
     return 'SHOW_FEEDBACK_FROM_PROMPTS';
   },
