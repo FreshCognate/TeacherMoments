@@ -1,4 +1,11 @@
-import registerTrigger from "./helpers/registerTrigger"
+import registerTrigger from "./helpers/registerTrigger";
+import buildLanguageSchema from "~/core/app/helpers/buildLanguageSchema";
+
+const body = buildLanguageSchema('body', {
+  type: 'TextArea',
+  label: 'Feedback text',
+  features: ['bold', 'italic', 'underline', 'strikethrough', 'code', 'blockquote', 'link', 'leftAlign', 'centerAlign', 'rightAlign', 'justifyAlign', 'bulletedList', 'numberedList']
+});
 
 const ShowFeedbackFromPrompts = {
   getAction: () => {
@@ -24,7 +31,7 @@ const ShowFeedbackFromPrompts = {
         addButtonText: "Add feedback item",
         shouldStopLastItemDelete: true,
         subSchema: {
-
+          ...body
         }
       }
     }
