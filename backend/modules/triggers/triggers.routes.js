@@ -33,7 +33,6 @@ export default {
     param: 'id',
     body: {
       event: Joi.string().valid(...getTriggerEvents()),
-      blocks: Joi.array().items(Joi.string()),
       items: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('body', Joi.array()),

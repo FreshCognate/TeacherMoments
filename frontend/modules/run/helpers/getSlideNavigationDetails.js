@@ -7,8 +7,11 @@ export default () => {
   let isAbleToCompleteSlide = true;
   let hasRequiredPrompts = false;
   let hasPrompts = false;
+  let isSubmitted = false;
   const slideStage = getSlideStage();
   if (slideStage) {
+
+    isSubmitted = slideStage.isSubmitted;
 
     const blocks = getBlocksBySlideRef({ slideRef: slideStage.slideRef });
 
@@ -28,5 +31,5 @@ export default () => {
     }
 
   }
-  return { isAbleToCompleteSlide, hasRequiredPrompts, hasPrompts };
+  return { isAbleToCompleteSlide, hasRequiredPrompts, hasPrompts, isSubmitted };
 }

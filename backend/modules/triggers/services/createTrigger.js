@@ -3,7 +3,7 @@ import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToSc
 
 export default async (props, options, context) => {
 
-  const { scenario, triggerType, elementRef, event, action, blocks } = props;
+  const { scenario, triggerType, elementRef, event, action } = props;
 
   await checkHasAccessToScenario({ modelId: scenario, modelType: 'Scenario' }, context);
 
@@ -19,7 +19,6 @@ export default async (props, options, context) => {
     elementRef,
     event,
     action,
-    blocks,
     sortOrder,
     createdBy: user._id,
   };
