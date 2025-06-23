@@ -14,6 +14,7 @@ import '~/core/app/conditions/modelValueIs';
 import '~/modules/slides/helpers/isRootSlide.condition';
 import '~/modules/ls/helpers/ls.condition'
 import '~/modules/triggers/showFeedbackFromPrompts.trigger';
+import '~/modules/triggers/containers/feedbackItemConditionsContainer.formField';
 
 axios.interceptors.response.use(function (response) {
   return response;

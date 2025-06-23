@@ -17,13 +17,16 @@ import addModal from '~/core/dialogs/helpers/addModal';
 import filter from 'lodash/filter';
 import getCache from '~/core/cache/helpers/getCache';
 import getTrigger from '~/modules/triggers/helpers/getTrigger';
+import setShouldStopNavigation from '~/modules/run/helpers/setShouldStopNavigation';
+import setSlideToSubmitted from '~/modules/run/helpers/setSlideToSubmitted';
 
 class SlidePlayerContainer extends Component {
 
   state = {
     isLoading: true,
     isMenuOpen: false,
-    isSubmitting: false
+    isSubmitting: false,
+    shouldStopNavigation: false
   }
 
   componentDidMount = () => {
@@ -47,7 +50,7 @@ class SlidePlayerContainer extends Component {
 
     const { isSubmitting } = this.state;
 
-    const { isAbleToCompleteSlide, hasRequiredPrompts, hasPrompts } = getSlideNavigationDetails();
+    const { isAbleToCompleteSlide, hasRequiredPrompts, hasPrompts, isSubmitted } = getSlideNavigationDetails();
 
     if (activeSlide?.slideType === 'CONSENT') {
       secondaryAction = {
@@ -78,7 +81,7 @@ class SlidePlayerContainer extends Component {
           isActive: true,
           isDisabled: isSubmitting
         }
-        if (hasPrompts) {
+        if (hasPrompts && !isSubmitted) {
           primaryAction = {
             action: 'SUBMIT',
             color: 'primary',
@@ -133,11 +136,22 @@ class SlidePlayerContainer extends Component {
     const triggers = filter(getCache('triggers').data, (trigger) => trigger.elementRef === this.props.activeSlide.ref && trigger.event === 'ON_EXIT');
     for (const trigger of triggers) {
       const triggerItem = getTrigger(trigger.action);
+      const shouldStopNavigation = triggerItem.getShouldStopNavigation();
+      if (shouldStopNavigation) {
+        setShouldStopNavigation(true);
+      }
       console.log(`Triggering: ${triggerItem.getText()}`);
       await triggerItem.trigger(trigger);
-      console.log(`Triggered: ${triggerItem.getText()}`)
+      console.log(`Triggered: ${triggerItem.getText()}`);
     }
-    return navigateToNextSlide();
+
+    setSlideToSubmitted();
+    const stage = getSlideStage();
+    this.setState({ isSubmitting: false });
+
+    if (!stage.shouldStopNavigation) {
+      return navigateToNextSlide();
+    }
   }
 
   onConsentAcceptedClicked = () => {
@@ -234,6 +248,7 @@ class SlidePlayerContainer extends Component {
         scenario={scenario}
         activeSlide={activeSlide}
         activeBlocks={activeBlocks}
+        run={this.props.run.data}
         isLoading={this.state.isLoading}
         isMenuOpen={isMenuOpen}
         navigateTo={this.navigateTo}

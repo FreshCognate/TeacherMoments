@@ -1,3 +1,4 @@
+import setSlideFeedback from "../run/helpers/setSlideFeedback";
 import registerTrigger from "./helpers/registerTrigger";
 import buildLanguageSchema from "~/core/app/helpers/buildLanguageSchema";
 
@@ -11,9 +12,13 @@ const ShowFeedbackFromPrompts = {
   trigger: async () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
+        setSlideFeedback(["This is some fake feedback"]);
         resolve();
-      }, 4000);
+      }, 1000);
     })
+  },
+  getShouldStopNavigation: () => {
+    return true;
   },
   getAction: () => {
     return 'SHOW_FEEDBACK_FROM_PROMPTS';
@@ -26,11 +31,6 @@ const ShowFeedbackFromPrompts = {
   },
   getSchema: (trigger) => {
     return {
-      blocks: {
-        type: 'TriggerBlocksSelector',
-        label: 'Selected blocks:',
-        blockTypes: ['INPUT_PROMPT', 'MULTIPLE_CHOICE_PROMPT']
-      },
       items: {
         type: 'Array',
         label: 'Feedback items',
@@ -38,7 +38,11 @@ const ShowFeedbackFromPrompts = {
         addButtonText: "Add feedback item",
         shouldStopLastItemDelete: true,
         subSchema: {
-          ...body
+          ...body,
+          conditions: {
+            type: 'FeedbackItemConditions',
+            label: 'Select this item if'
+          }
         }
       }
     }

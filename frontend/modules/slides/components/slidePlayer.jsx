@@ -8,6 +8,7 @@ import SlidePlayerNavigation from './slidePlayerNavigation';
 import SlidePlayerHeader from './slidePlayerHeader';
 import SummarySlide from './summarySlide';
 import ConsentSlide from './consentSlide';
+import getSlideFeedbackItems from '~/modules/run/helpers/getSlideFeedbackItems';
 
 const SlidePlayer = ({
   scenario,
@@ -27,6 +28,8 @@ const SlidePlayer = ({
   if (!activeSlide || isLoading) return (
     <Loading />
   );
+
+  const slideFeedbackItems = getSlideFeedbackItems();
 
   return (
     <div className="w-full bg-lm-0 dark:bg-dm-1 border border-lm-2 dark:border-dm-2 rounded ">
@@ -69,9 +72,9 @@ const SlidePlayer = ({
             </div>
           );
         })}
-        {(run.feedbackItems && run.feedbackItems.length > 0) && (
+        {(slideFeedbackItems && slideFeedbackItems.length > 0) && (
           <div className="bg-blue-200 bg-opacity-30 border border-blue-200 p-2 rounded-md dark:text-gray-200 text-gray-800">
-            {map(run.feedbackItems, (feedbackItem, index) => {
+            {map(slideFeedbackItems, (feedbackItem, index) => {
               return (
                 <Body key={index} body={feedbackItem} />
               )

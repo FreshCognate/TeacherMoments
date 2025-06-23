@@ -22,7 +22,6 @@ const schema = {
     enum: getTriggerActions(),
     required: true
   },
-  blocks: { type: [mongoose.Schema.Types.ObjectId], default: [] },
   items: {
     type: [{
       ...body
