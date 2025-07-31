@@ -7,7 +7,7 @@ const DialogModalLightbox = ({
   isSidePanel
 }) => {
   const className = classnames("fixed top-0 left-0 w-full h-full", {
-    "bg-dm-2 bg-opacity-20 dark:bg-dm-2 dark:bg-opacity-20": isSidePanel,
+    "bg-dm-2 bg-opacity-40 dark:bg-dm-2 dark:bg-opacity-40": isSidePanel,
     "bg-dm-2 bg-opacity-80 dark:bg-dm-2 dark:bg-opacity-80": !isSidePanel,
   })
   return (

@@ -14,20 +14,15 @@ const TriggerDisplay = ({
   onSortDownClicked
 }) => {
   return (
-    <div className="w-full pt-4 pb-8 px-8 max-w-screen-lg mx-auto">
+    <div className="w-full pt-4 pb-8 px-4 max-w-screen-lg mx-auto">
       <div className="flex items-center justify-between text-black/60 dark:text-white/60 mb-2">
-        <div className="flex items-center">
-
-          <Icon icon="trigger" size={16} className="mr-2" />
-          <Body body="Triggers" />
-        </div>
         <Alert text="Triggers are extra functionality that can happen during the transition to the next slide." type="info" />
       </div>
-      <div className="bg-lm-0 dark:bg-dm-0 p-2 rounded-md">
+      <div className=" p-2">
         <div>
           {map(triggers, (trigger, index) => {
             return (
-              <div key={trigger._id} className="mb-2">
+              <div key={trigger._id} className="mb-8">
                 <TriggerItemContainer
                   trigger={trigger}
                   isLastTrigger={index === triggers.length - 1}
@@ -39,7 +34,7 @@ const TriggerDisplay = ({
             );
           })}
         </div>
-        <div>
+        <div className="mt-8">
           <Button color="primary" text="Add trigger" icon="trigger" onClick={onAddTriggerClicked} />
         </div>
       </div>
