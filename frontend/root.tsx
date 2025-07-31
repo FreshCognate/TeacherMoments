@@ -76,7 +76,7 @@ export default function App(props) {
   }
 
   return (
-    <div className="pt-10">
+    <div className="pt-14">
       <DialogsContainer />
       <NavigationContainer loaderData={props.loaderData} />
       <Outlet />
