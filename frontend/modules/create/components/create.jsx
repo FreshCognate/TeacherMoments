@@ -37,8 +37,8 @@ const Create = ({
 
       <div
         id="scenario-builder"
-        style={{ height: 'calc(100vh - 68px', marginTop: '28px' }}
-        className="bg-lm-2 dark:bg-dm-2 flex"
+        style={{ height: 'calc(100vh - 84px', marginTop: '44px' }}
+        className="bg-lm-0 dark:bg-dm-0 flex"
       >
         <CreateNavigationContainer />
         <CreateWorkspaceContainer />
