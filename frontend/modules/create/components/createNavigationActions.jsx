@@ -8,8 +8,8 @@ const CreateNavigationActions = ({
   onAddSlideClicked
 }) => {
   return (
-    <div className="flex items-center p-2 sticky top-0 z-10 bg-lm-0 dark:bg-dm-0">
-      <FlatButton isCircular isDisabled={isCreating} title="Add new slide" icon="create" onClick={onAddSlideClicked} />
+    <div className="flex items-center justify-between p-2 sticky top-0 z-10 bg-lm-0 dark:bg-dm-0">
+      <FlatButton isCircular isDisabled={isCreating} text="Add slide" title="Add new slide" icon="create" onClick={onAddSlideClicked} />
       {(isCreating) && (
         <Body body="Creating slide..." size="xs" className="ml-2 text-black/60 dark:text-white/60" />
       )}

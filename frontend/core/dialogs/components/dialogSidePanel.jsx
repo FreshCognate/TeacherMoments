@@ -3,6 +3,7 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import { motion } from 'framer-motion';
 import Title from '~/uikit/content/components/title';
 import classnames from 'classnames';
+import Icon from '~/uikit/icons/components/icon';
 
 const DialogSidePanel = ({
   sidePanel,
@@ -44,7 +45,7 @@ const DialogSidePanel = ({
   const className = classnames("flex flex-col relative w-full bg-lm-0 rounded-lg border border-lm-1 dark:border-dm-1 dark:bg-dm-0", {
     "max-w-md": sidePanel.size !== 'md' && sidePanel.size !== 'lg',
     "max-w-xl": sidePanel.size === 'md',
-    "max-w-auto": sidePanel.size === 'lg'
+    "max-w-5xl": sidePanel.size === 'lg'
   });
 
   return (
@@ -67,9 +68,12 @@ const DialogSidePanel = ({
         style={style}
       >
 
-        <div className="flex flex-0 items-center justify-between pl-4 pr-1 max-h-full">
+        <div className="flex flex-0 items-center justify-between pl-4 pr-2 py-2 border-b border-b-lm-3 dark:border-b-dm-2 max-h-full">
 
-          <div>
+          <div className="flex items-center">
+            {(sidePanel.icon) && (
+              <Icon icon={sidePanel.icon} className="mr-2" />
+            )}
             <Title title={sidePanel.title} element="h5" className="text-lg font-normal" />
           </div>
           <div>
@@ -82,7 +86,7 @@ const DialogSidePanel = ({
           </div>
 
         </div>
-        <div className="flex-grow flex-1 overflow-hidden">
+        <div className="flex-grow flex-1 overflow-y-scroll">
           {sidePanel.component && React.isValidElement(sidePanel.component) && (
             <>
               {React.cloneElement(sidePanel.component, {

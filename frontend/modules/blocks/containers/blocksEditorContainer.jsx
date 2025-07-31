@@ -16,6 +16,8 @@ import getIsCurrentUser from '~/modules/authentication/helpers/getIsCurrentUser'
 import ScenarioRequestAccessTimer from '~/modules/scenarioBuilder/components/scenarioRequestAccessTimer';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import addToast from '~/core/dialogs/helpers/addToast';
+import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
+import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
 
 class BlocksEditorContainer extends Component {
 
@@ -213,6 +215,16 @@ class BlocksEditorContainer extends Component {
     })
   }
 
+  onOpenTriggersClicked = () => {
+    console.log('opening');
+    addSidePanel({
+      size: 'lg',
+      icon: 'trigger',
+      title: 'Triggers',
+      component: <TriggerDisplayContainer />
+    })
+  }
+
   render() {
     const isLockedFromEditing = this.getIsLockedFromEditing();
     return (
@@ -223,6 +235,7 @@ class BlocksEditorContainer extends Component {
         onSortUpClicked={this.onSortUpClicked}
         onSortDownClicked={this.onSortDownClicked}
         onRequestAccessClicked={this.onRequestAccessClicked}
+        onOpenTriggersClicked={this.onOpenTriggersClicked}
       />
     );
   }

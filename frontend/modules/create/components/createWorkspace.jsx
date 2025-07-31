@@ -27,9 +27,6 @@ const CreateWorkspace = ({
                   slideId={activeSlideId}
                 />
               )}
-              {(activeSlideRef) && (
-                <TriggerDisplayContainer />
-              )}
             </div>
           )}
           {(displayMode === 'PREVIEW') && (

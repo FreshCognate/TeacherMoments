@@ -17,10 +17,10 @@ const ArrayFormField = ({
   return (
     <div>
 
-      <div className=" ">
+      <div className="p-2 bg-lm-2 dark:bg-dm-2 rounded-lg rounded-bl-none">
         {map(value, (action, index) => {
           return (
-            <div key={action._id} className="bg-lm-2 dark:bg-dm-1 mb-2 rounded-lg overflow-hidden group/actionItem">
+            <div key={action._id} className="bg-lm-1 border border-lm-3 dark:border-none dark:bg-dm-1 mb-2 last:mb-0 rounded-md overflow-hidden group/actionItem">
               <div className="p-4">
                 <FormContainer
                   schema={schema.subSchema}
@@ -30,7 +30,7 @@ const ArrayFormField = ({
               </div>
               {(schema.shouldStopLastItemDelete && value.length === 1)
                 ? null : (
-                  <div className="bg-lm-3 dark:bg-dm-2 px-2 py-2 flex justify-between group-hover/actionItem:opacity-100">
+                  <div className="bg-lm-1 dark:bg-dm-1 px-2 py-2 flex justify-between group-hover/actionItem:opacity-100">
                     <div>
                       <ConfirmButton icon="delete" title={schema.deleteTitleText} color="warning" onClick={() => onRemoveActionClicked(action._id)} />
                     </div>
@@ -49,7 +49,7 @@ const ArrayFormField = ({
         })}
       </div>
       <div className="inline-flex">
-        <Button icon="create" color="secondary" text={schema.addButtonText} onClick={onAddActionClicked} />
+        <Button icon="create" color="secondary" className="rounded-t-none" text={schema.addButtonText} onClick={onAddActionClicked} />
       </div>
     </div>
   );

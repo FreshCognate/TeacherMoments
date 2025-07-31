@@ -46,43 +46,46 @@ const EditBlock = ({
           </div>
         </div>
         <div className=" bg-lm-1 dark:bg-dm-1 w-96 min-w-96 rounded-r-lg">
-          <div className="flex items-center justify-end px-6 h-14">
-            <div className="flex items-center bg-lm-2 border border-lm-3 dark:border-none dark:bg-dm-2 rounded-lg mr-4">
-              <FlatButton
-                icon="sortUp"
-                className="p-2"
-                title="Sort up"
-                isDisabled={!canSortUp}
-                onClick={() => onSortUpClicked(block.sortOrder)}
-              />
-              <FlatButton
-                icon="sortDown"
-                className=" p-2"
-                title="Sort down"
-                isDisabled={!canSortDown}
-                onClick={() => onSortDownClicked(block.sortOrder)}
+          <div className="sticky top-0">
+
+            <div className="flex items-center justify-end px-6 h-14">
+              <div className="flex items-center bg-lm-2 border border-lm-3 dark:border-none dark:bg-dm-2 rounded-lg mr-4">
+                <FlatButton
+                  icon="sortUp"
+                  className="p-2"
+                  title="Sort up"
+                  isDisabled={!canSortUp}
+                  onClick={() => onSortUpClicked(block.sortOrder)}
+                />
+                <FlatButton
+                  icon="sortDown"
+                  className=" p-2"
+                  title="Sort down"
+                  isDisabled={!canSortDown}
+                  onClick={() => onSortDownClicked(block.sortOrder)}
+                />
+              </div>
+              <Options
+                options={[{
+                  text: 'Delete block',
+                  icon: 'delete',
+                  color: 'warning',
+                  action: 'DELETE'
+                }]}
+                title="Block options"
+                isOpen={isOptionsOpen}
+                onToggle={onToggleActionsClicked}
+                onOptionClicked={onActionClicked}
               />
             </div>
-            <Options
-              options={[{
-                text: 'Delete block',
-                icon: 'delete',
-                color: 'warning',
-                action: 'DELETE'
-              }]}
-              title="Block options"
-              isOpen={isOptionsOpen}
-              onToggle={onToggleActionsClicked}
-              onOptionClicked={onActionClicked}
-            />
-          </div>
-          <div className="px-6 py-2">
-            <FormContainer
-              renderKey={`${block._id}-${block.blockType}-${renderKey}`}
-              schema={settingsSchema}
-              model={block}
-              onUpdate={onEditBlockUpdate}
-            />
+            <div className="px-6 py-2">
+              <FormContainer
+                renderKey={`${block._id}-${block.blockType}-${renderKey}`}
+                schema={settingsSchema}
+                model={block}
+                onUpdate={onEditBlockUpdate}
+              />
+            </div>
           </div>
         </div>
       </div>

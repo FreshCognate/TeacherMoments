@@ -11,7 +11,8 @@ const BlocksEditor = ({
   onSortUpClicked,
   onSortDownClicked,
   onCreateBlockClicked,
-  onRequestAccessClicked
+  onRequestAccessClicked,
+  onOpenTriggersClicked
 }) => {
   return (
     <div className="w-full pt-4 pb-8 px-8 max-w-screen-lg mx-auto">
@@ -47,12 +48,26 @@ const BlocksEditor = ({
             />
           )
         }))}
-        <div className="pl-2">
-          <FlatButton
-            text="Add block"
-            icon="create"
-            onClick={onCreateBlockClicked}
-          />
+        <div className="px-2 flex justify-between">
+          <div>
+            {(blocks.length > 0) && (
+              <FlatButton
+                text="Edit triggers"
+                icon="trigger"
+                onClick={onOpenTriggersClicked}
+              />
+            )}
+          </div>
+          <div>
+            {(blocks.length > 0) && (
+
+              <FlatButton
+                text="Add block"
+                icon="create"
+                onClick={onCreateBlockClicked}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>
