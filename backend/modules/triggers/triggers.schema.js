@@ -1,9 +1,26 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import getTriggerEvents from './helpers/getTriggerEvents.js';
 import getTriggerActions from './helpers/getTriggerActions.js';
 import buildLanguageSchema from '#core/app/helpers/buildLanguageSchema.js';
 import textAreaSchema from '#core/app/textArea.schema.js';
 const body = buildLanguageSchema('body', textAreaSchema);
+
+const conditionSchema = new Schema({
+  type: {
+    blocksByRef: {},
+  },
+  default: {}
+})
+
+const itemSchema = new Schema({
+  ...body,
+  conditions: [{
+    type: {
+      blocksByRef: {},
+    },
+    default: { blocksByRef: {} }
+  }]
+})
 
 const schema = {
   type: { type: String, default: 'trigger' },
@@ -23,9 +40,8 @@ const schema = {
     required: true
   },
   items: {
-    type: [{
-      ...body
-    }], default: [{}]
+    type: [itemSchema],
+    default: [{}]
   },
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

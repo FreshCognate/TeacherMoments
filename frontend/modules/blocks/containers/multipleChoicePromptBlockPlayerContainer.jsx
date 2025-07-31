@@ -3,7 +3,7 @@ import MultipleChoicePromptBlockPlayer from '../components/multipleChoicePromptB
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import remove from 'lodash/remove';
-import getString from '~/modules/ls/helpers/getString';
+import includes from 'lodash/includes';
 
 class MultipleChoicePromptBlockPlayerContainer extends Component {
 
@@ -12,17 +12,13 @@ class MultipleChoicePromptBlockPlayerContainer extends Component {
     const { isMultiSelect, options } = this.props.block;
     const currentOption = find(options, { _id: selectedOptionId });
 
-    let usersSelectedOption = {
-      _id: currentOption._id,
-      text: getString({ model: currentOption, field: 'text' }),
-      value: currentOption.value,
-    }
+    let usersSelectedOption = currentOption.value;
 
     let clonedSelectedOptions = cloneDeep(selectedOptions);
     if (isMultiSelect) {
-      if (find(clonedSelectedOptions, { _id: selectedOptionId })) {
+      if (includes(clonedSelectedOptions, usersSelectedOption)) {
         remove(clonedSelectedOptions, (item) => {
-          if (item._id === selectedOptionId) return true;
+          if (item === usersSelectedOption) return true;
         });
       } else {
         clonedSelectedOptions.push(usersSelectedOption);

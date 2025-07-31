@@ -1,6 +1,10 @@
+import getBlockTracking from "../run/helpers/getBlockTracking";
 import setSlideFeedback from "../run/helpers/setSlideFeedback";
 import registerTrigger from "./helpers/registerTrigger";
 import buildLanguageSchema from "~/core/app/helpers/buildLanguageSchema";
+import xor from 'lodash/xor';
+import map from 'lodash/map';
+import getString from "../ls/helpers/getString";
 
 const body = buildLanguageSchema('body', {
   type: 'TextArea',
@@ -9,12 +13,36 @@ const body = buildLanguageSchema('body', {
 });
 
 const ShowFeedbackFromPrompts = {
-  trigger: async () => {
+  trigger: async (trigger) => {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        setSlideFeedback(["This is some fake feedback"]);
-        resolve();
-      }, 1000);
+
+      let matchedItems = [];
+      for (const triggerItem of trigger.items) {
+        let hasMatched = true;
+        for (const condition of triggerItem.conditions) {
+          const blockRefs = Object.keys(condition.blocksByRef);
+          for (const blockRef of blockRefs) {
+            const blockTracking = getBlockTracking({ blockRef: blockRef });
+            const selectedOptions = blockTracking.selectedOptions;
+            const test = xor(condition.blocksByRef[blockRef], selectedOptions);
+
+            if (test.length > 0) {
+              hasMatched = false;
+            }
+
+          }
+        }
+        if (hasMatched) {
+          matchedItems.push(triggerItem);
+        }
+      }
+
+      const matchedItemsFeedback = map(matchedItems, (matchedItem) => {
+        return getString({ model: matchedItem, field: 'body' });
+      })
+      setSlideFeedback(matchedItemsFeedback);
+      resolve();
+
     })
   },
   getShouldStopNavigation: () => {

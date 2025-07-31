@@ -56,13 +56,6 @@ const schema = {
       actionValue: { type: String, default: '' },
     }], default: [{ "en-US-text": "Next" }]
   },
-  feedbackItems: {
-    type: [{
-      ...text,
-      value: { type: String, default: "" }
-    }],
-    default: [{ "en-US-text": "" }]
-  },
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   updatedAt: { type: Date },
