@@ -31,11 +31,11 @@ const Scenarios = ({
 }) => {
   return (
     <div className="flex h-full">
-      <div className="min-w-60 p-4 bg-lm-1 dark:bg-dm-2/50 border-r border-lm-2 dark:border-dm-2" style={{ height: 'calc(100vh - 40px)' }}>
+      <div className="min-w-60 p-4 bg-lm-0 dark:bg-dm-0 border-r border-lm-3 dark:border-dm-2" style={{ height: 'calc(100vh - 68px)' }}>
         <Button text="Create scenario" color="primary" isFullWidth onClick={onCreateScenarioClicked} />
       </div>
       <div className="flex-1">
-        <div className="bg-lm-1 dark:bg-dm-1 px-4">
+        <div className="bg-lm-0 dark:bg-dm-0 px-4 border-b border-b-lm-3 dark:border-b-dm-2">
           <ActionBar
             searchValue={searchValue}
             searchPlaceholder="Search scenarios..."

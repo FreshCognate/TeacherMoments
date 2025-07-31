@@ -20,7 +20,7 @@ const ArrayFormField = ({
       <div className=" ">
         {map(value, (action, index) => {
           return (
-            <div key={action._id} className="bg-lm-1 dark:bg-dm-1 mb-2 rounded-lg overflow-hidden group/actionItem">
+            <div key={action._id} className="bg-lm-2 dark:bg-dm-1 mb-2 rounded-lg overflow-hidden group/actionItem">
               <div className="p-4">
                 <FormContainer
                   schema={schema.subSchema}
@@ -49,7 +49,7 @@ const ArrayFormField = ({
         })}
       </div>
       <div className="inline-flex">
-        <Button icon="create" color="primary" text={schema.addButtonText} onClick={onAddActionClicked} />
+        <Button icon="create" color="secondary" text={schema.addButtonText} onClick={onAddActionClicked} />
       </div>
     </div>
   );

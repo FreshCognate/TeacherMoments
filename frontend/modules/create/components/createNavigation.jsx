@@ -21,7 +21,7 @@ const CreateNavigation = ({
   onToggleNavigationTypeClicked
 }) => {
   return (
-    <div className="bg-lm-1 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col">
+    <div className="bg-lm-0 dark:bg-dm-0 w-full max-w-64 h-full flex flex-col border-r border-r-lm-3 dark:border-r-dm-2">
       <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} onAddSlideClicked={onAddSlideClicked} />
       <div className="p-2 overflow-y-scroll flex-grow">
         {(navigationMode === 'SLIDES') && (
@@ -65,7 +65,7 @@ const CreateNavigation = ({
           </div>
         )}
       </div>
-      <div className="px-2 py-4 border-t border-t-lm-2 dark:border-t-dm-2">
+      <div className="px-2 py-4 border-t border-t-lm-3 dark:border-t-dm-3">
         <Button
           icon={navigationMode === 'SLIDES' ? "finish" : "slides"}
           text={navigationMode === 'SLIDES' ? "Navigation" : "Slides"}

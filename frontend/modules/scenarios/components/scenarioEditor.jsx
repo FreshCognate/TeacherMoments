@@ -15,7 +15,7 @@ const ScenarioEditor = ({
   if (isLoading) return <Loading />
   return (
     <div>
-      <div className="flex items-center fixed w-full top-10 z-30 justify-stretch px-4 h-7 bg-lm-1 dark:bg-dm-1">
+      <div className="flex items-center fixed w-full top-14 z-30 justify-stretch px-4 h-7 bg-lm-0 dark:bg-dm-0 border-b border-b-lm-3 dark:border-b-dm-2">
         <div className="w-1/3 flex items-center">
           <div className="text-xs">
             <Link
@@ -34,7 +34,6 @@ const ScenarioEditor = ({
           </div>
         </div>
         <div className="w-1/3 flex justify-center">
-
           <NavigationToggle
             value={pathValue}
             size="sm"

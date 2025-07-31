@@ -20,7 +20,7 @@ const Toggle = ({
           'p-2': size !== 'sm',
           'py-1 px-2 text-xs': size === 'sm',
           'opacity-100 border-transparent': !isSelected,
-          'opacity-100 bg-lm-0 dark:bg-dm-0 border-lm-3 dark:border-dm-3 text-black/100 dark:text-white/100': isSelected,
+          'opacity-100 bg-lm-0 dark:bg-dm-2 border-lm-3 dark:border-dm-3 text-black/100 dark:text-white/100': isSelected,
         });
 
         return (

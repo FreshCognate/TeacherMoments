@@ -21,7 +21,7 @@ const CreateWorkspace = ({
 
         <>
           {(displayMode === 'EDITING') && (
-            <div className="pt-10 w-full h-full overflow-y-auto">
+            <div className="pt-14 w-full h-full overflow-y-auto">
               {(activeSlideRef) && (
                 <BlocksEditorContainer
                   slideId={activeSlideId}
@@ -33,7 +33,7 @@ const CreateWorkspace = ({
             </div>
           )}
           {(displayMode === 'PREVIEW') && (
-            <div className="pt-10 w-full h-full overflow-y-auto">
+            <div className="pt-14 w-full h-full overflow-y-auto">
               <div className="w-full pt-4 pb-8 px-8 max-w-lg mx-auto">
                 <ScenarioPreviewContainer slideRef={activeSlideRef} />
               </div>
@@ -42,7 +42,7 @@ const CreateWorkspace = ({
         </>
       )}
       {(navigationMode === 'STEM') && (
-        <div className="pt-10 w-full h-full overflow-y-auto">
+        <div className="pt-14 w-full h-full overflow-y-auto">
           <div className="w-full pt-4 pb-8 px-8 max-w-lg mx-auto">
             <div className="text-center">
               Navigation settings coming soon...
