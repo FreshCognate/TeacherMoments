@@ -62,11 +62,6 @@ export default {
         ...buildLanguageValidation('feedback', Joi.array()),
         value: Joi.string().allow(''),
       }),
-      feedbackItems: Joi.array().items({
-        _id: Joi.string(),
-        ...buildLanguageValidation('text', Joi.string().allow('')),
-        value: Joi.string().allow(''),
-      }),
       actions: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('text', Joi.string().allow('')),

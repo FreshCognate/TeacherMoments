@@ -2,7 +2,7 @@ import React from 'react';
 import getString from '~/modules/ls/helpers/getString';
 import Body from '~/uikit/content/components/body';
 import map from 'lodash/map';
-import find from 'lodash/find';
+import includes from 'lodash/includes';
 import MultipleChoicePromptBlockPlayerAnswer from './multipleChoicePromptBlockPlayerAnswer';
 import Required from '~/uikit/alerts/components/required';
 
@@ -24,7 +24,7 @@ const MultipleChoicePromptBlockPlayer = ({
 
       <div className="mb-2">
         {map(block.options, (option) => {
-          const isSelected = !!find(blockTracking.selectedOptions, { _id: option._id });
+          const isSelected = !!includes(blockTracking.selectedOptions, option.value);
           return (
             <MultipleChoicePromptBlockPlayerAnswer
               key={option._id}
