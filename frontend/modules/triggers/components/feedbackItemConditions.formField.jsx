@@ -12,7 +12,6 @@ const FeedbackItemConditions = ({
   prompts,
   onAddConditionClicked,
   onRemoveConditionClicked,
-  onPromptConditionValueChanged,
   onEditPromptConditionClicked
 }) => {
   return (
