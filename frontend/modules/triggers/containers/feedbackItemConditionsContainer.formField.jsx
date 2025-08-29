@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import getPromptBlocksBySlideRef from '~/modules/blocks/helpers/getPromptBlocksBySlideRef';
 import getCache from '~/core/cache/helpers/getCache';
 import find from 'lodash/find';
+import addModal from '~/core/dialogs/helpers/addModal';
 
 class FeedbackItemConditionsContainer extends Component {
 
@@ -36,6 +37,20 @@ class FeedbackItemConditionsContainer extends Component {
     this.props.updateField(clonedValue);
   }
 
+  onEditPromptConditionClicked = () => {
+    addModal({
+      title: 'Edit prompt condition',
+      actions: [{
+        type: 'CANCEL',
+        text: 'Cancel'
+      }, {
+        type: 'SAVE',
+        text: 'Save',
+        color: 'primary'
+      }]
+    })
+  }
+
   render() {
     return (
       <FeedbackItemConditions
@@ -43,6 +58,7 @@ class FeedbackItemConditionsContainer extends Component {
         prompts={this.getPrompts()}
         onAddConditionClicked={this.onAddConditionClicked}
         onRemoveConditionClicked={this.onRemoveConditionClicked}
+        onEditPromptConditionClicked={this.onEditPromptConditionClicked}
         onPromptConditionValueChanged={this.onPromptConditionValueChanged}
       />
     );

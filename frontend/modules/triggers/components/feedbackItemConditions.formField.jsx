@@ -12,7 +12,8 @@ const FeedbackItemConditions = ({
   prompts,
   onAddConditionClicked,
   onRemoveConditionClicked,
-  onPromptConditionValueChanged
+  onPromptConditionValueChanged,
+  onEditPromptConditionClicked
 }) => {
   return (
     <div>
@@ -68,13 +69,14 @@ const FeedbackItemConditions = ({
                             <div className="w-1/4">
                               <Body body="Has value:" size="sm" />
                             </div>
-                            <SelectOptions
+                            <FlatButton icon="edit" onClick={onEditPromptConditionClicked} />
+                            {/* <SelectOptions
                               value={blocksByRef[prompt.ref] || null}
                               options={options}
                               onChange={(value) => {
                                 onPromptConditionValueChanged({ value, blockRef: prompt.ref, conditionId: condition._id });
                               }}
-                            />
+                            /> */}
                           </div>
                         </div>
                       </div>
