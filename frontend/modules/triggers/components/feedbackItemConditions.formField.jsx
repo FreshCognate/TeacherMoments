@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import map from 'lodash/map';
-import SelectOptions from '~/uikit/select/components/selectOptions';
-import each from 'lodash/each';
+import find from 'lodash/find';
 import Body from '~/uikit/content/components/body';
 import getBlockDisplayName from '~/modules/blocks/helpers/getBlockDisplayName';
 import getString from '~/modules/ls/helpers/getString';
+import Badge from '~/uikit/badges/components/badge';
 
 const FeedbackItemConditions = ({
   value,
@@ -28,21 +28,11 @@ const FeedbackItemConditions = ({
               <div key={index} className="rounded-md overflow-hidden">
                 <div>
                   {map(prompts, (prompt) => {
-                    const options = [{
-                      value: null,
-                      text: 'Set condition'
-                    }];
 
-                    each(prompt.options, (option) => {
-                      if (option.value) {
-                        options.push({
-                          value: option.value,
-                          text: option.value
-                        });
-                      }
-                    });
+                    const conditionPrompt = find(condition.prompts, { ref: prompt.ref });
+
                     const blockDisplayName = getBlockDisplayName(prompt);
-                    const blocksByRef = condition.blocksByRef || {};
+
                     return (
                       <div key={prompt._id} className="flex items-start justify-between bg-lm-1 dark:bg-dm-2 mb-0.5 p-4 last:border-b-0">
                         <div className="w-1/2">
@@ -65,17 +55,17 @@ const FeedbackItemConditions = ({
                         </div>
                         <div className="w-1/2">
                           <div className="flex w-full items-center">
-                            <div className="w-1/4">
-                              <Body body="Has value:" size="sm" />
+                            <div className="w-5/6">
+                              <Body body="Has value:" size="sm" className="mb-1" />
+                              <div className="flex">
+                                {map(conditionPrompt.options, (option, index) => {
+                                  return (
+                                    <Badge text={option} key={index} className="mr-1" />
+                                  );
+                                })}
+                              </div>
                             </div>
                             <FlatButton icon="edit" onClick={() => onEditPromptConditionClicked({ prompt, condition })} />
-                            {/* <SelectOptions
-                              value={blocksByRef[prompt.ref] || null}
-                              options={options}
-                              onChange={(value) => {
-                                onPromptConditionValueChanged({ value, blockRef: prompt.ref, conditionId: condition._id });
-                              }}
-                            /> */}
                           </div>
                         </div>
                       </div>

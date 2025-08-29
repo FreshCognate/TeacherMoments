@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import EditPromptCondition from '../components/editPromptCondition';
 import find from 'lodash/find';
 import cloneDeep from 'lodash/cloneDeep';
+import includes from 'lodash/includes';
 import WithCache from '~/core/cache/containers/withCache';
 
 class EditPromptConditionContainer extends Component {
@@ -31,7 +32,7 @@ class EditPromptConditionContainer extends Component {
   }
 
   render() {
-    const { prompt, condition } = this.props;
+    const { prompt } = this.props;
 
     return (
       <EditPromptCondition prompt={prompt} blockTracking={this.props.modal.data} onAnswerClicked={this.onAnswerClicked} />
