@@ -30,11 +30,21 @@ class FeedbackItemConditionsContainer extends Component {
     this.props.updateField(clonedValue);
   }
 
-  onPromptConditionValueChanged = ({ value, blockRef, conditionId }) => {
+  onPromptConditionValueChanged = ({ key, value, blockRef, conditionId }) => {
     const clonedValue = cloneDeep(this.props.value);
     const condition = find(clonedValue, { _id: conditionId });
-    condition.blocksByRef = condition.blocksByRef || {};
-    condition.blocksByRef[blockRef] = [value];
+    const prompt = find(condition.prompts, { ref: blockRef });
+
+    if (!prompt) {
+      let prompt = {
+        ref: blockRef
+      };
+      prompt[key] = value;
+      condition.prompts.push(prompt);
+    } else {
+      prompt[key] = value;
+    }
+
     this.props.updateField(clonedValue);
   }
 
@@ -56,6 +66,12 @@ class FeedbackItemConditionsContainer extends Component {
         text: 'Save',
         color: 'primary'
       }]
+    }, (state, { type, modal }) => {
+      if (state === 'ACTION' && type === 'SAVE') {
+        console.log(state, modal);
+        console.log(this.props.value);
+        this.onPromptConditionValueChanged({ key: 'options', value: modal.selectedOptions, blockRef: prompt.ref, conditionId: condition._id });
+      }
     })
   }
 
@@ -67,7 +83,6 @@ class FeedbackItemConditionsContainer extends Component {
         onAddConditionClicked={this.onAddConditionClicked}
         onRemoveConditionClicked={this.onRemoveConditionClicked}
         onEditPromptConditionClicked={this.onEditPromptConditionClicked}
-        onPromptConditionValueChanged={this.onPromptConditionValueChanged}
       />
     );
   }
