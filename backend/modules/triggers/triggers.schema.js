@@ -1,26 +1,35 @@
 import mongoose, { Schema } from 'mongoose';
-import getTriggerEvents from './helpers/getTriggerEvents.js';
 import getTriggerActions from './helpers/getTriggerActions.js';
 import buildLanguageSchema from '#core/app/helpers/buildLanguageSchema.js';
 import textAreaSchema from '#core/app/textArea.schema.js';
 const body = buildLanguageSchema('body', textAreaSchema);
 
-const conditionSchema = new Schema({
-  type: {
-    blocksByRef: {},
-  },
-  default: {}
-})
-
 const itemSchema = new Schema({
   ...body,
   conditions: [{
-    type: {
-      blocksByRef: {},
-    },
-    default: { blocksByRef: {} }
+    prompts: [{
+      ref: mongoose.Schema.Types.ObjectId,
+      options: [{ type: String, default: [] }],
+      text: { type: String, default: '' },
+    }]
   }]
 })
+
+const example = {
+  items: [{
+    body: "This is the feedback the end user gets",
+    conditions: [{
+      _id: "123",
+      prompts: [{
+        ref: "1234",
+        options: ["OPTION_ONE", "OPTION_TWO"]
+      }, {
+        ref: "1234",
+        text: "Describes that Bob is not a nice person",
+      }]
+    }]
+  }]
+}
 
 const schema = {
   type: { type: String, default: 'trigger' },
@@ -29,11 +38,6 @@ const schema = {
   elementRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Slide', required: true },
   triggerType: { type: String, enum: ['SLIDE'], required: true },
   sortOrder: { type: Number },
-  event: {
-    type: String,
-    enum: getTriggerEvents(),
-    required: true
-  },
   action: {
     type: String,
     enum: getTriggerActions(),
