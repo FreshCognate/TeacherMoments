@@ -69,7 +69,7 @@ const FeedbackItemConditions = ({
                             <div className="w-1/4">
                               <Body body="Has value:" size="sm" />
                             </div>
-                            <FlatButton icon="edit" onClick={onEditPromptConditionClicked} />
+                            <FlatButton icon="edit" onClick={() => onEditPromptConditionClicked({ prompt, condition })} />
                             {/* <SelectOptions
                               value={blocksByRef[prompt.ref] || null}
                               options={options}

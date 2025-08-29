@@ -6,6 +6,7 @@ import getPromptBlocksBySlideRef from '~/modules/blocks/helpers/getPromptBlocksB
 import getCache from '~/core/cache/helpers/getCache';
 import find from 'lodash/find';
 import addModal from '~/core/dialogs/helpers/addModal';
+import EditPromptConditionContainer from './editPromptConditionContainer';
 
 class FeedbackItemConditionsContainer extends Component {
 
@@ -37,9 +38,16 @@ class FeedbackItemConditionsContainer extends Component {
     this.props.updateField(clonedValue);
   }
 
-  onEditPromptConditionClicked = () => {
+  onEditPromptConditionClicked = ({ prompt, condition }) => {
+
+    const conditionPrompt = find(condition.prompts, { ref: prompt.ref }) || {};
+
+    const selectedOptions = conditionPrompt.options || [];
+
     addModal({
       title: 'Edit prompt condition',
+      component: <EditPromptConditionContainer prompt={prompt} condition={condition} />,
+      model: { selectedOptions },
       actions: [{
         type: 'CANCEL',
         text: 'Cancel'
