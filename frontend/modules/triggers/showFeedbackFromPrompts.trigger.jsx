@@ -4,6 +4,7 @@ import registerTrigger from "./helpers/registerTrigger";
 import buildLanguageSchema from "~/core/app/helpers/buildLanguageSchema";
 import xor from 'lodash/xor';
 import map from 'lodash/map';
+import find from 'lodash/find';
 import getString from "../ls/helpers/getString";
 
 const body = buildLanguageSchema('body', {
@@ -18,7 +19,7 @@ const ShowFeedbackFromPrompts = {
 
       let matchedItems = [];
       for (const triggerItem of trigger.items) {
-        let hasMatched = true;
+        let hasMatched = false;
         for (const condition of triggerItem.conditions) {
 
           for (const prompt of condition.prompts) {
@@ -26,8 +27,8 @@ const ShowFeedbackFromPrompts = {
             const selectedOptions = blockTracking.selectedOptions;
             const test = xor(prompt.options, selectedOptions);
 
-            if (test.length > 0) {
-              hasMatched = false;
+            if (test.length === 0) {
+              hasMatched = true;
             }
 
           }
@@ -35,6 +36,16 @@ const ShowFeedbackFromPrompts = {
         if (hasMatched) {
           matchedItems.push(triggerItem);
         }
+      }
+
+      if (matchedItems.length === 0) {
+        const unmatchedItem = find(trigger.items, (item) => {
+          if (item.conditions.length === 0) {
+            return item;
+          }
+        });
+        matchedItems.push(unmatchedItem);
+        console.log('should find unmatched items');
       }
 
       const matchedItemsFeedback = map(matchedItems, (matchedItem) => {

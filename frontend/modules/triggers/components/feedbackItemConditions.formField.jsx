@@ -58,7 +58,7 @@ const FeedbackItemConditions = ({
                             <div className="w-5/6">
                               <Body body="Has value:" size="sm" className="mb-1" />
                               <div className="flex">
-                                {map(conditionPrompt.options, (option, index) => {
+                                {map(conditionPrompt?.options, (option, index) => {
                                   return (
                                     <Badge text={option} key={index} className="mr-1" />
                                   );
@@ -72,10 +72,10 @@ const FeedbackItemConditions = ({
                     );
                   })}
                 </div>
-                <div className="min-w-10">
-                  {(value.length > 1) && (
-                    <FlatButton title="Delete condition" icon="delete" onClick={onRemoveConditionClicked} />
-                  )}
+                <div className="min-w-10 flex justify-end p-2 bg-dm-2">
+
+                  <FlatButton title="Delete condition" icon="delete" onClick={onRemoveConditionClicked} />
+
                 </div>
               </div>
             </Fragment>
