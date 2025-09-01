@@ -8,17 +8,9 @@ export default {
   controller,
   create: {
     body: {
-      generateType: Joi.string().valid('SHOW_FEEDBACK_FROM_PROMPTS'),
-      prompts: Joi.array(),
-      stem: Joi.string().allow(''),
-      answerText: Joi.string(),
-      answerValue: Joi.string(),
-      feedbackItems: Joi.array().items({
-        _id: Joi.string(),
-        text: Joi.string(),
-        value: Joi.string()
-      }),
-      actions: Joi.array(),
+      generateType: Joi.string().valid('USER_INPUT_PROMPT_MATCHES_CONDITION_PROMPT'),
+      userText: Joi.string(),
+      promptText: Joi.string()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },

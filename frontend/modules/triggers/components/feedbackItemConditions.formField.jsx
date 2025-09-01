@@ -7,6 +7,7 @@ import getBlockDisplayName from '~/modules/blocks/helpers/getBlockDisplayName';
 import getString from '~/modules/ls/helpers/getString';
 import Badge from '~/uikit/badges/components/badge';
 import Alert from '~/uikit/alerts/components/alert';
+import Icon from '~/uikit/icons/components/icon';
 
 const FeedbackItemConditions = ({
   value,
@@ -65,7 +66,13 @@ const FeedbackItemConditions = ({
                                   );
                                 })}
                                 {prompt.blockType === 'INPUT_PROMPT' && (
-                                  <Body body={conditionPrompt?.text} size="sm" className="bg-lm-1 dark:bg-dm-1 p-2 rounded-md" />
+                                  <div>
+                                    <Body body={conditionPrompt?.text} size="sm" className="bg-lm-1 dark:bg-dm-1 p-2 rounded-md" />
+                                    <div className="flex items-center mt-2 opacity-40">
+                                      <Icon icon="ai" size={12} className="mr-1" />
+                                      <Body size="xs" body="This will use AI to check with this matches the users input" />
+                                    </div>
+                                  </div>
                                 )}
                               </div>
                             </div>
