@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import getPromptBlocksBySlideRef from '~/modules/blocks/helpers/getPromptBlocksBySlideRef';
 import getCache from '~/core/cache/helpers/getCache';
 import find from 'lodash/find';
+import remove from 'lodash/remove';
 import addModal from '~/core/dialogs/helpers/addModal';
 import EditPromptConditionContainer from './editPromptConditionContainer';
 
@@ -24,9 +25,9 @@ class FeedbackItemConditionsContainer extends Component {
     this.props.updateField(clonedValue);
   }
 
-  onRemoveConditionClicked = (index) => {
+  onRemoveConditionClicked = (conditionId) => {
     const clonedValue = cloneDeep(this.props.value);
-    clonedValue.splice(index, 1);
+    remove(clonedValue, { _id: conditionId });
     this.props.updateField(clonedValue);
   }
 

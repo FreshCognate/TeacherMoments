@@ -6,6 +6,7 @@ import Body from '~/uikit/content/components/body';
 import getBlockDisplayName from '~/modules/blocks/helpers/getBlockDisplayName';
 import getString from '~/modules/ls/helpers/getString';
 import Badge from '~/uikit/badges/components/badge';
+import Alert from '~/uikit/alerts/components/alert';
 
 const FeedbackItemConditions = ({
   value,
@@ -25,7 +26,7 @@ const FeedbackItemConditions = ({
                   OR
                 </div>
               )}
-              <div key={index} className="rounded-md overflow-hidden">
+              <div className="rounded-md overflow-hidden">
                 <div>
                   {map(prompts, (prompt) => {
 
@@ -74,13 +75,18 @@ const FeedbackItemConditions = ({
                 </div>
                 <div className="min-w-10 flex justify-end p-2 bg-dm-2">
 
-                  <FlatButton title="Delete condition" icon="delete" onClick={onRemoveConditionClicked} />
+                  <FlatButton title="Delete condition" icon="delete" onClick={() => onRemoveConditionClicked(condition._id)} />
 
                 </div>
               </div>
             </Fragment>
           );
         })}
+        {value.length === 0 && (
+          <div>
+            <Alert type="info" text="If the users prompt answers do not match anything." />
+          </div>
+        )}
       </div>
       <div className="mt-2">
         <FlatButton
