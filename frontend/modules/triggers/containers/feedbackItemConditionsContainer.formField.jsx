@@ -54,11 +54,12 @@ class FeedbackItemConditionsContainer extends Component {
     const conditionPrompt = find(condition.prompts, { ref: prompt.ref }) || {};
 
     const selectedOptions = conditionPrompt.options || [];
+    const textValue = conditionPrompt.text || '';
 
     addModal({
       title: 'Edit prompt condition',
       component: <EditPromptConditionContainer prompt={prompt} condition={condition} />,
-      model: { selectedOptions },
+      model: { selectedOptions, textValue },
       actions: [{
         type: 'CANCEL',
         text: 'Cancel'
@@ -69,9 +70,22 @@ class FeedbackItemConditionsContainer extends Component {
       }]
     }, (state, { type, modal }) => {
       if (state === 'ACTION' && type === 'SAVE') {
-        console.log(state, modal);
-        console.log(this.props.value);
-        this.onPromptConditionValueChanged({ key: 'options', value: modal.selectedOptions, blockRef: prompt.ref, conditionId: condition._id });
+        if (prompt.blockType === 'MULTIPLE_CHOICE_PROMPT') {
+          this.onPromptConditionValueChanged({
+            key: 'options',
+            value: modal.selectedOptions,
+            blockRef: prompt.ref,
+            conditionId: condition._id
+          });
+        }
+        if (prompt.blockType === 'INPUT_PROMPT') {
+          this.onPromptConditionValueChanged({
+            key: 'text',
+            value: modal.textValue,
+            blockRef: prompt.ref,
+            conditionId: condition._id
+          });
+        }
       }
     })
   }
