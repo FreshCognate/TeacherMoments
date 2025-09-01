@@ -59,11 +59,14 @@ const FeedbackItemConditions = ({
                             <div className="w-5/6">
                               <Body body="Has value:" size="sm" className="mb-1" />
                               <div className="flex">
-                                {map(conditionPrompt?.options, (option, index) => {
+                                {prompt.blockType === 'MULTIPLE_CHOICE_PROMPT' && map(conditionPrompt?.options, (option, index) => {
                                   return (
                                     <Badge text={option} key={index} className="mr-1" />
                                   );
                                 })}
+                                {prompt.blockType === 'INPUT_PROMPT' && (
+                                  <Body body={conditionPrompt.text} size="sm" className="bg-lm-1 dark:bg-dm-1 p-2 rounded-md" />
+                                )}
                               </div>
                             </div>
                             <FlatButton icon="edit" onClick={() => onEditPromptConditionClicked({ prompt, condition })} />

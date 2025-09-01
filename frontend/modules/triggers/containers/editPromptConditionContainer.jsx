@@ -31,6 +31,10 @@ class EditPromptConditionContainer extends Component {
 
   }
 
+  onTextInputChanged = (event) => {
+    this.props.modal.set({ textValue: event.target.value });
+  }
+
   onRemoveSelectionClicked = () => {
     this.props.modal.set({ selectedOptions: [] });
   }
@@ -43,6 +47,7 @@ class EditPromptConditionContainer extends Component {
         prompt={prompt}
         blockTracking={this.props.modal.data}
         onAnswerClicked={this.onAnswerClicked}
+        onTextInputChanged={this.onTextInputChanged}
         onRemoveSelectionClicked={this.onRemoveSelectionClicked}
       />
     );
