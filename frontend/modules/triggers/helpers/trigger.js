@@ -3,10 +3,10 @@ import filter from 'lodash/filter';
 import getCache from '~/core/cache/helpers/getCache';
 import getTrigger from './getTrigger';
 
-export default ({ triggerType, event, elementRef }, context) => {
+export default ({ triggerType, elementRef }, context) => {
   const triggers = getCache('triggers');
 
-  const filteredTriggers = sortBy(filter(triggers.data, { triggerType, event, elementRef }), 'sortOrder');
+  const filteredTriggers = sortBy(filter(triggers.data, { triggerType, elementRef }), 'sortOrder');
 
   const promise = new Promise(async (resolve) => {
     for (const trigger of filteredTriggers) {

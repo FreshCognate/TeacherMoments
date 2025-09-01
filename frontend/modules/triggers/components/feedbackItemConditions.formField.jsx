@@ -7,6 +7,7 @@ import getBlockDisplayName from '~/modules/blocks/helpers/getBlockDisplayName';
 import getString from '~/modules/ls/helpers/getString';
 import Badge from '~/uikit/badges/components/badge';
 import Alert from '~/uikit/alerts/components/alert';
+import Icon from '~/uikit/icons/components/icon';
 
 const FeedbackItemConditions = ({
   value,
@@ -57,7 +58,7 @@ const FeedbackItemConditions = ({
                         <div className="w-1/2">
                           <div className="flex w-full items-center">
                             <div className="w-5/6">
-                              <Body body="Has value:" size="sm" className="mb-1" />
+                              <Body body={prompt.blockType === 'MULTIPLE_CHOICE_PROMPT' ? "Has value:" : "Has answered:"} size="sm" className="mb-1" />
                               <div className="flex">
                                 {prompt.blockType === 'MULTIPLE_CHOICE_PROMPT' && map(conditionPrompt?.options, (option, index) => {
                                   return (
@@ -65,7 +66,13 @@ const FeedbackItemConditions = ({
                                   );
                                 })}
                                 {prompt.blockType === 'INPUT_PROMPT' && (
-                                  <Body body={conditionPrompt.text} size="sm" className="bg-lm-1 dark:bg-dm-1 p-2 rounded-md" />
+                                  <div>
+                                    <Body body={conditionPrompt?.text} size="sm" className="bg-lm-1 dark:bg-dm-1 p-2 rounded-md" />
+                                    <div className="flex items-center mt-2 opacity-40">
+                                      <Icon icon="ai" size={12} className="mr-1" />
+                                      <Body size="xs" body="This will use AI to check with this matches the users input" />
+                                    </div>
+                                  </div>
                                 )}
                               </div>
                             </div>
@@ -83,7 +90,7 @@ const FeedbackItemConditions = ({
             </Fragment>
           );
         })}
-        {value.length === 0 && (
+        {value?.length === 0 && (
           <div>
             <Alert type="info" text="If the users prompt answers do not match anything." />
           </div>

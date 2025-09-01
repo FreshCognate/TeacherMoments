@@ -6,6 +6,8 @@ import xor from 'lodash/xor';
 import map from 'lodash/map';
 import filter from 'lodash/filter';
 import getString from "../ls/helpers/getString";
+import getBlockByRef from "../blocks/helpers/getBlockByRef";
+import axios from "axios";
 
 const body = buildLanguageSchema('body', {
   type: 'TextArea',
@@ -24,11 +26,27 @@ const ShowFeedbackFromPrompts = {
           const promptsMatched = [];
           for (const prompt of condition.prompts) {
             const blockTracking = getBlockTracking({ blockRef: prompt.ref });
-            const selectedOptions = blockTracking.selectedOptions;
-            const test = xor(prompt.options, selectedOptions);
+            const block = getBlockByRef({ ref: prompt.ref });
 
-            if (test.length === 0) {
-              promptsMatched.push(prompt);
+            if (block.blockType === 'MULTIPLE_CHOICE_PROMPT') {
+
+              const selectedOptions = blockTracking.selectedOptions;
+              const test = xor(prompt.options, selectedOptions);
+
+              if (test.length === 0) {
+                promptsMatched.push(prompt);
+              }
+
+            }
+            if (block.blockType === 'INPUT_PROMPT') {
+              const userText = blockTracking.textValue;
+              const promptText = prompt.text;
+              const response = axios.post('/api/generate', {
+                generateType: 'USER_INPUT_PROMPT_MATCHES_CONDITION_PROMPT',
+                userText,
+                promptText
+              });
+              console.log(response);
             }
 
           }

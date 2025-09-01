@@ -3,13 +3,13 @@ import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToSc
 
 export default async (props, options, context) => {
 
-  const { scenario, triggerType, elementRef, event, action } = props;
+  const { scenario, triggerType, elementRef, action } = props;
 
   await checkHasAccessToScenario({ modelId: scenario, modelType: 'Scenario' }, context);
 
   const { models, user } = context;
 
-  let elementTriggerItems = await models.Trigger.find({ scenario, triggerType, elementRef, event, isDeleted: false });
+  let elementTriggerItems = await models.Trigger.find({ scenario, triggerType, elementRef, isDeleted: false });
 
   const sortOrder = elementTriggerItems.length;
 
@@ -17,7 +17,6 @@ export default async (props, options, context) => {
     scenario,
     triggerType,
     elementRef,
-    event,
     action,
     sortOrder,
     createdBy: user._id,

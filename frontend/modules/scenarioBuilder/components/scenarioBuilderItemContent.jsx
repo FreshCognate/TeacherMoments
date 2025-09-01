@@ -124,7 +124,7 @@ const ScenarioBuilderItemContent = ({
         <div>
           <EditSlideContainer slideId={slide._id} />
           <BlocksEditorContainer />
-          <TriggerDisplayContainer elementRef={slide.ref} triggerType="SLIDE" event="ON_COMPLETE" />
+          <TriggerDisplayContainer elementRef={slide.ref} triggerType="SLIDE" />
         </div>
       )
       }

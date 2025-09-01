@@ -35,9 +35,7 @@ class SlidePlayerContainer extends Component {
 
   componentDidUpdate = (prevProps) => {
     if (this.props.activeSlide !== prevProps.activeSlide) {
-      trigger({ triggerType: 'SLIDE', event: 'ON_ENTER', elementRef: this.props.activeSlide.ref }, {}).then(() => {
-        this.setState({ isLoading: false });
-      });
+      this.setState({ isLoading: false });
     }
   }
 
@@ -133,7 +131,7 @@ class SlidePlayerContainer extends Component {
   onSubmitSlideClicked = async () => {
     this.setState({ isSubmitting: true });
     setSlideToComplete({ slideRef: this.props.activeSlide.ref });
-    const triggers = filter(getCache('triggers').data, (trigger) => trigger.elementRef === this.props.activeSlide.ref && trigger.event === 'ON_EXIT');
+    const triggers = filter(getCache('triggers').data, (trigger) => trigger.elementRef === this.props.activeSlide.ref);
     for (const trigger of triggers) {
       const triggerItem = getTrigger(trigger.action);
       const shouldStopNavigation = triggerItem.getShouldStopNavigation();

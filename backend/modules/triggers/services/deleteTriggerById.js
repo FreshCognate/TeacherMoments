@@ -21,7 +21,6 @@ export default async (props, options, context) => {
     scenario: trigger.scenario,
     triggerType: trigger.triggerType,
     elementRef: trigger.elementRef,
-    event: trigger.event,
     isDeleted: false
   }).sort('sortOrder');
 

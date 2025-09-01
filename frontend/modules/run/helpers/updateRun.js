@@ -35,9 +35,6 @@ export default async ({ slideRef, blockRef, update }) => {
     if (isSlideComplete && !currentStage.isComplete) {
       currentStage.isComplete = true;
       currentStage.completedAt = new Date();
-      setTimeout(() => {
-        trigger({ triggerType: 'SLIDE', event: 'ON_COMPLETE', elementRef: slideRef }, {});
-      }, 0);
     }
   }
 

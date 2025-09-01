@@ -15,7 +15,7 @@ class TriggerDisplayContainer extends Component {
 
   getTriggers = () => {
     const { data } = this.props.triggers;
-    return filter(data, (trigger) => trigger.elementRef === this.props.slide.data?.ref && trigger.event === 'ON_EXIT');
+    return filter(data, (trigger) => trigger.elementRef === this.props.slide.data?.ref);
   }
 
   getTriggerBaseModel = () => {
@@ -25,7 +25,6 @@ class TriggerDisplayContainer extends Component {
     return {
       scenario,
       elementRef: this.props.slide.data.ref,
-      event: 'ON_EXIT',
       triggerType: 'SLIDE'
     }
   }
