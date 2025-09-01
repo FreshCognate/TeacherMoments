@@ -20,11 +20,11 @@ const ShowFeedbackFromPrompts = {
       for (const triggerItem of trigger.items) {
         let hasMatched = true;
         for (const condition of triggerItem.conditions) {
-          const blockRefs = Object.keys(condition.blocksByRef);
-          for (const blockRef of blockRefs) {
-            const blockTracking = getBlockTracking({ blockRef: blockRef });
+
+          for (const prompt of condition.prompts) {
+            const blockTracking = getBlockTracking({ blockRef: prompt.ref });
             const selectedOptions = blockTracking.selectedOptions;
-            const test = xor(condition.blocksByRef[blockRef], selectedOptions);
+            const test = xor(prompt.options, selectedOptions);
 
             if (test.length > 0) {
               hasMatched = false;
