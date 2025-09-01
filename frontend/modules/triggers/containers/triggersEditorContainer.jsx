@@ -15,20 +15,19 @@ import pick from 'lodash/pick';
 class TriggersEditorContainer extends Component {
 
   getTriggers = () => {
-    const { elementRef, triggerType, event } = this.props;
-    return getFilteredTriggersByElement({ elementRef, triggerType, event });
+    const { elementRef, triggerType } = this.props;
+    return getFilteredTriggersByElement({ elementRef, triggerType });
   }
 
   getTriggerBaseModel = () => {
     const { params } = this.props.router;
     const scenario = params.id;
 
-    const { elementRef, event, triggerType } = this.props;
+    const { elementRef, triggerType } = this.props;
 
     return {
       scenario,
       elementRef,
-      event,
       triggerType
     }
   }
@@ -166,11 +165,11 @@ class TriggersEditorContainer extends Component {
   }
 
   render() {
-    const { event, triggerType } = this.props;
+    const { triggerType } = this.props;
     return (
       <TriggersEditor
         triggers={this.getTriggers()}
-        eventDescription={getEventDescription({ event, triggerType })}
+        eventDescription={getEventDescription({ triggerType })}
         onAddTriggerClicked={this.onAddTriggerClicked}
         onEditTriggerClicked={this.onEditTriggerClicked}
         onDeleteTriggerClicked={this.onDeleteTriggerClicked}

@@ -24,6 +24,8 @@ const ShowFeedbackFromPrompts = {
           const promptsMatched = [];
           for (const prompt of condition.prompts) {
             const blockTracking = getBlockTracking({ blockRef: prompt.ref });
+            console.log(blockTracking);
+            console.log(prompt, trigger);
             const selectedOptions = blockTracking.selectedOptions;
             const test = xor(prompt.options, selectedOptions);
 

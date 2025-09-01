@@ -13,11 +13,6 @@ export default ({ slideRef, update }) => {
   extend(currentStage, update);
 
   // If update has isComplete we should see if the slide is complete as something big has happened
-  if (update.isComplete) {
-    setTimeout(() => {
-      trigger({ triggerType: 'SLIDE', event: 'ON_COMPLETE', elementRef: slideRef }, {});
-    }, 0);
-  }
 
   return run.set({ stages });
 }

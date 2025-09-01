@@ -17,8 +17,7 @@ export default async (props, options, context) => {
       const triggers = await models.Trigger.find({
         scenario: trigger.scenario,
         isDeleted: false,
-        elementRef: trigger.elementRef,
-        event: trigger.event
+        elementRef: trigger.elementRef
       }).sort('sortOrder');
 
       const result = Array.from(triggers);

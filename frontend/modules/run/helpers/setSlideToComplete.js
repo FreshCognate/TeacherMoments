@@ -12,9 +12,6 @@ export default ({ slideRef }) => {
 
   if (!currentStage.isComplete) {
     currentStage.isComplete = true;
-    setTimeout(() => {
-      trigger({ triggerType: 'SLIDE', event: 'ON_COMPLETE', elementRef: slideRef }, {});
-    }, 0);
     return run.set({ stages });
   }
 
