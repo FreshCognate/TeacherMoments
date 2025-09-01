@@ -74,9 +74,7 @@ const FeedbackItemConditions = ({
                   })}
                 </div>
                 <div className="min-w-10 flex justify-end p-2 bg-dm-2">
-
                   <FlatButton title="Delete condition" icon="delete" onClick={() => onRemoveConditionClicked(condition._id)} />
-
                 </div>
               </div>
             </Fragment>

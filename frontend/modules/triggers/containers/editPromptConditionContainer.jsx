@@ -31,11 +31,20 @@ class EditPromptConditionContainer extends Component {
 
   }
 
+  onRemoveSelectionClicked = () => {
+    this.props.modal.set({ selectedOptions: [] });
+  }
+
   render() {
     const { prompt } = this.props;
 
     return (
-      <EditPromptCondition prompt={prompt} blockTracking={this.props.modal.data} onAnswerClicked={this.onAnswerClicked} />
+      <EditPromptCondition
+        prompt={prompt}
+        blockTracking={this.props.modal.data}
+        onAnswerClicked={this.onAnswerClicked}
+        onRemoveSelectionClicked={this.onRemoveSelectionClicked}
+      />
     );
   }
 };
