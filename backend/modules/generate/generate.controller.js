@@ -9,7 +9,7 @@ export default {
 
     const generate = await createGenerate({ generateType, userText, promptText }, {}, context);
 
-    return { generate }
+    return { jobId: generate.jobId }
 
   },
 

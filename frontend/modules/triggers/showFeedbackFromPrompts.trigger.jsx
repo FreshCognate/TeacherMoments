@@ -7,7 +7,7 @@ import map from 'lodash/map';
 import filter from 'lodash/filter';
 import getString from "../ls/helpers/getString";
 import getBlockByRef from "../blocks/helpers/getBlockByRef";
-import axios from "axios";
+import generate from "../generate/helpers/generate";
 
 const body = buildLanguageSchema('body', {
   type: 'TextArea',
@@ -17,7 +17,7 @@ const body = buildLanguageSchema('body', {
 
 const ShowFeedbackFromPrompts = {
   trigger: async (trigger) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
 
       let matchedItems = [];
       for (const triggerItem of trigger.items) {
@@ -41,12 +41,12 @@ const ShowFeedbackFromPrompts = {
             if (block.blockType === 'INPUT_PROMPT') {
               const userText = blockTracking.textValue;
               const promptText = prompt.text;
-              const response = axios.post('/api/generate', {
+              const generatedContent = await generate({
                 generateType: 'USER_INPUT_PROMPT_MATCHES_CONDITION_PROMPT',
                 userText,
                 promptText
               });
-              console.log(response);
+              console.log(generatedContent);
             }
 
           }

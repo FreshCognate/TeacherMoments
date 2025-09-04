@@ -35,7 +35,7 @@ export default async ({ queue, name, repeat, job, children }) => {
       repeat
     });
   }
-  queueItem.add(name, job, {
+  return queueItem.add(name, job, {
     removeOnComplete: {
       age: 72 * 3600, // keep up to 1 hour
       count: 2000, // keep up to 2000 jobs
