@@ -18,12 +18,12 @@ export default async (props, options, context) => {
       break;
   }
 
-  createJob({
+  const job = await createJob({
     queue: 'generate',
     name: generateType,
     job: newGenerateObject
   });
 
-  return newGenerateObject;
+  return { jobId: job.id };
 
 };
