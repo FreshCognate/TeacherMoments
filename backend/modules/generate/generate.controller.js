@@ -5,9 +5,9 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { generateType, userText, promptText } = body;
+    const { generateType, payload } = body;
 
-    const generate = await createGenerate({ generateType, userText, promptText }, {}, context);
+    const generate = await createGenerate({ generateType, payload }, {}, context);
 
     return { jobId: generate.jobId }
 

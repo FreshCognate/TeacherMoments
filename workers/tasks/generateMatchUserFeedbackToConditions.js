@@ -21,8 +21,8 @@ export default async ({ stem, usersAnswer, conditions }) => {
     The JSON structured returned should be: {"conditions": [{"_id": "", "reasoning": "", "score": 0}]}
     Where:
     - "_id" = The id of the condition.
-    - "score" = How much on a scale of 0 to 1 that this condition matches the users input. 
-      0 being not at all, 0.5 being a partial match and 1 being an exact match.
+    - "score" = How much on a scale of 0.1 to 1.0 that this condition matches the users input. 
+      0.1 being not at all, 0.5 being a partial match and 1.0 being an exact match.
     - "reasoning" = The reason why you chose the score for this condition
   `);
 
