@@ -5,8 +5,10 @@ import buildLanguageSchema from "~/core/app/helpers/buildLanguageSchema";
 import xor from 'lodash/xor';
 import map from 'lodash/map';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 import getString from "../ls/helpers/getString";
-import getBlockByRef from "../blocks/helpers/getBlockByRef";
+import getBlocksBySlideRef from "../blocks/helpers/getBlocksBySlideRef";
+import getBlockDisplayType from "../blocks/helpers/getBlockDisplayType";
 import generate from "../generate/helpers/generate";
 
 const body = buildLanguageSchema('body', {
@@ -19,34 +21,121 @@ const ShowFeedbackFromPrompts = {
   trigger: async (trigger) => {
     return new Promise(async (resolve, reject) => {
 
+      const blocks = getBlocksBySlideRef({ slideRef: trigger.elementRef });
+
+      // Gather block and block tracking info
+
+      let items = [];
+
+      for (const block of blocks) {
+        if (getBlockDisplayType(block) === 'PROMPT') {
+
+          let item = {};
+
+          item.blockRef = block.ref;
+          item.blockType = block.blockType;
+          item.stem = getString({ model: block, field: 'body' });
+          item.selectedOptions = [];
+          item.textValue = "";
+
+          const blockTracking = getBlockTracking({ blockRef: block.ref });
+
+          if (block.blockType === 'MULTIPLE_CHOICE_PROMPT') {
+            item.selectedOptions = blockTracking.selectedOptions;
+          }
+
+          if (block.blockType === 'INPUT_PROMPT') {
+            item.textValue = blockTracking.textValue;
+          }
+
+          item.conditions = [];
+
+          items.push(item);
+
+        }
+      }
+
+
+      // Gather condition info
+
+      for (const triggerItem of trigger.items) {
+
+        const triggerId = triggerItem._id;
+        // triggerItem has feedback and conditions
+        for (const condition of triggerItem.conditions) {
+
+          const conditionId = condition._id;
+          for (const prompt of condition.prompts) {
+
+            const item = find(items, { blockRef: prompt.ref });
+
+            item.conditions.push({
+              triggerId,
+              conditionId,
+              text: prompt.text,
+              options: prompt.options,
+              score: 0
+            })
+          }
+        }
+      }
+
+      // Mark items based upon their conditions and score each condition.
+
+      for (const item of items) {
+
+        if (item.blockType === 'MULTIPLE_CHOICE_PROMPT') {
+          for (const condition of item.conditions) {
+
+            const test = xor(item.selectedOptions, condition.options);
+
+            if (test.length === 0) {
+              condition.score = 1;
+            }
+          }
+        }
+
+        if (item.blockType === 'INPUT_PROMPT') {
+          const stem = item.stem;
+          const usersAnswer = item.textValue;
+          const conditions = map(item.conditions, (condition) => {
+            return { _id: condition.conditionId, condition: condition.text };
+          })
+          const generatedContent = await generate({
+            generateType: 'USER_INPUT_PROMPT_MATCHES_CONDITION_PROMPT',
+            payload: {
+              stem,
+              usersAnswer,
+              conditions,
+            }
+          });
+
+          const generatedConditions = generatedContent.payload.conditions;
+
+          for (const generatedCondition of generatedConditions) {
+            const currentCondition = find(item.conditions, { conditionId: generatedCondition._id });
+            currentCondition.score = generatedCondition.score;
+            currentCondition.reasoning = generatedCondition.reasoning;
+          }
+
+        }
+      }
+
+      // Now match individual trigger items
+
       let matchedItems = [];
       for (const triggerItem of trigger.items) {
         let hasMatched = false;
         for (const condition of triggerItem.conditions) {
           const promptsMatched = [];
           for (const prompt of condition.prompts) {
-            const blockTracking = getBlockTracking({ blockRef: prompt.ref });
-            const block = getBlockByRef({ ref: prompt.ref });
 
-            if (block.blockType === 'MULTIPLE_CHOICE_PROMPT') {
+            const item = find(items, { blockRef: prompt.ref });
 
-              const selectedOptions = blockTracking.selectedOptions;
-              const test = xor(prompt.options, selectedOptions);
+            const itemCondition = find(item.conditions, { conditionId: condition._id });
 
-              if (test.length === 0) {
-                promptsMatched.push(prompt);
-              }
-
-            }
-            if (block.blockType === 'INPUT_PROMPT') {
-              const userText = blockTracking.textValue;
-              const promptText = prompt.text;
-              const generatedContent = await generate({
-                generateType: 'USER_INPUT_PROMPT_MATCHES_CONDITION_PROMPT',
-                userText,
-                promptText
-              });
-              console.log(generatedContent);
+            if (itemCondition.score === 1) {
+              promptsMatched.push(prompt);
             }
 
           }
