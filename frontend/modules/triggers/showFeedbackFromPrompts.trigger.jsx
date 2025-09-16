@@ -55,7 +55,6 @@ const ShowFeedbackFromPrompts = {
         }
       }
 
-
       // Gather condition info
 
       for (const triggerItem of trigger.items) {
@@ -101,6 +100,11 @@ const ShowFeedbackFromPrompts = {
           const conditions = map(item.conditions, (condition) => {
             return { _id: condition.conditionId, condition: condition.text };
           })
+          console.log(
+            stem,
+            usersAnswer,
+            conditions,
+          );
           const generatedContent = await generate({
             generateType: 'USER_INPUT_PROMPT_MATCHES_CONDITION_PROMPT',
             payload: {
@@ -111,6 +115,8 @@ const ShowFeedbackFromPrompts = {
           });
 
           const generatedConditions = generatedContent.payload.conditions;
+
+          console.log(generatedConditions);
 
           for (const generatedCondition of generatedConditions) {
             const currentCondition = find(item.conditions, { conditionId: generatedCondition._id });
@@ -133,8 +139,9 @@ const ShowFeedbackFromPrompts = {
             const item = find(items, { blockRef: prompt.ref });
 
             const itemCondition = find(item.conditions, { conditionId: condition._id });
+            console.log(itemCondition.score);
 
-            if (itemCondition.score === 1) {
+            if (itemCondition.score >= 0.7) {
               promptsMatched.push(prompt);
             }
 
@@ -193,6 +200,17 @@ const ShowFeedbackFromPrompts = {
             label: 'Select this item if'
           }
         }
+      },
+      shouldGenerateFeedbackFromAI: {
+        type: 'Toggle',
+        label: 'Generate feedback from AI',
+        options: [{
+          value: true,
+          icon: 'confirm'
+        }, {
+          value: false,
+          icon: 'cancel'
+        }]
       }
     }
   }
