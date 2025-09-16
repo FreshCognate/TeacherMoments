@@ -68,7 +68,7 @@ class InputPromptBlockPlayerContainer extends Component {
         case 'TRANSCRIPT_PROCESSED':
           const assetTranscribedResponse = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
           const isAbleToComplete = assetTranscribedResponse.data.asset.transcript.length > 0;
-          this.props.onUpdateBlockTracking({ audio: assetTranscribedResponse.data.asset, isAbleToComplete });
+          this.props.onUpdateBlockTracking({ audio: assetTranscribedResponse.data.asset, isAbleToComplete, textValue: assetTranscribedResponse.data.asset.transcript });
           this.setState({ uploadStatus: null, isTranscribingAudio: false });
           break;
         case 'ASSET_ERRORED':
