@@ -10,6 +10,7 @@ import getString from "../ls/helpers/getString";
 import getBlocksBySlideRef from "../blocks/helpers/getBlocksBySlideRef";
 import getBlockDisplayType from "../blocks/helpers/getBlockDisplayType";
 import generate from "../generate/helpers/generate";
+import setSlideTrigger from "../run/helpers/setSlideTrigger";
 
 const body = buildLanguageSchema('body', {
   type: 'TextArea',
@@ -59,7 +60,7 @@ const ShowFeedbackFromPrompts = {
 
       for (const triggerItem of trigger.items) {
 
-        const triggerId = triggerItem._id;
+        const triggerItemId = triggerItem._id;
         // triggerItem has feedback and conditions
         for (const condition of triggerItem.conditions) {
 
@@ -69,7 +70,7 @@ const ShowFeedbackFromPrompts = {
             const item = find(items, { blockRef: prompt.ref });
 
             item.conditions.push({
-              triggerId,
+              triggerItemId,
               conditionId,
               text: prompt.text,
               options: prompt.options,
@@ -168,6 +169,23 @@ const ShowFeedbackFromPrompts = {
       const matchedItemsFeedback = map(matchedItems, (matchedItem) => {
         return getString({ model: matchedItem, field: 'body' });
       })
+
+      const triggerItems = map(items, (item) => {
+        return {
+          blockRef: item.blockRef,
+          blockType: item.blockType,
+          conditions: map(item.conditions, (condition) => {
+            return {
+              conditionId: condition.conditionId,
+              triggerItemId: condition.triggerItemId,
+              score: condition.score,
+              reasoning: condition.reasoning
+            };
+          })
+        }
+      })
+
+      setSlideTrigger({ triggerRef: trigger.ref, triggerItems })
       setSlideFeedback(matchedItemsFeedback);
       resolve();
 
