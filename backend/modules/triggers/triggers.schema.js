@@ -15,22 +15,6 @@ const itemSchema = new Schema({
   }]
 })
 
-const example = {
-  items: [{
-    body: "This is the feedback the end user gets",
-    conditions: [{
-      _id: "123",
-      prompts: [{
-        ref: "1234",
-        options: ["OPTION_ONE", "OPTION_TWO"]
-      }, {
-        ref: "1234",
-        text: "Describes that Bob is not a nice person",
-      }]
-    }]
-  }]
-}
-
 const schema = {
   type: { type: String, default: 'trigger' },
   ref: mongoose.Schema.Types.ObjectId,
@@ -46,6 +30,10 @@ const schema = {
   items: {
     type: [itemSchema],
     default: [{}]
+  },
+  shouldGenerateFeedbackFromAI: {
+    type: Boolean,
+    default: false
   },
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

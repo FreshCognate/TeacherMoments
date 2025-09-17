@@ -35,6 +35,7 @@ export default {
         ...buildLanguageValidation('body', Joi.array()),
         conditions: Joi.array(),
       }),
+      shouldGenerateFeedbackFromAI: Joi.boolean(),
       sourceIndex: Joi.number(),
       destinationIndex: Joi.number(),
       isDeleted: Joi.boolean().invalid(true),
