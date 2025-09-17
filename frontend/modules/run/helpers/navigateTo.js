@@ -5,8 +5,9 @@ import each from 'lodash/each';
 import getIsSlideComplete from "./getIsSlideComplete";
 import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
 import findSlideStage from "./findSlideStage";
+import { createSearchParams } from "react-router";
 
-export default async ({ slideRef }) => {
+export default async ({ slideRef, router }) => {
 
   const run = getCache('run');
 
@@ -52,5 +53,10 @@ export default async ({ slideRef }) => {
   } else {
     run.set({ activeSlideRef: slideRef, stages });
   }
+
+  router.navigate({
+    pathname: router.pathname,
+    search: `?${createSearchParams({ slide: slideRef })}`,
+  }, { replace: true })
 
 }

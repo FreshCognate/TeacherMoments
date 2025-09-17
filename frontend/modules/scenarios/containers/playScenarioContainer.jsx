@@ -18,9 +18,11 @@ class PlayScenarioContainer extends Component {
   startScenario = () => {
     const { activeSlideRef } = this.props.run.data;
     const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
-    if (!activeSlideRef) {
-      navigateTo({ slideRef: firstSlideRef });
-    }
+
+    const slideRef = activeSlideRef || firstSlideRef;
+
+    navigateTo({ slideRef, router: this.props.router });
+
   }
 
   getActiveSlide = () => {
