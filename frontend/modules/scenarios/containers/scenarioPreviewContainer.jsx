@@ -5,18 +5,19 @@ import find from 'lodash/find';
 import filter from 'lodash/filter';
 import WithCache from '~/core/cache/containers/withCache';
 import navigateTo from '~/modules/run/helpers/navigateTo';
+import WithRouter from '~/core/app/components/withRouter';
 
 class ScenarioPreviewContainer extends Component {
 
   componentDidMount = () => {
     setTimeout(() => {
-      navigateTo({ slideRef: this.props.slideRef });
+      navigateTo({ slideRef: this.props.slideRef, router: this.props.router });
     }, 0);
   }
 
   componentDidUpdate = (prevProps) => {
     if (this.props.slideRef !== prevProps.slideRef) {
-      navigateTo({ slideRef: this.props.slideRef });
+      navigateTo({ slideRef: this.props.slideRef, router: this.props.router });
     }
   }
 
@@ -50,7 +51,7 @@ class ScenarioPreviewContainer extends Component {
   }
 };
 
-export default WithCache(ScenarioPreviewContainer, {
+export default WithRouter(WithCache(ScenarioPreviewContainer, {
   run: {
     getInitialData: () => {
       return {
@@ -59,4 +60,4 @@ export default WithCache(ScenarioPreviewContainer, {
       }
     }
   }
-}, ['slides', 'blocks']);
+}, ['slides', 'blocks']));

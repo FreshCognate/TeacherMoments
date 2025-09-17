@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ActionsPromptBlockPlayer from '../components/actionsPromptBlockPlayer';
 import setSlideToComplete from '~/modules/run/helpers/setSlideToComplete';
 import resetScenario from '~/modules/run/helpers/resetScenario';
+import WithRouter from '~/core/app/components/withRouter';
 
 class ActionsPromptBlockPlayerContainer extends Component {
 
@@ -12,7 +13,7 @@ class ActionsPromptBlockPlayerContainer extends Component {
         setSlideToComplete({ slideRef: this.props.block.slideRef });
         break;
       case 'RESET_SCENARIO':
-        resetScenario();
+        resetScenario({ router: this.props.router });
         break;
     }
   }
@@ -27,4 +28,4 @@ class ActionsPromptBlockPlayerContainer extends Component {
   }
 };
 
-export default ActionsPromptBlockPlayerContainer;
+export default WithRouter(ActionsPromptBlockPlayerContainer);

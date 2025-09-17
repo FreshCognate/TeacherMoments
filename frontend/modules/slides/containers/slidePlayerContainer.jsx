@@ -125,7 +125,7 @@ class SlidePlayerContainer extends Component {
 
   onNextSlideClicked = () => {
     setSlideToComplete({ slideRef: this.props.activeSlide.ref });
-    return navigateToNextSlide();
+    return navigateToNextSlide({ router: this.props.router });
   }
 
   onSubmitSlideClicked = async () => {
@@ -148,7 +148,7 @@ class SlidePlayerContainer extends Component {
     this.setState({ isSubmitting: false });
 
     if (!stage.shouldStopNavigation) {
-      return navigateToNextSlide();
+      return navigateToNextSlide({ router: this.props.router });
     }
   }
 
@@ -166,7 +166,7 @@ class SlidePlayerContainer extends Component {
   }
 
   navigateTo = ({ slideRef }) => {
-    return navigateTo({ slideRef });
+    return navigateTo({ slideRef, router: this.props.router });
   }
 
   onActionClicked = (action) => {

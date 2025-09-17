@@ -1,10 +1,10 @@
 import navigateTo from "./navigateTo";
 import getNextSlide from "./getNextSlide";
 
-export default async () => {
+export default async ({ router }) => {
 
   const nextSlide = getNextSlide();
 
-  navigateTo({ slideRef: nextSlide.ref });
+  navigateTo({ slideRef: nextSlide.ref, router });
 
 }
