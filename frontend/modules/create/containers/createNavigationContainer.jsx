@@ -39,7 +39,9 @@ class CreateNavigationContainer extends Component {
     }).then((response) => {
       const slideId = response.data.slide._id;
       this.props.slides.fetch().then(() => {
-        this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideId}`)
+        this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideId}`, {
+          replace: true
+        })
         this.setState({ isCreating: false });
       });
     }).catch((error) => {
@@ -59,7 +61,9 @@ class CreateNavigationContainer extends Component {
       const slideId = response.data.slide._id;
       this.props.blocks.fetch();
       this.props.slides.fetch().then(() => {
-        this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideId}`)
+        this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideId}`, {
+          replace: true
+        })
         this.setState({ isDuplicating: false });
       });
     }).catch((error) => {
@@ -81,10 +85,14 @@ class CreateNavigationContainer extends Component {
           const slideWithSameSortOrderAsDeleted = find(this.props.slides.data, { sortOrder: selectedSlideSortOrder });
 
           if (slideWithSameSortOrderAsDeleted) {
-            this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideWithSameSortOrderAsDeleted._id}`)
+            this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideWithSameSortOrderAsDeleted._id}`, {
+              replace: true
+            })
           } else {
             const slideBeforeDeletedSlide = find(this.props.slides.data, { sortOrder: selectedSlideSortOrder - 1 });
-            this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideBeforeDeletedSlide._id}`)
+            this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideBeforeDeletedSlide._id}`, {
+              replace: true
+            })
           }
 
         });

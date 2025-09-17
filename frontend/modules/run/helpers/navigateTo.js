@@ -57,6 +57,6 @@ export default async ({ slideRef, router }) => {
   router.navigate({
     pathname: router.pathname,
     search: `?${createSearchParams({ slide: slideRef })}`,
-  })
+  }, { replace: true })
 
 }

@@ -26,7 +26,7 @@ const CreateNavigationSlide = ({
   });
 
   return (
-    <Link to={`/scenarios/${scenarioId}/create?slide=${slide._id}`}>
+    <Link to={`/scenarios/${scenarioId}/create?slide=${slide._id}`} replace>
       <div className={className} style={style} ref={setNodeRef} {...listeners} {...attributes}>
         <CreateNavigationSlideActionsContainer
           slideNumber={slide.sortOrder + 1}
