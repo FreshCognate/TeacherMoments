@@ -67,6 +67,11 @@ const InputPromptAudioBlockPlayer = ({
           <Alert type="warning" text="Transcription process completed, however it appears your audio recording is empty. Please try recording your response again." />
         </div>
       )}
+      {(isTranscribingAudio) && (
+        <div className="mt-4">
+          <Alert type="warning" text="Transcribing audio..." />
+        </div>
+      )}
       {(transcript) && (
         <div className="p-4 bg-lm-2/20 dark:bg-dm-1/60 rounded-md mt-4">
           <div>

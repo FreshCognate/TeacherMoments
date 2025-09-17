@@ -12,7 +12,6 @@ class InputPromptBlockPlayerContainer extends Component {
 
   state = {
     isUploadingAudio: false,
-    isTranscribing: false,
     uploadProgress: 0,
     uploadAssetId: null,
     uploadStatus: ''
@@ -109,7 +108,7 @@ class InputPromptBlockPlayerContainer extends Component {
         isAudioDisabled={isAudioDisabled}
         isResponseBlock={isResponseBlock}
         isUploadingAudio={isUploadingAudio}
-        isTranscribingAudio={isTranscribingAudio}
+        isTranscribingAudio={blockTracking.isTranscribingAudio}
         uploadProgress={uploadProgress}
         uploadStatus={uploadStatus}
         onTextInputChanged={this.onTextInputChanged}
