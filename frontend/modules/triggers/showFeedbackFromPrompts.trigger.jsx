@@ -100,12 +100,8 @@ const ShowFeedbackFromPrompts = {
           const usersAnswer = item.textValue;
           const conditions = map(item.conditions, (condition) => {
             return { _id: condition.conditionId, condition: condition.text };
-          })
-          console.log(
-            stem,
-            usersAnswer,
-            conditions,
-          );
+          });
+
           const generatedContent = await generate({
             generateType: 'USER_INPUT_PROMPT_MATCHES_CONDITION_PROMPT',
             payload: {
@@ -116,8 +112,6 @@ const ShowFeedbackFromPrompts = {
           });
 
           const generatedConditions = generatedContent.payload.conditions;
-
-          console.log(generatedConditions);
 
           for (const generatedCondition of generatedConditions) {
             const currentCondition = find(item.conditions, { conditionId: generatedCondition._id });
@@ -163,7 +157,6 @@ const ShowFeedbackFromPrompts = {
           }
         });
         matchedItems.push(...unmatchedItems);
-        console.log('should find unmatched items');
       }
 
       const matchedItemsFeedback = map(matchedItems, (matchedItem) => {
@@ -185,8 +178,23 @@ const ShowFeedbackFromPrompts = {
         }
       })
 
-      setSlideTrigger({ triggerRef: trigger.ref, triggerItems })
-      setSlideFeedback(matchedItemsFeedback);
+      setSlideTrigger({ triggerRef: trigger.ref, triggerItems });
+      let feedback = [];
+      if (trigger.shouldGenerateFeedbackFromAI) {
+        const generatedContent = await generate({
+          generateType: 'FEEDBACK_FROM_FEEDBACK_ITEMS',
+          payload: {
+            feedbackItems: matchedItemsFeedback,
+            items
+          }
+        });
+
+        feedback = [generatedContent.payload.feedback];
+      } else {
+        feedback = matchedItemsFeedback;
+      }
+
+      setSlideFeedback(feedback);
       resolve();
 
     })
