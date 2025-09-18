@@ -8,7 +8,7 @@ export default {
   controller,
   create: {
     body: {
-      generateType: Joi.string().valid('USER_INPUT_PROMPT_MATCHES_CONDITION_PROMPT'),
+      generateType: Joi.string().valid('USER_INPUT_PROMPT_MATCHES_CONDITION_PROMPT', 'FEEDBACK_FROM_FEEDBACK_ITEMS'),
       payload: Joi.object(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],

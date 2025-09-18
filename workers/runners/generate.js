@@ -1,5 +1,6 @@
 import generateShowFeedbackFromPrompts from '../tasks/generateShowFeedbackFromPrompts.js';
 import generateMatchUserFeedbackToConditions from '../tasks/generateMatchUserFeedbackToConditions.js';
+import generatedFeedbackFromFeedbackItems from '../tasks/generatedFeedbackFromFeedbackItems.js';
 import getSockets from '../getSockets.js';
 
 export default async (job) => {
@@ -21,6 +22,28 @@ export default async (job) => {
         const { stem, usersAnswer, conditions } = job.data.payload;
 
         const payload = await generateMatchUserFeedbackToConditions({ stem, usersAnswer, conditions });
+
+        sockets = await getSockets();
+
+        sockets.emit(`workers:generate:${job.id}`, {
+          event: 'GENERATED',
+          payload
+        });
+        break;
+      }
+      case 'FEEDBACK_FROM_FEEDBACK_ITEMS': {
+        sockets = await getSockets();
+
+        sockets.emit(`workers:generate:${job.id}`, {
+          event: 'GENERATING'
+        });
+
+        const {
+          feedbackItems,
+          items
+        } = job.data.payload;
+
+        const payload = await generatedFeedbackFromFeedbackItems({ feedbackItems, items });
 
         sockets = await getSockets();
 
