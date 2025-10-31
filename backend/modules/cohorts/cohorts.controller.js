@@ -1,5 +1,5 @@
 import getCohorts from './services/getCohorts.js';
-// import getCohortById from './services/getCohortById.js';
+import getCohortById from './services/getCohortById.js';
 // import restoreCohortById from './services/restoreCohortById.js';
 // import updateCohortById from './services/updateCohortById.js';
 // import deleteCohortById from './services/deleteCohortById.js';
@@ -8,6 +8,7 @@ import duplicateCohort from './services/duplicateCohort.js';
 // import has from 'lodash/has.js';
 
 export default {
+
   all: async function ({ query }, context) {
 
     const { searchValue, currentPage, sortBy, accessType, isDeleted } = query;
@@ -31,12 +32,13 @@ export default {
     return { cohort }
 
   },
-  // read: async function ({ param }, context) {
 
-  //   const cohort = await getCohortById({ cohortId: param }, {}, context);
-  //   return { cohort };
+  read: async function ({ param }, context) {
 
-  // },
+    const cohort = await getCohortById({ cohortId: param }, {}, context);
+    return { cohort };
+
+  },
 
   // update: async function ({ param, body }, context) {
 
