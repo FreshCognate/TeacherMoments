@@ -16,7 +16,7 @@ export interface ActionBarProps {
   isLoading?: boolean,
   shouldAutoFocus?: boolean,
   onSearchValueChange?: (searchValue: string) => void,
-  onActionClicked?: (action: string) => void,
+  onActionClicked?: ({ action }: { action: string }) => void,
   onPaginationClicked?: (direction: string) => void,
   onFiltersChanged?: (filter: string) => void,
   onSortByChanged?: (sortBy: string) => void
@@ -25,6 +25,7 @@ export interface ActionBarProps {
 export interface Action {
   action: string,
   text: string,
+  color?: string,
   getIsDisabled?: () => boolean
 }
 
