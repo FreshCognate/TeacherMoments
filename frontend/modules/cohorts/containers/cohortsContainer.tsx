@@ -40,8 +40,7 @@ class CohortsContainer extends Component<CohortsContainerProps> {
         },
       },
       model: {
-        name: '',
-        accessType: 'PRIVATE'
+        name: ''
       },
       actions: [{
         type: 'CANCEL',
@@ -81,13 +80,6 @@ class CohortsContainer extends Component<CohortsContainerProps> {
     this.debounceFetch(cohorts.fetch);
   }
 
-  onFiltersChanged = (filter: string) => {
-    const { cohorts } = this.props;
-    cohorts.setStatus('syncing');
-    cohorts.setQuery({ currentPage: 1, accessType: filter });
-    cohorts.fetch();
-  }
-
   onSortByChanged = (sortBy: string) => {
     const { cohorts } = this.props;
     cohorts.setStatus('syncing');
@@ -108,7 +100,7 @@ class CohortsContainer extends Component<CohortsContainerProps> {
 
     const { query, status, data } = this.props.cohorts;
 
-    const { searchValue, currentPage, accessType, sortBy } = query;
+    const { searchValue, currentPage, sortBy } = query;
     const totalPages = get(this.props, 'cohorts.response.totalPages', 1);
     const isSyncing = status === 'syncing';
     const isLoading = status === 'loading' || status === 'unresolved';
@@ -127,7 +119,6 @@ class CohortsContainer extends Component<CohortsContainerProps> {
         onActionClicked={this.onActionClicked}
         onSearchValueChange={this.onSearchValueChange}
         onPaginationClicked={this.onPaginationClicked}
-        onFiltersChanged={this.onFiltersChanged}
         onSortByChanged={this.onSortByChanged}
         onDuplicateCohortClicked={this.onDuplicateCohortClicked}
       />

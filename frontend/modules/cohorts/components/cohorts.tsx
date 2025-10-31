@@ -17,15 +17,12 @@ const Cohorts = ({
   searchValue,
   currentPage,
   totalPages,
-  filter,
-  filters,
   sortBy,
   sortByOptions,
   isSyncing,
   isLoading,
   onSearchValueChange,
   onPaginationClicked,
-  onFiltersChanged,
   onSortByChanged,
   onActionClicked,
   onDuplicateCohortClicked
@@ -42,8 +39,6 @@ const Cohorts = ({
           searchPlaceholder="Search cohorts..."
           currentPage={currentPage}
           totalPages={totalPages}
-          filter={filter}
-          filters={filters}
           sortBy={sortBy}
           sortByOptions={sortByOptions}
           hasSearch
@@ -55,7 +50,6 @@ const Cohorts = ({
           shouldAutoFocus
           onSearchValueChange={onSearchValueChange}
           onPaginationClicked={onPaginationClicked}
-          onFiltersChanged={onFiltersChanged}
           onSortByChanged={onSortByChanged}
           onActionClicked={onActionClicked}
         />
