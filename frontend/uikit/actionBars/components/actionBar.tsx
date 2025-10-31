@@ -6,6 +6,8 @@ import map from 'lodash/map';
 import Syncing from '~/uikit/loaders/components/syncing';
 import Toggle from '~/uikit/toggles/components/toggle';
 
+import { ActionBarProps } from '../actionBars.types';
+
 const ActionBar = ({
   actions,
   searchValue,
@@ -28,7 +30,7 @@ const ActionBar = ({
   onPaginationClicked,
   onFiltersChanged,
   onSortByChanged
-}) => {
+}: ActionBarProps) => {
   return (
     <div className="relative py-2">
       <div className="flex items-center">
@@ -72,7 +74,7 @@ const ActionBar = ({
               />
             </div>
           )}
-          {map(actions, (action) => {
+          {map(actions, (action: Action) => {
             let isDisabled = false;
             if (action.getIsDisabled) {
               isDisabled = action.getIsDisabled();

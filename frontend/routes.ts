@@ -12,5 +12,8 @@ export default [
       route(":id/settings", "./modules/scenarios/routes/scenarioSettingsRoute.tsx"),
     ])
   ]),
+  ...prefix("cohorts", [
+    index("./modules/cohorts/routes/cohortsRoute.tsx"),
+  ]),
   route("/play/:publishLink", "./modules/scenarios/routes/playScenarioRoute.tsx")
 ] satisfies RouteConfig;
