@@ -19,7 +19,6 @@ export default [{
   create: {
     body: {
       name: Joi.string().when('cohortId', { is: Joi.string(), then: Joi.optional(), otherwise: Joi.required() }),
-      accessType: Joi.string().when('cohortId', { is: Joi.string(), then: Joi.optional(), otherwise: Joi.required().valid("PUBLIC", "PRIVATE") }),
       cohortId: Joi.string().optional(),
       tags: Joi.array().items(Joi.string())
     },
@@ -35,9 +34,6 @@ export default [{
       name: Joi.string(),
       ...buildLanguageValidation('title', Joi.string().allow('')),
       ...buildLanguageValidation('description', Joi.array()),
-      ...buildLanguageValidation('consent', Joi.array()),
-      ...buildLanguageValidation('summary', Joi.array()),
-      accessType: Joi.string().valid("PUBLIC", "PRIVATE"),
       tags: Joi.array().items(Joi.string()),
       collaborators: Joi.array().items({
         user: Joi.string().required(),
