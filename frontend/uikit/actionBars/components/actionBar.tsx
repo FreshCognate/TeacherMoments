@@ -6,7 +6,7 @@ import map from 'lodash/map';
 import Syncing from '~/uikit/loaders/components/syncing';
 import Toggle from '~/uikit/toggles/components/toggle';
 
-import { ActionBarProps } from '../actionBars.types';
+import { Action, ActionBarProps } from '../actionBars.types';
 
 const ActionBar = ({
   actions,
@@ -74,20 +74,29 @@ const ActionBar = ({
               />
             </div>
           )}
-          {map(actions, (action: Action) => {
-            let isDisabled = false;
-            if (action.getIsDisabled) {
-              isDisabled = action.getIsDisabled();
-            }
-            return (
-              <Button
-                key={action.action}
-                {...action}
-                isDisabled={isDisabled}
-                onClick={() => onActionClicked({ action: action.action })}
-              />
-            );
-          })}
+          {(actions && actions.length > 0) && (
+            <div className="ml-2 flex items-center gap-x-2">
+              {map(actions, (action: Action) => {
+                let isDisabled = false;
+                if (action.getIsDisabled) {
+                  isDisabled = action.getIsDisabled();
+                }
+                return (
+                  <Button
+                    key={action.action}
+                    {...action}
+                    isDisabled={isDisabled}
+                    onClick={() => {
+                      if (onActionClicked) {
+                        onActionClicked({ action: action.action })
+                      }
+                    }
+                    }
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
       <Syncing isSyncing={isSyncing || isLoading} />

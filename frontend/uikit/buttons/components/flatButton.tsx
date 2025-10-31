@@ -20,7 +20,7 @@ type Props = {
   isDisabled?: boolean,
   isCircular?: boolean,
   isFullWidth?: boolean,
-  onClick: (params: any) => any
+  onClick?: (params: any) => any
 }
 
 export default function FlatButton({
