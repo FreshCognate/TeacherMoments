@@ -1,4 +1,4 @@
-// import getCohorts from './services/getCohorts.js';
+import getCohorts from './services/getCohorts.js';
 // import getCohortById from './services/getCohortById.js';
 // import restoreCohortById from './services/restoreCohortById.js';
 // import updateCohortById from './services/updateCohortById.js';
@@ -8,13 +8,13 @@ import duplicateCohort from './services/duplicateCohort.js';
 // import has from 'lodash/has.js';
 
 export default {
-  // all: async function ({ query }, context) {
+  all: async function ({ query }, context) {
 
-  //   const { searchValue, currentPage, sortBy, accessType, isDeleted } = query;
+    const { searchValue, currentPage, sortBy, accessType, isDeleted } = query;
 
-  //   return await getCohorts({ accessType }, { searchValue, currentPage, sortBy, isDeleted }, context);
+    return await getCohorts({ accessType }, { searchValue, currentPage, sortBy, isDeleted }, context);
 
-  // },
+  },
 
   create: async function ({ body }, context) {
 
