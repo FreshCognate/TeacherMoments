@@ -21,6 +21,7 @@ export default async (props, options, context) => {
     duplicatedScenarioObject.name = duplicatedScenarioObject.name + " - Duplicate";
     duplicatedScenarioObject.originalScenario = existingScenario._id;
     duplicatedScenarioObject.createdAt = new Date();
+    duplicatedScenarioObject.createdBy = user._id;
     duplicatedScenarioObject.hasChanges = true;
 
     const bulkScenarios = await models.Scenario.create([duplicatedScenarioObject], { session });
