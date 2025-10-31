@@ -11,7 +11,6 @@ export default [{
     query: {
       searchValue: Joi.string().allow('').default(''),
       currentPage: Joi.number().default(1),
-      accessType: Joi.string().allow('').default(''),
       sortBy: Joi.string().valid('NAME', 'NEWEST', 'OLDEST').default('NAME'),
       isDeleted: Joi.boolean()
     },
