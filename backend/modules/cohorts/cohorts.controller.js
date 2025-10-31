@@ -1,7 +1,7 @@
 import getCohorts from './services/getCohorts.js';
 import getCohortById from './services/getCohortById.js';
-// import restoreCohortById from './services/restoreCohortById.js';
-// import updateCohortById from './services/updateCohortById.js';
+import restoreCohortById from './services/restoreCohortById.js';
+import updateCohortById from './services/updateCohortById.js';
 // import deleteCohortById from './services/deleteCohortById.js';
 import createCohort from './services/createCohort.js';
 import duplicateCohort from './services/duplicateCohort.js';
@@ -40,18 +40,19 @@ export default {
 
   },
 
-  // update: async function ({ param, body }, context) {
+  update: async function ({ param, body }, context) {
 
-  //   if (has(body, 'isDeleted')) {
-  //     const cohort = await restoreCohortById({ cohortId: param }, {}, context);
-  //     return { cohort };
-  //   }
+    if (has(body, 'isDeleted')) {
+      const cohort = await restoreCohortById({ cohortId: param }, {}, context);
+      return { cohort };
+    }
 
-  //   const cohort = await updateCohortById({ cohortId: param, update: body }, {}, context);
+    const cohort = await updateCohortById({ cohortId: param, update: body }, {}, context);
 
-  //   return { cohort };
+    return { cohort };
 
-  // },
+  },
+
   // delete: async function ({ param }, context) {
   //   const cohort = await deleteCohortById({ cohortId: param }, {}, context);
 
