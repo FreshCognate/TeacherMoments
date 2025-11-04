@@ -14,6 +14,12 @@ export default [
   ]),
   ...prefix("cohorts", [
     index("./modules/cohorts/routes/cohortsRoute.tsx"),
+    layout("./modules/cohorts/routes/cohortsEditorLayout.tsx", [
+      route(":id/overview", "./modules/cohorts/routes/cohortOverviewRoute.tsx", { id: 'overview' }),
+      route(":id/users", "./modules/cohorts/routes/cohortUsersRoute.tsx", { id: 'users' }),
+      route(":id/scenarios", "./modules/cohorts/routes/cohortScenariosRoute.tsx", { id: 'scenarios' }),
+      route(":id/settings", "./modules/cohorts/routes/cohortSettingsRoute.tsx", { id: 'settings' })
+    ])
   ]),
   route("/play/:publishLink", "./modules/scenarios/routes/playScenarioRoute.tsx")
 ] satisfies RouteConfig;

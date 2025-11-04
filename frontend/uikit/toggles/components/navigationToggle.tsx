@@ -10,6 +10,14 @@ const NavigationToggle = ({
   size,
   isDisabled,
   onClick
+}: {
+  value: string | number,
+  options: { value: string, text: string }[],
+  color?: string,
+  className?: string,
+  size?: 'sm',
+  isDisabled?: boolean,
+  onClick: (value: string | number) => void
 }) => {
   const classNames = classnames('inline-flex items-center', className);
   return (
