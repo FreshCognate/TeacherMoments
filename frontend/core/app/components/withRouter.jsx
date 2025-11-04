@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useNavigation, useParams, useRevalidator } from "react-router";
+import { useLocation, useMatches, useNavigate, useNavigation, useParams, useRevalidator } from "react-router";
 
 const WithRouter = (Component) => {
 
@@ -8,13 +8,13 @@ const WithRouter = (Component) => {
     const params = useParams();
     const location = useLocation();
     const transition = useNavigation();
-
+    const matches = useMatches();
     const revalidator = useRevalidator();
 
     return (
       <Component
         {...props}
-        router={{ navigate, location, params, transition, revalidator }}
+        router={{ navigate, location, params, transition, revalidator, matches }}
       />
     );
 

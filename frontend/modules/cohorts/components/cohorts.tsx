@@ -62,7 +62,7 @@ const Cohorts = ({
                 <Title title={truncate(cohort.name, { length: 60 })} />
               </CardContent>
               <CardActions>
-                <Link to={`/cohorts/${cohort._id}/create`}>
+                <Link to={`/cohorts/${cohort._id}/overview`}>
                   <FlatButton
                     icon="edit"
                     text="Edit"

@@ -6,6 +6,10 @@ const Loading = ({
   text,
   size = "rg",
   className
+}: {
+  text?: string,
+  size?: 'rg',
+  className?: string,
 }) => {
 
   const textClassName = classnames({
