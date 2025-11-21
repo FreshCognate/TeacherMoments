@@ -40,6 +40,7 @@ export default [{
         user: Joi.string().required(),
         role: Joi.string().required().valid('AUTHOR', 'OWNER')
       }),
+      intent: Joi.string().valid('ADD', 'REMOVE'),
       scenarioId: Joi.string(),
       isArchived: Joi.boolean(),
       isDeleted: Joi.boolean().invalid(true),
