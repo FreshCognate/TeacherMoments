@@ -27,6 +27,22 @@ const schema = {
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     role: { type: String, enum: ['AUTHOR', 'OWNER'] }
   }],
+  cohorts: [{
+    _id: false,
+    cohort: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Cohort',
+      required: true
+    },
+    addedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    addedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   updatedAt: { type: Date },
