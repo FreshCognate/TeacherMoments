@@ -5,6 +5,8 @@ import updateCohortById from './services/updateCohortById.js';
 import deleteCohortById from './services/deleteCohortById.js';
 import createCohort from './services/createCohort.js';
 import duplicateCohort from './services/duplicateCohort.js';
+import archiveCohortById from './services/archiveCohortById.js';
+import unarchiveCohortById from './services/unarchiveCohortById.js';
 import has from 'lodash/has.js';
 
 export default {
@@ -44,6 +46,16 @@ export default {
 
     if (has(body, 'isDeleted')) {
       const cohort = await restoreCohortById({ cohortId: param }, {}, context);
+      return { cohort };
+    }
+
+    if (has(body, 'isArchived')) {
+      let cohort;
+      if (body.isArchived) {
+        cohort = await archiveCohortById({ cohortId: param }, {}, context);
+      } else {
+        cohort = await unarchiveCohortById({ cohortId: param }, {}, context);
+      }
       return { cohort };
     }
 

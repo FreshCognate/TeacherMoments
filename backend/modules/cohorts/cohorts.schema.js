@@ -21,6 +21,9 @@ const schema = {
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   updatedAt: { type: Date },
   updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  isArchived: { type: Boolean, default: false },
+  archivedAt: { type: Date },
+  archivedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   isDeleted: { type: Boolean, default: false },
   deletedAt: { type: Date },
   deletedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
