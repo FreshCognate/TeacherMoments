@@ -9,6 +9,7 @@ import archiveCohortById from './services/archiveCohortById.js';
 import unarchiveCohortById from './services/unarchiveCohortById.js';
 import has from 'lodash/has.js';
 import addScenarioToCohort from './services/addScenarioToCohort.js';
+import removeScenarioFromCohort from './services/removeScenarioFromCohort.js';
 
 export default {
 
@@ -46,8 +47,13 @@ export default {
   update: async function ({ param, body }, context) {
 
     if (has(body, 'scenarioId')) {
-      const cohort = await addScenarioToCohort({ cohortId: param, update: body }, {}, context);
-      return { cohort };
+      if (body.intent === 'ADD') {
+        const cohort = await addScenarioToCohort({ cohortId: param, update: body }, {}, context);
+        return { cohort };
+      } else if (body.intent === 'REMOVE') {
+        const cohort = await removeScenarioFromCohort({ cohortId: param, update: body }, {}, context);
+        return { cohort };
+      }
     }
 
     if (has(body, 'isDeleted')) {
