@@ -12,6 +12,7 @@ export default [{
       searchValue: Joi.string().allow('').default(''),
       currentPage: Joi.number().default(1),
       sortBy: Joi.string().valid('NAME', 'NEWEST', 'OLDEST').default('NAME'),
+      isArchived: Joi.boolean(),
       isDeleted: Joi.boolean()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
