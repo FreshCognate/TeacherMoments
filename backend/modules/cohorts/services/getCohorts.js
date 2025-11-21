@@ -12,12 +12,13 @@ export default async (props, options, context) => {
     searchValue = '',
     currentPage = 1,
     sortBy = 'NAME',
+    isArchived = false,
     isDeleted = false,
   } = options;
 
   const { models, user } = context;
 
-  let search = { isDeleted };
+  let search = { isArchived, isDeleted };
   let searchOptions = {};
 
   if (searchValue.length) {

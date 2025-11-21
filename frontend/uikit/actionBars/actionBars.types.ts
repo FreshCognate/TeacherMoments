@@ -4,7 +4,7 @@ export interface ActionBarProps {
   searchPlaceholder?: string,
   currentPage?: number,
   totalPages?: number,
-  filter?: string,
+  filter?: string | boolean,
   filters?: Filter[],
   sortBy?: string,
   sortByOptions?: SortByOption[],
@@ -18,7 +18,7 @@ export interface ActionBarProps {
   onSearchValueChange?: (searchValue: string) => void,
   onActionClicked?: ({ action }: { action: string }) => void,
   onPaginationClicked?: (direction: string) => void,
-  onFiltersChanged?: (filter: string) => void,
+  onFiltersChanged?: (filter: string | boolean) => void,
   onSortByChanged?: (sortBy: string) => void
 }
 
@@ -30,7 +30,7 @@ export interface Action {
 }
 
 export interface Filter {
-  value: string,
+  value: string | boolean,
   text?: string,
   icon?: string
 }

@@ -13,9 +13,9 @@ export default {
 
   all: async function ({ query }, context) {
 
-    const { searchValue, currentPage, sortBy, accessType, isDeleted } = query;
+    const { searchValue, currentPage, sortBy, accessType, isArchived, isDeleted } = query;
 
-    return await getCohorts({ accessType }, { searchValue, currentPage, sortBy, isDeleted }, context);
+    return await getCohorts({ accessType }, { searchValue, currentPage, sortBy, isArchived, isDeleted }, context);
 
   },
 

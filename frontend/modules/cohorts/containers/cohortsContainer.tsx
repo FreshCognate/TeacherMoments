@@ -69,6 +69,13 @@ class CohortsContainer extends Component<CohortsContainerProps> {
     this.debounceFetch(cohorts.fetch);
   }
 
+  onFiltersChanged = (isArchived: string | boolean) => {
+    const { cohorts } = this.props;
+    cohorts.setStatus('syncing');
+    cohorts.setQuery({ currentPage: 1, isArchived });
+    cohorts.fetch();
+  }
+
   onPaginationClicked = (direction: string) => {
     const { cohorts } = this.props;
     cohorts.setStatus('syncing');
@@ -100,7 +107,7 @@ class CohortsContainer extends Component<CohortsContainerProps> {
 
     const { query, status, data } = this.props.cohorts;
 
-    const { searchValue, currentPage, sortBy } = query;
+    const { searchValue, currentPage, sortBy, isArchived } = query;
     const totalPages = get(this.props, 'cohorts.response.totalPages', 1);
     const isSyncing = status === 'syncing';
     const isLoading = status === 'loading' || status === 'unresolved';
@@ -112,12 +119,15 @@ class CohortsContainer extends Component<CohortsContainerProps> {
         searchValue={searchValue}
         currentPage={currentPage}
         totalPages={totalPages}
+        filter={isArchived}
+        filters={[{ value: false, text: 'Live' }, { value: true, text: 'Archived' }]}
         sortBy={sortBy}
         sortByOptions={[{ value: 'NAME', text: 'Name' }, { value: 'NEWEST', text: 'Newest' }, { value: 'OLDEST', text: 'Oldest' }]}
         isSyncing={isSyncing}
         isLoading={isLoading}
         onActionClicked={this.onActionClicked}
         onSearchValueChange={this.onSearchValueChange}
+        onFiltersChanged={this.onFiltersChanged}
         onPaginationClicked={this.onPaginationClicked}
         onSortByChanged={this.onSortByChanged}
         onDuplicateCohortClicked={this.onDuplicateCohortClicked}
@@ -134,7 +144,8 @@ export default WithRouter(WithCache(CohortsContainer, {
       return {
         searchValue: '',
         currentPage: 1,
-        sortBy: 'NAME'
+        sortBy: 'NAME',
+        isArchived: false
       }
     }
   }
