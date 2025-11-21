@@ -61,7 +61,7 @@ const CohortsEditor = ({
           {/* <ScenarioSyncStatusContainer /> */}
         </div>
       </div>
-      <main>
+      <main className="pt-7">
         <Outlet />
       </main>
     </div>

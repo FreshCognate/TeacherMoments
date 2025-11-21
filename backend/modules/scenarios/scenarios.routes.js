@@ -4,8 +4,36 @@ import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js'
 import controller from './scenarios.controller.js';
 import scenarioCollaboratorsController from './scenarioCollaborators.controller.js';
 import buildLanguageValidation from '#core/app/helpers/buildLanguageValidation.js';
+import availableScenariosController from './availableScenarios.controller.js';
+import cohortScenariosController from './cohortScenarios.controller.js';
 
 export default [{
+  route: '/availableScenarios',
+  controller: availableScenariosController,
+  all: {
+    query: {
+      cohortId: Joi.string().required(),
+      searchValue: Joi.string().allow('').default(''),
+      currentPage: Joi.number().default(1),
+      accessType: Joi.string().allow('').default(''),
+      sortBy: Joi.string().valid('NAME', 'NEWEST', 'OLDEST').default('NAME'),
+    },
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+  }
+}, {
+  route: '/cohortScenarios',
+  controller: cohortScenariosController,
+  all: {
+    query: {
+      cohortId: Joi.string().required(),
+      searchValue: Joi.string().allow('').default(''),
+      currentPage: Joi.number().default(1),
+      accessType: Joi.string().allow('').default(''),
+      sortBy: Joi.string().valid('NAME', 'NEWEST', 'OLDEST').default('NAME'),
+    },
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+  }
+}, {
   route: '/scenarioCollaborators',
   controller: scenarioCollaboratorsController,
   all: {
