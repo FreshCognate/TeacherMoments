@@ -3,6 +3,7 @@ import ActionBar from '~/uikit/actionBars/components/actionBar';
 import map from 'lodash/map';
 import Badge from '~/uikit/badges/components/badge';
 import CollectionItem from './collectionItem';
+import { CollectionProps } from '../collections.types';
 
 const Collection = ({
   items,
@@ -30,7 +31,7 @@ const Collection = ({
   onPaginationClicked,
   onFiltersChanged,
   onSortByChanged
-}) => {
+}: CollectionProps) => {
   return (
     <div>
       <ActionBar
@@ -57,7 +58,7 @@ const Collection = ({
         onSortByChanged={onSortByChanged}
       />
       <div>
-        {map(items, (item) => {
+        {map(items, (item: any) => {
           const { id, name, meta } = getItemAttributes(item);
           const itemActions = getItemActions ? getItemActions(item) : {};
           return (
