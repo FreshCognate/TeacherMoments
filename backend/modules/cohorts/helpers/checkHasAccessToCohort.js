@@ -14,6 +14,10 @@ export default async ({ cohortId }, { user, models }) => {
     }
   });
 
+  if (cohort) {
+    return cohort;
+  }
+
   if (!cohort) {
     throw { message: 'You do not have access to this cohort', statusCode: 401 };
   }
