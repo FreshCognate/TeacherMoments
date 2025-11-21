@@ -1,17 +1,20 @@
 import checkHasAccessToCohort from '../helpers/checkHasAccessToCohort.js';
-import getCohortCollaboratorsPopulate from '../helpers/getCohortCollaboratorsPopulate.js';
+import getCohortCollaboratorsPopulate from "../helpers/getCohortCollaboratorsPopulate.js";
 
 export default async (props, options, context) => {
 
-  const { cohortId, update } = props;
+  const { cohortId } = props;
   const { models, user } = context;
 
   await checkHasAccessToCohort({ cohortId }, context);
 
-  const { path, select } = getCohortCollaboratorsPopulate();
+  const update = {
+    isArchived: true,
+    archivedAt: new Date(),
+    archivedBy: user._id
+  }
 
-  update.updatedBy = user._id;
-  update.updatedAt = new Date();
+  const { path, select } = getCohortCollaboratorsPopulate();
 
   const cohort = await models.Cohort.findByIdAndUpdate(cohortId, update, { new: true }).populate(path, select);
 

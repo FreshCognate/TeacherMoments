@@ -39,6 +39,7 @@ export default [{
         user: Joi.string().required(),
         role: Joi.string().required().valid('AUTHOR', 'OWNER')
       }),
+      isArchived: Joi.boolean(),
       isDeleted: Joi.boolean().invalid(true),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
