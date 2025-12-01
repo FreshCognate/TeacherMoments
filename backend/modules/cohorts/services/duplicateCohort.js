@@ -24,6 +24,7 @@ export default async (props, options, context) => {
     duplicatedCohortObject.createdBy = user._id;
     duplicatedCohortObject.invites = [{
       token: generateInviteToken(),
+      isActive: true,
       createdBy: user._id,
       createdAt: new Date()
     }]
