@@ -17,6 +17,13 @@ const schema = {
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     role: { type: String, enum: ['AUTHOR', 'OWNER'] }
   }],
+  invites: [{
+    _id: false,
+    token: { type: String },
+    expiresAt: { type: Date },
+    createdAt: { type: Date, default: Date.now },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  }],
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   updatedAt: { type: Date },

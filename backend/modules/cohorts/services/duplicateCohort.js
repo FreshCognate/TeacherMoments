@@ -1,5 +1,6 @@
 import omit from 'lodash/omit.js';
 import checkHasAccessToCohort from '../helpers/checkHasAccessToCohort.js';
+import generateInviteToken from '../helpers/generateInviteToken.js';
 
 export default async (props, options, context) => {
 
@@ -21,6 +22,11 @@ export default async (props, options, context) => {
     duplicatedCohortObject.originalCohort = existingCohort._id;
     duplicatedCohortObject.createdAt = new Date();
     duplicatedCohortObject.createdBy = user._id;
+    duplicatedCohortObject.invites = [{
+      token: generateInviteToken(),
+      createdBy: user._id,
+      createdAt: new Date()
+    }]
 
     const bulkCohorts = await models.Cohort.create([duplicatedCohortObject], { session });
     newCohort = bulkCohorts[0];
