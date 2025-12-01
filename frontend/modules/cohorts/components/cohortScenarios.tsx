@@ -32,7 +32,7 @@ const CohortScenarios = ({
   return (
     <div className="grid grid-cols-2 gap-10 px-10 py-4">
       <div className="border border-lm-1 p-4 dark:border-dm-2 rounded-md">
-        <Title title="Cohort scenarios" />
+        <Title title="Cohort scenarios" className="mb-2" />
         <CohortScenariosListContainer />
       </div>
       <div className="border border-lm-1 p-4 dark:border-dm-2 rounded-md">
