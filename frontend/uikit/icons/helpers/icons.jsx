@@ -182,6 +182,17 @@ export default {
     ]
   },
 
+  sort: {
+    viewBox: "0 0 24 24",
+    elements: [
+      <path d="M10 14H2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />,
+      <path d="M8 10H2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />,
+      <path d="M6 6H2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />,
+      <path d="M12 18H2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />,
+      <path d="M19 20V4M19 20L22 17M19 20L16 17M19 4L22 7M19 4L16 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    ]
+  },
+
   done: {
     viewBox: "0 0 24 24",
     elements: [
