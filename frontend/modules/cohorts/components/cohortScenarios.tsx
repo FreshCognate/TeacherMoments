@@ -5,12 +5,6 @@ import Title from '~/uikit/content/components/title';
 import CohortScenariosListContainer from '../containers/cohortScenariosListContainer';
 
 const CohortScenarios = ({
-  cohortScenarios,
-  cohortScenariosSearchValue,
-  cohortScenariosCurrentPage,
-  cohortScenariosTotalPages,
-  cohortScenariosIsLoading,
-  cohortScenariosIsSyncing,
   availableScenarios,
   availableScenariosSearchValue,
   availableScenariosCurrentPage,
@@ -18,21 +12,11 @@ const CohortScenarios = ({
   availableScenariosIsLoading,
   availableScenariosIsSyncing,
   getItemAttributes,
-  getCohortScenariosItemActions,
   getAvailableScenariosItemActions,
-  onCohortScenariosSearchValueChange,
-  onCohortScenariosPaginationClicked,
-  onCohortScenariosItemActionClicked,
   onAvailableScenariosSearchValueChange,
   onAvailableScenariosPaginationClicked,
   onAvailableScenariosItemActionClicked
 }: {
-  cohortScenarios: Scenario[],
-  cohortScenariosSearchValue: string,
-  cohortScenariosCurrentPage: number,
-  cohortScenariosTotalPages: number,
-  cohortScenariosIsLoading: boolean,
-  cohortScenariosIsSyncing: boolean,
   availableScenarios: Scenario[],
   availableScenariosSearchValue: string,
   availableScenariosCurrentPage: number,
@@ -40,11 +24,7 @@ const CohortScenarios = ({
   availableScenariosIsLoading: boolean,
   availableScenariosIsSyncing: boolean,
   getItemAttributes: (item: Scenario) => any,
-  getCohortScenariosItemActions: () => any[],
   getAvailableScenariosItemActions: () => any[],
-  onCohortScenariosSearchValueChange: (searchValue: string) => void,
-  onCohortScenariosPaginationClicked: (action: string) => void,
-  onCohortScenariosItemActionClicked: ({ itemId, action }: { itemId: string, action: string }) => void
   onAvailableScenariosSearchValueChange: (searchValue: string) => void,
   onAvailableScenariosPaginationClicked: (action: string) => void,
   onAvailableScenariosItemActionClicked: ({ itemId, action }: { itemId: string, action: string }) => void
@@ -54,22 +34,6 @@ const CohortScenarios = ({
       <div className="border border-lm-1 p-4 dark:border-dm-2 rounded-md">
         <Title title="Cohort scenarios" />
         <CohortScenariosListContainer />
-        <Collection
-          items={cohortScenarios}
-          getItemActions={getCohortScenariosItemActions}
-          getItemAttributes={getItemAttributes}
-          searchPlaceholder="Search scenarios..."
-          searchValue={cohortScenariosSearchValue}
-          currentPage={cohortScenariosCurrentPage}
-          totalPages={cohortScenariosTotalPages}
-          hasSearch
-          hasPagination
-          isLoading={cohortScenariosIsLoading}
-          isSyncing={cohortScenariosIsSyncing}
-          onSearchValueChange={onCohortScenariosSearchValueChange}
-          onPaginationClicked={onCohortScenariosPaginationClicked}
-          onItemActionClicked={onCohortScenariosItemActionClicked}
-        />
       </div>
       <div className="border border-lm-1 p-4 dark:border-dm-2 rounded-md">
         <Title title="Available scenarios" />

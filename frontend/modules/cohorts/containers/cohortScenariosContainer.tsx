@@ -38,13 +38,6 @@ class CohortScenariosContainer extends Component<CohortScenariosProps> {
     }
   }
 
-  getCohortScenariosItemActions = () => {
-    return [{
-      action: 'REMOVE',
-      text: 'Remove'
-    }]
-  }
-
   getAvailableScenariosItemActions = () => {
     return [{
       action: 'ADD',
@@ -53,38 +46,6 @@ class CohortScenariosContainer extends Component<CohortScenariosProps> {
   }
 
   debounceFetch = debounce((fetch) => fetch(), 1000)
-
-  onCohortScenariosSearchValueChange = (searchValue: string) => {
-    this.props.cohortScenarios.setStatus('syncing');
-    this.props.cohortScenarios.setQuery({ searchValue, currentPage: 1 });
-    this.debounceFetch(this.props.cohortScenarios.fetch);
-  }
-
-  onCohortScenariosPaginationClicked = (action: string) => {
-    const { setStatus, setQuery, fetch, query } = this.props.cohortScenarios;
-    setStatus('syncing');
-    let currentPage = query.currentPage;
-    if (action === 'up') {
-      currentPage++;
-    } else {
-      currentPage--;
-    }
-    setQuery({ currentPage });
-    fetch();
-  }
-
-  onCohortScenariosItemActionClicked = ({ itemId, action }: { itemId: string, action: string }) => {
-    if (action === 'REMOVE') {
-      this.props.cohortScenarios.setStatus('syncing');
-      axios.put(`/api/cohorts/${this.props.router.params.id}`, {
-        scenarioId: itemId,
-        intent: 'REMOVE'
-      }).then(() => {
-        this.props.availableScenarios.fetch();
-        this.props.cohortScenarios.fetch();
-      });
-    }
-  }
 
   onAvailableScenariosSearchValueChange = (searchValue: string) => {
     this.props.availableScenarios.setStatus('syncing');
@@ -136,12 +97,6 @@ class CohortScenariosContainer extends Component<CohortScenariosProps> {
 
     return (
       <CohortScenarios
-        cohortScenarios={cohortScenariosData}
-        cohortScenariosSearchValue={cohortScenariosQuery.searchValue}
-        cohortScenariosCurrentPage={cohortScenariosQuery.currentPage}
-        cohortScenariosTotalPages={cohortScenariosResponse?.totalPages || 1}
-        cohortScenariosIsLoading={cohortScenariosStatus === 'loading' || cohortScenariosStatus === 'unresolved'}
-        cohortScenariosIsSyncing={cohortScenariosStatus === 'syncing'}
         availableScenarios={availableScenariosData}
         availableScenariosSearchValue={availableScenariosQuery.searchValue}
         availableScenariosCurrentPage={availableScenariosQuery.currentPage}
@@ -149,11 +104,7 @@ class CohortScenariosContainer extends Component<CohortScenariosProps> {
         availableScenariosIsLoading={availableScenariosStatus === 'loading' || availableScenariosStatus === 'unresolved'}
         availableScenariosIsSyncing={availableScenariosStatus === 'syncing'}
         getItemAttributes={this.getItemAttributes}
-        getCohortScenariosItemActions={this.getCohortScenariosItemActions}
         getAvailableScenariosItemActions={this.getAvailableScenariosItemActions}
-        onCohortScenariosSearchValueChange={this.onCohortScenariosSearchValueChange}
-        onCohortScenariosPaginationClicked={this.onCohortScenariosPaginationClicked}
-        onCohortScenariosItemActionClicked={this.onCohortScenariosItemActionClicked}
         onAvailableScenariosSearchValueChange={this.onAvailableScenariosSearchValueChange}
         onAvailableScenariosPaginationClicked={this.onAvailableScenariosPaginationClicked}
         onAvailableScenariosItemActionClicked={this.onAvailableScenariosItemActionClicked}
