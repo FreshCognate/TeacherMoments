@@ -1,4 +1,4 @@
-FROM node:25
+FROM node:24
 WORKDIR /usr/server/app
 COPY ./backend/package.json ./server/
 COPY ./yarn.lock ./server/

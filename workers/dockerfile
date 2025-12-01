@@ -1,4 +1,4 @@
-FROM node:25
+FROM node:24
 WORKDIR /usr/server/app
 RUN apt-get -y update && apt-get -y upgrade && apt-get install -y --no-install-recommends ffmpeg
 COPY ./backend/package.json ./backend/
