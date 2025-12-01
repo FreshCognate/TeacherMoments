@@ -34,6 +34,7 @@ const schema = {
       ref: 'Cohort',
       required: true
     },
+    sortOrder: { type: Number },
     addedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'

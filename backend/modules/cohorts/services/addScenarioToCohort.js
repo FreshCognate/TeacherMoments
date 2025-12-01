@@ -1,3 +1,4 @@
+import getScenariosCountByCohortId from '../../scenarios/services/getScenariosCountByCohortId.js';
 import checkHasAccessToCohort from '../helpers/checkHasAccessToCohort.js';
 import getCohortCollaboratorsPopulate from '../helpers/getCohortCollaboratorsPopulate.js';
 
@@ -15,8 +16,11 @@ export default async (props, options, context) => {
 
   const { scenarioId } = update;
 
+  const { count } = await getScenariosCountByCohortId({ cohortId }, {}, context);
+
   const scenarioCohort = {
     cohort: cohortId,
+    sortOrder: count,
     addedBy: updatedBy,
     addedAt: updatedAt
   };
