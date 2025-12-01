@@ -2,7 +2,7 @@ import React from 'react';
 import Icons from '../helpers/icons';
 import map from 'lodash/map';
 
-const Icon = ({ icon, size, className, ariaLabel }) => {
+const Icon = ({ icon, size, className, ariaLabel }: { icon: string, size?: number, className?: string, ariaLabel?: string }) => {
   const iconSize = size || 24;
 
   if (!icon) {
@@ -10,12 +10,12 @@ const Icon = ({ icon, size, className, ariaLabel }) => {
     return null;
   }
 
-  if (!Icons[icon]) {
+  if (!Icons[icon as keyof typeof Icons]) {
     console.warn(`${icon} icon does not exist`);
     return null;
   }
 
-  const elements = map(Icons[icon].elements, (element, index) => {
+  const elements = map(Icons[icon as keyof typeof Icons].elements, (element, index) => {
     return React.cloneElement(element, { key: index });
   });
 
