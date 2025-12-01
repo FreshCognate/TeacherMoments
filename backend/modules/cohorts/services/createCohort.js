@@ -17,6 +17,7 @@ export default async (props, options, context) => {
     }],
     invites: [{
       token: generateInviteToken(),
+      isActive: true,
       createdBy: user._id,
       createdAt: new Date()
     }]

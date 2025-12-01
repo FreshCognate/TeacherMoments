@@ -10,6 +10,7 @@ import unarchiveCohortById from './services/unarchiveCohortById.js';
 import has from 'lodash/has.js';
 import addScenarioToCohort from './services/addScenarioToCohort.js';
 import removeScenarioFromCohort from './services/removeScenarioFromCohort.js';
+import generateCohortInvite from './services/generateCohortInvite.js';
 
 export default {
 
@@ -45,6 +46,11 @@ export default {
   },
 
   update: async function ({ param, body }, context) {
+
+    if (body.intent === 'CREATE_INVITE') {
+      const cohort = await generateCohortInvite({ cohortId: param }, {}, context);
+      return { cohort };
+    }
 
     if (has(body, 'scenarioId')) {
       if (body.intent === 'ADD') {
