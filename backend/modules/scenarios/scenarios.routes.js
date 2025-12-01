@@ -32,6 +32,16 @@ export default [{
       sortBy: Joi.string().valid('NAME', 'NEWEST', 'OLDEST').default('NAME'),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+  },
+  create: {
+    body: {
+      cohortId: Joi.string().required(),
+      scenarios: Joi.array().items({
+        _id: Joi.string().required(),
+        sortOrder: Joi.number().required()
+      })
+    },
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   }
 }, {
   route: '/scenarioCollaborators',
