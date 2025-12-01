@@ -55,7 +55,7 @@ class CohortsContainer extends Component<CohortsContainerProps> {
         if (type === 'CREATE') {
           axios.post('/api/cohorts', modal).then((response) => {
             const { cohort } = response.data;
-            this.props.router.navigate(`/cohorts/${cohort._id}/create`);
+            this.props.router.navigate(`/cohorts/${cohort._id}/overview`);
           }).catch(handleRequestError);
         }
       }
@@ -99,7 +99,7 @@ class CohortsContainer extends Component<CohortsContainerProps> {
     cohorts.setStatus('syncing');
     axios.post(`/api/cohorts`, { cohortId }).then((response) => {
       const newCohortId = response.data.cohort._id;
-      this.props.router.navigate(`/cohorts/${newCohortId}/create`);
+      this.props.router.navigate(`/cohorts/${newCohortId}/overview`);
     }).catch(handleRequestError);
   }
 

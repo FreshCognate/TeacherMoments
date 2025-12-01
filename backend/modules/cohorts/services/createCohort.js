@@ -1,4 +1,5 @@
 import createSlide from "../../slides/services/createSlide.js";
+import generateInviteToken from "../helpers/generateInviteToken.js";
 
 export default async (props, options, context) => {
 
@@ -13,6 +14,11 @@ export default async (props, options, context) => {
     collaborators: [{
       user: user._id,
       role: 'OWNER'
+    }],
+    invites: [{
+      token: generateInviteToken(),
+      createdBy: user._id,
+      createdAt: new Date()
     }]
   };
 
