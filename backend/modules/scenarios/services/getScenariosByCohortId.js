@@ -1,66 +1,53 @@
-import getTotalPages from '#core/app/helpers/getTotalPages.js';
-import getSearchFromSearchValue from '#core/app/helpers/getSearchFromSearchValue.js';
-import getModelPaginationByCurrentPage from '#core/app/helpers/getModelPaginationByCurrentPage.js';
+import mongoose from 'mongoose';
+import checkHasAccessToCohort from '../../cohorts/helpers/checkHasAccessToCohort.js';
 
 export default async (props, options, context) => {
 
   const {
-    cohortId,
-    accessType = null
+    cohortId
   } = props;
 
   let {
-    searchValue = '',
-    currentPage = 1,
-    sortBy = 'NAME',
   } = options;
+
+  await checkHasAccessToCohort({ cohortId }, context);
 
   const { models, user } = context;
 
-  let search = { isDeleted: false };
-  let searchOptions = {};
-
-  if (searchValue.length) {
-    getSearchFromSearchValue(searchValue, ['name'], search);
-  }
-
-  if (currentPage) {
-    currentPage = parseInt(currentPage);
-    getModelPaginationByCurrentPage(currentPage, searchOptions);
-  }
-
-  if (accessType) {
-    search.accessType = accessType;
-  }
-
-  let sort = 'name';
-
-  if (sortBy === 'NEWEST') {
-    sort = '-createdAt';
-  } else if (sortBy === 'OLDEST') {
-    sort = 'createdAt';
-  }
-
-  search.collaborators = {
-    $elemMatch: {
-      user: user._id,
-      role: { $in: ['OWNER', 'AUTHOR'] }
+  const scenarios = await models.Scenario.aggregate([{
+    $match: {
+      "cohorts.cohort": new mongoose.Types.ObjectId(cohortId),
+      isDeleted: false
     }
-  }
-
-  search['cohorts.cohort'] = cohortId;
-
-  const count = await models.Scenario.countDocuments(search);
-
-  const totalPages = getTotalPages(count);
-
-  const scenarios = await models.Scenario.find(search, null, searchOptions).sort(sort);
+  }, {
+    $addFields: {
+      filteredCohorts: {
+        $filter: {
+          input: "$cohorts",
+          as: "cohort",
+          cond: { $eq: ["$$cohort.cohort", new mongoose.Types.ObjectId(cohortId)] }
+        }
+      }
+    }
+  }, {
+    $addFields: {
+      cohortSortValue: {
+        $arrayElemAt: ["$filteredCohorts.sortOrder", 0]
+      }
+    }
+  }, {
+    $sort: {
+      cohortSortValue: 1
+    }
+  }, {
+    $project: {
+      filteredCohorts: 0,
+      cohortSortValue: 0,
+    }
+  }]);
 
   return {
-    scenarios,
-    count,
-    currentPage,
-    totalPages
+    scenarios
   };
 
 };
