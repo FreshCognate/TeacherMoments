@@ -16,13 +16,14 @@ const CohortScenarioListItem = ({
     transform: CSS.Transform.toString(transform),
     transition,
     boxShadow: isDragging ? '0 4px 12px rgba(0,0,0,0.08)' : undefined,
+    zIndex: isDragging ? 10 : 0
   };
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-lm-1 dark:bg-dm-1 rounded-md p-4 flex items-center group"
+      className="bg-lm-2 dark:bg-dm-2 rounded-md p-4 flex items-center group"
     >
       <div
         {...attributes}
