@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import BaseButton from './baseButton';
 import classnames from 'classnames';
 
@@ -16,6 +16,20 @@ export default function Button({
   isDisabled,
   isFullWidth,
   onClick
+}: {
+  text?: string,
+  html?: string,
+  title?: string,
+  component?: ReactElement,
+  icon?: string,
+  iconPosition?: string,
+  color?: string,
+  className?: string,
+  style?: any,
+  size?: 'rg',
+  isDisabled?: boolean,
+  isFullWidth?: boolean,
+  onClick: (event: Event) => void
 }) {
 
   const classes = classnames('rounded-md px-4 py-2 transition-colors text-sm', {
