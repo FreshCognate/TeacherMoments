@@ -21,5 +21,6 @@ export default [
       route(":id/settings", "./modules/cohorts/routes/cohortSettingsRoute.tsx", { id: 'settings' })
     ])
   ]),
-  route("/play/:publishLink", "./modules/scenarios/routes/playScenarioRoute.tsx")
+  route("/play/:publishLink", "./modules/scenarios/routes/playScenarioRoute.tsx"),
+  route("/invite/:inviteId", "./modules/invites/routes/inviteRoute.tsx")
 ] satisfies RouteConfig;
