@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useMatches,
 } from "react-router";
 
 import type { Route } from "./.react-router/types/+types/root";
@@ -14,6 +15,8 @@ import axios from 'axios';
 import '~/modules/index';
 import NavigationContainer from './modules/navigation/containers/navigationContainer';
 import DialogsContainer from './core/dialogs/containers/dialogsContainer';
+import each from 'lodash/each';
+import classnames from 'classnames';
 
 export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -69,6 +72,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App(props) {
+
+  const matches = useMatches();
+
+  let isNavigationVisible = true;
+
+  each(matches, match => {
+
+    if (match.handle && match.handle.isNavigationVisible === false) {
+      isNavigationVisible = false;
+    }
+
+  });
+
   if (typeof window !== 'undefined') {
     window.NODE_ENV = props.loaderData.NODE_ENV;
     window.STORAGE_NAME = props.loaderData.STORAGE_NAME;
@@ -76,11 +92,13 @@ export default function App(props) {
   }
 
   return (
-    <div className="pt-14">
+    <div className={classnames({ "pt-14": isNavigationVisible })}>
       <DialogsContainer />
-      <NavigationContainer loaderData={props.loaderData} />
+      {(isNavigationVisible) && (
+        <NavigationContainer loaderData={props.loaderData} />
+      )}
       <Outlet />
-    </div>
+    </div >
   );
 }
 
