@@ -18,6 +18,8 @@ export default async (props, options, context) => {
     $set: { 'invites.$[invite].isActive': false },
   }, {
     arrayFilters: [{ 'invite.isActive': true }],
+  }).catch(() => {
+    // If invites field doesn't exist, ignore the error
   });
 
   const newInvite = {
@@ -30,7 +32,7 @@ export default async (props, options, context) => {
   const cohort = await models.Cohort.findByIdAndUpdate(cohortId, {
     $push: { invites: newInvite },
     updatedBy: createdBy,
-    udpatedAt: createdAt
+    updatedAt: createdAt
   }, {
     new: true,
   }).populate(path, select);
