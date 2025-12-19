@@ -7,7 +7,7 @@ export default async (props, options, context) => {
 
   const userCohort = {
     cohort: cohortId,
-    addedAt: addedAt
+    addedAt
   };
 
   const updatedUser = await models.User.findOneAndUpdate({
@@ -21,6 +21,7 @@ export default async (props, options, context) => {
 
   if (!updatedUser) {
     const existingUser = await models.User.findOne({
+      _id: user._id,
       'cohorts.cohort': cohortId
     })
     if (!existingUser) throw { message: 'This user does not exist', statusCode: 404 };

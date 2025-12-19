@@ -6,6 +6,7 @@ import scenarioCollaboratorsController from './scenarioCollaborators.controller.
 import buildLanguageValidation from '#core/app/helpers/buildLanguageValidation.js';
 import availableScenariosController from './availableScenarios.controller.js';
 import cohortScenariosController from './cohortScenarios.controller.js';
+import cohortUsersController from './cohortUsers.controller.js';
 
 export default [{
   route: '/availableScenarios',
@@ -28,8 +29,6 @@ export default [{
       cohortId: Joi.string().required(),
       searchValue: Joi.string().allow('').default(''),
       currentPage: Joi.number().default(1),
-      accessType: Joi.string().allow('').default(''),
-      sortBy: Joi.string().valid('NAME', 'NEWEST', 'OLDEST').default('NAME'),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
@@ -40,6 +39,17 @@ export default [{
         _id: Joi.string().required(),
         sortOrder: Joi.number().required()
       })
+    },
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+  }
+}, {
+  route: '/cohortUsers',
+  controller: cohortUsersController,
+  all: {
+    query: {
+      cohortId: Joi.string().required(),
+      searchValue: Joi.string().allow('').default(''),
+      currentPage: Joi.number().default(1)
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   }
