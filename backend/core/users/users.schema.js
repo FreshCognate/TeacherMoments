@@ -15,6 +15,18 @@ const userSchema = {
   registrationId: String,
   forgotPasswordAt: { type: Date },
   forgotPasswordId: String,
+  cohorts: [{
+    _id: false,
+    cohort: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Cohort',
+      required: true
+    },
+    addedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   updatedAt: { type: Date },
