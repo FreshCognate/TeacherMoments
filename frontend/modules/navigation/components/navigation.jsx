@@ -1,12 +1,18 @@
 import classNames from 'classnames';
 import React from 'react';
 import { Link, NavLink } from 'react-router';
+import Button from '~/uikit/buttons/components/button';
+import Options from '~/uikit/dropdowns/components/options';
 
 const Navigation = ({
-  authentication
+  authentication,
+  isLoggingOut,
+  onLogoutClicked
 }) => {
   return (
-    <div className="flex items-center fixed w-full top-0 z-30 justify-between h-14 px-4  bg-lm-0 dark:bg-dm-0 border-b border-b-lm-3 dark:border-b-dm-2">
+    <div className={classNames("flex items-center fixed w-full top-0 z-30 justify-between h-14 px-4  bg-lm-0 dark:bg-dm-0 border-b border-b-lm-3 dark:border-b-dm-2",
+      { "opacity-60": isLoggingOut }
+    )}>
       <div>
         <nav className="flex gap-x-4">
           <NavLink
@@ -43,9 +49,7 @@ const Navigation = ({
       </div>
       <div>
         {authentication && (
-          <div className="text-black/60 dark:text-white/60">
-            {`Logged in as ${authentication.firstName} ${authentication.lastName}`}
-          </div>
+          <Button text="Logout" isDisabled={isLoggingOut} onClick={onLogoutClicked} />
         )}
         {(!authentication) && (
           <Link to="/login" className="text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 transition-colors">
