@@ -11,5 +11,5 @@ export default async ({ inviteId }, options, context) => {
     }
   });
 
-  return cohort;
+  return { cohort };
 }
