@@ -5,13 +5,19 @@ export default {
 
   create: async function ({ body }, context) {
 
+    const { user } = context;
+
     const { inviteId } = body;
 
     if (inviteId) {
-      const cohort = await checkInviteIdIsValid({ inviteId }, {}, context);
+      const { cohort } = await checkInviteIdIsValid({ inviteId }, {}, context);
       if (cohort) {
-        await addUserToCohort({ cohortId: cohort._id }, {}, context);
-        return cohort;
+        if (user && user._id) {
+          const cohortUser = await addUserToCohort({ cohortId: cohort._id }, {}, context);
+          return { cohort, user: cohortUser };
+        } else {
+          return { cohort };
+        }
       }
     }
 
