@@ -6,6 +6,7 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import get from 'lodash/get';
 import addModal from '~/core/dialogs/helpers/addModal';
 import LoginAndSignupDialogContainer from '~/modules/authentication/containers/loginAndSignupDialogContainer';
+import LoginDialogContainer from '~/modules/authentication/containers/loginDialogContainer';
 
 export type InviteContainerProps = {
   router: any,
@@ -32,7 +33,7 @@ class InviteContainer extends Component<InviteContainerProps> {
               const { type } = payload;
               switch (type) {
                 case 'LOGIN':
-                  addModal({ title: 'Login' }, () => { });
+                  addModal({ title: 'Login', component: <LoginDialogContainer /> }, () => { });
                   break;
                 case 'ANONYMOUSLY':
                   addModal({ title: 'Anonymously login' }, () => { });
