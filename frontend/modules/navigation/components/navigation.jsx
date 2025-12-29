@@ -7,6 +7,7 @@ import Options from '~/uikit/dropdowns/components/options';
 const Navigation = ({
   authentication,
   isLoggingOut,
+  onLoginClicked,
   onLogoutClicked
 }) => {
   return (
@@ -52,9 +53,7 @@ const Navigation = ({
           <Button text="Logout" isDisabled={isLoggingOut} onClick={onLogoutClicked} />
         )}
         {(!authentication) && (
-          <Link to="/login" className="text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 transition-colors">
-            Login
-          </Link>
+          <Button text="Login" onClick={onLoginClicked} />
         )}
       </div>
     </div>
