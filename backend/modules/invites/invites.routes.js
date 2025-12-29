@@ -10,6 +10,6 @@ export default [{
     body: {
       inviteId: Joi.string()
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'PARTICIPANT'])],
+    middleware: [],
   }
 }];
