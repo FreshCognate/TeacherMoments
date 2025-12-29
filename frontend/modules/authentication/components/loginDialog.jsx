@@ -1,14 +1,17 @@
 import React from 'react';
 import FormContainer from '~/core/forms/containers/formContainer';
+import Alert from '~/uikit/alerts/components/alert';
 import Button from '~/uikit/buttons/components/button';
 
-const Login = ({
+const LoginDialog = ({
   model,
+  hasError,
+  error,
   onLoginFormUpdate,
   onLoginButtonClicked
 }) => {
   return (
-    <div className="max-w-md mx-auto">
+    <div className="px-4 pb-4">
       <FormContainer
         schema={{
           email: {
@@ -24,9 +27,14 @@ const Login = ({
         model={model}
         onUpdate={onLoginFormUpdate}
       />
+      {(hasError) && (
+        <div className="py-4">
+          <Alert text={error} type="warning" />
+        </div>
+      )}
       <Button text="Login" onClick={onLoginButtonClicked} />
     </div>
   );
 };
 
-export default Login;
+export default LoginDialog;

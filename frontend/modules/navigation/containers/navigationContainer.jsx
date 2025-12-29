@@ -5,6 +5,8 @@ import connectSockets from '~/core/sockets/helpers/connectSockets';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import axios from 'axios';
 import disconnectSockets from '~/core/sockets/helpers/disconnectSockets';
+import LoginDialogContainer from '~/modules/authentication/containers/loginDialogContainer';
+import addModal from '~/core/dialogs/helpers/addModal';
 
 class NavigationContainer extends Component {
 
@@ -16,6 +18,13 @@ class NavigationContainer extends Component {
 
   componentWillUnmount = () => {
     disconnectSockets();
+  }
+
+  onLoginClicked = () => {
+    addModal({
+      title: 'Login',
+      component: <LoginDialogContainer />
+    })
   }
 
   onLogoutClicked = () => {
@@ -31,6 +40,7 @@ class NavigationContainer extends Component {
       <Navigation
         authentication={this.props.authentication.data}
         isLoggingOut={this.state.isLoggingOut}
+        onLoginClicked={this.onLoginClicked}
         onLogoutClicked={this.onLogoutClicked}
       />
     );

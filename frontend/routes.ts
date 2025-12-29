@@ -2,7 +2,6 @@ import { type RouteConfig, index, layout, prefix, route } from "@react-router/de
 
 export default [
   index("./modules/dashboard/routes/homeRoute.tsx"),
-  route("login", "./modules/authentication/routes/loginRoute.tsx"),
   ...prefix("scenarios", [
     index("./modules/scenarios/routes/scenariosRoute.tsx"),
     layout("./modules/scenarios/routes/scenarioEditorLayout.tsx", [
