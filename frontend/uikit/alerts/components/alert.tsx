@@ -14,6 +14,11 @@ const Alert = ({
   text,
   actionText,
   onActionClicked
+}: {
+  type?: 'info' | 'warning',
+  text: string,
+  actionText?: string,
+  onActionClicked?: () => void
 }) => {
 
   const iconClassName = classnames("p-1 rounded-full mr-3", {
@@ -23,7 +28,7 @@ const Alert = ({
 
   return (
     <div className="flex items-center p-2 bg-lm-0/60 rounded-lg dark:bg-dm-0/30">
-      {(ICONS[type]) && (
+      {(type && ICONS[type]) && (
         <div className={iconClassName}>
           <Icon icon={ICONS[type]} className="text-button-default" />
         </div>
