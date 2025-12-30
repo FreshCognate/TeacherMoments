@@ -7,6 +7,7 @@ import get from 'lodash/get';
 import addModal from '~/core/dialogs/helpers/addModal';
 import LoginAndSignupDialogContainer from '~/modules/authentication/containers/loginAndSignupDialogContainer';
 import LoginDialogContainer from '~/modules/authentication/containers/loginDialogContainer';
+import SignupDialogContainer from '~/modules/authentication/containers/signupDialogContainer';
 
 export type InviteContainerProps = {
   router: any,
@@ -18,11 +19,14 @@ class InviteContainer extends Component<InviteContainerProps> {
     const { params } = this.props.router;
     if (params.inviteId) {
       axios.post('/api/invites', { inviteId: params.inviteId }).then((response) => {
+
         const cohort = get(response, 'data.cohort');
         const user = get(response, 'data.user');
+
         if (cohort && user) {
           this.props.router.navigate(`/cohorts/${cohort._id}/overview`);
         } else {
+
           addModal({
             title: 'Login or create an account',
             body: 'Please choose one of the following options:',
@@ -39,7 +43,7 @@ class InviteContainer extends Component<InviteContainerProps> {
                   addModal({ title: 'Anonymously login' }, () => { });
                   break;
                 case 'CREATE':
-                  addModal({ title: 'Create an account' }, () => { });
+                  addModal({ title: 'Create an account', component: <SignupDialogContainer /> }, () => { });
                   break;
               }
             }
