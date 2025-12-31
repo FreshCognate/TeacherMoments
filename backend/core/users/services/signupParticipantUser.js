@@ -1,5 +1,5 @@
 import uuid from 'node-uuid';
-import { isEmail } from 'validator';
+import validator from 'validator';
 import crypto from 'crypto';
 import createHash from '#core/authentication/helpers/createHash.js';
 import sendEmail from '#core/mailer/helpers/sendEmail.js';
@@ -17,7 +17,7 @@ export default async (props, options, context) => {
 
   const lowerCaseEmail = email.toLowerCase();
 
-  const isValidEmail = isEmail(email);
+  const isValidEmail = validator.isEmail(email);
 
   if (username.length < 6) throw { message: 'Username is too short', statusCode: 400 };
 

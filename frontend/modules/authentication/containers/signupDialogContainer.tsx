@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SignupDialog from '../components/signupDialog';
 import axios from 'axios';
 import has from 'lodash/has';
-import { isEmail, isStrongPassword } from 'validator';
+import validator from 'validator';
 import sanitizeUsername from '../helpers/sanitizeUsername';
 import getPasswordStrength from '../helpers/getPasswordStrength';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
@@ -29,11 +29,11 @@ class SignupDialogContainer extends Component {
       isSignupButtonDisabled = true;
       error = 'Passwords do not match';
     }
-    if (!isStrongPassword(password)) {
+    if (!validator.isStrongPassword(password)) {
       isSignupButtonDisabled = true;
       error = 'Passwords is not strong enough';
     }
-    if (!isEmail(email)) {
+    if (!validator.isEmail(email)) {
       isSignupButtonDisabled = true;
       error = 'Email is not valid';
     }
