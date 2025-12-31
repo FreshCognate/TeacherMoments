@@ -1,5 +1,5 @@
 import uuid from 'node-uuid';
-import isEmail from 'validator/lib/isEmail.js';
+import { isEmail } from 'validator';
 import crypto from 'crypto';
 import createHash from '#core/authentication/helpers/createHash.js';
 import sendEmail from '#core/mailer/helpers/sendEmail.js';
