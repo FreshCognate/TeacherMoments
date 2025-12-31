@@ -15,6 +15,11 @@ const userSchema = {
   registrationId: String,
   forgotPasswordAt: { type: Date },
   forgotPasswordId: String,
+  isVerified: { type: Boolean, default: false },
+  verificationCode: { type: String, select: false },
+  verificationCodeExpiry: { type: Date, select: false },
+  verificationAttempts: { type: Number, default: 0 },
+  verifiedAt: { type: Date },
   cohorts: [{
     _id: false,
     cohort: {

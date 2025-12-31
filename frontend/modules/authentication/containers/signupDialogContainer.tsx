@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import SignupDialog from '../components/signupDialog';
 import axios from 'axios';
-import get from 'lodash/get';
 import has from 'lodash/has';
 import isEmail from 'validator/lib/isEmail';
 import isStrongPassword from 'validator/lib/isStrongPassword';
+import sanitizeUsername from '../helpers/sanitizeUsername';
+import getPasswordStrength from '../helpers/getPasswordStrength';
+import handleRequestError from '~/core/app/helpers/handleRequestError';
 
 class SignupDialogContainer extends Component {
 
@@ -17,41 +19,12 @@ class SignupDialogContainer extends Component {
     error: ''
   }
 
-  sanitizeUsername = (username: string): string => {
-    return username
-      .toLowerCase()
-      .replace(/\s+/g, '-')
-      .replace(/[^a-z-]/g, '');
-  }
-
-  getPasswordStrength = (password: string) => {
-    let strength = 0;
-    const attributes = {
-      hasMinLength: password.length >= 8,
-      hasLowercase: /[a-z]/.test(password),
-      hasUppercase: /[A-Z]/.test(password),
-      hasNumber: /[0-9]/.test(password),
-      hasSymbol: /[^a-zA-Z0-9]/.test(password)
-    };
-
-    if (attributes.hasMinLength) strength++;
-    if (attributes.hasLowercase) strength++;
-    if (attributes.hasUppercase) strength++;
-    if (attributes.hasNumber) strength++;
-    if (attributes.hasSymbol) strength++;
-
-    return {
-      strength,
-      attributes
-    };
-  }
-
-  getIsSignupButtonDisabled = () => {
+  getIsValidNewUser = () => {
     const { username, email, password, confirmPassword } = this.state;
     let isSignupButtonDisabled = false;
     let error = '';
 
-    const passwordStrengthData = this.getPasswordStrength(password);
+    const passwordStrengthData = getPasswordStrength(password);
 
     if (password !== confirmPassword) {
       isSignupButtonDisabled = true;
@@ -69,6 +42,7 @@ class SignupDialogContainer extends Component {
       isSignupButtonDisabled = true;
       error = 'Username must be atleast 6 characters';
     }
+
     return {
       hasError: isSignupButtonDisabled,
       error,
@@ -80,18 +54,25 @@ class SignupDialogContainer extends Component {
 
   onSignupFormUpdate = ({ update }: { update: any }) => {
     if (has(update, 'username')) {
-      update.username = this.sanitizeUsername(update.username);
+      update.username = sanitizeUsername(update.username);
     }
     this.setState(update);
   }
 
   onSignupButtonClicked = () => {
-
+    const { hasError } = this.getIsValidNewUser();
+    if (hasError) {
+      return;
+    }
+    const { username, email, password, confirmPassword } = this.state;
+    axios.post(`/api/signup`, { username, email, password, confirmPassword }).then((response) => {
+      console.log(response);
+    }).catch(handleRequestError);
   }
 
   render() {
 
-    let { isSignupButtonDisabled, hasError, error, passwordAttributes, passwordStrength } = this.getIsSignupButtonDisabled();
+    let { isSignupButtonDisabled, hasError, error, passwordAttributes, passwordStrength } = this.getIsValidNewUser();
 
     return (
       <SignupDialog
