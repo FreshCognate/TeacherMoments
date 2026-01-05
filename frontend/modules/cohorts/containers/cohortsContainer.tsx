@@ -7,6 +7,8 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import get from 'lodash/get';
 import debounce from 'lodash/debounce';
 import WithRouter from '~/core/app/components/withRouter';
+import getCohortsActions from '../helpers/getCohortsActions';
+import getCohortsFilters from '../helpers/getCohortsFilters';
 
 interface CohortsContainerProps {
   cohorts: any,
@@ -115,12 +117,12 @@ class CohortsContainer extends Component<CohortsContainerProps> {
     return (
       <Cohorts
         cohorts={data}
-        actions={[{ action: 'CREATE', text: 'Create cohort', color: 'primary' }]}
+        actions={getCohortsActions()}
         searchValue={searchValue}
         currentPage={currentPage}
         totalPages={totalPages}
         filter={isArchived}
-        filters={[{ value: false, text: 'Live' }, { value: true, text: 'Archived' }]}
+        filters={getCohortsFilters()}
         sortBy={sortBy}
         sortByOptions={[{ value: 'NAME', text: 'Name' }, { value: 'NEWEST', text: 'Newest' }, { value: 'OLDEST', text: 'Oldest' }]}
         isSyncing={isSyncing}

@@ -1,6 +1,7 @@
 import getTotalPages from '#core/app/helpers/getTotalPages.js';
 import getSearchFromSearchValue from '#core/app/helpers/getSearchFromSearchValue.js';
 import getModelPaginationByCurrentPage from '#core/app/helpers/getModelPaginationByCurrentPage.js';
+import map from 'lodash/map.js';
 
 export default async (props, options, context) => {
 
@@ -38,11 +39,18 @@ export default async (props, options, context) => {
     sort = 'createdAt';
   }
 
-  search.collaborators = {
-    $elemMatch: {
-      user: user._id,
-      role: { $in: ['OWNER', 'AUTHOR'] }
+  if (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') {
+    search.collaborators = {
+      $elemMatch: {
+        user: user._id,
+        role: { $in: ['OWNER', 'AUTHOR'] }
+      }
     }
+  } else {
+    const usersCohortIds = map(user.cohorts, (cohort) => {
+      return cohort.cohort;
+    })
+    search._id = { $in: usersCohortIds };
   }
 
   const count = await models.Cohort.countDocuments(search);
