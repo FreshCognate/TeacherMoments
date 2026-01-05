@@ -28,7 +28,7 @@ export default async (props, options, context) => {
   const isExistingUser = await models.User.findOne({ email: lowerCaseEmail });
 
   if (isExistingUser) {
-    throw { message: 'This user already exists.', statusCode: 400 };
+    throw { message: 'This user already exists. Trying another username or email.', statusCode: 400 };
   }
 
   const createdAt = new Date();
@@ -58,6 +58,6 @@ export default async (props, options, context) => {
     textBody: `${verificationCode}`,
   })
 
-  return user;
+  return { _id: user._id };
 
 };
