@@ -11,5 +11,11 @@ export default [{
       password: Joi.string().required(),
       confirmPassword: Joi.string().required()
     },
+  },
+  update: {
+    param: 'id',
+    body: {
+      code: Joi.string().required()
+    },
   }
 }];

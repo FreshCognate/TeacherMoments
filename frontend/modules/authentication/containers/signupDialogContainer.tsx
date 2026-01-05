@@ -6,6 +6,8 @@ import validator from 'validator';
 import sanitizeUsername from '../helpers/sanitizeUsername';
 import getPasswordStrength from '../helpers/getPasswordStrength';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
+import addModal from '~/core/dialogs/helpers/addModal';
+import VerifyCodeDialogContainer from './verifyCodeDialogContainer';
 
 class SignupDialogContainer extends Component {
 
@@ -19,32 +21,41 @@ class SignupDialogContainer extends Component {
   }
 
   getIsValidNewUser = () => {
-    const { username, email, password, confirmPassword } = this.state;
+    const { username, email, password, confirmPassword, error, hasError } = this.state;
+    let hasErrorMessage = false;
     let isSignupButtonDisabled = false;
-    let error = '';
+    let errorMessage = '';
 
     const passwordStrengthData = getPasswordStrength(password);
 
     if (password !== confirmPassword) {
+      hasErrorMessage = true;
       isSignupButtonDisabled = true;
-      error = 'Passwords do not match';
+      errorMessage = 'Passwords do not match';
     }
     if (!validator.isStrongPassword(password)) {
+      hasErrorMessage = true;
       isSignupButtonDisabled = true;
-      error = 'Passwords is not strong enough';
+      errorMessage = 'Passwords is not strong enough';
     }
     if (!validator.isEmail(email)) {
+      hasErrorMessage = true;
       isSignupButtonDisabled = true;
-      error = 'Email is not valid';
+      errorMessage = 'Email is not valid';
     }
     if (username.length < 6) {
+      hasErrorMessage = true;
       isSignupButtonDisabled = true;
-      error = 'Username must be atleast 6 characters';
+      errorMessage = 'Username must be atleast 6 characters';
+    }
+    if (hasError) {
+      hasErrorMessage = true;
+      errorMessage = error;
     }
 
     return {
-      hasError: isSignupButtonDisabled,
-      error,
+      hasError: hasErrorMessage,
+      error: errorMessage,
       isSignupButtonDisabled,
       passwordStrength: passwordStrengthData.strength,
       passwordAttributes: passwordStrengthData.attributes
@@ -55,6 +66,8 @@ class SignupDialogContainer extends Component {
     if (has(update, 'username')) {
       update.username = sanitizeUsername(update.username);
     }
+    update.hasError = false;
+    update.error = '';
     this.setState(update);
   }
 
@@ -65,8 +78,14 @@ class SignupDialogContainer extends Component {
     }
     const { username, email, password, confirmPassword } = this.state;
     axios.post(`/api/signup`, { username, email, password, confirmPassword }).then((response) => {
-      console.log(response);
-    }).catch(handleRequestError);
+      const userId = response.data.user._id;
+      window.location.href = `${window.location.href}/verify/${userId}`;
+    }).catch((error) => {
+      const { statusCode, message } = error.response.data;
+      if (statusCode === 400) {
+        this.setState({ error: message, hasError: true })
+      }
+    });
   }
 
   render() {
