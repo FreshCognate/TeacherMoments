@@ -15,7 +15,7 @@ export default [{
       isArchived: Joi.boolean(),
       isDeleted: Joi.boolean()
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated],
   },
   create: {
     body: {
