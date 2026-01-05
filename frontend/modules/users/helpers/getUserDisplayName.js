@@ -1,4 +1,7 @@
 export default (user) => {
   if (!user) return `Unknown user`;
-  return `${user.firstName} ${user.lastName}`;
+  if (user.firstName && user.lastName) {
+    return `${user.firstName} ${user.lastName}`;
+  }
+  return user.username;
 }
