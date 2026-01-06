@@ -3,6 +3,7 @@ import CohortParticipantScenarios from '../components/cohortParticipantScenarios
 import WithCache from '~/core/cache/containers/withCache';
 import WithRouter from '~/core/app/components/withRouter';
 import { Scenario } from '~/modules/scenarios/scenarios.types';
+import find from 'lodash/find';
 
 interface CohortParticipantScenariosProps {
   cohortParticipantScenarios: {
@@ -20,7 +21,8 @@ interface CohortParticipantScenariosProps {
 class CohortParticipantScenariosContainer extends Component<CohortParticipantScenariosProps> {
 
   onPlayScenarioClicked = (scenarioId: string) => {
-    console.log('scenarioId', scenarioId);
+    const scenario = find(this.props.cohortParticipantScenarios.data, { _id: scenarioId });
+    this.props.router.navigate(`/play/${scenario.publishLink}?cohort=${this.props.router.params.id}`);
   }
 
   render() {

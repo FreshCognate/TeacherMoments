@@ -54,9 +54,17 @@ export default async ({ slideRef, router }) => {
     run.set({ activeSlideRef: slideRef, stages });
   }
 
+  const searchParams = new URLSearchParams(router.location.search);
+  const cohort = searchParams.get('cohort');
+
+  const newSearchParams = { slide: slideRef };
+  if (cohort) {
+    newSearchParams.cohort = cohort;
+  }
+
   router.navigate({
     pathname: router.pathname,
-    search: `?${createSearchParams({ slide: slideRef })}`,
+    search: `?${createSearchParams(newSearchParams)}`,
   }, { replace: true })
 
 }
