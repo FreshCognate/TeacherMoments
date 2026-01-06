@@ -1,11 +1,11 @@
-import checkHasAccessToCohort from '../helpers/checkHasAccessToCohort.js';
+import checkHasAccessToEditCohort from '../helpers/checkHasAccessToEditCohort.js';
 
 export default async (props, options, context) => {
 
   const { cohortId } = props;
   const { models, user } = context;
 
-  await checkHasAccessToCohort({ cohortId }, context);
+  await checkHasAccessToEditCohort({ cohortId }, context);
 
   const cohort = await models.Cohort.findByIdAndUpdate(cohortId, {
     isDeleted: true,

@@ -3,17 +3,19 @@ import { Link, Outlet } from 'react-router';
 import Loading from '~/uikit/loaders/components/loading';
 import truncate from 'lodash/truncate';
 import NavigationToggle from '~/uikit/toggles/components/navigationToggle';
-import { Cohort } from '../cohorts.types';
+import { Cohort as CohortType } from '../cohorts.types';
 
-const CohortsEditor = ({
+const Cohort = ({
   cohort,
   pathValue,
   isLoading,
+  isEditor,
   onToggleClicked
 }: {
-  cohort: Cohort,
+  cohort: CohortType,
   pathValue: string,
   isLoading: boolean,
+  isEditor: boolean,
   onToggleClicked: (pathValue: string | number) => void
 }) => {
   if (isLoading) return <Loading />
@@ -37,26 +39,28 @@ const CohortsEditor = ({
             </span>
           </div>
         </div>
-        <div className="w-1/3 flex justify-center">
-          <NavigationToggle
-            value={pathValue}
-            size="sm"
-            options={[{
-              value: 'overview',
-              text: 'Overview'
-            }, {
-              value: 'users',
-              text: 'Users'
-            }, {
-              value: 'scenarios',
-              text: 'Scenarios'
-            }, {
-              value: 'settings',
-              text: 'Settings'
-            }]}
-            onClick={onToggleClicked}
-          />
-        </div>
+        {(isEditor) && (
+          <div className="w-1/3 flex justify-center">
+            <NavigationToggle
+              value={pathValue}
+              size="sm"
+              options={[{
+                value: 'overview',
+                text: 'Overview'
+              }, {
+                value: 'users',
+                text: 'Users'
+              }, {
+                value: 'scenarios',
+                text: 'Scenarios'
+              }, {
+                value: 'settings',
+                text: 'Settings'
+              }]}
+              onClick={onToggleClicked}
+            />
+          </div>
+        )}
         <div className="w-1/3 flex justify-end text-sm">
           {/* <ScenarioSyncStatusContainer /> */}
         </div>
@@ -68,4 +72,4 @@ const CohortsEditor = ({
   );
 };
 
-export default CohortsEditor;
+export default Cohort;

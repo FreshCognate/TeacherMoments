@@ -11,6 +11,7 @@ import has from 'lodash/has.js';
 import addScenarioToCohort from './services/addScenarioToCohort.js';
 import removeScenarioFromCohort from './services/removeScenarioFromCohort.js';
 import generateCohortInvite from './services/generateCohortInvite.js';
+import getPublishedCohortById from './services/getPublishedCohortById.js';
 
 export default {
 
@@ -39,6 +40,14 @@ export default {
   },
 
   read: async function ({ param }, context) {
+
+    console.log(context.user.role);
+
+    if (context.user.role === 'PARTICIPANT') {
+      console.log('taka');
+      const cohort = await getPublishedCohortById({ cohortId: param }, {}, context);
+      return { cohort };
+    }
 
     const cohort = await getCohortById({ cohortId: param }, {}, context);
     return { cohort };

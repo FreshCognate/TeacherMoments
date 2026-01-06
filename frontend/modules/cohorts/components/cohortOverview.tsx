@@ -6,21 +6,25 @@ import getCohortInviteLink from '../helpers/getCohortInviteLink';
 
 const CohortOverview = ({
   cohortId,
-  activeInvite
+  activeInvite,
+  isEditor,
 }: {
   cohortId: string,
-  activeInvite: Invite | undefined
+  activeInvite: Invite | undefined,
+  isEditor: boolean
 }) => {
   return (
     <div className="grid grid-cols-2 gap-8">
-      <div className="p-4 ">
-        <Title title="Invite link" className="mb-2" />
-        {(activeInvite) && (
-          <ShareLink
-            shareLink={getCohortInviteLink({ cohortId: cohortId, invite: activeInvite })}
-          />
-        )}
-      </div>
+      {(isEditor) && (
+        <div className="p-4 ">
+          <Title title="Invite link" className="mb-2" />
+          {(activeInvite) && (
+            <ShareLink
+              shareLink={getCohortInviteLink({ cohortId: cohortId, invite: activeInvite })}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 };

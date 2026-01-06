@@ -3,6 +3,7 @@ import CohortOverview from '../components/cohortOverview';
 import WithCache from '~/core/cache/containers/withCache';
 import find from 'lodash/find';
 import { Cohort } from '../cohorts.types';
+import getIsEditor from '~/modules/authentication/helpers/getIsEditor';
 
 export type CohortOverviewContainerProps = {
   cohort: {
@@ -21,6 +22,7 @@ class CohortOverviewContainer extends Component<CohortOverviewContainerProps> {
       <CohortOverview
         cohortId={this.props.cohort.data._id}
         activeInvite={this.getActiveInvite()}
+        isEditor={getIsEditor()}
       />
     );
   }

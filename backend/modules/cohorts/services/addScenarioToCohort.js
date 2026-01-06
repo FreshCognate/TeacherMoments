@@ -1,5 +1,5 @@
 import getScenariosCountByCohortId from '../../scenarios/services/getScenariosCountByCohortId.js';
-import checkHasAccessToCohort from '../helpers/checkHasAccessToCohort.js';
+import checkHasAccessToEditCohort from '../helpers/checkHasAccessToEditCohort.js';
 import getCohortCollaboratorsPopulate from '../helpers/getCohortCollaboratorsPopulate.js';
 
 export default async (props, options, context) => {
@@ -7,7 +7,7 @@ export default async (props, options, context) => {
   const { cohortId, update } = props;
   const { models, user } = context;
 
-  await checkHasAccessToCohort({ cohortId }, context);
+  await checkHasAccessToEditCohort({ cohortId }, context);
 
   const { path, select } = getCohortCollaboratorsPopulate();
 

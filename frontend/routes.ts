@@ -13,7 +13,7 @@ export default [
   ]),
   ...prefix("cohorts", [
     index("./modules/cohorts/routes/cohortsRoute.tsx"),
-    layout("./modules/cohorts/routes/cohortsEditorLayout.tsx", [
+    layout("./modules/cohorts/routes/cohortLayout.tsx", [
       route(":id/overview", "./modules/cohorts/routes/cohortOverviewRoute.tsx", { id: 'overview' }),
       route(":id/users", "./modules/cohorts/routes/cohortUsersRoute.tsx", { id: 'users' }),
       route(":id/scenarios", "./modules/cohorts/routes/cohortScenariosRoute.tsx", { id: 'scenarios' }),
