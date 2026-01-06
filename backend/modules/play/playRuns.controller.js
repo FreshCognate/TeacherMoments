@@ -3,9 +3,9 @@ import updateUsersRunByScenarioId from '../runs/services/updateUsersRunByScenari
 
 export default {
 
-  read: async function ({ param, body }, context) {
+  read: async function ({ param, query }, context) {
 
-    let run = await getUsersRunByScenarioId({ scenarioId: param }, {}, context);
+    let run = await getUsersRunByScenarioId({ scenarioId: param, cohortId: query.cohort }, {}, context);
 
     return { run }
 

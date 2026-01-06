@@ -11,3 +11,4 @@ import './runs/index.js';
 import './play/index.js';
 import './transcripts/index.js';
 import './invites/index.js';
+import './trackings/index.js';
