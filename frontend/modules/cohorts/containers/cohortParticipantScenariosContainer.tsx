@@ -26,7 +26,6 @@ class CohortParticipantScenariosContainer extends Component<CohortParticipantSce
   }
 
   render() {
-    console.log(this.props);
     const { data, status } = this.props.cohortParticipantScenarios;
     return (
       <CohortParticipantScenarios
