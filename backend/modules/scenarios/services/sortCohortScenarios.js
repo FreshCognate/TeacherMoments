@@ -1,4 +1,4 @@
-import checkHasAccessToCohort from '../../cohorts/helpers/checkHasAccessToCohort.js';
+import checkHasAccessToEditCohort from '../../cohorts/helpers/checkHasAccessToEditCohort.js';
 import getScenarioCollaboratorsPopulate from '../helpers/getScenarioCollaboratorsPopulate.js';
 import setScenarioHasChanges from './setScenarioHasChanges.js';
 
@@ -7,7 +7,7 @@ export default async (props, options, context) => {
   const { cohortId, scenarios } = props;
   const { models } = context;
 
-  await checkHasAccessToCohort({ cohortId }, context);
+  await checkHasAccessToEditCohort({ cohortId }, context);
 
   for (const scenario of scenarios) {
 

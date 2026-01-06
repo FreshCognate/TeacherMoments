@@ -23,6 +23,7 @@ const Cohorts = ({
   sortByOptions,
   isSyncing,
   isLoading,
+  isEditor,
   onSearchValueChange,
   onFiltersChanged,
   onPaginationClicked,
@@ -31,6 +32,7 @@ const Cohorts = ({
   onDuplicateCohortClicked
 }: ActionBarProps & {
   cohorts: Cohort[],
+  isEditor: boolean,
   onDuplicateCohortClicked: (cohortId: string) => void
 }) => {
   return (
@@ -67,15 +69,27 @@ const Cohorts = ({
               <CardContent>
                 <Title title={truncate(cohort.name, { length: 60 })} />
               </CardContent>
-              <CardActions>
-                <Link to={`/cohorts/${cohort._id}/overview`}>
-                  <FlatButton
-                    icon="edit"
-                    text="Edit"
-                  />
-                </Link>
-                <FlatButton icon="copy" text="Copy" onClick={() => onDuplicateCohortClicked(cohort._id)} />
-              </CardActions>
+              {(isEditor) && (
+                <CardActions>
+                  <Link to={`/cohorts/${cohort._id}/overview`}>
+                    <FlatButton
+                      icon="edit"
+                      text="Edit"
+                    />
+                  </Link>
+                  <FlatButton icon="copy" text="Copy" onClick={() => onDuplicateCohortClicked(cohort._id)} />
+                </CardActions>
+              )}
+              {(!isEditor) && (
+                <CardActions>
+                  <Link to={`/cohorts/${cohort._id}/overview`}>
+                    <FlatButton
+                      icon="view"
+                      text="View"
+                    />
+                  </Link>
+                </CardActions>
+              )}
             </Card>
           );
         })}

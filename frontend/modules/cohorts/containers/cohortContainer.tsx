@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
-import CohortsEditor from '../components/cohortsEditor';
+import Cohort from '../components/cohort';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
-import { Cohort } from '../cohorts.types';
+import { Cohort as CohortType } from '../cohorts.types';
+import getIsEditor from '~/modules/authentication/helpers/getIsEditor';
 
-interface CohortEditorContainerProps {
+interface CohortContainerProps {
   router: any,
   cohort: {
-    data: Cohort,
+    data: CohortType,
     status: 'loading' | 'unresolved' | 'syncing'
   }
 }
 
-class CohortsEditorContainer extends Component<CohortEditorContainerProps> {
+class CohortContainer extends Component<CohortContainerProps> {
 
   onToggleClicked = (value: string | number) => {
     const { navigate, params } = this.props.router;
@@ -26,24 +27,25 @@ class CohortsEditorContainer extends Component<CohortEditorContainerProps> {
     const { data, status } = this.props.cohort;
 
     return (
-      <CohortsEditor
+      <Cohort
         cohort={data}
         pathValue={pathValue}
         isLoading={status === 'loading' || status === 'unresolved'}
+        isEditor={getIsEditor()}
         onToggleClicked={this.onToggleClicked}
       />
     );
   }
 };
 
-export default WithRouter(WithCache(CohortsEditorContainer, {
+export default WithRouter(WithCache(CohortContainer, {
   cohort: {
     url: '/api/cohorts/:id',
-    getParams: ({ props }: { props: CohortEditorContainerProps }) => {
+    getParams: ({ props }: { props: CohortContainerProps }) => {
       return {
         id: props.router.params.id
       }
     },
-    transform: ({ data }: { data: { cohort: Cohort } }) => data.cohort
+    transform: ({ data }: { data: { cohort: CohortType } }) => data.cohort
   }
 }));

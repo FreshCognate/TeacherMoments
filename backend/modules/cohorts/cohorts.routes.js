@@ -27,7 +27,7 @@ export default [{
   },
   read: {
     param: 'id',
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated],
   },
   update: {
     param: 'id',
