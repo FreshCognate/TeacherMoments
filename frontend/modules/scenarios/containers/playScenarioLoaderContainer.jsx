@@ -88,6 +88,13 @@ export default WithRouter(WithCache(PlayScenarioLoaderContainer, {
         id: getCache('scenario')?.data?._id
       }
     },
+    getQuery: ({ props }) => {
+      const searchParams = new URLSearchParams(props.router.location.search);
+      const cohort = searchParams.get('cohort');
+      return {
+        cohort
+      }
+    },
     transform: ({ data }) => data.run,
     getDependencies: ({ props }) => {
       const scenario = getCache('scenario');

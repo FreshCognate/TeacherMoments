@@ -39,6 +39,9 @@ export default [{
   controller: playRunsController,
   read: {
     param: 'id',
+    query: {
+      cohort: Joi.string(),
+    },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])]
   },
   update: {
@@ -60,6 +63,9 @@ export default [{
         slideRef: Joi.string(),
         feedbackItems: Joi.array()
       }),
+    },
+    query: {
+      cohort: Joi.string(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])]
   }
