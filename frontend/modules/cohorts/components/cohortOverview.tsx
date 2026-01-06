@@ -3,6 +3,7 @@ import { Invite } from '../cohorts.types';
 import Title from '~/uikit/content/components/title';
 import ShareLink from '~/uikit/share/components/shareLink';
 import getCohortInviteLink from '../helpers/getCohortInviteLink';
+import CohortParticipantScenariosContainer from '../containers/cohortParticipantScenariosContainer';
 
 const CohortOverview = ({
   cohortId,
@@ -14,7 +15,7 @@ const CohortOverview = ({
   isEditor: boolean
 }) => {
   return (
-    <div className="grid grid-cols-2 gap-8">
+    <div className="">
       {(isEditor) && (
         <div className="p-4 ">
           <Title title="Invite link" className="mb-2" />
@@ -25,6 +26,9 @@ const CohortOverview = ({
           )}
         </div>
       )}
+      <div>
+        <CohortParticipantScenariosContainer />
+      </div>
     </div>
   );
 };

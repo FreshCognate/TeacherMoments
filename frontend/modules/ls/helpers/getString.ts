@@ -2,7 +2,7 @@ import getCache from '~/core/cache/helpers/getCache';
 import isString from 'lodash/isString';
 import getTextString from '~/core/slate/helpers/getTextString';
 
-export default function getString({ model, field, isTitle }) {
+export default function getString({ model, field, isTitle }: { model: any, field: string, isTitle?: boolean }) {
 
   const app = getCache('app');
 
