@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import checkHasAccessToEditCohort from '../../cohorts/helpers/checkHasAccessToEditCohort.js';
+import checkHasAccessToViewCohort from '../../cohorts/helpers/checkHasAccessToViewCohort.js';
 
 export default async (props, options, context) => {
 
@@ -10,7 +10,7 @@ export default async (props, options, context) => {
   let {
   } = options;
 
-  await checkHasAccessToEditCohort({ cohortId }, context);
+  await checkHasAccessToViewCohort({ cohortId }, context);
 
   const { models, user } = context;
 

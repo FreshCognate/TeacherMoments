@@ -30,7 +30,7 @@ export default [{
       searchValue: Joi.string().allow('').default(''),
       currentPage: Joi.number().default(1),
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated],
   },
   create: {
     body: {
