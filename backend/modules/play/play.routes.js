@@ -14,7 +14,7 @@ export default [{
     query: {
       scenario: Joi.string().required()
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])]
+    middleware: [isAuthenticated]
   },
 }, {
   route: '/play/blocks',
@@ -23,7 +23,7 @@ export default [{
     query: {
       scenario: Joi.string().required()
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])]
+    middleware: [isAuthenticated]
   },
 }, {
   route: '/play/triggers',
@@ -32,17 +32,23 @@ export default [{
     query: {
       scenario: Joi.string().required()
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])]
+    middleware: [isAuthenticated]
   },
 }, {
   route: '/play/runs',
   controller: playRunsController,
+  all: {
+    query: {
+      cohort: Joi.string().required()
+    },
+    middleware: [isAuthenticated]
+  },
   read: {
     param: 'id',
     query: {
       cohort: Joi.string(),
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])]
+    middleware: [isAuthenticated]
   },
   update: {
     param: 'id',
@@ -56,24 +62,28 @@ export default [{
           audio: Joi.alternatives().try(Joi.object(), Joi.string(), null),
           isAbleToComplete: Joi.boolean(),
           isComplete: Joi.boolean(),
+          isTranscribingAudio: Joi.boolean(),
           textValue: Joi.string().allow(''),
           selectedOptions: Joi.array().items(Joi.string())
         })),
         isComplete: Joi.boolean(),
+        isSubmitted: Joi.boolean(),
         slideRef: Joi.string(),
-        feedbackItems: Joi.array()
+        feedbackItems: Joi.array(),
+        shouldStopNavigation: Joi.boolean(),
+        triggersByRef: Joi.object()
       }),
     },
     query: {
       cohort: Joi.string(),
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])]
+    middleware: [isAuthenticated]
   }
 }, {
   route: '/play',
   controller,
   read: {
     param: 'id',
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated],
   },
 }];

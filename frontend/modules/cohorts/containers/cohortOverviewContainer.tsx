@@ -20,7 +20,7 @@ class CohortOverviewContainer extends Component<CohortOverviewContainerProps> {
   render() {
     return (
       <CohortOverview
-        cohortId={this.props.cohort.data._id}
+        cohort={this.props.cohort.data}
         activeInvite={this.getActiveInvite()}
         isEditor={getIsEditor()}
       />

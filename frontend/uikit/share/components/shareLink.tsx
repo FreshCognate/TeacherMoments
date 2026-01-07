@@ -18,7 +18,7 @@ const ShareLink = ({
   }
 
   return (
-    <div className="border border-lm-1 dark:border-dm-1 rounded-lg px-4 py-6">
+    <div className="w-full border border-lm-1 dark:border-dm-1 rounded-lg px-4 py-6">
       <div>
         <div className="flex items-center relative">
           <Button icon="copy" className="mr-2" onClick={onCopyLinkClicked} />

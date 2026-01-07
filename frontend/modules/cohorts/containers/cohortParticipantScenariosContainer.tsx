@@ -4,6 +4,8 @@ import WithCache from '~/core/cache/containers/withCache';
 import WithRouter from '~/core/app/components/withRouter';
 import { Scenario } from '~/modules/scenarios/scenarios.types';
 import find from 'lodash/find';
+import keyBy from 'lodash/keyBy';
+import { Run } from '~/modules/run/runs.types';
 
 interface CohortParticipantScenariosProps {
   cohortParticipantScenarios: {
@@ -14,6 +16,9 @@ interface CohortParticipantScenariosProps {
     fetch: any,
     setQuery: any,
     setStatus: any
+  }
+  cohortParticipantRuns: {
+    data: any
   }
   router: any
 }
@@ -30,6 +35,7 @@ class CohortParticipantScenariosContainer extends Component<CohortParticipantSce
     return (
       <CohortParticipantScenarios
         scenarios={data}
+        runs={this.props.cohortParticipantRuns.data}
         onPlayScenarioClicked={this.onPlayScenarioClicked}
       />
     );
@@ -46,4 +52,14 @@ export default WithRouter(WithCache(CohortParticipantScenariosContainer, {
       }
     },
   },
+  cohortParticipantRuns: {
+    url: '/api/play/runs',
+    getInitialData: () => ({}),
+    transform: ({ data }: { data: { runs: Run[] } }) => keyBy(data.runs, 'scenario'),
+    getQuery: ({ props }: { props: CohortParticipantScenariosProps }) => {
+      return {
+        cohort: props.router.params.id
+      }
+    },
+  }
 }));
