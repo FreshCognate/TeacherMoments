@@ -41,7 +41,18 @@ const CohortUsers = ({
   onItemActionClicked: ({ itemId, action }: { itemId: string, action: string }) => void
 }) => {
   return (
-    <div className="grid grid-cols-2 gap-10 px-10 py-4">
+    <div className="px-10 py-4">
+      <div className="mb-4">
+        <Title title="Invite link" className="mb-2" />
+        {(activeInvite) && (
+          <ShareLink
+            shareLink={getCohortInviteLink({ cohortId: cohortId, invite: activeInvite })}
+          />
+        )}
+        {(!activeInvite) && (
+          <Button text="Create an invite link" isDisabled={isCreatingInviteLink} onClick={onCreateInviteLinkClicked} />
+        )}
+      </div>
       <div className="bg-lm-1 dark:bg-dm-1 p-4 dark:border-dm-2 rounded-md">
         <Title title="Cohort users" className="mb-2" />
         <Collection
@@ -61,17 +72,7 @@ const CohortUsers = ({
           onItemActionClicked={onItemActionClicked}
         />
       </div>
-      <div className="p-4 flex items-center">
-        <Title title="Invite link" className="mb-2" />
-        {(activeInvite) && (
-          <ShareLink
-            shareLink={getCohortInviteLink({ cohortId: cohortId, invite: activeInvite })}
-          />
-        )}
-        {(!activeInvite) && (
-          <Button text="Create an invite link" isDisabled={isCreatingInviteLink} onClick={onCreateInviteLinkClicked} />
-        )}
-      </div>
+
     </div>
   );
 };

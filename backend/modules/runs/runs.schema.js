@@ -15,6 +15,7 @@ const schema = {
       of: {
         audio: { type: mongoose.Schema.Types.ObjectId, ref: 'Asset' },
         isAbleToComplete: { type: Boolean, default: false },
+        isTranscribingAudio: { type: Boolean, default: false },
         isComplete: { type: Boolean, default: false },
         textValue: { type: String, default: "" },
         selectedOptions: [String],
