@@ -54,6 +54,7 @@ export default [{
     param: 'id',
     body: {
       activeSlideRef: Joi.string(),
+      isArchived: Joi.boolean(),
       isComplete: Joi.boolean(),
       isConsentAcknowledged: Joi.boolean(),
       hasGivenConsent: Joi.boolean(),
