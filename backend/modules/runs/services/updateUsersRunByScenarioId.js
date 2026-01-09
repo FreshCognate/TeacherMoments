@@ -13,6 +13,10 @@ export default async (props, options, context) => {
 
   const originalRun = await models.Run.findOne(search);
 
+  if (update.isArchived && !originalRun.isArchived) {
+    update.archivedAt = new Date();
+  }
+
   if (update.isComplete && !originalRun.isComplete) {
     update.completedAt = new Date();
   }

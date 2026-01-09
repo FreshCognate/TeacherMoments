@@ -19,6 +19,7 @@ import getCache from '~/core/cache/helpers/getCache';
 import getTrigger from '~/modules/triggers/helpers/getTrigger';
 import setShouldStopNavigation from '~/modules/run/helpers/setShouldStopNavigation';
 import setSlideToSubmitted from '~/modules/run/helpers/setSlideToSubmitted';
+import setScenarioToArchived from '~/modules/run/helpers/setScenarioToArchived';
 
 class SlidePlayerContainer extends Component {
 
@@ -100,7 +101,7 @@ class SlidePlayerContainer extends Component {
           }
         } else {
           primaryAction = {
-            action: 'FINISH_SCENARIO',
+            action: 'COMPLETE_SCENARIO',
             color: 'primary',
             text: 'Finish',
           }
@@ -161,6 +162,10 @@ class SlidePlayerContainer extends Component {
   }
 
   onFinishScenarioClicked = () => {
+    setScenarioToArchived();
+  }
+
+  onCompleteScenarioClicked = () => {
     setSlideToComplete({ slideRef: this.props.activeSlide.ref });
     setScenarioToComplete();
   }
@@ -186,6 +191,8 @@ class SlidePlayerContainer extends Component {
       case 'FINISH_SCENARIO':
         this.onFinishScenarioClicked();
         break;
+      case 'COMPLETE_SCENARIO':
+        this.onCompleteScenarioClicked();
       case 'SUBMIT':
         this.onSubmitSlideClicked();
         break;

@@ -23,6 +23,8 @@ const schema = {
       }
     },
   }],
+  isArchived: { type: Boolean, default: false },
+  archivedAt: { type: Date },
   isComplete: { type: Boolean, default: false },
   completedAt: { type: Date },
   isConsentAcknowledged: { type: Boolean, default: false },

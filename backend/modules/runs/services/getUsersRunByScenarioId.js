@@ -9,7 +9,7 @@ export default async (props, options, context) => {
 
   const { models, user } = context;
 
-  const search = { scenario: scenarioId, user: user._id, isDeleted: false, isComplete: false };
+  const search = { scenario: scenarioId, user: user._id, isDeleted: false, isArchived: false };
 
   const createdAt = new Date();
   const createdBy = user._id;
