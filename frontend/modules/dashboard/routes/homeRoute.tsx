@@ -6,8 +6,8 @@ import Icon from '~/uikit/icons/components/icon';
 
 export function meta({ }) {
   return [
-    { title: "TM" },
-    { name: "description", content: "Welcome to TM!" },
+    { title: "Teacher Moments" },
+    { name: "description", content: "Welcome to Teacher Moments!" },
   ];
 }
 
