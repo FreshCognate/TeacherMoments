@@ -52,7 +52,7 @@ export default async (props, options, context) => {
   const user = await models.User.create(createObject);
 
   await sendEmail({
-    to: 'daryl@freshcognate.com',
+    to: lowerCaseEmail,
     subject: 'Verification',
     htmlBody: `${verificationCode}`,
     textBody: `${verificationCode}`,
