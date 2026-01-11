@@ -53,9 +53,11 @@ export default async (props, options, context) => {
 
   await sendEmail({
     to: lowerCaseEmail,
-    subject: 'Verification',
-    htmlBody: `${verificationCode}`,
-    textBody: `${verificationCode}`,
+    templateAlias: 'signup',
+    templateModel: {
+      name: username,
+      verificationCode
+    }
   })
 
   return { _id: user._id };

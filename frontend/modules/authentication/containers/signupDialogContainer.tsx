@@ -5,9 +5,6 @@ import has from 'lodash/has';
 import validator from 'validator';
 import sanitizeUsername from '../helpers/sanitizeUsername';
 import getPasswordStrength from '../helpers/getPasswordStrength';
-import handleRequestError from '~/core/app/helpers/handleRequestError';
-import addModal from '~/core/dialogs/helpers/addModal';
-import VerifyCodeDialogContainer from './verifyCodeDialogContainer';
 
 class SignupDialogContainer extends Component {
 
@@ -17,13 +14,14 @@ class SignupDialogContainer extends Component {
     password: '',
     confirmPassword: '',
     hasError: false,
-    error: ''
+    error: '',
+    isSigningUp: false
   }
 
   getIsValidNewUser = () => {
-    const { username, email, password, confirmPassword, error, hasError } = this.state;
+    const { username, email, password, confirmPassword, error, hasError, isSigningUp } = this.state;
     let hasErrorMessage = false;
-    let isSignupButtonDisabled = false;
+    let isSignupButtonDisabled = isSigningUp;
     let errorMessage = '';
 
     const passwordStrengthData = getPasswordStrength(password);
@@ -76,14 +74,17 @@ class SignupDialogContainer extends Component {
     if (hasError) {
       return;
     }
+    this.setState({ isSigningUp: true });
     const { username, email, password, confirmPassword } = this.state;
     axios.post(`/api/signup`, { username, email, password, confirmPassword }).then((response) => {
       const userId = response.data.user._id;
       window.location.href = `${window.location.href}/verify/${userId}`;
     }).catch((error) => {
-      const { statusCode, message } = error.response.data;
-      if (statusCode === 400) {
-        this.setState({ error: message, hasError: true })
+      if (error.response?.data) {
+        const { message } = error.response.data;
+        this.setState({ error: message, hasError: true, isSigningUp: false });
+      } else {
+        this.setState({ error: 'Network error. Please try again.', hasError: true, isSigningUp: false });
       }
     });
   }

@@ -44,7 +44,7 @@ class VerifyCodeDialogContainer extends Component<any, VerifyCodeDialogContainer
       .then((response) => {
         const { params } = this.props.router;
         if (params.inviteId) {
-          this.props.router.navigate(`/invite/${params.inviteId}`);
+          window.location.href = `${window.location.origin}/invite/${params.inviteId}`;
         }
       })
       .catch((error) => {
