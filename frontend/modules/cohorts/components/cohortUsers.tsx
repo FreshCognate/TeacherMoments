@@ -41,7 +41,7 @@ const CohortUsers = ({
   onItemActionClicked: ({ itemId, action }: { itemId: string, action: string }) => void
 }) => {
   return (
-    <div className="px-10 py-4">
+    <div className="py-4">
       <div className="mb-4">
         <Title title="Invite link" className="mb-2" />
         {(activeInvite) && (
@@ -53,8 +53,8 @@ const CohortUsers = ({
           <Button text="Create an invite link" isDisabled={isCreatingInviteLink} onClick={onCreateInviteLinkClicked} />
         )}
       </div>
+      <Title title="Cohort users" className="mb-2" />
       <div className="bg-lm-1 dark:bg-dm-1 p-4 dark:border-dm-2 rounded-md">
-        <Title title="Cohort users" className="mb-2" />
         <Collection
           items={users}
           getItemActions={getItemActions}

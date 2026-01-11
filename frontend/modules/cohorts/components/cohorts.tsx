@@ -36,8 +36,8 @@ const Cohorts = ({
   onDuplicateCohortClicked: (cohortId: string) => void
 }) => {
   return (
-    <div>
-      <div className="bg-lm-0 dark:bg-dm-0 px-4 border-b border-b-lm-3 dark:border-b-dm-2">
+    <div className="p-4">
+      <div>
         <ActionBar
           actions={actions}
           searchValue={searchValue}
@@ -62,7 +62,7 @@ const Cohorts = ({
           onActionClicked={onActionClicked}
         />
       </div>
-      <div className="grid grid-cols-4 gap-4 p-4">
+      <div className="grid grid-cols-4 gap-4 py-4">
         {map(cohorts, (cohort: Cohort) => {
           return (
             <Card key={cohort._id}>

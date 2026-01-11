@@ -13,7 +13,7 @@ const CohortOverview = ({
   isEditor: boolean
 }) => {
   return (
-    <div className="p-4">
+    <div className="py-4">
       <div>
         <Title title={`Cohort: ${cohort.name}`} />
       </div>

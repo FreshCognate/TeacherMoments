@@ -11,8 +11,8 @@ const CreateWorkspace = ({
   navigationMode
 }) => {
   return (
-    <div className="w-full h-full">
-      <div className="flex justify-center">
+    <div className="w-full h-full ml-4 border border-lm-3 bg-lm-0 dark:bg-dm-1 dark:border-dm-1 rounded-lg overflow-y-auto">
+      <div className="flex justify-center sticky top-0 z-30">
         <CreateWorkspaceToolbarContainer
           activeSlideRef={activeSlideRef}
         />
@@ -21,7 +21,7 @@ const CreateWorkspace = ({
 
         <>
           {(displayMode === 'EDITING') && (
-            <div className="pt-14 w-full h-full overflow-y-auto">
+            <div className="">
               {(activeSlideRef) && (
                 <BlocksEditorContainer
                   slideId={activeSlideId}
@@ -30,7 +30,7 @@ const CreateWorkspace = ({
             </div>
           )}
           {(displayMode === 'PREVIEW') && (
-            <div className="pt-14 w-full h-full overflow-y-auto">
+            <div className="">
               <div className="w-full pt-4 pb-8 px-8 max-w-lg mx-auto">
                 <ScenarioPreviewContainer slideRef={activeSlideRef} />
               </div>

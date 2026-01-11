@@ -13,12 +13,12 @@ const ShareScenario = ({
 }) => {
   return (
     <div style={{ marginTop: '28px' }} >
-      <div className="p-2 flex items-center justify-between bg-lm-0 dark:bg-dm-2">
+      <div className="p-2 flex items-center justify-between bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-1 rounded-lg">
         <div className="flex items-center">
           {(scenario.isPublished) && (
             <>
               <Button text="Copy link" className="mr-2" onClick={onCopyLinkClicked} />
-              <div className="bg-lm-1 dark:bg-dm-1 py-1 px-4 rounded-md">
+              <div className="bg-lm-1 dark:bg-dm-2 py-1 px-4 rounded-md">
                 {`${publishLink}`}
               </div>
               {(hasCopied) && (

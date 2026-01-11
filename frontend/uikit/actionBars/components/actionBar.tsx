@@ -32,7 +32,7 @@ const ActionBar = ({
   onSortByChanged
 }: ActionBarProps) => {
   return (
-    <div className="relative py-2">
+    <div className="relative bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-1 rounded-lg py-2 px-3 overflow-clip">
       <div className="flex items-center">
         <div className="flex-1 flex items-center">
           {hasSearch && (

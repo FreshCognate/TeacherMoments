@@ -33,30 +33,32 @@ const Collection = ({
   onSortByChanged
 }: CollectionProps) => {
   return (
-    <div>
-      <ActionBar
-        actions={actions}
-        searchValue={searchValue}
-        searchPlaceholder={searchPlaceholder}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        filter={filter}
-        filters={filters}
-        sortBy={sortBy}
-        sortByOptions={sortByOptions}
-        hasSearch={hasSearch}
-        hasPagination={hasPagination}
-        hasFilters={hasFilters}
-        hasSortBy={hasSortBy}
-        isSyncing={isSyncing}
-        isLoading={isLoading}
-        shouldAutoFocus={shouldAutoFocus}
-        onSearchValueChange={onSearchValueChange}
-        onActionClicked={onActionClicked}
-        onPaginationClicked={onPaginationClicked}
-        onFiltersChanged={onFiltersChanged}
-        onSortByChanged={onSortByChanged}
-      />
+    <div className="pt-4">
+      <div className="mb-4">
+        <ActionBar
+          actions={actions}
+          searchValue={searchValue}
+          searchPlaceholder={searchPlaceholder}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          filter={filter}
+          filters={filters}
+          sortBy={sortBy}
+          sortByOptions={sortByOptions}
+          hasSearch={hasSearch}
+          hasPagination={hasPagination}
+          hasFilters={hasFilters}
+          hasSortBy={hasSortBy}
+          isSyncing={isSyncing}
+          isLoading={isLoading}
+          shouldAutoFocus={shouldAutoFocus}
+          onSearchValueChange={onSearchValueChange}
+          onActionClicked={onActionClicked}
+          onPaginationClicked={onPaginationClicked}
+          onFiltersChanged={onFiltersChanged}
+          onSortByChanged={onSortByChanged}
+        />
+      </div>
       <div>
         {map(items, (item: any) => {
           const { id, name, meta } = getItemAttributes(item);

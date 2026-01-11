@@ -32,7 +32,7 @@ const SlidePlayer = ({
   const slideFeedbackItems = getSlideFeedbackItems();
 
   return (
-    <div className="w-full bg-lm-0 dark:bg-dm-1 border border-lm-2 dark:border-dm-2 rounded ">
+    <div className="w-full bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-2 rounded ">
       <SlidePlayerHeader
         activeSlide={activeSlide}
         isMenuOpen={isMenuOpen}

@@ -15,7 +15,7 @@ const CohortParticipantScenariosItem = ({
   onPlayScenarioClicked: (scenarioId: string) => void
 }) => {
   return (
-    <div className="p-4 bg-lm-1 dark:bg-dm-1 border border-lm-2 dark:border-dm-2 rounded-lg">
+    <div className="p-4 bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-1 rounded-lg">
       <div>
         {scenario.name}
       </div>

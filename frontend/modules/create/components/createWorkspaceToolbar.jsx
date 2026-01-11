@@ -10,7 +10,7 @@ const CreateWorkspaceToolbar = ({
   onSlideNameChanged
 }) => {
   return (
-    <div className="fixed top-24 flex items-center justify-between z-40 shadow-md bg-lm-0 dark:bg-dm-1 rounded-lg text-xs mx-2 border border-lm-3 dark:border-dm-2">
+    <div className="sticky mt-4 top-0 flex items-center justify-between z-40 shadow-md bg-lm-0 dark:bg-dm-1 rounded-lg text-xs mx-2 border border-lm-3 dark:border-dm-2">
       <div className="pl-2 pr-2">
         <input
           type="text"
