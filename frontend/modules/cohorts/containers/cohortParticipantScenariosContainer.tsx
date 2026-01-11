@@ -30,6 +30,10 @@ class CohortParticipantScenariosContainer extends Component<CohortParticipantSce
     this.props.router.navigate(`/play/${scenario.publishLink}?cohort=${this.props.router.params.id}`);
   }
 
+  onViewScenarioResponseClicked = (scenarioId: string) => {
+    this.props.router.navigate(`/cohorts/${this.props.router.params.id}/scenarios/${scenarioId}`);
+  }
+
   render() {
     const { data, status } = this.props.cohortParticipantScenarios;
     return (
@@ -37,6 +41,7 @@ class CohortParticipantScenariosContainer extends Component<CohortParticipantSce
         scenarios={data}
         runs={this.props.cohortParticipantRuns.data}
         onPlayScenarioClicked={this.onPlayScenarioClicked}
+        onViewScenarioResponseClicked={this.onViewScenarioResponseClicked}
       />
     );
   }

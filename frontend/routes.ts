@@ -17,6 +17,7 @@ export default [
       route(":id/overview", "./modules/cohorts/routes/cohortOverviewRoute.tsx", { id: 'overview' }),
       route(":id/users", "./modules/cohorts/routes/cohortUsersRoute.tsx", { id: 'users' }),
       route(":id/scenarios", "./modules/cohorts/routes/cohortScenariosRoute.tsx", { id: 'scenarios' }),
+      route(":id/scenarios/:scenarioId", "./modules/cohorts/routes/cohortScenarioRoute.tsx", { id: 'scenario' }),
       route(":id/settings", "./modules/cohorts/routes/cohortSettingsRoute.tsx", { id: 'settings' })
     ])
   ]),
