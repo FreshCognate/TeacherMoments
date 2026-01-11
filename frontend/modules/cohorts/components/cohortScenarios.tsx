@@ -30,7 +30,7 @@ const CohortScenarios = ({
   onAvailableScenariosItemActionClicked: ({ itemId, action }: { itemId: string, action: string }) => void
 }) => {
   return (
-    <div className="grid grid-cols-2 gap-10 px-10 py-4">
+    <div className="grid grid-cols-2 gap-10 py-4">
       <div className="bg-lm-1 dark:bg-dm-1 p-4 dark:border-dm-2 rounded-md">
         <Title title="Cohort scenarios" className="mb-2" />
         <CohortScenariosListContainer />

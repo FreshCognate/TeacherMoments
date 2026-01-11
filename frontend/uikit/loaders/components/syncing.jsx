@@ -9,7 +9,7 @@ const Syncing = ({
   if (!isSyncing) return null;
   const classes = classnames("absolute w-full overflow-hidden left-0", className);
   return (
-    <div className={classes} style={{ height: '2px', bottom: "-2px", borderRadius: '4px' }}>
+    <div className={classes} style={{ height: '2px', bottom: "0px", borderRadius: '4px' }}>
       <motion.div
         className="absolute bg-primary-light"
         style={{ width: "10%", height: "2px", borderRadius: '2px' }}

@@ -16,26 +16,24 @@ const Scenarios = ({
   searchValue,
   currentPage,
   totalPages,
+  actions,
   filter,
   filters,
   sortBy,
   sortByOptions,
   isSyncing,
   isLoading,
-  onCreateScenarioClicked,
   onSearchValueChange,
   onPaginationClicked,
   onFiltersChanged,
   onSortByChanged,
-  onDuplicateScenarioClicked
+  onDuplicateScenarioClicked,
+  onActionClicked
 }) => {
   return (
-    <div className="flex h-full">
-      <div className="min-w-60 p-4 bg-lm-0 dark:bg-dm-0 border-r border-lm-3 dark:border-dm-2" style={{ height: 'calc(100vh - 68px)' }}>
-        <Button text="Create scenario" color="primary" isFullWidth onClick={onCreateScenarioClicked} />
-      </div>
-      <div className="flex-1">
-        <div className="bg-lm-0 dark:bg-dm-0 px-4 border-b border-b-lm-3 dark:border-b-dm-2">
+    <div className="p-4">
+      <div className="">
+        <div className="">
           <ActionBar
             searchValue={searchValue}
             searchPlaceholder="Search scenarios..."
@@ -43,6 +41,7 @@ const Scenarios = ({
             totalPages={totalPages}
             filter={filter}
             filters={filters}
+            actions={actions}
             sortBy={sortBy}
             sortByOptions={sortByOptions}
             hasSearch
@@ -56,9 +55,10 @@ const Scenarios = ({
             onPaginationClicked={onPaginationClicked}
             onFiltersChanged={onFiltersChanged}
             onSortByChanged={onSortByChanged}
+            onActionClicked={onActionClicked}
           />
         </div>
-        <div className="grid grid-cols-4 gap-4 p-4">
+        <div className="grid grid-cols-4 gap-4 py-4">
           {map(scenarios, (scenario) => {
             return (
               <Card key={scenario._id}>

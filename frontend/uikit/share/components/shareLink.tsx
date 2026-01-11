@@ -18,11 +18,11 @@ const ShareLink = ({
   }
 
   return (
-    <div className="w-full border border-lm-1 dark:border-dm-1 rounded-lg px-4 py-6">
+    <div className="w-full bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-1 rounded-lg px-4 py-6">
       <div>
         <div className="flex items-center relative">
           <Button icon="copy" className="mr-2" onClick={onCopyLinkClicked} />
-          <div className="bg-lm-1 dark:bg-dm-1 py-1 px-4 rounded-md h-8 text-nowrap overflow-x-scroll overflow-y-hidden w-full">
+          <div className="bg-lm-2 dark:bg-dm-2 py-1 px-4 rounded-md h-8 text-nowrap overflow-x-scroll overflow-y-hidden w-full">
             {`${shareLink}`}
           </div>
         </div>

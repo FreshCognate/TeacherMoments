@@ -7,12 +7,22 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import get from 'lodash/get';
 import debounce from 'lodash/debounce';
 import WithRouter from '~/core/app/components/withRouter';
+import getScenariosActions from '../helpers/getScenariosActions';
 
 class ScenariosContainer extends Component {
 
   debounceFetch = debounce((fetch) => {
     fetch();
   }, 800)
+
+  onActionClicked = ({ action }) => {
+    switch (action) {
+      case 'CREATE': {
+        this.onCreateScenarioClicked();
+        break;
+      }
+    }
+  }
 
   onCreateScenarioClicked = () => {
 
@@ -116,6 +126,7 @@ class ScenariosContainer extends Component {
         searchValue={searchValue}
         currentPage={currentPage}
         totalPages={totalPages}
+        actions={getScenariosActions()}
         filter={accessType}
         filters={[{ value: '', text: 'All' }, { value: 'PUBLIC', text: 'Public' }, { value: 'PRIVATE', text: 'Private' }]}
         sortBy={sortBy}
@@ -128,6 +139,7 @@ class ScenariosContainer extends Component {
         onFiltersChanged={this.onFiltersChanged}
         onSortByChanged={this.onSortByChanged}
         onDuplicateScenarioClicked={this.onDuplicateScenarioClicked}
+        onActionClicked={this.onActionClicked}
       />
     );
   }

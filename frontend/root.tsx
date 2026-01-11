@@ -97,7 +97,9 @@ export default function App(props) {
       {(isNavigationVisible) && (
         <NavigationContainer loaderData={props.loaderData} />
       )}
-      <Outlet />
+      <div className="max-w-7xl mx-auto">
+        <Outlet />
+      </div>
     </div >
   );
 }

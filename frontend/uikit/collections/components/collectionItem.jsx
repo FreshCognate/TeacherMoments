@@ -11,7 +11,7 @@ const CollectionItem = ({
   onActionClicked,
 }) => {
   return (
-    <div className="bg-lm-1 dark:bg-dm-1 p-4 rounded-md mb-2 flex items-center justify-between">
+    <div className="bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-1 p-4 rounded-md mb-2 flex items-center justify-between">
       <div>
 
         <div className="text-black/80 dark:text-white/80 text-lg">
