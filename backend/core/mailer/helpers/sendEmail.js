@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export default async ({ to, subject, htmlBody, textBody, from = process.env.POSTMARK_FROM_EMAIL }) => {
+export default async ({ to, templateAlias, templateModel = {}, from = process.env.POSTMARK_FROM_EMAIL }) => {
 
   const POSTMARK_API_KEY = process.env.POSTMARK_API_KEY;
 
@@ -12,15 +12,18 @@ export default async ({ to, subject, htmlBody, textBody, from = process.env.POST
     throw new Error('POSTMARK_FROM_EMAIL environment variable is not set');
   }
 
+  if (!templateAlias) {
+    throw new Error('templateAlias is required');
+  }
+
   try {
     const response = await axios.post(
-      'https://api.postmarkapp.com/email',
+      'https://api.postmarkapp.com/email/withTemplate',
       {
         From: from,
         To: to,
-        Subject: subject,
-        HtmlBody: htmlBody,
-        TextBody: textBody || htmlBody.replace(/<[^>]*>/g, ''),
+        TemplateAlias: templateAlias,
+        TemplateModel: templateModel,
         MessageStream: 'outbound'
       },
       {
