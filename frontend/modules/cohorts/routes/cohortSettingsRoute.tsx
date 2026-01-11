@@ -3,8 +3,10 @@ import React, { Component } from 'react';
 class CohortSettingsRoute extends Component {
   render() {
     return (
-      <div>
-        Settings
+      <div className="py-4">
+        <div className="border border-lm-3 dark:border-dm-1 bg-lm-0 dark:bg-dm-1 p-6 rounded-lg text-center">
+          Comming Soon...
+        </div>
       </div>
     );
   }
