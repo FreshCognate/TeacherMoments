@@ -13,9 +13,7 @@ export type CohortBreadcrumbContainerProps = {
 
 class CohortBreadcrumbContainer extends Component<CohortBreadcrumbContainerProps> {
   render() {
-    console.log(this.props.router);
     const routeId = this.props.router.matches[2]?.id;
-    console.log(routeId);
     return (
       <CohortBreadcrumb
         cohort={this.props.cohort.data}
