@@ -25,7 +25,12 @@ export default async (props, options, context) => {
 
   if (password !== confirmPassword) throw { message: 'Passwords do not match', statusCode: 400 };
 
-  const isExistingUser = await models.User.findOne({ email: lowerCaseEmail });
+  const isExistingUser = await models.User.findOne({
+    $or: [
+      { email: lowerCaseEmail },
+      { username }
+    ]
+  });
 
   if (isExistingUser) {
     throw { message: 'This user already exists. Trying another username or email.', statusCode: 400 };

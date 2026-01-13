@@ -8,7 +8,7 @@ const userSchema = {
   email: { type: String, required: true },
   username: { type: String },
   hash: { type: String, select: false },
-  role: { type: String, enum: ['SUPER_ADMIN', 'ADMIN', 'RESEARCHER', 'FACILITATOR', 'PARTICIPANT'], default: 'PARTICIPANT' },
+  role: { type: String, enum: ['SUPER_ADMIN', 'ADMIN', 'FACILITATOR', 'RESEARCHER', 'PARTICIPANT'], default: 'PARTICIPANT' },
   isRegistered: { type: Boolean, default: false },
   isAgent: { type: Boolean, default: false },
   registratedAt: { type: Date },

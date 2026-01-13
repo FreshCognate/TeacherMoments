@@ -6,7 +6,7 @@ export interface User {
   lastName: string,
   email: string,
   username: string,
-  role: 'SUPER_ADMIN' | 'ADMIN' | 'RESEARCHER' | 'FACILITATOR' | 'PARTICIPANT',
+  role: 'SUPER_ADMIN' | 'ADMIN' | 'FACILITATOR' | 'RESEARCHER' | 'PARTICIPANT',
   isRegistered: boolean,
   isAgent: boolean,
   registratedAt: Date,

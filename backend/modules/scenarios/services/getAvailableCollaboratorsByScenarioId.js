@@ -19,7 +19,7 @@ export default async (props, options, context) => {
 
   const currentScenarioCollaborators = map(scenario.collaborators, 'user');
 
-  const search = { _id: { $nin: currentScenarioCollaborators }, isDeleted: false };
+  const search = { _id: { $nin: currentScenarioCollaborators }, role: { $in: ['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'] }, isDeleted: false };
 
   const searchOptions = {};
 

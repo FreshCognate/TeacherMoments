@@ -4,6 +4,8 @@ import getString from '~/modules/ls/helpers/getString';
 import Button from '~/uikit/buttons/components/button';
 import { Scenario } from '~/modules/scenarios/scenarios.types';
 import { Run } from '~/modules/run/runs.types';
+import getUserRole from '~/modules/users/helpers/getUserRole';
+import getIsEditor from '~/modules/authentication/helpers/getIsEditor';
 
 const CohortParticipantScenariosItem = ({
   scenario,
@@ -29,7 +31,9 @@ const CohortParticipantScenariosItem = ({
       </div>
       <div className="flex gap-2 mt-3">
         <Button icon="play" text="Run scenario" color="primary" onClick={() => onPlayScenarioClicked(scenario._id)} />
-        <Button icon="responses" text="View responses" onClick={() => onViewScenarioResponseClicked(scenario._id)} />
+        {(getIsEditor()) && (
+          <Button icon="responses" text="View responses" onClick={() => onViewScenarioResponseClicked(scenario._id)} />
+        )}
       </div>
     </div>
   );
