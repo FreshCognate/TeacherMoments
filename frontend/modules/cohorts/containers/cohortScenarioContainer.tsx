@@ -5,8 +5,14 @@ import WithCache from '~/core/cache/containers/withCache';
 
 class CohortScenarioContainer extends Component {
   render() {
+
+    const { cohortScenarioResponses } = this.props;
+
     return (
-      <CohortScenario />
+      <CohortScenario
+        responses={cohortScenarioResponses.data}
+        isLoading={cohortScenarioResponses.status === 'loading' || cohortScenarioResponses.status === 'unresolved'}
+      />
     );
   }
 };
@@ -21,6 +27,7 @@ export default WithRouter(WithCache(CohortScenarioContainer, {
         cohortId: id,
         scenarioId
       }
-    }
+    },
+    getInitialData: () => ([])
   }
 }));

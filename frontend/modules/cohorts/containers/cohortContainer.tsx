@@ -23,7 +23,6 @@ class CohortContainer extends Component<CohortContainerProps> {
   render() {
 
     const pathValue = this.props.router.matches[this.props.router.matches.length - 1].id;
-    console.log(pathValue);
 
     const { data, status } = this.props.cohort;
 
