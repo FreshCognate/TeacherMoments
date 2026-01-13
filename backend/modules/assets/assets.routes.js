@@ -24,11 +24,11 @@ export default {
       mimetype: Joi.string().required().valid(...getMimeTypes()),
       isTemporary: Joi.boolean()
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated],
   },
   read: {
     param: 'id',
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated],
   },
   update: {
     param: 'id',
@@ -38,7 +38,7 @@ export default {
       isUploading: Joi.boolean().invalid(true),
       isDeleted: Joi.boolean().invalid(true),
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated],
   },
   delete: {
     param: 'id',
