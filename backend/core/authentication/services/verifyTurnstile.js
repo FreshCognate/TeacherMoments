@@ -25,7 +25,6 @@ export default async (token, context) => {
   const clientIp = req.ip || req.connection.remoteAddress;
 
   try {
-    console.log(secretKey, token, clientIp);
     const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
       headers: {
