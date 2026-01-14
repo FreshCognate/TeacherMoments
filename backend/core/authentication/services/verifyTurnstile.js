@@ -2,7 +2,7 @@
 export default async (token, context) => {
   const { req } = context;
 
-  if (process.env.VITE_TURNSTILE_ENABLED === 'false') {
+  if (process.env.TURNSTILE_ENABLED === 'false') {
     return { success: true, bypass: true };
   }
 

@@ -8,7 +8,7 @@ export default [{
   create: {
     body: {
       email: Joi.string().email().required(),
-      turnstileToken: Joi.string().when('$VITE_TURNSTILE_ENABLED', {
+      turnstileToken: Joi.string().when('$TURNSTILE_ENABLED', {
         is: 'true',
         then: Joi.required(),
         otherwise: Joi.optional()

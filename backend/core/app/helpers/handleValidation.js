@@ -14,7 +14,7 @@ export default (param, bodyValidation, queryValidation, filesValidation, shouldS
 
       const { value, error } = bodyValidation.validate(req.body, {
         context: {
-          VITE_TURNSTILE_ENABLED: process.env.VITE_TURNSTILE_ENABLED
+          TURNSTILE_ENABLED: process.env.TURNSTILE_ENABLED
         }
       });
       if (error) {

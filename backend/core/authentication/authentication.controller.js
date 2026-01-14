@@ -7,7 +7,7 @@ export default {
   create: async function ({ body }, context) {
     const { email, turnstileToken } = body;
 
-    if (process.env.VITE_TURNSTILE_ENABLED !== 'false') {
+    if (process.env.TURNSTILE_ENABLED !== 'false') {
       await verifyTurnstile(turnstileToken, context);
     }
 
