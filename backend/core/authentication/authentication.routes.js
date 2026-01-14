@@ -15,6 +15,7 @@ export default [{
         otherwise: Joi.optional()
       })
     },
+    rateLimit: 5,
   },
   read: {
     middleware: [isAuthenticated],

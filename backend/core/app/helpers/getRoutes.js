@@ -4,6 +4,7 @@ import handleValidation from './handleValidation.js';
 import handleRoute from './handleRoute.js';
 import Joi from 'joi';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 
 const ROUTE_MAPPINGS = {
   all: {
@@ -44,9 +45,21 @@ export default function (app) {
           app.options(`${process.env.API_PREFIX}${route.route}${routeItemParam}`, cors());
         }
 
+        const limiter = rateLimit({
+          windowMs: routeItem.rateLimit <= 5 ? 15 * 60 * 1000 : 1 * 60 * 1000,
+          limit: routeItem.rateLimit,
+          standardHeaders: 'draft-8',
+          legacyHeaders: false,
+          skip: () => routeItem.shouldSkipRateLimit,
+          handler: (req, res, next, options) => {
+            return res.status(options.statusCode).json({ message: "Too many requests, please try again later.", statusCode: options.statusCode })
+          }
+        });
+
         app[method](
           `${process.env.API_PREFIX}${route.route}${routeItemParam}`,
           cors(routeItem.hasCors),
+          limiter,
           ...routeItem.middleware,
           handleValidation(routeItem.param, bodyValidation, queryValidation, filesValidation, routeItem.shouldSkipValidation),
           handleRoute({
