@@ -50,7 +50,7 @@ export default async (props, options, context) => {
 
   await sendEmail({
     to: lowerCaseEmail,
-    templateAlias: 'signup-otp',
+    templateAlias: 'signup',
     templateModel: {
       name: username,
       otpCode,
@@ -58,9 +58,6 @@ export default async (props, options, context) => {
     }
   });
 
-  return {
-    message: 'User created successfully. Please check your email for the OTP.',
-    email: lowerCaseEmail
-  };
+  return { user };
 
 };

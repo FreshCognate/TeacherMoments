@@ -71,11 +71,6 @@ const LoginDialog = ({
           email: {
             type: 'Text',
             label: 'Email'
-          },
-          password: {
-            type: 'Text',
-            label: 'Password',
-            textType: 'password'
           }
         }}
         model={model}

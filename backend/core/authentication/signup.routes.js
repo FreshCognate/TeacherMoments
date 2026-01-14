@@ -11,6 +11,7 @@ export default [{
     },
   },
   update: {
+    param: 'id',
     body: {
       email: Joi.string().email().required(),
       otpCode: Joi.string().length(6).required()

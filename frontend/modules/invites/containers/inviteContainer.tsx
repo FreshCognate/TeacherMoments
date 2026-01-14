@@ -39,9 +39,6 @@ class InviteContainer extends Component<InviteContainerProps> {
                 case 'LOGIN':
                   addModal({ title: 'Login', component: <LoginDialogContainer /> }, () => { });
                   break;
-                case 'ANONYMOUSLY':
-                  addModal({ title: 'Anonymously login' }, () => { });
-                  break;
                 case 'CREATE':
                   addModal({ title: 'Create an account', component: <SignupDialogContainer /> }, () => { });
                   break;

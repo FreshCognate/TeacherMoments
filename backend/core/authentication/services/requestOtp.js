@@ -40,7 +40,7 @@ export default async ({ email }, context) => {
 
   await sendEmail({
     to: lowerCaseEmail,
-    templateAlias: 'otp-login',
+    templateAlias: 'login',
     templateModel: {
       name: user.firstName || user.username || 'User',
       otpCode,

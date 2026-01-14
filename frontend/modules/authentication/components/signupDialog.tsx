@@ -1,16 +1,12 @@
 import React from 'react';
 import FormContainer from '~/core/forms/containers/formContainer';
 import Alert from '~/uikit/alerts/components/alert';
-import PasswordStrength from '~/uikit/alerts/components/passwordStrength';
 import Button from '~/uikit/buttons/components/button';
-import Icon from '~/uikit/icons/components/icon';
 
 const SignupDialog = ({
   model,
   alertText,
   alertType,
-  passwordStrength,
-  passwordAttributes,
   isSignupButtonDisabled,
   onSignupFormUpdate,
   onSignupButtonClicked,
@@ -18,8 +14,6 @@ const SignupDialog = ({
   model: any,
   alertText: string,
   alertType: 'info' | 'warning',
-  passwordStrength: number,
-  passwordAttributes: any,
   isSignupButtonDisabled: boolean,
   onSignupFormUpdate: ({ update }: { update: any }) => void,
   onSignupButtonClicked: () => void
@@ -36,24 +30,10 @@ const SignupDialog = ({
           email: {
             type: 'Text',
             label: 'Email'
-          },
-          password: {
-            type: 'Text',
-            label: 'Password',
-            textType: 'password'
-          },
-          confirmPassword: {
-            type: 'Text',
-            label: 'Confirm password',
-            textType: 'password'
           }
         }}
         model={model}
         onUpdate={onSignupFormUpdate}
-      />
-      <PasswordStrength
-        passwordStrength={passwordStrength}
-        passwordAttributes={passwordAttributes}
       />
       <div className="py-4">
         <Alert text={alertText} type={alertType} />

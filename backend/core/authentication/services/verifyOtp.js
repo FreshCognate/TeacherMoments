@@ -58,9 +58,7 @@ export default async ({ email, otpCode }, context) => {
   }
 
   if (user.otpCode !== otpCode) {
-    await models.User.findByIdAndUpdate(user._id, {
-      $inc: { otpAttempts: 1 }
-    });
+    await models.User.findByIdAndUpdate(user._id, { $inc: { otpAttempts: 1 } });
     const attemptsRemaining = 5 - (user.otpAttempts + 1);
     throw {
       message: `Invalid OTP. ${attemptsRemaining} attempt(s) remaining.`,
@@ -83,11 +81,7 @@ export default async ({ email, otpCode }, context) => {
     updateFields.verifiedAt = now;
   }
 
-  const updatedUser = await models.User.findByIdAndUpdate(
-    user._id,
-    updateFields,
-    { new: true }
-  );
+  const updatedUser = await models.User.findByIdAndUpdate(user._id, updateFields, { new: true });
 
   return new Promise((resolve, reject) => {
     req.logIn(updatedUser, (err) => {
