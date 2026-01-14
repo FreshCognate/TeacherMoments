@@ -12,6 +12,8 @@ const setDefaults = (route, item) => {
   routeItem.props = routeItem.props || {};
   routeItem.hasCors = !!routeItem.hasCors;
   routeItem.shouldSkipValidation = !!routeItem.shouldSkipValidation;
+  routeItem.shouldSkipRateLimit = !!routeItem.shouldSkipRateLimit;
+  routeItem.rateLimit = routeItem.rateLimit ? routeItem.rateLimit : (item === 'all' || item === 'read') ? 2000 : 200;
 };
 
 const registerRoute = (route) => {

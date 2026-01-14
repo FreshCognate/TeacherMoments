@@ -50,6 +50,8 @@ export async function loader({ request }) {
     NODE_ENV: process.env.NODE_ENV,
     STORAGE_NAME: process.env.STORAGE_NAME,
     STORAGE_ENDPOINT: process.env.STORAGE_ENDPOINT,
+    TURNSTILE_SITE_KEY: process.env.TURNSTILE_SITE_KEY,
+    TURNSTILE_ENABLED: process.env.TURNSTILE_ENABLED,
   }
 }
 
@@ -89,6 +91,8 @@ export default function App(props) {
     window.NODE_ENV = props.loaderData.NODE_ENV;
     window.STORAGE_NAME = props.loaderData.STORAGE_NAME;
     window.STORAGE_ENDPOINT = props.loaderData.STORAGE_ENDPOINT;
+    window.TURNSTILE_SITE_KEY = props.loaderData.TURNSTILE_SITE_KEY;
+    window.TURNSTILE_ENABLED = props.loaderData.TURNSTILE_ENABLED;
   }
 
   return (

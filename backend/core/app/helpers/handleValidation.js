@@ -12,7 +12,11 @@ export default (param, bodyValidation, queryValidation, filesValidation, shouldS
 
     if (bodyValidation) {
 
-      const { value, error } = bodyValidation.validate(req.body);
+      const { value, error } = bodyValidation.validate(req.body, {
+        context: {
+          TURNSTILE_ENABLED: process.env.TURNSTILE_ENABLED
+        }
+      });
       if (error) {
         throw error.message;
       }

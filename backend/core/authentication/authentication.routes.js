@@ -8,8 +8,20 @@ export default [{
   create: {
     body: {
       email: Joi.string().email().required(),
-      password: Joi.string().required()
+      turnstileToken: Joi.string().when('$TURNSTILE_ENABLED', {
+        is: 'true',
+        then: Joi.required(),
+        otherwise: Joi.optional()
+      })
     },
+    rateLimit: 5,
+  },
+  update: {
+    body: {
+      email: Joi.string().email().required(),
+      otpCode: Joi.string().length(6).required()
+    },
+    rateLimit: 10,
   },
   read: {
     middleware: [isAuthenticated],

@@ -20,31 +20,34 @@ class VerifyCodeDialogContainer extends Component<any, VerifyCodeDialogContainer
     isVerifying: false
   }
 
-  onVerifyFormUpdate = ({ update }: { update: any }) => {
-    this.setState({
-      ...update,
-      hasError: false,
-      error: ''
-    });
+  loginUser = () => {
+    axios.put(`/api/authentication`, { email: this.props.email, otpCode: this.state.code })
+      .then((response) => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        const message = get(error, 'response.data.message', 'Verification failed. Please try again.');
+        this.setState({
+          hasError: true,
+          error: message,
+          isVerifying: false
+        });
+      });
   }
 
-  onVerifyButtonClicked = () => {
-    const { userId } = this.props.router.params;
-    if (!this.state.code || this.state.isVerifying || !userId) {
+  signupUser = () => {
+    const { userId, inviteId } = this.props.router.params;
+    const searchParams = new URLSearchParams(this.props.router.location.search);
+    const email = searchParams.get('email');
+    console.log(email);
+    if (!userId || !email) {
+      window.location.href = '/';
       return;
-    }
-
-    this.setState({
-      hasError: false,
-      error: '',
-      isVerifying: true
-    });
-
-    axios.put(`/api/signup/${this.props.router.params.userId}`, { code: this.state.code })
+    };
+    axios.put(`/api/signup/${userId}`, { email: email, otpCode: this.state.code })
       .then((response) => {
-        const { params } = this.props.router;
-        if (params.inviteId) {
-          window.location.href = `${window.location.origin}/invite/${params.inviteId}`;
+        if (inviteId) {
+          window.location.href = `${window.location.origin}/invite/${inviteId}`;
         }
       })
       .catch((error) => {
@@ -55,6 +58,33 @@ class VerifyCodeDialogContainer extends Component<any, VerifyCodeDialogContainer
           isVerifying: false
         });
       });
+  }
+
+  onVerifyFormUpdate = ({ update }: { update: any }) => {
+    this.setState({
+      ...update,
+      hasError: false,
+      error: ''
+    });
+  }
+
+  onVerifyButtonClicked = () => {
+    if (!this.state.code || this.state.isVerifying) {
+      return;
+    }
+
+    this.setState({
+      hasError: false,
+      error: '',
+      isVerifying: true
+    });
+
+    if (this.props.verifyType === 'LOGIN') {
+      return this.loginUser();
+    } else {
+      return this.signupUser();
+    }
+
   }
 
   render() {

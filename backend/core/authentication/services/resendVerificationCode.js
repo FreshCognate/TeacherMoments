@@ -21,15 +21,20 @@ export default async (props, options, context) => {
     throw { message: 'User not found or already verified', statusCode: 400 };
   }
 
+  // Validate rate limiting
   await validateOtpRateLimit(user, models);
 
   const now = new Date();
+  const windowStart = user.otpRequestWindowStart;
   const fifteenMinutesAgo = new Date(now.getTime() - 15 * 60 * 1000);
 
   let otpRequestCount = user.otpRequestCount || 0;
+  let otpRequestWindowStart = user.otpRequestWindowStart;
 
-  if (!user.otpGeneratedAt || user.otpGeneratedAt < fifteenMinutesAgo) {
+  // Reset window if expired
+  if (!windowStart || windowStart < fifteenMinutesAgo) {
     otpRequestCount = 1;
+    otpRequestWindowStart = now;
   } else {
     otpRequestCount += 1;
   }
@@ -40,7 +45,8 @@ export default async (props, options, context) => {
     otpCode,
     otpAttempts: 0,
     otpRequestCount,
-    otpGeneratedAt: now
+    otpRequestWindowStart,
+    lastOtpSentAt: now
   });
 
   await sendEmail({

@@ -1,6 +1,4 @@
 import omit from 'lodash/omit.js';
-import { Strategy as LocalStrategy } from 'passport-local';
-import isValidUserPassword from '#core/authentication/helpers/isValidUserPassword.js';
 import getModelsAndTenant from '#core/databases/helpers/getModelsAndTenant.js';
 
 export default function (passport) {
@@ -18,7 +16,7 @@ export default function (passport) {
         let user = await models.User.findById(id);
 
         if (!user) return done('No user');
-        user = omit(user.toObject(), ['hash']);
+        user = omit(user.toObject(), ['otpCode']);
         done(null, user);
 
       } catch (error) {
@@ -31,15 +29,5 @@ export default function (passport) {
     deserialize();
 
   });
-
-  passport.use(new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password',
-    passReqToCallback: true,
-    failureRedirect: `${global.protocol}://www.mit.edu/`,
-    failureFlash: true
-  }, function (req, email, password, done) {
-    isValidUserPassword(req, { email, password }, done);
-  }));
 
 };

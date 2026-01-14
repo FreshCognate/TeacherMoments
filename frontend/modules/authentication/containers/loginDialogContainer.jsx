@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import LoginDialog from '../components/loginDialog';
 import axios from 'axios';
 import get from 'lodash/get';
+import addModal from '~/core/dialogs/helpers/addModal';
+import VerifyCodeDialogContainer from './verifyCodeDialogContainer';
 
 class LoginDialogContainer extends Component {
 
   state = {
     email: '',
-    password: '',
     hasError: false,
     error: ''
   }
@@ -16,13 +17,20 @@ class LoginDialogContainer extends Component {
     this.setState(update);
   }
 
-  onLoginButtonClicked = () => {
+  onLoginButtonClicked = (turnstileToken) => {
     this.setState({
       hasError: false,
       error: ''
     });
-    axios.post('/api/authentication', { email: this.state.email, password: this.state.password }).then(() => {
-      window.location.reload();
+    axios.post('/api/authentication', {
+      email: this.state.email,
+      turnstileToken
+    }).then(() => {
+      addModal({
+        component: <VerifyCodeDialogContainer verifyType="LOGIN" email={this.state.email} />
+      }, () => {
+
+      })
     }).catch((error) => {
       this.setState({
         hasError: true,

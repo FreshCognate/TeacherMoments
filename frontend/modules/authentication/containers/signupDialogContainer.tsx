@@ -4,38 +4,23 @@ import axios from 'axios';
 import has from 'lodash/has';
 import validator from 'validator';
 import sanitizeUsername from '../helpers/sanitizeUsername';
-import getPasswordStrength from '../helpers/getPasswordStrength';
 
 class SignupDialogContainer extends Component {
 
   state = {
     username: '',
     email: '',
-    password: '',
-    confirmPassword: '',
     hasError: false,
     error: '',
     isSigningUp: false
   }
 
   getIsValidNewUser = () => {
-    const { username, email, password, confirmPassword, error, hasError, isSigningUp } = this.state;
+    const { username, email, error, hasError, isSigningUp } = this.state;
     let hasErrorMessage = false;
     let isSignupButtonDisabled = isSigningUp;
     let errorMessage = '';
 
-    const passwordStrengthData = getPasswordStrength(password);
-
-    if (password !== confirmPassword) {
-      hasErrorMessage = true;
-      isSignupButtonDisabled = true;
-      errorMessage = 'Passwords do not match';
-    }
-    if (!validator.isStrongPassword(password)) {
-      hasErrorMessage = true;
-      isSignupButtonDisabled = true;
-      errorMessage = 'Passwords is not strong enough';
-    }
     if (!validator.isEmail(email)) {
       hasErrorMessage = true;
       isSignupButtonDisabled = true;
@@ -54,9 +39,7 @@ class SignupDialogContainer extends Component {
     return {
       hasError: hasErrorMessage,
       error: errorMessage,
-      isSignupButtonDisabled,
-      passwordStrength: passwordStrengthData.strength,
-      passwordAttributes: passwordStrengthData.attributes
+      isSignupButtonDisabled
     };
   }
 
@@ -75,10 +58,10 @@ class SignupDialogContainer extends Component {
       return;
     }
     this.setState({ isSigningUp: true });
-    const { username, email, password, confirmPassword } = this.state;
-    axios.post(`/api/signup`, { username, email, password, confirmPassword }).then((response) => {
+    const { username, email } = this.state;
+    axios.post(`/api/signup`, { username, email }).then((response) => {
       const userId = response.data.user._id;
-      window.location.href = `${window.location.href}/verify/${userId}`;
+      window.location.href = `${window.location.href}/verify/${userId}?email=${encodeURIComponent(email)}`;
     }).catch((error) => {
       if (error.response?.data) {
         const { message } = error.response.data;
@@ -91,15 +74,13 @@ class SignupDialogContainer extends Component {
 
   render() {
 
-    let { isSignupButtonDisabled, hasError, error, passwordAttributes, passwordStrength } = this.getIsValidNewUser();
+    let { isSignupButtonDisabled, hasError, error } = this.getIsValidNewUser();
 
     return (
       <SignupDialog
         model={this.state}
         alertText={hasError ? error : 'Everything looks good!'}
         alertType={hasError ? 'warning' : 'info'}
-        passwordAttributes={passwordAttributes}
-        passwordStrength={passwordStrength}
         isSignupButtonDisabled={isSignupButtonDisabled}
         onSignupFormUpdate={this.onSignupFormUpdate}
         onSignupButtonClicked={this.onSignupButtonClicked}

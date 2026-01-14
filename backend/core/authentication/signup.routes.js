@@ -6,16 +6,15 @@ export default [{
   controller,
   create: {
     body: {
-      username: Joi.string().required(),
-      email: Joi.string().email().required(),
-      password: Joi.string().required(),
-      confirmPassword: Joi.string().required()
+      username: Joi.string().min(6).required(),
+      email: Joi.string().email().required()
     },
   },
   update: {
     param: 'id',
     body: {
-      code: Joi.string().required()
+      email: Joi.string().email().required(),
+      otpCode: Joi.string().length(6).required()
     },
   }
 }];
