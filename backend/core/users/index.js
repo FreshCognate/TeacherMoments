@@ -4,7 +4,6 @@ import model from './users.model.js';
 import { on, emit } from '#core/events/index.js';
 import routes from './users.routes.js';
 import getConnection from '#core/databases/helpers/getConnection.js';
-import createHash from '#core/authentication/helpers/createHash.js';
 
 registerModel({
   name: 'User',
@@ -24,23 +23,22 @@ on('core:server:started', async function () {
     const user = await User.findOne({ role: 'SUPER_ADMIN' });
     if (!user) {
 
-      console.log("ADDING USER");
+      console.log("ADDING SUPER ADMIN USER");
 
       const superAdmin = {
         firstName: 'Daryl',
         lastName: 'Hedley',
+        username: process.env.SUPER_ADMIN_EMAIL.split('@')[0],
         email: process.env.SUPER_ADMIN_EMAIL,
-        password: process.env.SUPER_ADMIN_PASSWORD,
         role: 'SUPER_ADMIN',
-        isRegistered: true,
-        registeredAt: new Date()
+        isVerified: true,
+        registeredAt: new Date(),
+        verifiedAt: new Date()
       };
 
-      const hash = await createHash(superAdmin.password);
-
-      superAdmin.hash = hash;
-
       await User.create(superAdmin);
+
+      console.log("SUPER ADMIN CREATED - Use OTP login to access the account");
 
     }
   } catch (error) {

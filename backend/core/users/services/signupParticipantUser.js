@@ -1,16 +1,12 @@
-import uuid from 'node-uuid';
 import validator from 'validator';
 import crypto from 'crypto';
-import createHash from '#core/authentication/helpers/createHash.js';
 import sendEmail from '#core/mailer/helpers/sendEmail.js';
 
 export default async (props, options, context) => {
 
   const {
     username,
-    email,
-    password,
-    confirmPassword
+    email
   } = props;
 
   const { req, models } = context;
@@ -19,11 +15,9 @@ export default async (props, options, context) => {
 
   const isValidEmail = validator.isEmail(email);
 
-  if (username.length < 6) throw { message: 'Username is too short', statusCode: 400 };
+  if (username.length < 6) throw { message: 'Username must be at least 6 characters', statusCode: 400 };
 
-  if (!isValidEmail) throw { message: 'Email is now valid', statusCode: 400 };
-
-  if (password !== confirmPassword) throw { message: 'Passwords do not match', statusCode: 400 };
+  if (!isValidEmail) throw { message: 'Email is not valid', statusCode: 400 };
 
   const isExistingUser = await models.User.findOne({
     $or: [
@@ -33,23 +27,22 @@ export default async (props, options, context) => {
   });
 
   if (isExistingUser) {
-    throw { message: 'This user already exists. Trying another username or email.', statusCode: 400 };
+    throw { message: 'This user already exists. Try another username or email.', statusCode: 400 };
   }
 
   const createdAt = new Date();
 
-  const hash = await createHash(password);
-
-  const verificationCode = crypto.randomInt(100000, 999999).toString();
-  const verificationCodeExpiry = new Date(Date.now() + 15 * 60 * 1000);
+  const otpCode = crypto.randomInt(100000, 999999).toString();
 
   const createObject = {
     username,
     email: lowerCaseEmail,
     role: 'PARTICIPANT',
-    hash,
-    verificationCode,
-    verificationCodeExpiry,
+    otpCode,
+    otpAttempts: 0,
+    otpRequestCount: 1,
+    otpRequestWindowStart: createdAt,
+    lastOtpSentAt: createdAt,
     isVerified: false,
     createdAt,
   };
@@ -58,13 +51,17 @@ export default async (props, options, context) => {
 
   await sendEmail({
     to: lowerCaseEmail,
-    templateAlias: 'signup',
+    templateAlias: 'signup-otp',
     templateModel: {
       name: username,
-      verificationCode
+      otpCode,
+      expiryMinutes: 10
     }
-  })
+  });
 
-  return { _id: user._id };
+  return {
+    message: 'User created successfully. Please check your email for the OTP.',
+    email: lowerCaseEmail
+  };
 
 };

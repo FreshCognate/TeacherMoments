@@ -1,23 +1,21 @@
 import signupParticipantUser from "#core/users/services/signupParticipantUser.js";
-import verifyParticipantUser from "#core/users/services/verifyParticipantUser.js";
+import verifyOtp from "./services/verifyOtp.js";
 
 export default {
 
   create: async function ({ body }, context) {
-    const { username, email, password, confirmPassword } = body;
+    const { username, email } = body;
 
-    const user = await signupParticipantUser({ username, email, password, confirmPassword }, {}, context);
+    const result = await signupParticipantUser({ username, email }, {}, context);
 
-    return { user };
-
+    return result;
   },
 
-  update: async function ({ body, param }, context) {
-    const { code } = body;
+  update: async function ({ body }, context) {
+    const { email, otpCode } = body;
 
-    const user = await verifyParticipantUser({ userId: param, code }, {}, context);
+    const user = await verifyOtp({ email, otpCode }, context);
 
     return { user };
-
   }
 };
