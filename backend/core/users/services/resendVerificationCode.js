@@ -1,24 +1,27 @@
 import crypto from 'crypto';
 import sendEmail from '#core/mailer/helpers/sendEmail.js';
-import validateOtpRateLimit from './validateOtpRateLimit.js';
+import validateOtpRateLimit from '#core/authentication/services/validateOtpRateLimit.js';
 
-export default async ({ email }, context) => {
+export default async (props, options, context) => {
+
+  const {
+    email
+  } = props;
+
   const { models } = context;
 
   const lowerCaseEmail = email.toLowerCase();
 
-  let user = await models.User.findOne({
+  const user = await models.User.findOne({
     email: lowerCaseEmail,
-    isDeleted: false
+    isVerified: false
   }).select('+otpCode');
 
   if (!user) {
-    throw { message: 'User not found', statusCode: 404 };
+    throw { message: 'User not found or already verified', statusCode: 400 };
   }
 
   await validateOtpRateLimit(user, models);
-
-  const otpCode = crypto.randomInt(100000, 999999).toString();
 
   const now = new Date();
   const fifteenMinutesAgo = new Date(now.getTime() - 15 * 60 * 1000);
@@ -31,6 +34,8 @@ export default async ({ email }, context) => {
     otpRequestCount += 1;
   }
 
+  const otpCode = crypto.randomInt(100000, 999999).toString();
+
   await models.User.findByIdAndUpdate(user._id, {
     otpCode,
     otpAttempts: 0,
@@ -40,9 +45,9 @@ export default async ({ email }, context) => {
 
   await sendEmail({
     to: lowerCaseEmail,
-    templateAlias: 'otp-login',
+    templateAlias: 'resend-otp',
     templateModel: {
-      name: user.firstName || user.username || 'User',
+      name: user.username || 'User',
       otpCode,
       expiryMinutes: 10
     }
@@ -50,6 +55,7 @@ export default async ({ email }, context) => {
 
   return {
     message: 'OTP sent successfully',
-    email: lowerCaseEmail
+    email: user.email
   };
+
 };

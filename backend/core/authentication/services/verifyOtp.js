@@ -34,11 +34,11 @@ export default async ({ email, otpCode }, context) => {
     user.otpAttempts = 0;
   }
 
-  if (!user.otpCode || !user.lastOtpSentAt) {
+  if (!user.otpCode || !user.otpGeneratedAt) {
     throw { message: 'No OTP found. Please request a new one.', statusCode: 400 };
   }
 
-  const otpExpiryTime = new Date(user.lastOtpSentAt.getTime() + 10 * 60 * 1000);
+  const otpExpiryTime = new Date(user.otpGeneratedAt.getTime() + 10 * 60 * 1000);
   if (now > otpExpiryTime) {
     throw { message: 'OTP has expired. Please request a new one.', statusCode: 400 };
   }

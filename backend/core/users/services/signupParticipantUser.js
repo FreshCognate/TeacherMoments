@@ -41,8 +41,7 @@ export default async (props, options, context) => {
     otpCode,
     otpAttempts: 0,
     otpRequestCount: 1,
-    otpRequestWindowStart: createdAt,
-    lastOtpSentAt: createdAt,
+    otpGeneratedAt: createdAt,
     isVerified: false,
     createdAt,
   };

@@ -43,9 +43,9 @@ export default async (user, models) => {
     };
   }
 
-  if (user.lastOtpSentAt) {
+  if (user.otpGeneratedAt) {
     const thirtySecondsAgo = new Date(now.getTime() - 30 * 1000);
-    if (user.lastOtpSentAt > thirtySecondsAgo) {
+    if (user.otpGeneratedAt > thirtySecondsAgo) {
       throw {
         message: 'Please wait 30 seconds before requesting another OTP.',
         statusCode: 429
