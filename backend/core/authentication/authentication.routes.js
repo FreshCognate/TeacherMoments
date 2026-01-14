@@ -8,7 +8,12 @@ export default [{
   create: {
     body: {
       email: Joi.string().email().required(),
-      password: Joi.string().required()
+      password: Joi.string().required(),
+      turnstileToken: Joi.string().when('$VITE_TURNSTILE_ENABLED', {
+        is: 'true',
+        then: Joi.required(),
+        otherwise: Joi.optional()
+      })
     },
   },
   read: {

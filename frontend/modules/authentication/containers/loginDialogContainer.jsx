@@ -16,12 +16,16 @@ class LoginDialogContainer extends Component {
     this.setState(update);
   }
 
-  onLoginButtonClicked = () => {
+  onLoginButtonClicked = (turnstileToken) => {
     this.setState({
       hasError: false,
       error: ''
     });
-    axios.post('/api/authentication', { email: this.state.email, password: this.state.password }).then(() => {
+    axios.post('/api/authentication', {
+      email: this.state.email,
+      password: this.state.password,
+      turnstileToken
+    }).then(() => {
       window.location.reload();
     }).catch((error) => {
       this.setState({

@@ -40,6 +40,7 @@ const startServer = async function () {
   const port = getPort();
 
   app.set('port', port);
+  app.set('trust proxy', true);
 
   app.use(compression());
 
