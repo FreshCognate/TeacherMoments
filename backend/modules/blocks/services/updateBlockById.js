@@ -7,9 +7,12 @@ export default async (props, options, context) => {
 
   const { blockId, update } = props;
 
-  const { models } = context;
+  const { models, user } = context;
 
   await checkHasAccessToScenario({ modelId: blockId, modelType: 'Block' }, context);
+
+  update.updatedBy = user._id;
+  update.updatedAt = new Date();
 
   const block = await models.Block.findByIdAndUpdate(blockId, update, { new: true }).populate(getBlockPopulate()).populate(getBlockItemsPopulate());
 
