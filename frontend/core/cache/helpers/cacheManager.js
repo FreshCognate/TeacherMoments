@@ -79,7 +79,7 @@ if (typeof window !== "undefined") {
 const config = {};
 
 const mutateDebounced = ({ debounceTime }) => debounce(({
-  update, cache, props, options
+  update, cache, props, options = {}
 }) => {
 
   cache.setPreviousState();
@@ -204,6 +204,8 @@ export function createCache({ key, cache, container }) {
     cacheObject.transform = (config.transform) ? config.transform : ({ data }) => data;
   }
 
+  cacheObject.getters = cache.getters || {};
+
   cacheObject.getDependencies = () => ([]);
 
   if (cache.getDependencies) {
@@ -240,6 +242,15 @@ export function createCache({ key, cache, container }) {
     cacheObject.trigger('SET');
   };
 
+  cacheObject.get = (getter, attributes) => {
+    if (cacheObject.getters[getter]) {
+      return cacheObject.getters[getter]({ data: cacheObject.data, attributes, props: cacheObject.container.props });
+    } else {
+      console.warn('Getter', getter, 'not setup')
+    }
+    return cacheObject.data;
+  };
+
   cacheObject.set = (update, options = {}) => {
 
     let updatedData;
@@ -268,7 +279,9 @@ export function createCache({ key, cache, container }) {
     cacheObject.data = updatedData;
     cacheObject.isStale = true;
 
-    cacheObject.trigger('SET');
+    if (!options.isSilent) {
+      cacheObject.trigger('SET');
+    }
 
     return new Promise((resolve) => {
       resolve();
@@ -280,7 +293,15 @@ export function createCache({ key, cache, container }) {
 
     cacheObject.setPreviousState();
 
+    if (cacheObject.isFetching) {
+      if (cacheObject.controller) {
+        cacheObject.controller.abort();
+      }
+    }
+
     cacheObject.isFetching = true;
+    cacheObject.controller = new AbortController();
+
     cacheObject.status = (cacheObject.status === 'idle' || cacheObject.status === 'unresolved') ? 'loading' : 'syncing';
 
     cacheObject.trigger('STATUS');
@@ -291,7 +312,8 @@ export function createCache({ key, cache, container }) {
       method: cacheObject.method,
       url: getUrl({ url: cacheObject.url, params: cacheObject.getParams({ props }) }),
       params: cacheObject.query,
-    }).catch(handleRequestError);
+      signal: cacheObject.controller.signal
+    });
 
     return fetchPromise.then((response) => {
       const { data } = response;
@@ -347,6 +369,12 @@ export function createCache({ key, cache, container }) {
 
     clearTimeout(cacheObject.mutatedDebounce);
 
+    if (cacheObject.abortController) {
+      cacheObject.abortController.abort();
+    }
+
+    cacheObject.abortController = new AbortController();
+
     cacheObject.mutatedDebounce = setTimeout(() => {
 
       let update = { ...cacheObject.mutations };
@@ -355,13 +383,14 @@ export function createCache({ key, cache, container }) {
 
       return axios({
         method: options.method || cacheObject.method,
-        url: getUrl({ url: cacheObject.url, params: cacheObject.getParams({ props }) }),
+        url: options.url || getUrl({ url: cacheObject.url, params: cacheObject.getParams({ props }) }),
         data: update,
+        signal: cacheObject.abortController.signal
       }).then((response) => {
         // Only emit if there are no new mutations coming through
         if (!cacheObject.isMutating) {
           const { data } = response;
-          const transformedData = cacheObject.transform({ data, props });
+          const transformedData = options.transform ? options.transform({ data, props }) : cacheObject.transform({ data, props });
 
           cacheObject.resetStale();
 
@@ -369,6 +398,10 @@ export function createCache({ key, cache, container }) {
 
           if (options.setType === 'replace') {
             updatedData = transformedData;
+          } else if (options.setType === 'itemExtend') {
+            const item = find(cacheObject.data, options.setFind);
+            extend(item, updatedData);
+            updatedData = cloneDeep(cacheObject.data);
           }
 
           cacheObject.data = updatedData;
@@ -386,6 +419,9 @@ export function createCache({ key, cache, container }) {
 
         }
       }).catch((error) => {
+        if (axios.isCancel(error)) {
+          return;
+        }
         if (error.response) {
           const { data } = error.response;
 
@@ -401,7 +437,6 @@ export function createCache({ key, cache, container }) {
             }
           }, 0);
         }
-        handleRequestError(error);
         console.error(error);
       });
 

@@ -212,6 +212,7 @@ const WithCache = (Component, cacheObject = {}, listeners = []) => {
           previousState: cache.previousState,
           query: cache.query,
           response: cache.response,
+          get: cache.get,
           set: cache.set,
           setStatus: cache.setStatus,
           status: cache.status,
