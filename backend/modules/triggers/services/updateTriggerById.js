@@ -5,9 +5,12 @@ export default async (props, options, context) => {
 
   const { triggerId, update } = props;
 
-  const { models } = context;
+  const { models, user } = context;
 
   await checkHasAccessToScenario({ modelId: triggerId, modelType: 'Trigger' }, context);
+
+  update.updatedAt = new Date();
+  update.updatedBy = user._id;
 
   const trigger = await models.Trigger.findByIdAndUpdate(triggerId, update, { new: true });
 

@@ -4,7 +4,7 @@ import setScenarioHasChanges from './setScenarioHasChanges.js';
 export default async (props, options, context) => {
 
   const { scenarioId, collaborators } = props;
-  const { models } = context;
+  const { models, user } = context;
 
   await checkHasAccessToScenario({ modelId: scenarioId, modelType: 'Scenario' }, context);
 
