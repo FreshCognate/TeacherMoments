@@ -22,8 +22,8 @@ const Required = ({
   });
   const text = isComplete ? "Complete" : "Required"
   return (
-    <div title="This prompt requires a response" className="flex items-center" >
-      <Icon icon={icon} className={iconClassName} size={12} />
+    <div title="This prompt requires a response" className="flex items-center bg-dm-0 py-1 px-2 rounded-full" >
+      <Icon icon={icon} className={iconClassName} size={10} />
       <Body body={text} size="xs" className={textClassName} />
     </div>
   );

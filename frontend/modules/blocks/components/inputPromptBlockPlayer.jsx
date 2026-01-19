@@ -23,10 +23,10 @@ const InputPromptBlockPlayer = ({
   return (
     <div>
       <div className="mb-2 relative">
-        <Body body={getString({ model: block, field: 'body' })} />
-        <div className="absolute -top-3 right-0">
+        <div className="flex mb-2">
           <Required isRequired={block.isRequired} isComplete={blockTracking.isAbleToComplete} />
         </div>
+        <Body body={getString({ model: block, field: 'body' })} />
       </div>
 
       {(block.inputType === 'AUDIO' && !isAudioDisabled) && (
