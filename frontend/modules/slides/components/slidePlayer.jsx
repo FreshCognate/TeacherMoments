@@ -9,6 +9,7 @@ import SlidePlayerHeader from './slidePlayerHeader';
 import SummarySlide from './summarySlide';
 import ConsentSlide from './consentSlide';
 import getSlideFeedbackItems from '~/modules/run/helpers/getSlideFeedbackItems';
+import Title from '~/uikit/content/components/title';
 
 const SlidePlayer = ({
   scenario,
@@ -74,6 +75,7 @@ const SlidePlayer = ({
         })}
         {(slideFeedbackItems && slideFeedbackItems.length > 0) && (
           <div className="bg-blue-200 bg-opacity-30 border border-blue-200 p-2 rounded-md dark:text-gray-200 text-gray-800">
+            <Title title="Feedback Based on Your Response" size='lg' className="font-bold mb-2" />
             {map(slideFeedbackItems, (feedbackItem, index) => {
               return (
                 <Body key={index} body={feedbackItem} />
