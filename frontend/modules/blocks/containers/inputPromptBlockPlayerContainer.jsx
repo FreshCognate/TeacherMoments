@@ -52,14 +52,16 @@ class InputPromptBlockPlayerContainer extends Component {
           this.setState({ uploadProgress: payload.progress });
           break;
         case 'ASSET_UPLOADED':
-          this.setState({ uploadProgress: 100, isUploadingAudio: false });
+          this.setState({ uploadProgress: 100 });
+          this.props.onUpdateBlockTracking({ isTranscribingAudio: true });
           break;
         case 'AUDIO_PROCESSING':
           this.setState({ uploadStatus: 'Converting audio' });
           break;
         case 'AUDIO_PROCESSED':
           const assetProcessedResponse = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
-          this.props.onUpdateBlockTracking({ audio: assetProcessedResponse.data.asset, isTranscribingAudio: true });
+          this.props.onUpdateBlockTracking({ audio: assetProcessedResponse.data.asset });
+          this.setState({ isUploadingAudio: false });
           break;
         case 'TRANSCRIPT_PROCESSING':
           this.setState({ uploadStatus: 'Creating transcript' });
@@ -67,8 +69,10 @@ class InputPromptBlockPlayerContainer extends Component {
         case 'TRANSCRIPT_PROCESSED':
           const assetTranscribedResponse = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
           const isAbleToComplete = assetTranscribedResponse.data.asset.transcript.length > 0;
-          this.props.onUpdateBlockTracking({ audio: assetTranscribedResponse.data.asset, isAbleToComplete, textValue: assetTranscribedResponse.data.asset.transcript });
-          this.setState({ uploadStatus: null, isTranscribingAudio: false });
+          this.props.onUpdateBlockTracking({ audio: assetTranscribedResponse.data.asset, isAbleToComplete, isTranscribingAudio: false, textValue: assetTranscribedResponse.data.asset.transcript });
+          break;
+        case 'ASSET_PROCESSED':
+          this.setState({ uploadStatus: null, uploadProgress: 0 });
           break;
         case 'ASSET_ERRORED':
           handleRequestError(payload);
@@ -99,7 +103,7 @@ class InputPromptBlockPlayerContainer extends Component {
 
   render() {
     const { block, blockTracking, isResponseBlock } = this.props;
-    const { isUploadingAudio, isTranscribingAudio, uploadProgress, uploadStatus } = this.state;
+    const { isUploadingAudio, uploadProgress, uploadStatus } = this.state;
     const { isAudioDisabled } = getUserPreferences();
     return (
       <InputPromptBlockPlayer

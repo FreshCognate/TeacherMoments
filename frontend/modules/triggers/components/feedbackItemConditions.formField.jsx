@@ -70,7 +70,7 @@ const FeedbackItemConditions = ({
                                     <Body body={conditionPrompt?.text} size="sm" className="bg-lm-1 dark:bg-dm-1 p-2 rounded-md" />
                                     <div className="flex items-center mt-2 opacity-40">
                                       <Icon icon="ai" size={12} className="mr-1" />
-                                      <Body size="xs" body="This will use AI to check with this matches the users input" />
+                                      <Body size="xs" body="This will use AI to check whether this matches the users input" />
                                     </div>
                                   </div>
                                 )}
