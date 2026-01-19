@@ -11,6 +11,7 @@ import getBlocksBySlideRef from "../blocks/helpers/getBlocksBySlideRef";
 import getBlockDisplayType from "../blocks/helpers/getBlockDisplayType";
 import generate from "../generate/helpers/generate";
 import setSlideTrigger from "../run/helpers/setSlideTrigger";
+import setSlideStatus from "../run/helpers/setSlideStatus";
 
 const body = buildLanguageSchema('body', {
   type: 'TextArea',
@@ -25,6 +26,8 @@ const ShowFeedbackFromPrompts = {
       const blocks = getBlocksBySlideRef({ slideRef: trigger.elementRef });
 
       // Gather block and block tracking info
+
+      setSlideStatus('Analysing prompts');
 
       let items = [];
 
@@ -122,6 +125,7 @@ const ShowFeedbackFromPrompts = {
         }
       }
 
+      setSlideStatus('Generating feedback');
       // Now match individual trigger items
 
       let matchedItems = [];
@@ -195,6 +199,7 @@ const ShowFeedbackFromPrompts = {
       }
 
       setSlideFeedback(feedback);
+      setSlideStatus(null);
       resolve();
 
     })
