@@ -18,6 +18,10 @@ class ScenarioEditorContainer extends Component {
   setupListeners = async () => {
     const sockets = await getSockets();
 
+    sockets.on(`SCENARIO:${this.props.scenario.data._id}_EVENT:SCENARIO_HAS_CHANGED`, () => {
+      this.props.scenario.fetch();
+    })
+
     sockets.on(`SCENARIO:${this.props.scenario.data._id}_EVENT:SLIDE_LOCK_STATUS`, (response) => {
       if (response.slide) {
         this.props.slides.set(response.slide, { setType: 'itemExtend', setFind: { _id: response.slide._id } });
@@ -70,6 +74,7 @@ class ScenarioEditorContainer extends Component {
 
   componentWillUnmount = async () => {
     const sockets = await getSockets();
+    sockets.off(`SCENARIO:${this.props.scenario.data._id}_EVENT:SCENARIO_HAS_CHANGED`);
     sockets.off(`SCENARIO:${this.props.scenario.data._id}_EVENT:SLIDE_LOCK_STATUS`);
     sockets.off(`SCENARIO:${this.props.scenario.data._id}_EVENT:SLIDE_REQUEST_ACCESS`);
   }
