@@ -8,8 +8,11 @@ const schema = {
   stages: [{
     _id: false,
     isComplete: { type: Boolean, default: false },
+    isSubmitted: { type: Boolean, default: false },
     slideRef: { type: String, required: true },
     feedbackItems: [],
+    shouldStopNavigation: { type: Boolean, default: false },
+    status: { type: String },
     blocksByRef: {
       type: Map,
       of: {
@@ -22,6 +25,7 @@ const schema = {
         _id: false,
       }
     },
+    triggersByRef: {},
   }],
   isArchived: { type: Boolean, default: false },
   archivedAt: { type: Date },
