@@ -5,7 +5,13 @@ import WithCache from '~/core/cache/containers/withCache';
 class ScenarioSyncStatusContainer extends Component {
 
   getSyncStatus = () => {
-    const { scenario, slides, slide, blocks, block } = this.props;
+    const { scenario, slides, slide, blocks, block, triggers } = this.props;
+    if (triggers.status === 'syncing') {
+      return {
+        syncType: 'triggers',
+        isSyncing: true
+      }
+    }
     if (slide.status === 'syncing') {
       return {
         syncType: 'slide',
@@ -44,4 +50,4 @@ class ScenarioSyncStatusContainer extends Component {
   }
 };
 
-export default WithCache(ScenarioSyncStatusContainer, null, ['scenario', 'slides', 'slide', 'blocks', 'block']);
+export default WithCache(ScenarioSyncStatusContainer, null, ['scenario', 'slides', 'slide', 'blocks', 'block', 'triggers']);

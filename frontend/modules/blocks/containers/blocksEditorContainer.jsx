@@ -69,6 +69,28 @@ class BlocksEditorContainer extends Component {
     }
   }
 
+  getTriggersBySlide = () => {
+    const slides = getCache('slides');
+    if (slides.data) {
+      const searchParams = new URLSearchParams(this.props.router.location.search);
+      const slideId = searchParams.get('slide');
+
+      const slide = find(slides.data, { _id: slideId })
+      if (slide) {
+        const slideRef = slide.ref;
+        return sortBy(filter(this.props.triggers.data, (trigger) => {
+          if (trigger.elementRef === slideRef && trigger.triggerType === 'SLIDE') {
+            return trigger;
+          }
+        }), 'sortOrder');
+      }
+
+      return [];
+
+    }
+    return [];
+  }
+
   getIsLockedFromEditing = () => {
     const slides = getCache('slides');
     if (slides.data) {
@@ -230,6 +252,7 @@ class BlocksEditorContainer extends Component {
     return (
       <BlocksEditor
         blocks={this.getBlocksBySlide()}
+        triggers={this.getTriggersBySlide()}
         isLockedFromEditing={isLockedFromEditing}
         onCreateBlockClicked={this.onCreateBlockClicked}
         onSortUpClicked={this.onSortUpClicked}
@@ -241,4 +264,4 @@ class BlocksEditorContainer extends Component {
   }
 };
 
-export default WithRouter(WithCache(BlocksEditorContainer, null, ['blocks', 'slide']));
+export default WithRouter(WithCache(BlocksEditorContainer, null, ['blocks', 'slide', 'triggers']));

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Title from '~/uikit/content/components/title';
 import classnames from 'classnames';
 import Icon from '~/uikit/icons/components/icon';
+import ScenarioSyncStatusContainer from '~/modules/scenarios/containers/scenarioSyncStatusContainer';
 
 const DialogSidePanel = ({
   sidePanel,
@@ -76,7 +77,8 @@ const DialogSidePanel = ({
             )}
             <Title title={sidePanel.title} element="h5" className="text-lg font-normal" />
           </div>
-          <div>
+          <div className="flex items-center gap-x-2">
+            <ScenarioSyncStatusContainer />
             <FlatButton icon="cancel" isCircular onClick={() => {
               setIsAnimatingOut(true);
               setTimeout(() => {

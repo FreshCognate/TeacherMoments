@@ -21,7 +21,7 @@ const FeedbackItemConditions = ({
       <div>
         {map(value, (condition, index) => {
           return (
-            <Fragment key={condition._id}>
+            <Fragment key={condition._id || index}>
               {(index > 0) && (
                 <div className="my-2 text-lg">
                   OR
@@ -29,14 +29,14 @@ const FeedbackItemConditions = ({
               )}
               <div className="rounded-md overflow-hidden">
                 <div>
-                  {map(prompts, (prompt) => {
+                  {map(prompts, (prompt, index) => {
 
                     const conditionPrompt = find(condition.prompts, { ref: prompt.ref });
 
                     const blockDisplayName = getBlockDisplayName(prompt);
 
                     return (
-                      <div key={prompt._id} className="flex items-start justify-between bg-lm-1 dark:bg-dm-2 mb-0.5 p-4 last:border-b-0">
+                      <div key={prompt._id || index} className="flex items-start justify-between bg-lm-2 dark:bg-dm-2 mb-0.5 p-4 last:border-b-0">
                         <div className="w-1/2">
                           <div className="flex items-center mb-2">
                             <div className="w-1/4">
@@ -67,7 +67,7 @@ const FeedbackItemConditions = ({
                                 })}
                                 {prompt.blockType === 'INPUT_PROMPT' && (
                                   <div>
-                                    <Body body={conditionPrompt?.text} size="sm" className="bg-lm-1 dark:bg-dm-1 p-2 rounded-md" />
+                                    <Body body={conditionPrompt?.text} size="sm" className="bg-lm-3 dark:bg-dm-1 p-2 rounded-md" />
                                     <div className="flex items-center mt-2 opacity-40">
                                       <Icon icon="ai" size={12} className="mr-1" />
                                       <Body size="xs" body="This will use AI to check whether this matches the users input" />
@@ -83,7 +83,7 @@ const FeedbackItemConditions = ({
                     );
                   })}
                 </div>
-                <div className="min-w-10 flex justify-end p-2 bg-dm-2">
+                <div className="min-w-10 flex justify-end p-2 bg-lm-2 dark:bg-dm-2">
                   <FlatButton title="Delete condition" icon="delete" onClick={() => onRemoveConditionClicked(condition._id)} />
                 </div>
               </div>
