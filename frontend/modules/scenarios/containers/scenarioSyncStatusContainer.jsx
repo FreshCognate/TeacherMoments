@@ -6,12 +6,6 @@ class ScenarioSyncStatusContainer extends Component {
 
   getSyncStatus = () => {
     const { scenario, slides, slide, blocks, block } = this.props;
-    if (scenario.status === 'syncing') {
-      return {
-        syncType: 'scenario',
-        isSyncing: true,
-      }
-    }
     if (slide.status === 'syncing') {
       return {
         syncType: 'slide',

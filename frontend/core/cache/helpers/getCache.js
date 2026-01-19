@@ -9,6 +9,7 @@ export default function getCache(key) {
     data: cache.data,
     status: cache.status,
     set: cache.set,
+    setStatus: cache.setStatus,
     get: cache.get,
     fetch: () => {
       if (cache.container) {

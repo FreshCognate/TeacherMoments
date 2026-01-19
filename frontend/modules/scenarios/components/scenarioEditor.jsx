@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router';
 import NavigationToggle from '~/uikit/toggles/components/navigationToggle';
-import Toggle from '~/uikit/toggles/components/toggle';
 import ScenarioSyncStatusContainer from '../containers/scenarioSyncStatusContainer';
 import Loading from '~/uikit/loaders/components/loading';
 import truncate from 'lodash/truncate';
+import ScenarioPublishStatusContainer from '../containers/scenarioPublishStatusContainer';
 
 const ScenarioEditor = ({
   scenario,
@@ -57,6 +57,7 @@ const ScenarioEditor = ({
           </div>
           <div className="w-1/3 flex justify-end text-sm">
             <ScenarioSyncStatusContainer />
+            <ScenarioPublishStatusContainer />
           </div>
         </div>
       </div>
