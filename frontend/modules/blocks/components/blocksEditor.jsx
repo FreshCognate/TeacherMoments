@@ -4,9 +4,11 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import EditBlockContainer from '../containers/editBlockContainer';
 import Icon from '~/uikit/icons/components/icon';
 import Body from '~/uikit/content/components/body';
+import Title from '~/uikit/content/components/title';
 
 const BlocksEditor = ({
   blocks,
+  triggers,
   isLockedFromEditing,
   onSortUpClicked,
   onSortDownClicked,
@@ -15,7 +17,7 @@ const BlocksEditor = ({
   onOpenTriggersClicked
 }) => {
   return (
-    <div className="w-full pt-4 pb-8 px-8 max-w-screen-lg mx-auto">
+    <div className="w-full  max-w-screen-lg mx-auto">
       <div className="relative">
         {(isLockedFromEditing) && (
           <div
@@ -37,38 +39,53 @@ const BlocksEditor = ({
           </div>
         )}
 
-        {(map(blocks, (block) => {
-          return (
-            <EditBlockContainer
-              key={block._id}
-              block={block}
-              blocksLength={blocks.length}
-              onSortUpClicked={onSortUpClicked}
-              onSortDownClicked={onSortDownClicked}
-            />
-          )
-        }))}
-        <div className="px-2 flex justify-between">
-          <div>
-            {(blocks.length > 0) && (
+        <div className="p-8" style={{ minHeight: "calc(100vh - 261px)" }}>
+          {(map(blocks, (block) => {
+            return (
+              <EditBlockContainer
+                key={block._id}
+                block={block}
+                blocksLength={blocks.length}
+                onSortUpClicked={onSortUpClicked}
+                onSortDownClicked={onSortDownClicked}
+              />
+            )
+          }))}
+        </div>
+        {(blocks.length === 0) && (
+          <div className="p-8 text-center">
+            <Title title="This slide has no blocks" className="text-black dark:text-white/80 mb-2" />
+            <Body body="Click Add block to create a new block for this slide" size="sm" className="text-black/60 dark:text-white/60" />
+          </div>
+        )}
+        {(blocks.length > 0) && (
+          <div className="px-8 flex justify-between sticky bottom-0 bg-lm-0 dark:bg-dm-1 border-t border-t-lm-3 dark:border-t-dm-2 py-4">
+            <div>
               <FlatButton
                 text="Edit triggers"
                 icon="trigger"
                 onClick={onOpenTriggersClicked}
               />
-            )}
-          </div>
-          <div>
-            {(blocks.length > 0) && (
-
+              <Body
+                body={`This slide has ${triggers.length} trigger${triggers.length > 1 ? 's' : ''}`}
+                size="xs"
+                className="text-black/60 dark:text-white/80"
+              />
+            </div>
+            <div className="flex flex-col items-end">
               <FlatButton
                 text="Add block"
                 icon="create"
                 onClick={onCreateBlockClicked}
               />
-            )}
+              <Body
+                body={`This slide has ${blocks.length} block${blocks.length > 1 ? 's' : ''}`}
+                size="xs"
+                className="text-black/60 dark:text-white/80"
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
