@@ -15,6 +15,8 @@ class EditSlideContainer extends Component {
       if (status === 'MUTATED') {
         const slides = getCache('slides');
         slides.fetch();
+        const scenario = getCache('scenario');
+        scenario.fetch();
       }
     });
   }

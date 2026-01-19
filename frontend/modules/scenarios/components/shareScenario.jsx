@@ -33,13 +33,13 @@ const ShareScenario = ({
         <div className="flex items-center">
           <div>
             {(!isPublishing && scenario.hasChanges) && (
-              <Body className="text-black/60 dark:text-white/60" body="This scenario has draft changes that have not been published." size="xs" />
+              <Body className="text-black/60 dark:text-white/60" body="This scenario has draft changes that have not been published." size="sm" />
             )}
             {(!isPublishing && !scenario.hasChanges) && (
-              <Body className="text-black/60 dark:text-white/60" body="All changes are published." size="xs" />
+              <Body className="text-black/60 dark:text-white/60" body="All changes are published." size="sm" />
             )}
             {(isPublishing) && (
-              <Body className="text-black/60 dark:text-white/60" body="Publishing..." size="xs" />
+              <Body className="text-black/60 dark:text-white/60" body="Publishing..." size="sm" />
             )}
           </div>
           <Button
