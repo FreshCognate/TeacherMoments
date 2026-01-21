@@ -19,7 +19,7 @@ export default [{
       accessType: Joi.string().allow('').default(''),
       sortBy: Joi.string().valid('NAME', 'NEWEST', 'OLDEST').default('NAME'),
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   }
 }, {
   route: '/cohortScenarios',
@@ -51,7 +51,7 @@ export default [{
       searchValue: Joi.string().allow('').default(''),
       currentPage: Joi.number().default(1)
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   }
 }, {
   route: '/scenarioCollaborators',
