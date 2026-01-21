@@ -63,7 +63,7 @@ export default [{
       scenarioId: Joi.string().required(),
       isDeleted: Joi.boolean()
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
   update: {
     param: 'id',
@@ -71,7 +71,7 @@ export default [{
       setType: Joi.string().valid("ADD", "REMOVE"),
       collaborators: Joi.array().items(Joi.string()),
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
 }, {
   route: '/scenarios',
@@ -84,7 +84,7 @@ export default [{
       sortBy: Joi.string().valid('NAME', 'NEWEST', 'OLDEST').default('NAME'),
       isDeleted: Joi.boolean()
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
   create: {
     body: {
@@ -93,11 +93,11 @@ export default [{
       scenarioId: Joi.string().optional(),
       tags: Joi.array().items(Joi.string())
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
   read: {
     param: 'id',
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
   update: {
     param: 'id',
@@ -115,10 +115,10 @@ export default [{
       }),
       isDeleted: Joi.boolean().invalid(true),
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
   delete: {
     param: 'id',
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   }
 }];

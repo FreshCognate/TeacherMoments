@@ -51,13 +51,13 @@ const BlocksEditor = ({
               />
             )
           }))}
+          {(blocks.length === 0) && (
+            <div className="p-8 text-center">
+              <Title title="This slide has no blocks" className="text-black dark:text-white/80 mb-2" />
+              <Body body="Click Add block to create a new block for this slide" size="sm" className="text-black/60 dark:text-white/60" />
+            </div>
+          )}
         </div>
-        {(blocks.length === 0) && (
-          <div className="p-8 text-center">
-            <Title title="This slide has no blocks" className="text-black dark:text-white/80 mb-2" />
-            <Body body="Click Add block to create a new block for this slide" size="sm" className="text-black/60 dark:text-white/60" />
-          </div>
-        )}
         {(blocks.length > 0) && (
           <div className="px-8 flex justify-between sticky bottom-0 bg-lm-0 dark:bg-dm-1 border-t border-t-lm-3 dark:border-t-dm-2 py-4">
             <div>

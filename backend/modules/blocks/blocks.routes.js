@@ -16,7 +16,7 @@ export default {
       slideRef: Joi.string(),
       isDeleted: Joi.boolean()
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
   create: {
     body: {
@@ -24,11 +24,11 @@ export default {
       slideRef: Joi.string().required(),
       blockType: Joi.string().required().valid('TEXT', 'IMAGES', 'MEDIA', 'SUGGESTION', 'RESPONSE', 'MULTIPLE_CHOICE_PROMPT', 'INPUT_PROMPT', 'ACTIONS_PROMPT')
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
   read: {
     param: 'id',
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
   update: {
     param: 'id',
@@ -71,10 +71,10 @@ export default {
       tags: Joi.array().items(Joi.string()),
       isDeleted: Joi.boolean().invalid(true),
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
   delete: {
     param: 'id',
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   }
 };

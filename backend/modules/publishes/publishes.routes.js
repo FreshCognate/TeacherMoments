@@ -10,10 +10,10 @@ export default {
     body: {
       scenarioId: Joi.string()
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
   delete: {
     param: 'id',
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   }
 };
