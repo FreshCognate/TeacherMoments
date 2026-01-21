@@ -7,6 +7,8 @@ export default (status) => {
 
   const currentStage = find(run.data.stages, { slideRef: run.data.activeSlideRef });
 
-  return currentStage.status;
+  if (currentStage) {
+    return currentStage.status;
+  }
 
 }

@@ -39,7 +39,7 @@ export default async (props, options, context) => {
     sort = 'createdAt';
   }
 
-  if (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') {
+  if (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN' || user.role === 'FACILITATOR') {
     search.collaborators = {
       $elemMatch: {
         user: user._id,
