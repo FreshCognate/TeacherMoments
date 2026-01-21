@@ -14,7 +14,8 @@ export default async (props, options, context) => {
 
   const user = await models.User.findOne({
     email: lowerCaseEmail,
-    isVerified: false
+    isVerified: false,
+    isDeleted: false
   }).select('+otpCode');
 
   if (!user) {

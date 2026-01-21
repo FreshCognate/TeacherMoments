@@ -36,7 +36,7 @@ const userSchema = {
   updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   firstLoggedInAt: { type: Date },
   loggedInAt: { type: Date },
-  selectedLanguage: { type: String, default: 'en-GB', enum: Object.keys(languages) },
+  selectedLanguage: { type: String, default: 'en-US', enum: Object.keys(languages) },
   updateVersion: { type: String, default: '1.0.0' },
   isDeleted: { type: Boolean, default: false },
   deletedAt: { type: Date },
