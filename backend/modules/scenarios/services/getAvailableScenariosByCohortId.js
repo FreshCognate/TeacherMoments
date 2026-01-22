@@ -50,6 +50,8 @@ export default async (props, options, context) => {
 
   search['cohorts.cohort'] = { $nin: [cohortId] }
 
+  search.isPublished = true
+
   const count = await models.Scenario.countDocuments(search);
 
   const totalPages = getTotalPages(count);
