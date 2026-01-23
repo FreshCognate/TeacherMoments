@@ -72,7 +72,8 @@ export default [{
         slideRef: Joi.string(),
         feedbackItems: Joi.array(),
         shouldStopNavigation: Joi.boolean(),
-        triggersByRef: Joi.object()
+        triggersByRef: Joi.object(),
+        status: Joi.string().allow(null)
       }),
     },
     query: {

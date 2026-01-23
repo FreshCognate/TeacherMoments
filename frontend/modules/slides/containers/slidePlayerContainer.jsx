@@ -193,6 +193,7 @@ class SlidePlayerContainer extends Component {
         break;
       case 'COMPLETE_SCENARIO':
         this.onCompleteScenarioClicked();
+        break;
       case 'SUBMIT':
         this.onSubmitSlideClicked();
         break;
@@ -200,7 +201,9 @@ class SlidePlayerContainer extends Component {
         this.props.router.navigate(`/scenarios`);
         break;
       case 'RERUN_SCENARIO':
-        this.props.router.navigate(0);
+        setScenarioToArchived().then(() => {
+          window.location.reload();
+        });
         break;
     }
   }

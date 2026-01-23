@@ -4,8 +4,12 @@ import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
 export default () => {
   const run = getCache('run');
   if (isScenarioInPlay()) {
-    run.mutate({ isArchived: true }, { method: 'put' });
+    return new Promise((resolve) => {
+      run.mutate({ isArchived: true }, { method: 'put' }, () => {
+        resolve();
+      });
+    })
   } else {
-    run.set({ isArchived: true });
+    return run.set({ isArchived: true });
   }
 }
