@@ -68,21 +68,24 @@ const startServer = async function () {
   app.use(hasDatabaseConnection);
 
   const sessionsSecret = process.env.SESSION_SECRET;
-  const sessionsMaxAge = 14 * 24 * 60 * 60; // = 14 days
+  const sessionsMaxAgeDays = 30;
+  const sessionsMaxAgeMs = sessionsMaxAgeDays * 24 * 60 * 60 * 1000;
 
   const sessionStore = MongoStore.create({
     mongoUrl: process.env.MONGODB_URL,
-    ttl: sessionsMaxAge,
+    ttl: sessionsMaxAgeDays * 24 * 60 * 60,
     collection: "sessions"
   });
 
   app.use(session({
-    key: 'express.sid',
+    name: 'express.sid',
     secret: sessionsSecret,
-    maxAge: sessionsMaxAge,
     store: sessionStore,
     resave: true,
     saveUninitialized: true,
+    cookie: {
+      maxAge: sessionsMaxAgeMs,
+    }
   }));
 
   const router = express.Router();
