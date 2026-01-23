@@ -281,3 +281,4 @@ No automated test suite is currently configured. Manual testing is required.
 - Real-time features should emit socket events
 - Long-running operations should use the queue system
 - Frontend uses SSR - be mindful of server vs client code
+- **IMPORTANT**: Before creating new UI components, always search `frontend/uikit/` for existing components first (e.g., Button, Badge, ActionBar, Modal, etc.). Reuse existing components instead of creating inline elements or new components
