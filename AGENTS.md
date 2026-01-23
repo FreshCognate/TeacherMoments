@@ -143,6 +143,32 @@ modules/[feature]/
 └── schemas/         # Form/data schemas
 ```
 
+### Container/Component Pattern
+
+The frontend follows a strict container/component separation:
+
+- **Containers** (`containers/`): Handle all business logic, state management, data fetching, and event handlers. Pass computed values and callbacks as props to components.
+- **Components** (`components/`): Purely presentational. Receive all data and callbacks via props. No useState, useEffect, or business logic.
+
+Example:
+```javascript
+// Container - handles logic
+class MyContainer extends Component {
+  state = { isReady: false }
+
+  onReady = () => this.setState({ isReady: true })
+
+  render() {
+    return <MyComponent isReady={this.state.isReady} onReady={this.onReady} />;
+  }
+}
+
+// Component - purely presentational
+const MyComponent = ({ isReady, onReady }) => (
+  <div>{isReady ? 'Ready' : 'Loading...'}</div>
+);
+```
+
 ### Path Aliases (Frontend)
 
 - `~/modules` - Feature modules
