@@ -12,6 +12,7 @@ const AudioRecorder = ({
   clearBlobUrl,
   audioSrc,
   isUploadingAudio,
+  isDisabled,
   uploadProgress,
   uploadStatus,
   onPermissionDenied,
@@ -58,6 +59,7 @@ const AudioRecorder = ({
             isCircular
             className={recordButtonClassName}
             color="warning"
+            isDisabled={isDisabled}
             onClick={() => {
               if (status === 'recording') {
                 stopRecording();
@@ -82,7 +84,7 @@ const AudioRecorder = ({
         </div>
         <div>
           {(hasRemoveAudioButton) && (
-            <FlatButton icon="delete" title="Delete audio" color="warning" onClick={() => {
+            <FlatButton icon="delete" title="Delete audio" color="warning" isDisabled={isDisabled} onClick={() => {
               addModal({
                 title: 'Are you sure you want to remove this audio?',
                 body: 'This cannot be undone',
