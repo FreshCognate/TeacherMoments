@@ -99,6 +99,19 @@ class SlidePlayerContainer extends Component {
             color: 'primary',
             text: 'Return to scenarios'
           }
+        } else if (hasPrompts && !isSubmitted) {
+          secondaryAction = {
+            action: 'BACK',
+            text: 'Back',
+            isActive: true,
+            isDisabled: isSubmitting
+          }
+          primaryAction = {
+            action: 'SUBMIT',
+            color: 'primary',
+            text: isSubmitting ? 'Submitting' : 'Submit',
+            isDisabled: (hasRequiredPrompts && !isAbleToCompleteSlide) || isSubmitting
+          }
         } else {
           primaryAction = {
             action: 'COMPLETE_SCENARIO',
