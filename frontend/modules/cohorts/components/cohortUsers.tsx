@@ -6,6 +6,7 @@ import getCohortInviteLink from '../helpers/getCohortInviteLink';
 import Button from '~/uikit/buttons/components/button';
 import { User } from '~/modules/users/users.types';
 import Collection from '~/uikit/collections/components/collection';
+import Body from '~/uikit/content/components/body';
 
 const CohortUsers = ({
   users,
@@ -46,6 +47,10 @@ const CohortUsers = ({
     <div className="py-4">
       <div className="mb-4">
         <Title title="Invite link" className="mb-2" />
+        <Body
+          body="To add users to this cohort, send them the Invite link below. Once they navigate to this invite link they will have the option to login or register via email."
+          className="mb-2 text-black/60 dark:text-white/60 text-sm max-w-lg"
+        />
         {(activeInvite) && (
           <ShareLink
             shareLink={getCohortInviteLink({ cohortId: cohortId, invite: activeInvite })}
