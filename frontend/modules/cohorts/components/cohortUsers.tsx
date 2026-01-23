@@ -19,6 +19,7 @@ const CohortUsers = ({
   isCreatingInviteLink,
   getItemAttributes,
   getItemActions,
+  getEmptyAttributes,
   onCreateInviteLinkClicked,
   onSearchValueChange,
   onPaginationClicked,
@@ -35,6 +36,7 @@ const CohortUsers = ({
   isCreatingInviteLink: boolean,
   getItemAttributes: (item: User) => any,
   getItemActions: (item: User) => any,
+  getEmptyAttributes: () => any,
   onCreateInviteLinkClicked: () => void,
   onSearchValueChange: (searchValue: string) => void,
   onPaginationClicked: (action: string) => void,
@@ -53,12 +55,13 @@ const CohortUsers = ({
           <Button text="Create an invite link" isDisabled={isCreatingInviteLink} onClick={onCreateInviteLinkClicked} />
         )}
       </div>
-      <Title title="Cohort users" className="mb-2" />
+      <Title title="Users in this Cohort" className="mb-2" />
       <div className="bg-lm-1 dark:bg-dm-1 p-4 dark:border-dm-2 rounded-md">
         <Collection
           items={users}
           getItemActions={getItemActions}
           getItemAttributes={getItemAttributes}
+          getEmptyAttributes={getEmptyAttributes}
           searchPlaceholder="Search users..."
           searchValue={searchValue}
           currentPage={currentPage}

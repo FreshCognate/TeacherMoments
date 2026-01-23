@@ -41,6 +41,13 @@ class CohortUsersContainer extends Component<CohortUsersContainerProps> {
     return []
   }
 
+  getEmptyAttributes = () => {
+    return {
+      title: 'No users in this cohort',
+      body: 'Share the invite link above to add users to this cohort.',
+    }
+  }
+
   onCreateInviteLinkClicked = () => {
 
     this.setState({
@@ -98,6 +105,7 @@ class CohortUsersContainer extends Component<CohortUsersContainerProps> {
         isSyncing={cohortUsers.status === 'syncing'}
         getItemAttributes={this.getItemAttributes}
         getItemActions={this.getItemActions}
+        getEmptyAttributes={this.getEmptyAttributes}
         onCreateInviteLinkClicked={this.onCreateInviteLinkClicked}
         onSearchValueChange={this.onSearchValueChange}
         onPaginationClicked={this.onPaginationClicked}
