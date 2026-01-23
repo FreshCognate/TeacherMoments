@@ -1,17 +1,23 @@
 import classNames from 'classnames';
-import React from 'react';
-import { Link, NavLink } from 'react-router';
+import { NavLink } from 'react-router';
 import Button from '~/uikit/buttons/components/button';
-import Options from '~/uikit/dropdowns/components/options';
+import Dropdown from '~/uikit/dropdowns/components/dropdown';
+import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
+
+const userMenuOptions = [
+  { icon: 'logout', text: 'Logout', action: 'logout' }
+];
 
 const Navigation = ({
   authentication,
   isLoggingOut,
+  isUserMenuOpen,
   onLoginClicked,
-  onLogoutClicked
+  onUserMenuToggle,
+  onUserMenuOptionClicked
 }) => {
   return (
-    <div className="fixed top-0 w-full bg-lm-0 dark:bg-dm-1 border-b border-b-lm-3 dark:border-b-dm-2">
+    <div className="fixed top-0 w-full z-40 bg-lm-0 dark:bg-dm-1 border-b border-b-lm-3 dark:border-b-dm-2">
       <div className="max-w-7xl mx-auto">
         <div className={classNames("flex items-center w-full top-0 z-30 justify-between h-14 px-4  ",
           { "opacity-60": isLoggingOut }
@@ -52,7 +58,13 @@ const Navigation = ({
           </div>
           <div>
             {authentication && (
-              <Button text="Logout" isDisabled={isLoggingOut} onClick={onLogoutClicked} />
+              <Dropdown
+                placeholder={getUserDisplayName(authentication)}
+                options={userMenuOptions}
+                isOpen={isUserMenuOpen}
+                onToggle={onUserMenuToggle}
+                onOptionClicked={onUserMenuOptionClicked}
+              />
             )}
             {(!authentication) && (
               <Button text="Login" onClick={onLoginClicked} />
