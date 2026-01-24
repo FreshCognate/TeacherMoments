@@ -6,6 +6,7 @@ import get from 'lodash/get';
 import find from 'lodash/find';
 import filter from 'lodash/filter';
 import navigateTo from '~/modules/run/helpers/navigateTo';
+import getUrlDetails from '~/modules/create/helpers/getUrlDetails';
 
 class PlayScenarioContainer extends Component {
 
@@ -16,40 +17,50 @@ class PlayScenarioContainer extends Component {
   }
 
   startScenario = () => {
-    if ('slideId' in this.props) {
-      return;
-    }
+    console.log(this.props);
+    const { selectedSlideId } = getUrlDetails();
 
-    const { isConsentAcknowledged, activeSlideRef } = this.props.run.data;
-
-    if (!isConsentAcknowledged) {
+    console.log(selectedSlideId);
+    if (!selectedSlideId) {
       navigateTo({ slideId: 'CONSENT', router: this.props.router });
-      return;
+      console.log('no selected slideId');
     }
+    // if ('slideId' in this.props) {
+    //   return;
+    // }
 
-    const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
-    const slideRef = activeSlideRef || firstSlideRef;
+    // const { isConsentAcknowledged, activeSlideRef } = this.props.run.data;
 
-    navigateTo({ slideRef, router: this.props.router });
+    // if (!isConsentAcknowledged) {
+    //   navigateTo({ slideId: 'CONSENT', router: this.props.router });
+    //   return;
+    // }
+
+    // const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
+    // const slideRef = activeSlideRef || firstSlideRef;
+
+    // navigateTo({ slideRef, router: this.props.router });
   }
 
   getActiveSlide = () => {
-    const { run, slides, slideId } = this.props;
+    const { run, slides } = this.props;
 
-    if (slideId === 'CONSENT') {
+    const { selectedSlideId } = getUrlDetails();
+
+    if (selectedSlideId === 'CONSENT') {
       return {
         _id: 'CONSENT_SLIDE',
         slideType: 'CONSENT'
       };
     }
-    if (slideId === 'SUMMARY') {
+    if (selectedSlideId === 'SUMMARY') {
       return {
         _id: 'SUMMARY_SLIDE',
         slideType: 'SUMMARY'
       };
     }
-    if (run.data.activeSlideRef) {
-      return find(slides.data, { ref: run.data.activeSlideRef });
+    if (selectedSlideId) {
+      return find(slides.data, { ref: selectedSlideId });
     }
     return null;
   }

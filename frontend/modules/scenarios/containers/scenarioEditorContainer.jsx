@@ -4,7 +4,7 @@ import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import getIsCurrentUser from '~/modules/authentication/helpers/getIsCurrentUser';
-import getEditingDetailsFromQuery from '~/modules/scenarioBuilder/helpers/getEditingDetailsFromQuery';
+import getEditingDetailsFromQuery from '~/modules/create/helpers/getEditingDetailsFromQuery';
 import addToast from '~/core/dialogs/helpers/addToast';
 
 class ScenarioEditorContainer extends Component {

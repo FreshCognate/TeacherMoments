@@ -36,7 +36,7 @@ const CreateWorkspace = ({
           )}
           {(displayMode === 'PREVIEW') && (
             <div className="">
-              <PlayScenarioContainer slideId={activeSlideId} />
+              <PlayScenarioContainer />
             </div>
           )}
         </>

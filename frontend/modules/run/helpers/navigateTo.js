@@ -7,26 +7,9 @@ import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
 import findSlideStage from "./findSlideStage";
 import { createSearchParams } from "react-router";
 
-export default async ({ slideRef, slideId, router }) => {
+export default async ({ slideRef, router }) => {
 
   const run = getCache('run');
-
-  if (slideId) {
-    const searchParams = new URLSearchParams(router.location.search);
-    const cohort = searchParams.get('cohort');
-
-    const newSearchParams = { slide: slideId };
-    if (cohort) {
-      newSearchParams.cohort = cohort;
-    }
-
-    router.navigate({
-      pathname: router.pathname,
-      search: `?${createSearchParams(newSearchParams)}`,
-    }, { replace: true });
-
-    return;
-  }
 
   const stages = cloneDeep(run.data.stages || []);
 

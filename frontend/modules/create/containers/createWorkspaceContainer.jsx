@@ -3,8 +3,6 @@ import CreateWorkspace from '../components/createWorkspace';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 import find from 'lodash/find';
-import sortBy from 'lodash/sortBy';
-import filter from 'lodash/filter';
 
 class CreateWorkspaceContainer extends Component {
   getActiveSlideRef = () => {

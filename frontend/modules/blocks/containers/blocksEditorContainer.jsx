@@ -13,7 +13,7 @@ import getCache from '~/core/cache/helpers/getCache';
 import addModal from '~/core/dialogs/helpers/addModal';
 import BlockSelectorContainer from './blockSelectorContainer';
 import getIsCurrentUser from '~/modules/authentication/helpers/getIsCurrentUser';
-import ScenarioRequestAccessTimer from '~/modules/scenarioBuilder/components/scenarioRequestAccessTimer';
+import ScenarioRequestAccessTimer from '~/modules/create/components/scenarioRequestAccessTimer';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import addToast from '~/core/dialogs/helpers/addToast';
 import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
