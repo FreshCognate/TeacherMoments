@@ -5,6 +5,7 @@ import BlockSelectorContainer from '~/modules/blocks/containers/blockSelectorCon
 import addModal from '~/core/dialogs/helpers/addModal';
 import getCache from '~/core/cache/helpers/getCache';
 import find from 'lodash/find';
+import getUrlDetails from '../helpers/getUrlDetails';
 
 class CreateWorkspaceToolbarContainer extends Component {
   onDisplayModeChanged = (displayMode) => {
@@ -40,10 +41,13 @@ class CreateWorkspaceToolbarContainer extends Component {
 
   render() {
     const { displayMode } = this.props.editor.data;
+    const { selectedSlideId } = getUrlDetails();
+    const isStaticSlide = selectedSlideId === 'CONSENT' || selectedSlideId === 'SUMMARY';
     return (
       <CreateWorkspaceToolbar
         slide={this.props.slide.data || {}}
         displayMode={displayMode}
+        isStaticSlide={isStaticSlide}
         onDisplayModeChanged={this.onDisplayModeChanged}
         onAddBlockClicked={this.onAddBlockClicked}
         onSlideNameChanged={this.onSlideNameChanged}
