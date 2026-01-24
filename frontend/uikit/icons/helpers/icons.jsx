@@ -145,6 +145,13 @@ export default {
     ]
   },
 
+  check: {
+    viewBox: "0 0 24 24",
+    elements: [
+      <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    ]
+  },
+
   checked: {
     viewBox: "0 0 24 24",
     elements: [

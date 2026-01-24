@@ -4,11 +4,26 @@ import Icon from '~/uikit/icons/components/icon';
 const ScenarioSyncStatus = ({
   syncType,
   isSyncing,
+  hasSynced,
 }) => {
-  if (!isSyncing) return null
+  if (!isSyncing && !hasSynced) {
+    return null;
+  }
+
   return (
-    <div className="flex items-center text-xs text-lm-4 dark:text-dm-4">
-      <Icon size="16" icon="syncing" className="mr-2 animate-spin" />{`Syncing ${syncType}`}
+    <div className="flex items-center text-xs text-black/60 dark:text-white/60 w-36 border border-lm-1 dark:border-dm-2 rounded-md px-1 py-1">
+      {isSyncing && (
+        <>
+          <Icon size="16" icon="syncing" className="mr-2 animate-spin" />
+          {`Syncing ${syncType}`}
+        </>
+      )}
+      {hasSynced && (
+        <>
+          <Icon size="16" icon="check" className="mr-2 text-green-500" />
+          Changes saved
+        </>
+      )}
     </div>
   );
 };

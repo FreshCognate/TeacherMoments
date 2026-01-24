@@ -4,6 +4,22 @@ import WithCache from '~/core/cache/containers/withCache';
 
 class ScenarioSyncStatusContainer extends Component {
 
+  state = {
+    hasSynced: false,
+    wasSyncing: false,
+  };
+
+  componentDidUpdate() {
+    const currentStatus = this.getSyncStatus();
+    const isSyncing = currentStatus && currentStatus.isSyncing;
+
+    if (isSyncing && !this.state.wasSyncing) {
+      this.setState({ wasSyncing: true, hasSynced: false });
+    } else if (!isSyncing && this.state.wasSyncing) {
+      this.setState({ wasSyncing: false, hasSynced: true });
+    }
+  }
+
   getSyncStatus = () => {
     const { scenario, slides, slide, blocks, block, triggers } = this.props;
     if (triggers.status === 'syncing') {
@@ -40,11 +56,15 @@ class ScenarioSyncStatusContainer extends Component {
   }
 
   render() {
-    const { syncType, isSyncing } = this.getSyncStatus();
+    const syncStatus = this.getSyncStatus();
+    const { syncType, isSyncing } = syncStatus || {};
+    const { hasSynced } = this.state;
+
     return (
       <ScenarioSyncStatus
         syncType={syncType}
         isSyncing={isSyncing}
+        hasSynced={hasSynced}
       />
     );
   }
