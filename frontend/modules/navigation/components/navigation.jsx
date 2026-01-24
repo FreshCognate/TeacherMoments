@@ -34,26 +34,30 @@ const Navigation = ({
               >
                 Dashboard
               </NavLink>
-              <NavLink
-                to="/scenarios"
-                className={({ isActive }) =>
-                  classNames("text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 transition-colors", {
-                    "underline": isActive
-                  })
-                }
-              >
-                Scenarios
-              </NavLink>
-              <NavLink
-                to="/cohorts"
-                className={({ isActive }) =>
-                  classNames("text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 transition-colors", {
-                    "underline": isActive
-                  })
-                }
-              >
-                Cohorts
-              </NavLink>
+              {authentication && (
+                <>
+                  <NavLink
+                    to="/scenarios"
+                    className={({ isActive }) =>
+                      classNames("text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 transition-colors", {
+                        "underline": isActive
+                      })
+                    }
+                  >
+                    Scenarios
+                  </NavLink>
+                  <NavLink
+                    to="/cohorts"
+                    className={({ isActive }) =>
+                      classNames("text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 transition-colors", {
+                        "underline": isActive
+                      })
+                    }
+                  >
+                    Cohorts
+                  </NavLink>
+                </>
+              )}
             </nav>
           </div>
           <div>
