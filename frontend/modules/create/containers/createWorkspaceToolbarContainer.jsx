@@ -69,7 +69,7 @@ export default WithCache(CreateWorkspaceToolbarContainer, {
       }
     },
     getDependencies: ({ props }) => {
-      return [props.activeSlideId]
+      return [props.activeSlideId && !props.isStaticSlide]
     }
   }
 }, ['editor']);

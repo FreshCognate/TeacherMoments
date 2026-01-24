@@ -11,7 +11,7 @@ const CreateNavigation = ({
   scenarioId,
   slides,
   blocks,
-  selectedSlideId,
+  activeSlideId,
   navigationMode,
   isCreating,
   deletingId,
@@ -31,7 +31,7 @@ const CreateNavigation = ({
               label="Consent slide"
               slideId="CONSENT"
               scenarioId={scenarioId}
-              isSelected={selectedSlideId === 'CONSENT'}
+              isSelected={activeSlideId === 'CONSENT'}
             />
             <CreateDroppableContainer
               id={`slides`}
@@ -44,7 +44,7 @@ const CreateNavigation = ({
                 const canDeleteSlides = items.length > 1;
                 let isSelected = false;
                 let isDeletingSlide = false;
-                if (item._id === selectedSlideId) isSelected = true;
+                if (item._id === activeSlideId) isSelected = true;
                 if (item._id === deletingId) isDeletingSlide = true;
                 const slideBlocks = filter(blocks, { slideRef: item.ref });
 
@@ -70,7 +70,7 @@ const CreateNavigation = ({
               label="Summary slide"
               slideId="SUMMARY"
               scenarioId={scenarioId}
-              isSelected={selectedSlideId === 'SUMMARY'}
+              isSelected={activeSlideId === 'SUMMARY'}
             />
           </>
         )}

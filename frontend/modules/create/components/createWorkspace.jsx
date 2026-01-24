@@ -16,6 +16,7 @@ const CreateWorkspace = ({
       <div className="flex justify-center sticky top-0 z-30">
         <CreateWorkspaceToolbarContainer
           activeSlideId={activeSlideId}
+          isStaticSlide={isStaticSlide}
         />
       </div>
       {(navigationMode === 'SLIDES') && (

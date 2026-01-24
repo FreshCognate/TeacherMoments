@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import CreateWorkspace from '../components/createWorkspace';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
-import getUrlDetails from '../../run/helpers/getUrlDetails';
+import getScenarioDetails from '../../run/helpers/getScenarioDetails';
 
 class CreateWorkspaceContainer extends Component {
 
   render() {
     const { displayMode, navigationMode } = this.props.editor.data;
-    const { selectedSlideId } = getUrlDetails();
-    const isStaticSlide = selectedSlideId === 'CONSENT' || selectedSlideId === 'SUMMARY';
+    const { activeSlideId } = getScenarioDetails();
+    const isStaticSlide = activeSlideId === 'CONSENT' || activeSlideId === 'SUMMARY';
     return (
       <CreateWorkspace
-        activeSlideId={selectedSlideId}
+        activeSlideId={activeSlideId}
         displayMode={displayMode}
         navigationMode={navigationMode}
         isStaticSlide={isStaticSlide}

@@ -6,7 +6,7 @@ import get from 'lodash/get';
 import find from 'lodash/find';
 import filter from 'lodash/filter';
 import navigateTo from '~/modules/run/helpers/navigateTo';
-import getUrlDetails from '~/modules/run/helpers/getUrlDetails';
+import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
 
 class PlayScenarioContainer extends Component {
 
@@ -18,10 +18,10 @@ class PlayScenarioContainer extends Component {
 
   startScenario = () => {
     console.log(this.props);
-    const { selectedSlideId } = getUrlDetails();
+    const { activeSlideId } = getScenarioDetails();
 
-    console.log(selectedSlideId);
-    if (!selectedSlideId) {
+    console.log(activeSlideId);
+    if (!activeSlideId) {
       navigateTo({ slideId: 'CONSENT', router: this.props.router });
       console.log('no selected slideId');
     }
@@ -45,22 +45,22 @@ class PlayScenarioContainer extends Component {
   getActiveSlide = () => {
     const { run, slides } = this.props;
 
-    const { selectedSlideId } = getUrlDetails();
+    const { activeSlideId } = getScenarioDetails();
 
-    if (selectedSlideId === 'CONSENT') {
+    if (activeSlideId === 'CONSENT') {
       return {
         _id: 'CONSENT_SLIDE',
         slideType: 'CONSENT'
       };
     }
-    if (selectedSlideId === 'SUMMARY') {
+    if (activeSlideId === 'SUMMARY') {
       return {
         _id: 'SUMMARY_SLIDE',
         slideType: 'SUMMARY'
       };
     }
-    if (selectedSlideId) {
-      return find(slides.data, { ref: selectedSlideId });
+    if (activeSlideId) {
+      return find(slides.data, { ref: activeSlideId });
     }
     return null;
   }

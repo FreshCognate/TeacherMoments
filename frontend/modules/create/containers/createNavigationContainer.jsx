@@ -5,7 +5,7 @@ import WithCache from '~/core/cache/containers/withCache';
 import filter from 'lodash/filter';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
-import getUrlDetails from '../../run/helpers/getUrlDetails';
+import getScenarioDetails from '../../run/helpers/getScenarioDetails';
 import find from 'lodash/find';
 
 class CreateNavigationContainer extends Component {
@@ -24,8 +24,8 @@ class CreateNavigationContainer extends Component {
   }
 
   getSelectedSlideSortOrder = () => {
-    const { selectedSlideId } = getUrlDetails();
-    return find(this.props.slides.data, { _id: selectedSlideId }).sortOrder;
+    const { activeSlideId } = getScenarioDetails();
+    return find(this.props.slides.data, { _id: activeSlideId }).sortOrder;
   }
 
   onAddSlideClicked = () => {
@@ -111,14 +111,14 @@ class CreateNavigationContainer extends Component {
 
   render() {
     const { isCreating, deletingId, isDuplicating } = this.state;
-    const { selectedSlideId } = getUrlDetails();
+    const { activeSlideId } = getScenarioDetails();
     const { navigationMode } = this.props.editor.data;
     return (
       <CreateNavigation
         scenarioId={this.props.scenario.data._id}
         slides={this.getCurrentStemOfSlides()}
         blocks={this.props.blocks.data}
-        selectedSlideId={selectedSlideId}
+        activeSlideId={activeSlideId}
         navigationMode={navigationMode}
         isCreating={isCreating}
         deletingId={deletingId}
