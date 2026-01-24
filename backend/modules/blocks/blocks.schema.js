@@ -25,7 +25,7 @@ const schema = {
   ...body,
   ...placeholder,
   isRequired: { type: Boolean, default: false },
-  requiredLength: { type: Number, default: 50 },
+  requiredLength: { type: Number, default: 10 },
   isMultiSelect: { type: Boolean, default: false },
   imagesShape: { type: String, enum: ['CIRCLE', 'LANDSCAPE', 'PORTRAIT', 'SQUARE', 'NONE'], default: 'NONE' },
   imagesBorderRadius: { type: Number, default: 0, enum: [0, 8] },

@@ -10,7 +10,7 @@ import addModal from '~/core/dialogs/helpers/addModal';
 
 class NavigationContainer extends Component {
 
-  state = { isLoggingOut: false }
+  state = { isLoggingOut: false, isUserMenuOpen: false }
 
   componentDidMount = () => {
     connectSockets();
@@ -35,13 +35,26 @@ class NavigationContainer extends Component {
     }).catch(handleRequestError);
   }
 
+  onUserMenuToggle = (isOpen) => {
+    this.setState({ isUserMenuOpen: isOpen });
+  }
+
+  onUserMenuOptionClicked = (action) => {
+    this.setState({ isUserMenuOpen: false });
+    if (action === 'logout') {
+      this.onLogoutClicked();
+    }
+  }
+
   render() {
     return (
       <Navigation
         authentication={this.props.authentication.data}
         isLoggingOut={this.state.isLoggingOut}
+        isUserMenuOpen={this.state.isUserMenuOpen}
         onLoginClicked={this.onLoginClicked}
-        onLogoutClicked={this.onLogoutClicked}
+        onUserMenuToggle={this.onUserMenuToggle}
+        onUserMenuOptionClicked={this.onUserMenuOptionClicked}
       />
     );
   }

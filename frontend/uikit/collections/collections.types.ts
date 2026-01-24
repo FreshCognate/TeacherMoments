@@ -18,10 +18,23 @@ export interface CollectionMetaItem {
   text: string,
 }
 
+export interface CollectionEmptyAction {
+  text: string,
+  action: string,
+}
+
+export interface CollectionEmptyAttributes {
+  title: string,
+  body: string,
+  action?: CollectionEmptyAction,
+  help?: string,
+}
+
 export interface CollectionProps {
   items: any[],
   getItemActions?: (item: any) => void,
   getItemAttributes: (item: any) => { id: string, name: string, meta: CollectionMetaItem[] },
+  getEmptyAttributes?: () => CollectionEmptyAttributes,
   actions?: CollectionAction[],
   searchValue?: string,
   searchPlaceholder?: string,
@@ -43,5 +56,6 @@ export interface CollectionProps {
   onActionClicked?: ({ action }: { action: string }) => void,
   onPaginationClicked?: (action: string) => void,
   onFiltersChanged?: (value: string | boolean) => void,
-  onSortByChanged?: (value: string) => void
+  onSortByChanged?: (value: string) => void,
+  onEmptyActionClicked?: ({ action }: { action: string }) => void
 }

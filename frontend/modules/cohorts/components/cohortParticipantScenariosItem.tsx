@@ -6,6 +6,8 @@ import { Scenario } from '~/modules/scenarios/scenarios.types';
 import { Run } from '~/modules/run/runs.types';
 import getUserRole from '~/modules/users/helpers/getUserRole';
 import getIsEditor from '~/modules/authentication/helpers/getIsEditor';
+import Body from '~/uikit/content/components/body';
+import Title from '~/uikit/content/components/title';
 
 const CohortParticipantScenariosItem = ({
   scenario,
@@ -21,13 +23,13 @@ const CohortParticipantScenariosItem = ({
   return (
     <div className="p-4 bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-1 rounded-lg">
       <div className="font-bold text-sm text-black/90 dark:text-white/90">
-        {scenario.name}
+        <Title title={scenario.name} />
       </div>
-      <div className="text-sm text-black/60 dark:text-white/60">
+      <div className="text-sm text-black/60 dark:text-white/60 mb-2">
         {getCohortScenarioStatus(run)}
       </div>
       <div>
-        {getString({ model: scenario, field: 'description' })}
+        <Body body={getString({ model: scenario, field: 'description' })} />
       </div>
       <div className="flex gap-2 mt-3">
         <Button icon="play" text="Run scenario" color="primary" onClick={() => onPlayScenarioClicked(scenario._id)} />

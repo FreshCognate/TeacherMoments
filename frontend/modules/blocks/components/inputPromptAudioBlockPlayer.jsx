@@ -13,6 +13,7 @@ if (typeof window !== 'undefined') {
 const InputPromptAudioBlockPlayer = ({
   block,
   blockTracking,
+  isResponseBlock,
   isUploadingAudio,
   isTranscribingAudio,
   uploadProgress,
@@ -53,6 +54,7 @@ const InputPromptAudioBlockPlayer = ({
               clearBlobUrl={clearBlobUrl}
               audioSrc={audioSrc}
               isUploadingAudio={isUploadingAudio}
+              isDisabled={blockTracking.isComplete || isResponseBlock}
               uploadProgress={uploadProgress}
               uploadStatus={uploadStatus}
               onPermissionDenied={onPermissionDenied}

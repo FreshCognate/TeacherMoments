@@ -1,31 +1,34 @@
-import React from 'react';
 import ReactPlayer from 'react-player';
-import getAssetUrl from '~/core/app/helpers/getAssetUrl';
 
 const MediaBlockPlayer = ({
-  mediaType,
-  mediaSrc,
-  mediaAsset,
+  mediaUrl,
+  isReady,
+  onVideoReady,
   onVideoStarted,
   onVideoEnded
 }) => {
-
-  let mediaUrl;
-  if (mediaType === 'YOUTUBE') {
-    mediaUrl = mediaSrc
-  }
-
-  if (mediaType === 'ASSET' && mediaAsset) {
-    mediaUrl = getAssetUrl(mediaAsset, 'original');
+  if (!mediaUrl) {
+    return (
+      <div className="aspect-video bg-gray-100 flex items-center justify-center">
+        <span className="text-gray-500">No media selected</span>
+      </div>
+    );
   }
 
   return (
-    <div className="aspect-video">
+    <div className="aspect-video relative">
+      {!isReady && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="">Loading...</span>
+        </div>
+      )}
       <ReactPlayer
+        key={mediaUrl}
         url={mediaUrl}
         controls
         width="100%"
         height="100%"
+        onReady={onVideoReady}
         onStart={onVideoStarted}
         onEnded={onVideoEnded}
       />

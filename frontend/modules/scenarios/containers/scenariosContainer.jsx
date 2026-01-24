@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Scenarios from '../components/scenarios';
-import addModal from '~/core/dialogs/helpers/addModal';
 import axios from 'axios';
 import WithCache from '~/core/cache/containers/withCache';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
@@ -8,6 +7,7 @@ import get from 'lodash/get';
 import debounce from 'lodash/debounce';
 import WithRouter from '~/core/app/components/withRouter';
 import getScenariosActions from '../helpers/getScenariosActions';
+import openCreateScenarioModal from '../helpers/openCreateScenarioModal';
 
 class ScenariosContainer extends Component {
 
@@ -25,49 +25,7 @@ class ScenariosContainer extends Component {
   }
 
   onCreateScenarioClicked = () => {
-
-    addModal({
-      title: 'Create scenario',
-      schema: {
-        name: {
-          type: 'Text',
-          label: 'Scenario name',
-          shouldAutoFocus: true
-        },
-        accessType: {
-          type: 'Toggle',
-          label: 'Access type',
-          options: [{
-            value: 'PRIVATE',
-            text: 'Private'
-          }, {
-            value: 'PUBLIC',
-            text: 'Public'
-          }]
-        }
-      },
-      model: {
-        name: '',
-        accessType: 'PRIVATE'
-      },
-      actions: [{
-        type: 'CANCEL',
-        text: 'Cancel'
-      }, {
-        type: 'CREATE',
-        text: 'Create',
-        color: 'primary'
-      }]
-    }, (state, { type, modal }) => {
-      if (state === 'ACTION') {
-        if (type === 'CREATE') {
-          axios.post('/api/scenarios', modal).then((response) => {
-            const { scenario } = response.data;
-            this.props.router.navigate(`/scenarios/${scenario._id}/create`);
-          }).catch(handleRequestError);
-        }
-      }
-    })
+    openCreateScenarioModal({ router: this.props.router });
   }
 
   onSearchValueChange = (searchValue) => {

@@ -99,6 +99,19 @@ class SlidePlayerContainer extends Component {
             color: 'primary',
             text: 'Return to scenarios'
           }
+        } else if (hasPrompts && !isSubmitted) {
+          secondaryAction = {
+            action: 'BACK',
+            text: 'Back',
+            isActive: true,
+            isDisabled: isSubmitting
+          }
+          primaryAction = {
+            action: 'SUBMIT',
+            color: 'primary',
+            text: isSubmitting ? 'Submitting' : 'Submit',
+            isDisabled: (hasRequiredPrompts && !isAbleToCompleteSlide) || isSubmitting
+          }
         } else {
           primaryAction = {
             action: 'COMPLETE_SCENARIO',
@@ -193,6 +206,7 @@ class SlidePlayerContainer extends Component {
         break;
       case 'COMPLETE_SCENARIO':
         this.onCompleteScenarioClicked();
+        break;
       case 'SUBMIT':
         this.onSubmitSlideClicked();
         break;
@@ -200,7 +214,9 @@ class SlidePlayerContainer extends Component {
         this.props.router.navigate(`/scenarios`);
         break;
       case 'RERUN_SCENARIO':
-        this.props.router.navigate(0);
+        setScenarioToArchived().then(() => {
+          window.location.reload();
+        });
         break;
     }
   }

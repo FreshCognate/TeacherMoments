@@ -5,6 +5,7 @@ import WithCache from '~/core/cache/containers/withCache';
 import { Scenario } from '~/modules/scenarios/scenarios.types';
 import debounce from 'lodash/debounce';
 import axios from 'axios';
+import openCreateScenarioModal from '~/modules/scenarios/helpers/openCreateScenarioModal';
 
 interface CohortScenariosProps {
   cohortScenarios: {
@@ -43,6 +44,21 @@ class CohortScenariosContainer extends Component<CohortScenariosProps> {
       action: 'ADD',
       text: 'Add'
     }]
+  }
+
+  getAvailableScenariosEmptyAttributes = () => {
+    return {
+      title: 'No available scenarios',
+      body: 'You have no available scenarios to choose from. Want to create a new one?',
+      action: { text: 'Create a scenario', action: 'CREATE_SCENARIO' },
+      help: "Looking for a scenario you've created? You need to make sure your scenario is published before it's available in a Cohort"
+    }
+  }
+
+  onAvailableScenariosEmptyActionClicked = ({ action }: { action: string }) => {
+    if (action === 'CREATE_SCENARIO') {
+      openCreateScenarioModal({ router: this.props.router });
+    }
   }
 
   debounceFetch = debounce((fetch) => fetch(), 1000)
@@ -105,9 +121,11 @@ class CohortScenariosContainer extends Component<CohortScenariosProps> {
         availableScenariosIsSyncing={availableScenariosStatus === 'syncing'}
         getItemAttributes={this.getItemAttributes}
         getAvailableScenariosItemActions={this.getAvailableScenariosItemActions}
+        getAvailableScenariosEmptyAttributes={this.getAvailableScenariosEmptyAttributes}
         onAvailableScenariosSearchValueChange={this.onAvailableScenariosSearchValueChange}
         onAvailableScenariosPaginationClicked={this.onAvailableScenariosPaginationClicked}
         onAvailableScenariosItemActionClicked={this.onAvailableScenariosItemActionClicked}
+        onAvailableScenariosEmptyActionClicked={this.onAvailableScenariosEmptyActionClicked}
       />
     );
   }

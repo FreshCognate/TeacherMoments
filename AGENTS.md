@@ -143,6 +143,32 @@ modules/[feature]/
 └── schemas/         # Form/data schemas
 ```
 
+### Container/Component Pattern
+
+The frontend follows a strict container/component separation:
+
+- **Containers** (`containers/`): Handle all business logic, state management, data fetching, and event handlers. Pass computed values and callbacks as props to components.
+- **Components** (`components/`): Purely presentational. Receive all data and callbacks via props. No useState, useEffect, or business logic.
+
+Example:
+```javascript
+// Container - handles logic
+class MyContainer extends Component {
+  state = { isReady: false }
+
+  onReady = () => this.setState({ isReady: true })
+
+  render() {
+    return <MyComponent isReady={this.state.isReady} onReady={this.onReady} />;
+  }
+}
+
+// Component - purely presentational
+const MyComponent = ({ isReady, onReady }) => (
+  <div>{isReady ? 'Ready' : 'Loading...'}</div>
+);
+```
+
 ### Path Aliases (Frontend)
 
 - `~/modules` - Feature modules
@@ -255,3 +281,4 @@ No automated test suite is currently configured. Manual testing is required.
 - Real-time features should emit socket events
 - Long-running operations should use the queue system
 - Frontend uses SSR - be mindful of server vs client code
+- **IMPORTANT**: Before creating new UI components, always search `frontend/uikit/` for existing components first (e.g., Button, Badge, ActionBar, Modal, etc.). Reuse existing components instead of creating inline elements or new components
