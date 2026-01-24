@@ -102,7 +102,7 @@ export default function App(props) {
         <NavigationContainer loaderData={props.loaderData} />
       )}
       <div className="max-w-7xl mx-auto">
-        <Outlet />
+        <Outlet context={{ loaderData: props.loaderData }} />
       </div>
     </div >
   );
