@@ -23,7 +23,7 @@ const Cohort = ({
   return (
     <div className="p-4">
       <div className="sticky top-14 z-30">
-        <div className="flex items-center justify-stretch px-4 h-7 bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-1 rounded-lg">
+        <div className="flex items-center justify-stretch px-4 py-6 h-7 bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-1 rounded-lg">
           <div className="w-1/3 flex items-center">
             <CohortBreadcrumbContainer />
           </div>
