@@ -16,34 +16,42 @@ class PlayScenarioContainer extends Component {
   }
 
   startScenario = () => {
-    const { activeSlideRef } = this.props.run.data;
-    const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
+    if ('slideId' in this.props) {
+      return;
+    }
 
+    const { isConsentAcknowledged, activeSlideRef } = this.props.run.data;
+
+    if (!isConsentAcknowledged) {
+      navigateTo({ slideId: 'CONSENT', router: this.props.router });
+      return;
+    }
+
+    const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
     const slideRef = activeSlideRef || firstSlideRef;
 
     navigateTo({ slideRef, router: this.props.router });
-
   }
 
   getActiveSlide = () => {
-    let activeSlide = null;
-    const { run, slides, scenario } = this.props;
-    if (!run.data.isConsentAcknowledged) {
+    const { run, slides, slideId } = this.props;
+
+    if (slideId === 'CONSENT') {
       return {
         _id: 'CONSENT_SLIDE',
         slideType: 'CONSENT'
       };
     }
-    if (run.data.isComplete) {
+    if (slideId === 'SUMMARY') {
       return {
         _id: 'SUMMARY_SLIDE',
         slideType: 'SUMMARY'
       };
     }
     if (run.data.activeSlideRef) {
-      activeSlide = find(slides.data, { ref: run.data.activeSlideRef });
+      return find(slides.data, { ref: run.data.activeSlideRef });
     }
-    return activeSlide;
+    return null;
   }
 
   getActiveBlocks = (activeSlide) => {

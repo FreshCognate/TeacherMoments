@@ -29,12 +29,15 @@ class CreateWorkspaceContainer extends Component {
   render() {
     const { displayMode, navigationMode } = this.props.editor.data;
     const activeSlideRef = this.getActiveSlideRef();
+    const activeSlideId = this.getActiveSlideId();
+    const isStaticSlide = activeSlideId === 'CONSENT' || activeSlideId === 'SUMMARY';
     return (
       <CreateWorkspace
         activeSlideRef={activeSlideRef}
-        activeSlideId={this.getActiveSlideId()}
+        activeSlideId={activeSlideId}
         displayMode={displayMode}
         navigationMode={navigationMode}
+        isStaticSlide={isStaticSlide}
       />
     );
   }
