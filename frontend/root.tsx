@@ -22,6 +22,13 @@ export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
+export function meta({ }) {
+  return [
+    { title: "Teacher Moments" },
+    { name: "description", content: "Welcome to Teacher Moments!" },
+  ];
+}
+
 export const shouldRevalidate = () => false;
 
 export async function loader({ request }) {
