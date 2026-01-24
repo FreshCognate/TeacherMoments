@@ -6,7 +6,7 @@ import get from 'lodash/get';
 import find from 'lodash/find';
 import filter from 'lodash/filter';
 import navigateTo from '~/modules/run/helpers/navigateTo';
-import getUrlDetails from '~/modules/create/helpers/getUrlDetails';
+import getUrlDetails from '~/modules/run/helpers/getUrlDetails';
 
 class PlayScenarioContainer extends Component {
 

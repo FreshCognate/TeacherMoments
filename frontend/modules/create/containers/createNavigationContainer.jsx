@@ -5,7 +5,7 @@ import WithCache from '~/core/cache/containers/withCache';
 import filter from 'lodash/filter';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
-import getUrlDetails from '../helpers/getUrlDetails';
+import getUrlDetails from '../../run/helpers/getUrlDetails';
 import find from 'lodash/find';
 
 class CreateNavigationContainer extends Component {

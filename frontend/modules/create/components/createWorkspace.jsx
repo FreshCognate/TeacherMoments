@@ -5,7 +5,6 @@ import CreateStaticSlideEditorContainer from '../containers/createStaticSlideEdi
 import PlayScenarioContainer from '~/modules/scenarios/containers/playScenarioContainer';
 
 const CreateWorkspace = ({
-  activeSlideRef,
   activeSlideId,
   displayMode,
   navigationMode,
@@ -16,7 +15,7 @@ const CreateWorkspace = ({
     <div className="w-full h-full ml-4 border border-lm-3 bg-lm-0 dark:bg-dm-1 dark:border-dm-1 rounded-lg overflow-y-auto">
       <div className="flex justify-center sticky top-0 z-30">
         <CreateWorkspaceToolbarContainer
-          activeSlideRef={activeSlideRef}
+          activeSlideId={activeSlideId}
         />
       </div>
       {(navigationMode === 'SLIDES') && (
@@ -27,7 +26,7 @@ const CreateWorkspace = ({
               {(isStaticSlide) && (
                 <CreateStaticSlideEditorContainer key={activeSlideId} type={activeSlideId} />
               )}
-              {(!isStaticSlide && activeSlideRef) && (
+              {(!isStaticSlide && activeSlideId) && (
                 <BlocksEditorContainer
                   slideId={activeSlideId}
                 />

@@ -2,37 +2,17 @@ import React, { Component } from 'react';
 import CreateWorkspace from '../components/createWorkspace';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
-import find from 'lodash/find';
+import getUrlDetails from '../../run/helpers/getUrlDetails';
 
 class CreateWorkspaceContainer extends Component {
-  getActiveSlideRef = () => {
-    const { slides, router } = this.props;
-
-    const searchParams = new URLSearchParams(router.location.search);
-    const slideId = searchParams.get('slide');
-
-    const activeSlide = find(slides.data, { _id: slideId })
-
-    if (activeSlide) {
-      return activeSlide.ref;
-    }
-
-  }
-
-  getActiveSlideId = () => {
-    const searchParams = new URLSearchParams(this.props.router.location.search);
-    return searchParams.get('slide');
-  }
 
   render() {
     const { displayMode, navigationMode } = this.props.editor.data;
-    const activeSlideRef = this.getActiveSlideRef();
-    const activeSlideId = this.getActiveSlideId();
-    const isStaticSlide = activeSlideId === 'CONSENT' || activeSlideId === 'SUMMARY';
+    const { selectedSlideId } = getUrlDetails();
+    const isStaticSlide = selectedSlideId === 'CONSENT' || selectedSlideId === 'SUMMARY';
     return (
       <CreateWorkspace
-        activeSlideRef={activeSlideRef}
-        activeSlideId={activeSlideId}
+        activeSlideId={selectedSlideId}
         displayMode={displayMode}
         navigationMode={navigationMode}
         isStaticSlide={isStaticSlide}
