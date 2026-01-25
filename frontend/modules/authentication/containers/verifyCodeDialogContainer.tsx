@@ -36,7 +36,7 @@ class VerifyCodeDialogContainer extends Component<any, VerifyCodeDialogContainer
   }
 
   signupUser = () => {
-    const { userId, inviteId } = this.props.router.params;
+    const { userId, inviteId, publishLink } = this.props.router.params;
     const searchParams = new URLSearchParams(this.props.router.location.search);
     const email = searchParams.get('email');
     console.log(email);
@@ -48,6 +48,8 @@ class VerifyCodeDialogContainer extends Component<any, VerifyCodeDialogContainer
       .then((response) => {
         if (inviteId) {
           window.location.href = `${window.location.origin}/invite/${inviteId}`;
+        } else if (publishLink) {
+          window.location.href = `${window.location.origin}/play/${publishLink}`;
         }
       })
       .catch((error) => {
