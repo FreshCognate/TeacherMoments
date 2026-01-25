@@ -9,7 +9,10 @@ import find from 'lodash/find';
 class CreateWorkspaceToolbarContainer extends Component {
   onDisplayModeChanged = (displayMode) => {
     this.props.editor.set({ displayMode });
-    if (displayMode === 'PREVIEW') {
+    if (displayMode === 'EDITING') {
+      const run = getCache('run');
+      run.reset();
+    } else {
       document.getElementById("scenario-builder").scrollTo({ top: 0, behaviour: 'instant' });
     }
   }
