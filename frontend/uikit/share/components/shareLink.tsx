@@ -22,7 +22,7 @@ const ShareLink = ({
       <div>
         <div className="flex items-center relative">
           <Button icon="copy" className="mr-2" onClick={onCopyLinkClicked} />
-          <div className="bg-lm-2 dark:bg-dm-2 py-1 px-4 rounded-md h-8 text-nowrap overflow-x-scroll overflow-y-hidden w-full">
+          <div className="bg-lm-2 dark:bg-dm-2 py-1 px-4 rounded-md text-nowrap overflow-x-auto overflow-y-hidden w-full">
             {`${shareLink}`}
           </div>
         </div>
