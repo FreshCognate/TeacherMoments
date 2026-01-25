@@ -5,9 +5,9 @@ import getScenarioDetails from "./getScenarioDetails";
 export default () => {
   const run = getCache('run');
 
-  const {activeSlideId} = getScenarioDetails();
+  const { activeSlideRef } = getScenarioDetails();
 
-  const currentStage = find(run.data.stages, { slideRef: run.data.activeSlideRef });
+  const currentStage = find(run.data.stages, { slideRef: activeSlideRef });
 
   return currentStage;
 

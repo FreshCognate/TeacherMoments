@@ -1,11 +1,13 @@
 import getCache from "~/core/cache/helpers/getCache";
 import findIndex from 'lodash/findIndex';
+import getScenarioDetails from "./getScenarioDetails";
 
 export default async () => {
 
   const run = getCache('run');
+  const { activeSlideRef } = getScenarioDetails();
 
-  const { activeSlideRef, stages } = run.data;
+  const { stages } = run.data;
 
   const currentStageIndex = findIndex(stages, { slideRef: activeSlideRef });
 

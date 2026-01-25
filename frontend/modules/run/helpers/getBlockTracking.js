@@ -6,7 +6,7 @@ export default ({ blockRef }) => {
  
   const run = getCache('run');
 
-  const { activeSlideId, activeSlideRef } = getScenarioDetails();
+  const { activeSlideRef } = getScenarioDetails();
 
   const currentStage = find(run.data.stages, { slideRef: activeSlideRef })
   const blocksByRef = currentStage.blocksByRef || {};

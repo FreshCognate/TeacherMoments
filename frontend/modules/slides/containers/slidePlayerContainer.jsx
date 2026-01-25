@@ -168,10 +168,12 @@ class SlidePlayerContainer extends Component {
 
   onConsentAcceptedClicked = () => {
     setScenarioConsent(true);
+    return navigateToNextSlide({ router: this.props.router });
   }
 
   onConsentDeniedClicked = () => {
     setScenarioConsent(false);
+    return navigateToNextSlide({ router: this.props.router });
   }
 
   onFinishScenarioClicked = () => {

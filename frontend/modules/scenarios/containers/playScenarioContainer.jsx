@@ -17,13 +17,12 @@ class PlayScenarioContainer extends Component {
   }
 
   startScenario = () => {
-    console.log(this.props);
-    const { activeSlideId } = getScenarioDetails();
 
-    console.log(activeSlideId);
-    if (!activeSlideId) {
-      navigateTo({ slideId: 'CONSENT', router: this.props.router });
-      console.log('no selected slideId');
+    const { activeSlideRef } = getScenarioDetails();
+
+    if (!activeSlideRef) {
+      navigateTo({ slideRef: 'CONSENT', router: this.props.router });
+      console.log('no selected slideRef');
     }
     // if ('slideId' in this.props) {
     //   return;
@@ -45,22 +44,22 @@ class PlayScenarioContainer extends Component {
   getActiveSlide = () => {
     const { run, slides } = this.props;
 
-    const { activeSlideId } = getScenarioDetails();
+    const { activeSlideRef } = getScenarioDetails();
 
-    if (activeSlideId === 'CONSENT') {
+    if (activeSlideRef === 'CONSENT') {
       return {
         _id: 'CONSENT_SLIDE',
         slideType: 'CONSENT'
       };
     }
-    if (activeSlideId === 'SUMMARY') {
+    if (activeSlideRef === 'SUMMARY') {
       return {
         _id: 'SUMMARY_SLIDE',
         slideType: 'SUMMARY'
       };
     }
-    if (activeSlideId) {
-      return find(slides.data, { ref: activeSlideId });
+    if (activeSlideRef) {
+      return find(slides.data, { ref: activeSlideRef });
     }
     return null;
   }
