@@ -19,6 +19,7 @@ import getTrigger from '~/modules/triggers/helpers/getTrigger';
 import setShouldStopNavigation from '~/modules/run/helpers/setShouldStopNavigation';
 import setSlideToSubmitted from '~/modules/run/helpers/setSlideToSubmitted';
 import setScenarioToArchived from '~/modules/run/helpers/setScenarioToArchived';
+import isScenarioInPlay from '~/modules/scenarios/helpers/isScenarioInPlay';
 
 class SlidePlayerContainer extends Component {
 
@@ -220,9 +221,15 @@ class SlidePlayerContainer extends Component {
         this.props.router.navigate(`/scenarios`);
         break;
       case 'RERUN_SCENARIO':
-        setScenarioToArchived().then(() => {
-          window.location.href = window.location.pathname;
-        });
+        if (!isScenarioInPlay()) {
+          const run = getCache('run');
+          run.set({}, { setType: 'replace' });
+          navigateTo({ slideRef: 'CONSENT', router: this.props.router });
+        } else {
+          setScenarioToArchived().then(() => {
+            window.location.href = window.location.pathname;
+          });
+        }
         break;
     }
   }
