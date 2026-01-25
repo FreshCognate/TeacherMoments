@@ -1,6 +1,7 @@
 import React from 'react';
 import CreateNavigationActions from './createNavigationActions';
 import CreateNavigationSlide from './createNavigationSlide';
+import CreateNavigationStaticSlide from './createNavigationStaticSlide';
 import CreateDroppableContainer from '../containers/createDroppableContainer';
 import filter from 'lodash/filter';
 import FlatButton from '~/uikit/buttons/components/flatButton';
@@ -10,7 +11,7 @@ const CreateNavigation = ({
   scenarioId,
   slides,
   blocks,
-  selectedSlideId,
+  activeSlideId,
   navigationMode,
   isCreating,
   deletingId,
@@ -25,39 +26,53 @@ const CreateNavigation = ({
       <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} onAddSlideClicked={onAddSlideClicked} />
       <div className="p-2 overflow-y-scroll flex-grow">
         {(navigationMode === 'SLIDES') && (
-          <CreateDroppableContainer
-            id={`slides`}
-            items={slides}
-            data={{
-              type: 'SLIDES'
-            }}
-            renderItem={({ item, index, items, draggingOptions }) => {
+          <>
+            <CreateNavigationStaticSlide
+              label="Consent slide"
+              slideId="CONSENT"
+              scenarioId={scenarioId}
+              isSelected={activeSlideId === 'CONSENT'}
+            />
+            <CreateDroppableContainer
+              id={`slides`}
+              items={slides}
+              data={{
+                type: 'SLIDES'
+              }}
+              renderItem={({ item, index, items, draggingOptions }) => {
 
-              const canDeleteSlides = items.length > 1;
-              let isSelected = false;
-              let isDeletingSlide = false;
-              if (item._id === selectedSlideId) isSelected = true;
-              if (item._id === deletingId) isDeletingSlide = true;
-              const slideBlocks = filter(blocks, { slideRef: item.ref });
+                const canDeleteSlides = items.length > 1;
+                let isSelected = false;
+                let isDeletingSlide = false;
+                if (item._id === activeSlideId) isSelected = true;
+                if (item._id === deletingId) isDeletingSlide = true;
+                const slideBlocks = filter(blocks, { slideRef: item.ref });
 
-              return (
-                <CreateNavigationSlide
-                  key={item._id}
-                  scenarioId={scenarioId}
-                  slide={item}
-                  slideBlocks={slideBlocks}
-                  draggingOptions={draggingOptions}
-                  isSelected={isSelected}
-                  isDeleting={isDeletingSlide}
-                  isDuplicating={isDuplicating}
-                  canDeleteSlides={canDeleteSlides}
-                  onDuplicateSlideClicked={onDuplicateSlideClicked}
-                  onDeleteSlideClicked={onDeleteSlideClicked}
-                />
-              );
+                return (
+                  <CreateNavigationSlide
+                    key={item._id}
+                    scenarioId={scenarioId}
+                    slide={item}
+                    slideBlocks={slideBlocks}
+                    draggingOptions={draggingOptions}
+                    isSelected={isSelected}
+                    isDeleting={isDeletingSlide}
+                    isDuplicating={isDuplicating}
+                    canDeleteSlides={canDeleteSlides}
+                    onDuplicateSlideClicked={onDuplicateSlideClicked}
+                    onDeleteSlideClicked={onDeleteSlideClicked}
+                  />
+                );
 
-            }}
-          />
+              }}
+            />
+            <CreateNavigationStaticSlide
+              label="Summary slide"
+              slideId="SUMMARY"
+              scenarioId={scenarioId}
+              isSelected={activeSlideId === 'SUMMARY'}
+            />
+          </>
         )}
         {(navigationMode === 'STEM') && (
           <div>

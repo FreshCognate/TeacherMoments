@@ -6,6 +6,7 @@ import get from 'lodash/get';
 import find from 'lodash/find';
 import filter from 'lodash/filter';
 import navigateTo from '~/modules/run/helpers/navigateTo';
+import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
 
 class PlayScenarioContainer extends Component {
 
@@ -16,34 +17,45 @@ class PlayScenarioContainer extends Component {
   }
 
   startScenario = () => {
-    const { activeSlideRef } = this.props.run.data;
-    const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
 
-    const slideRef = activeSlideRef || firstSlideRef;
+    const { activeSlideRef } = getScenarioDetails();
 
-    navigateTo({ slideRef, router: this.props.router });
+    if (!activeSlideRef) {
+
+      const { isConsentAcknowledged, activeSlideRef } = this.props.run.data;
+      if (isConsentAcknowledged) {
+        const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
+        const slideRef = activeSlideRef || firstSlideRef;
+
+        navigateTo({ slideRef, router: this.props.router });
+      } else {
+        navigateTo({ slideRef: 'CONSENT', router: this.props.router });
+      }
+    }
 
   }
 
   getActiveSlide = () => {
-    let activeSlide = null;
-    const { run, slides, scenario } = this.props;
-    if (!run.data.isConsentAcknowledged) {
+    const { slides } = this.props;
+
+    const { activeSlideRef } = getScenarioDetails();
+
+    if (activeSlideRef === 'CONSENT') {
       return {
         _id: 'CONSENT_SLIDE',
         slideType: 'CONSENT'
       };
     }
-    if (run.data.isComplete) {
+    if (activeSlideRef === 'SUMMARY') {
       return {
         _id: 'SUMMARY_SLIDE',
         slideType: 'SUMMARY'
       };
     }
-    if (run.data.activeSlideRef) {
-      activeSlide = find(slides.data, { ref: run.data.activeSlideRef });
+    if (activeSlideRef) {
+      return find(slides.data, { ref: activeSlideRef });
     }
-    return activeSlide;
+    return null;
   }
 
   getActiveBlocks = (activeSlide) => {

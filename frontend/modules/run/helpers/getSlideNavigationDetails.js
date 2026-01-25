@@ -1,5 +1,5 @@
 import getBlocksBySlideRef from "~/modules/blocks/helpers/getBlocksBySlideRef";
-import getSlideStage from "./getSlideStage"
+import getCurrentStage from "./getCurrentStage"
 import getBlockTracking from "./getBlockTracking";
 import getBlockDisplayType from "~/modules/blocks/helpers/getBlockDisplayType";
 
@@ -8,7 +8,7 @@ export default () => {
   let hasRequiredPrompts = false;
   let hasPrompts = false;
   let isSubmitted = false;
-  const slideStage = getSlideStage();
+  const slideStage = getCurrentStage();
   if (slideStage) {
 
     isSubmitted = slideStage.isSubmitted;

@@ -5,7 +5,7 @@ import navigateTo from "./navigateTo";
 export default ({ router }) => {
   const slides = getCache('slides');
   const run = getCache('run');
-  run.set({});
+  run.set({}, {setType: 'replace'});
   const firstSlideRef = get(slides, 'data.0.ref', null);
   navigateTo({ slideRef: firstSlideRef, router });
 }

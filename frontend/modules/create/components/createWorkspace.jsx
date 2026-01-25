@@ -1,20 +1,22 @@
 import React from 'react';
 import BlocksEditorContainer from '~/modules/blocks/containers/blocksEditorContainer';
 import CreateWorkspaceToolbarContainer from '../containers/createWorkspaceToolbarContainer';
-import ScenarioPreviewContainer from '~/modules/scenarios/containers/scenarioPreviewContainer';
-import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
+import CreateStaticSlideEditorContainer from '../containers/createStaticSlideEditorContainer';
+import PlayScenarioContainer from '~/modules/scenarios/containers/playScenarioContainer';
 
 const CreateWorkspace = ({
-  activeSlideRef,
   activeSlideId,
   displayMode,
-  navigationMode
+  navigationMode,
+  isStaticSlide
 }) => {
+
   return (
     <div className="w-full h-full ml-4 border border-lm-3 bg-lm-0 dark:bg-dm-1 dark:border-dm-1 rounded-lg overflow-y-auto">
       <div className="flex justify-center sticky top-0 z-30">
         <CreateWorkspaceToolbarContainer
-          activeSlideRef={activeSlideRef}
+          activeSlideId={activeSlideId}
+          isStaticSlide={isStaticSlide}
         />
       </div>
       {(navigationMode === 'SLIDES') && (
@@ -22,7 +24,10 @@ const CreateWorkspace = ({
         <>
           {(displayMode === 'EDITING') && (
             <div className="">
-              {(activeSlideRef) && (
+              {(isStaticSlide) && (
+                <CreateStaticSlideEditorContainer key={activeSlideId} type={activeSlideId} />
+              )}
+              {(!isStaticSlide && activeSlideId) && (
                 <BlocksEditorContainer
                   slideId={activeSlideId}
                 />
@@ -31,9 +36,7 @@ const CreateWorkspace = ({
           )}
           {(displayMode === 'PREVIEW') && (
             <div className="">
-              <div className="w-full pt-4 pb-8 px-8 max-w-lg mx-auto">
-                <ScenarioPreviewContainer slideRef={activeSlideRef} />
-              </div>
+              <PlayScenarioContainer />
             </div>
           )}
         </>

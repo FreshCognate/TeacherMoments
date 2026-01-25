@@ -9,7 +9,10 @@ import find from 'lodash/find';
 class CreateWorkspaceToolbarContainer extends Component {
   onDisplayModeChanged = (displayMode) => {
     this.props.editor.set({ displayMode });
-    if (displayMode === 'PREVIEW') {
+    if (displayMode === 'EDITING') {
+      const run = getCache('run');
+      run.reset();
+    } else {
       document.getElementById("scenario-builder").scrollTo({ top: 0, behaviour: 'instant' });
     }
   }
@@ -40,10 +43,12 @@ class CreateWorkspaceToolbarContainer extends Component {
 
   render() {
     const { displayMode } = this.props.editor.data;
+    const isStaticSlide = this.props.activeSlideId === 'CONSENT' || this.props.activeSlideId === 'SUMMARY';
     return (
       <CreateWorkspaceToolbar
         slide={this.props.slide.data || {}}
         displayMode={displayMode}
+        isStaticSlide={isStaticSlide}
         onDisplayModeChanged={this.onDisplayModeChanged}
         onAddBlockClicked={this.onAddBlockClicked}
         onSlideNameChanged={this.onSlideNameChanged}
@@ -57,19 +62,17 @@ export default WithCache(CreateWorkspaceToolbarContainer, {
     url: '/api/slides/:id',
     getInitialData: ({ props }) => {
       const slides = getCache('slides');
-      const currentSlide = find(slides.data, { ref: props.activeSlideRef });
+      const currentSlide = find(slides.data, { _id: props.activeSlideId });
       return currentSlide;
     },
     transform: ({ data }) => data.slide,
     getParams: ({ props }) => {
-      const slides = getCache('slides');
-      const currentSlide = find(slides.data, { ref: props.activeSlideRef });
       return {
-        id: currentSlide?._id
+        id: props.activeSlideId
       }
     },
     getDependencies: ({ props }) => {
-      return [props.activeSlideRef]
+      return [props.activeSlideId && !props.isStaticSlide]
     }
   }
 }, ['editor']);

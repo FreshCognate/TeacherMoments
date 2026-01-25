@@ -2,39 +2,20 @@ import React, { Component } from 'react';
 import CreateWorkspace from '../components/createWorkspace';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
-import find from 'lodash/find';
-import sortBy from 'lodash/sortBy';
-import filter from 'lodash/filter';
+import getScenarioDetails from '../../run/helpers/getScenarioDetails';
 
 class CreateWorkspaceContainer extends Component {
-  getActiveSlideRef = () => {
-    const { slides, router } = this.props;
-
-    const searchParams = new URLSearchParams(router.location.search);
-    const slideId = searchParams.get('slide');
-
-    const activeSlide = find(slides.data, { _id: slideId })
-
-    if (activeSlide) {
-      return activeSlide.ref;
-    }
-
-  }
-
-  getActiveSlideId = () => {
-    const searchParams = new URLSearchParams(this.props.router.location.search);
-    return searchParams.get('slide');
-  }
 
   render() {
     const { displayMode, navigationMode } = this.props.editor.data;
-    const activeSlideRef = this.getActiveSlideRef();
+    const { activeSlideId } = getScenarioDetails();
+    const isStaticSlide = activeSlideId === 'CONSENT' || activeSlideId === 'SUMMARY';
     return (
       <CreateWorkspace
-        activeSlideRef={activeSlideRef}
-        activeSlideId={this.getActiveSlideId()}
+        activeSlideId={activeSlideId}
         displayMode={displayMode}
         navigationMode={navigationMode}
+        isStaticSlide={isStaticSlide}
       />
     );
   }

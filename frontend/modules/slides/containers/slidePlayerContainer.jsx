@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import SlidePlayer from '../components/slidePlayer';
 import updateRun from '~/modules/run/helpers/updateRun';
 import navigateTo from '~/modules/run/helpers/navigateTo';
-import trigger from '~/modules/triggers/helpers/trigger';
-import getSlideStage from '~/modules/run/helpers/getSlideStage';
+import getCurrentStage from '~/modules/run/helpers/getCurrentStage';
 import WithCache from '~/core/cache/containers/withCache';
 import navigateBack from '~/modules/run/helpers/navigateBack';
 import navigateToNextSlide from '~/modules/run/helpers/navigateToNextSlide';
@@ -20,6 +19,7 @@ import getTrigger from '~/modules/triggers/helpers/getTrigger';
 import setShouldStopNavigation from '~/modules/run/helpers/setShouldStopNavigation';
 import setSlideToSubmitted from '~/modules/run/helpers/setSlideToSubmitted';
 import setScenarioToArchived from '~/modules/run/helpers/setScenarioToArchived';
+import isScenarioInPlay from '~/modules/scenarios/helpers/isScenarioInPlay';
 
 class SlidePlayerContainer extends Component {
 
@@ -113,6 +113,11 @@ class SlidePlayerContainer extends Component {
             isDisabled: (hasRequiredPrompts && !isAbleToCompleteSlide) || isSubmitting
           }
         } else {
+          secondaryAction = {
+            action: 'BACK',
+            text: 'Back',
+            isActive: true
+          }
           primaryAction = {
             action: 'COMPLETE_SCENARIO',
             color: 'primary',
@@ -134,7 +139,7 @@ class SlidePlayerContainer extends Component {
   }
 
   onPreviousSlideClicked = () => {
-    return navigateBack();
+    return navigateBack({ router: this.props.router });
   }
 
   onNextSlideClicked = () => {
@@ -158,7 +163,7 @@ class SlidePlayerContainer extends Component {
     }
 
     setSlideToSubmitted();
-    const stage = getSlideStage();
+    const stage = getCurrentStage();
     this.setState({ isSubmitting: false });
 
     if (!stage.shouldStopNavigation) {
@@ -168,10 +173,12 @@ class SlidePlayerContainer extends Component {
 
   onConsentAcceptedClicked = () => {
     setScenarioConsent(true);
+    return navigateToNextSlide({ router: this.props.router });
   }
 
   onConsentDeniedClicked = () => {
     setScenarioConsent(false);
+    return navigateToNextSlide({ router: this.props.router });
   }
 
   onFinishScenarioClicked = () => {
@@ -214,9 +221,15 @@ class SlidePlayerContainer extends Component {
         this.props.router.navigate(`/scenarios`);
         break;
       case 'RERUN_SCENARIO':
-        setScenarioToArchived().then(() => {
-          window.location.reload();
-        });
+        if (!isScenarioInPlay()) {
+          const run = getCache('run');
+          run.set({}, { setType: 'replace' });
+          navigateTo({ slideRef: 'CONSENT', router: this.props.router });
+        } else {
+          setScenarioToArchived().then(() => {
+            window.location.href = window.location.pathname;
+          });
+        }
         break;
     }
   }
@@ -257,7 +270,7 @@ class SlidePlayerContainer extends Component {
 
     const { isMenuOpen } = this.state;
 
-    const slideStage = getSlideStage();
+    const slideStage = getCurrentStage();
 
     const {
       primaryAction,
