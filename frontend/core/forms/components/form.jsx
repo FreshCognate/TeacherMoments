@@ -23,7 +23,7 @@ const Form = ({
   function renderFields() {
     return map(schema, (schemaValue, schemaKey) => {
 
-      const { type, label, help, isInline, getMediaQueriesInfo, formFieldId } = schemaValue;
+      const { type, label, tooltip, help, isInline, getMediaQueriesInfo, formFieldId } = schemaValue;
       const fieldId = `${uniqueId('form-field-')}-${type.toLowerCase()}`;
       const value = model[schemaKey];
       const fieldState = state[schemaKey];
@@ -38,6 +38,7 @@ const Form = ({
           value={value}
           type={type}
           label={label}
+          tooltip={tooltip}
           help={help}
           isInline={isInline}
           getMediaQueriesInfo={getMediaQueriesInfo}
