@@ -1,20 +1,33 @@
 import getCache from "~/core/cache/helpers/getCache";
-import findIndex from 'lodash/findIndex';
+import find from 'lodash/find';
 import getScenarioDetails from "./getScenarioDetails";
+import navigateTo from "./navigateTo";
 
-export default async () => {
+export default async ({router}) => {
 
-  const run = getCache('run');
   const { activeSlideRef } = getScenarioDetails();
 
-  const { stages } = run.data;
+  if (activeSlideRef === 'SUMMARY') {
+    const slides = getCache('slides').data;
+    const maxSortOrder = Math.max(...slides.map(s => s.sortOrder));
+    const prevSlide = find(slides, {sortOrder: maxSortOrder});
+    if (prevSlide) {
+      navigateTo({slideRef: prevSlide.ref, router});
+    }
+    return;
+  }
 
-  const currentStageIndex = findIndex(stages, { slideRef: activeSlideRef });
+  const currentSlide = find(getCache('slides').data, { ref: activeSlideRef });
 
-  if (currentStageIndex === 0) return;
-
-  if (stages[currentStageIndex - 1]) {
-    run.set({ activeSlideRef: stages[currentStageIndex - 1].slideRef });
+  if (currentSlide) {
+    if (currentSlide.sortOrder === 0) {
+      navigateTo({slideRef: 'CONSENT', router});
+      return;
+    }
+    const prevSlide = find(getCache('slides').data, { sortOrder: currentSlide.sortOrder - 1 });
+    if (prevSlide) {
+      navigateTo({slideRef: prevSlide.ref, router});
+    }
   }
 
 }

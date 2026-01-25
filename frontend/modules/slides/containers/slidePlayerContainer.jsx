@@ -134,7 +134,7 @@ class SlidePlayerContainer extends Component {
   }
 
   onPreviousSlideClicked = () => {
-    return navigateBack();
+    return navigateBack({ router: this.props.router });
   }
 
   onNextSlideClicked = () => {
