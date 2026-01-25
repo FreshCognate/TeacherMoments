@@ -36,7 +36,7 @@ class PlayScenarioContainer extends Component {
   }
 
   getActiveSlide = () => {
-    const { run, slides } = this.props;
+    const { slides } = this.props;
 
     const { activeSlideRef } = getScenarioDetails();
 
