@@ -3,43 +3,43 @@
     "blockType": "TEXT",
     "displayType": "VISUAL",
     "displayName": "Text",
-    "description": "A rich text editor. Great for adding instructions or detailing a scene."
+    "description": "Add instructions, narrative details, or formatted text to the scene."
   },
   {
     "blockType": "IMAGES",
     "displayType": "VISUAL",
     "displayName": "Images",
-    "description": "A set of images. Great for visually setting a scene."
+    "description": "Display a single image or a gallery to visually set the context."
   },
   {
     "blockType": "MEDIA",
     "displayType": "VISUAL",
     "displayName": "Media",
-    "description": "A media element that can either be audio or video. This includes YouTube."
+    "description": "Embed audio clips, video files, or YouTube links."
   },
   {
     "blockType": "SUGGESTION",
     "displayType": "VISUAL",
     "displayName": "Suggestion",
-    "description": "A suggestion box to help guide the user."
+    "description": "Provide hints or guidance to help scaffold the learner's thinking."
   },
   {
     "blockType": "RESPONSE",
     "displayType": "VISUAL",
     "displayName": "Response",
-    "description": "Embed a response from a previous slide."
+    "description": "Re-display a learner's answer from a previous slide for reflection."
   },
   {
     "blockType": "MULTIPLE_CHOICE_PROMPT",
     "displayType": "PROMPT",
     "displayName": "Multiple choice prompt",
-    "description": "A prompt with predefined options for the user to select."
+    "description": "Present a question with a list of predefined options."
   },
   {
     "blockType": "INPUT_PROMPT",
     "displayType": "PROMPT",
     "displayName": "Input prompt",
-    "description": "A prompt with either text or audio as an input."
+    "description": "Collect an open-ended response via text or audio recording."
   },
   {
     "blockType": "ACTIONS_PROMPT",
