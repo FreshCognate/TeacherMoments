@@ -14,7 +14,7 @@ const body = buildLanguageSchema('body', {
 const optionText = buildLanguageSchema('text', {
   type: 'Text',
   label: 'Option text',
-  help: 'This is the text that is displayed within an option for the user to select'
+  tooltip: 'This is the text that is displayed within an option for the user to select'
 });
 
 const feedbackText = buildLanguageSchema('feedback', {
@@ -44,7 +44,7 @@ export default {
         value: {
           type: 'Text',
           label: 'Option value',
-          help: "This value is stored for analytics purposes. This can be left blank but it's a good idea to fill this out if you would like another value other than the option text to be saved."
+          tooltip: "This value is stored for analytics purposes. This can be left blank but it's a good idea to fill this out if you would like another value other than the option text to be saved."
         }
       }
     }

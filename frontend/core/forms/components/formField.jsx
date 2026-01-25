@@ -15,6 +15,7 @@ const FormField = ({
   value = null,
   label = '',
   help = '',
+  tooltip = '',
   isInline,
   getMediaQueriesInfo,
   fieldId = '',
@@ -98,6 +99,7 @@ const FormField = ({
         fieldId={fieldId}
         size={size}
         isInline={isInline}
+        tooltip={tooltip}
       />
       {(!hasCondition) && (
         <>
