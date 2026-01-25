@@ -113,6 +113,11 @@ class SlidePlayerContainer extends Component {
             isDisabled: (hasRequiredPrompts && !isAbleToCompleteSlide) || isSubmitting
           }
         } else {
+          secondaryAction = {
+            action: 'BACK',
+            text: 'Back',
+            isActive: true
+          }
           primaryAction = {
             action: 'COMPLETE_SCENARIO',
             color: 'primary',
@@ -217,7 +222,7 @@ class SlidePlayerContainer extends Component {
         break;
       case 'RERUN_SCENARIO':
         setScenarioToArchived().then(() => {
-          window.location.reload();
+          window.location.href = window.location.pathname;
         });
         break;
     }
