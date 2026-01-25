@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import SlidePlayer from '../components/slidePlayer';
 import updateRun from '~/modules/run/helpers/updateRun';
 import navigateTo from '~/modules/run/helpers/navigateTo';
-import trigger from '~/modules/triggers/helpers/trigger';
-import getSlideStage from '~/modules/run/helpers/getSlideStage';
+import getCurrentStage from '~/modules/run/helpers/getCurrentStage';
 import WithCache from '~/core/cache/containers/withCache';
 import navigateBack from '~/modules/run/helpers/navigateBack';
 import navigateToNextSlide from '~/modules/run/helpers/navigateToNextSlide';
@@ -163,7 +162,7 @@ class SlidePlayerContainer extends Component {
     }
 
     setSlideToSubmitted();
-    const stage = getSlideStage();
+    const stage = getCurrentStage();
     this.setState({ isSubmitting: false });
 
     if (!stage.shouldStopNavigation) {
@@ -264,7 +263,7 @@ class SlidePlayerContainer extends Component {
 
     const { isMenuOpen } = this.state;
 
-    const slideStage = getSlideStage();
+    const slideStage = getCurrentStage();
 
     const {
       primaryAction,
