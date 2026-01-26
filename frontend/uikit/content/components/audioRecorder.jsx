@@ -35,7 +35,7 @@ const AudioRecorder = ({
   }
 
   if (status === 'recording') {
-    statusText = "To stop recording, press microphone. (8 min max)";
+    statusText = "To stop recording, press microphone.";
   }
 
   if (isUploadingAudio) {
@@ -54,7 +54,6 @@ const AudioRecorder = ({
     }
   }, [error]);
 
-  // Enforce max recording time with setTimeout (works even when tab is not focused)
   useEffect(() => {
     if (status === 'recording') {
       maxTimeoutRef.current = setTimeout(() => {

@@ -32,12 +32,11 @@ const Timer = ({ maxTime, onMaxTimeReached }) => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  const displayTime = maxTime ? Math.max(0, maxTime - time) : time;
-  const isNearLimit = maxTime && (maxTime - time) <= 30;
+  const isNearLimit = maxTime && time >= maxTime - 30;
 
   return (
-    <div className={classnames(maxTime ? "w-16" : "w-9", { "text-red-500": isNearLimit })}>
-      {formatTime(displayTime)}{maxTime ? " left" : ""}
+    <div className={classnames("w-9", { "text-red-500": isNearLimit })}>
+      {formatTime(time)}
     </div>
   );
 };
