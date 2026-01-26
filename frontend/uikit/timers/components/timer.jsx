@@ -1,14 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
+import classnames from "classnames";
 
-const Timer = () => {
+const Timer = ({ maxTime, onMaxTimeReached }) => {
   const [time, setTime] = useState(0);
   const requestRef = useRef(null);
   const startTimeRef = useRef(null);
+  const hasCalledMaxTimeRef = useRef(false);
 
   const updateTimer = (timestamp) => {
     if (!startTimeRef.current) startTimeRef.current = timestamp;
     const elapsed = Math.floor((timestamp - startTimeRef.current) / 1000);
     setTime(elapsed);
+
+    if (maxTime && elapsed >= maxTime && !hasCalledMaxTimeRef.current) {
+      hasCalledMaxTimeRef.current = true;
+      if (onMaxTimeReached) onMaxTimeReached();
+      return;
+    }
+
     requestRef.current = requestAnimationFrame(updateTimer);
   };
 
@@ -23,9 +32,12 @@ const Timer = () => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
+  const displayTime = maxTime ? Math.max(0, maxTime - time) : time;
+  const isNearLimit = maxTime && (maxTime - time) <= 30;
+
   return (
-    <div className="w-9">
-      {formatTime(time)}
+    <div className={classnames(maxTime ? "w-16" : "w-9", { "text-red-500": isNearLimit })}>
+      {formatTime(displayTime)}{maxTime ? " left" : ""}
     </div>
   );
 };

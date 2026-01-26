@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import classnames from 'classnames';
 import Timer from '~/uikit/timers/components/timer';
 import addModal from '~/core/dialogs/helpers/addModal';
+
+const MAX_RECORDING_TIME_SECONDS = 480; // 8 minutes
 
 const AudioRecorder = ({
   status,
@@ -33,7 +35,7 @@ const AudioRecorder = ({
   }
 
   if (status === 'recording') {
-    statusText = "To stop recording, press microphone.";
+    statusText = "To stop recording, press microphone. (8 min max)";
   }
 
   if (isUploadingAudio) {
@@ -44,11 +46,33 @@ const AudioRecorder = ({
     statusText = uploadStatus;
   }
 
+  const maxTimeoutRef = useRef(null);
+
   useEffect(() => {
     if (error === 'permission_denied') {
       onPermissionDenied();
     }
   }, [error]);
+
+  // Enforce max recording time with setTimeout (works even when tab is not focused)
+  useEffect(() => {
+    if (status === 'recording') {
+      maxTimeoutRef.current = setTimeout(() => {
+        stopRecording();
+      }, MAX_RECORDING_TIME_SECONDS * 1000);
+    } else {
+      if (maxTimeoutRef.current) {
+        clearTimeout(maxTimeoutRef.current);
+        maxTimeoutRef.current = null;
+      }
+    }
+
+    return () => {
+      if (maxTimeoutRef.current) {
+        clearTimeout(maxTimeoutRef.current);
+      }
+    };
+  }, [status, stopRecording]);
 
   return (
     <div>
@@ -75,7 +99,7 @@ const AudioRecorder = ({
           )}
           {(status === 'recording') && (
             <div className="ml-2 text-sm text-black/60 dark:text-white/60">
-              <Timer />
+              <Timer maxTime={MAX_RECORDING_TIME_SECONDS} />
             </div>
           )}
           <div className="ml-2 text-sm text-black/60 dark:text-white/60">
