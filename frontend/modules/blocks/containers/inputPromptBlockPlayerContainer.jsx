@@ -17,6 +17,8 @@ class InputPromptBlockPlayerContainer extends Component {
     uploadStatus: ''
   }
 
+  transcriptReceived = false;
+
   componentDidMount = async () => {
     if (navigator.permissions) {
       const permission = await navigator.permissions.query({ name: 'microphone' });
@@ -35,6 +37,7 @@ class InputPromptBlockPlayerContainer extends Component {
   }
 
   onAudioRecorded = async (mediaBlobUrl) => {
+    this.transcriptReceived = false;
     this.setState({ isUploadingAudio: true });
 
     const response = await fetch(mediaBlobUrl);
@@ -60,19 +63,24 @@ class InputPromptBlockPlayerContainer extends Component {
           break;
         case 'AUDIO_PROCESSED':
           const assetProcessedResponse = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
-          this.props.onUpdateBlockTracking({ audio: assetProcessedResponse.data.asset });
-          this.setState({ isUploadingAudio: false });
+          if (!this.transcriptReceived) {
+            this.props.onUpdateBlockTracking({
+              audio: assetProcessedResponse.data.asset,
+              isTranscribingAudio: true
+            });
+          }
           break;
         case 'TRANSCRIPT_PROCESSING':
           this.setState({ uploadStatus: 'Creating transcript' });
           break;
         case 'TRANSCRIPT_PROCESSED':
+          this.transcriptReceived = true;
           const assetTranscribedResponse = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
           const isAbleToComplete = assetTranscribedResponse.data.asset.transcript.length > 0;
           this.props.onUpdateBlockTracking({ audio: assetTranscribedResponse.data.asset, isAbleToComplete, isTranscribingAudio: false, textValue: assetTranscribedResponse.data.asset.transcript });
+          this.setState({ isUploadingAudio: false, uploadStatus: null, uploadProgress: 0 });
           break;
         case 'ASSET_PROCESSED':
-          this.setState({ uploadStatus: null, uploadProgress: 0 });
           break;
         case 'ASSET_ERRORED':
           handleRequestError(payload);
