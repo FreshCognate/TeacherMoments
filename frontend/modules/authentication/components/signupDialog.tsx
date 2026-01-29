@@ -29,7 +29,8 @@ const SignupDialog = ({
           },
           email: {
             type: 'Text',
-            label: 'Email'
+            label: 'Email',
+            help: 'Enter your email, this will be used for logging into the system.'
           }
         }}
         model={model}
