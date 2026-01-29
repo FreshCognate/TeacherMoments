@@ -26,10 +26,20 @@ class SignupDialogContainer extends Component {
       isSignupButtonDisabled = true;
       errorMessage = 'Email is not valid';
     }
+    if (email.length === 0) {
+      hasErrorMessage = true;
+      isSignupButtonDisabled = true;
+      errorMessage = 'Please enter your email';
+    }
     if (username.length < 6) {
       hasErrorMessage = true;
       isSignupButtonDisabled = true;
       errorMessage = 'Username must be atleast 6 characters';
+    }
+    if (username.length === 0) {
+      hasErrorMessage = true;
+      isSignupButtonDisabled = true;
+      errorMessage = 'Please enter a username';
     }
     if (hasError) {
       hasErrorMessage = true;
