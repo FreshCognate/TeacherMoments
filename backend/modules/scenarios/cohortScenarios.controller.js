@@ -1,5 +1,4 @@
 import getPublishedScenariosByCohortId from './services/getPublishedScenariosByCohortId.js';
-import getScenariosByCohortId from './services/getScenariosByCohortId.js';
 import sortCohortScenarios from './services/sortCohortScenarios.js';
 
 export default {
@@ -9,11 +8,7 @@ export default {
 
     const { cohortId, searchValue, currentPage } = query;
 
-    if (user.role === 'PARTICIPANT') {
-      return await getPublishedScenariosByCohortId({ cohortId }, {}, context);
-    }
-
-    return await getScenariosByCohortId({ cohortId }, { searchValue, currentPage }, context);
+    return await getPublishedScenariosByCohortId({ cohortId }, {}, context);
 
   },
 

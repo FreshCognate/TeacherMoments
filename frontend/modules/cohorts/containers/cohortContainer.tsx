@@ -3,7 +3,7 @@ import Cohort from '../components/cohort';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 import { Cohort as CohortType } from '../cohorts.types';
-import getIsEditor from '~/modules/authentication/helpers/getIsEditor';
+import canUserEditCohort from '~/modules/authentication/helpers/canUserEditCohort';
 
 interface CohortContainerProps {
   router: any,
@@ -31,7 +31,7 @@ class CohortContainer extends Component<CohortContainerProps> {
         cohort={data}
         pathValue={pathValue}
         isLoading={status === 'loading' || status === 'unresolved'}
-        isEditor={getIsEditor()}
+        isEditor={canUserEditCohort(data)}
         onToggleClicked={this.onToggleClicked}
       />
     );

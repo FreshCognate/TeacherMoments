@@ -1,7 +1,13 @@
+interface Collaborator {
+  user: string | { _id: string };
+  role: 'OWNER' | 'AUTHOR';
+}
+
 export interface Cohort {
   _id: string,
   name: string,
-  invites: Invite[]
+  invites: Invite[],
+  collaborators?: Collaborator[];
 }
 
 export interface Invite {

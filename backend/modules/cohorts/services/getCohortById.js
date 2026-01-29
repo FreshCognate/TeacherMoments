@@ -1,4 +1,4 @@
-import checkHasAccessToEditCohort from '../helpers/checkHasAccessToEditCohort.js';
+import checkHasAccessToViewCohort from '../helpers/checkHasAccessToViewCohort.js';
 import getCohortCollaboratorsPopulate from "../helpers/getCohortCollaboratorsPopulate.js";
 
 export default async (props, options, context) => {
@@ -6,7 +6,7 @@ export default async (props, options, context) => {
   const { cohortId } = props;
   const { models } = context;
 
-  await checkHasAccessToEditCohort({ cohortId }, context);
+  await checkHasAccessToViewCohort({ cohortId }, context);
 
   const { path, select } = getCohortCollaboratorsPopulate();
 

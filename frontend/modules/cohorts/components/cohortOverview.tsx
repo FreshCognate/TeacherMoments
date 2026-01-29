@@ -5,12 +5,8 @@ import CohortParticipantScenariosContainer from '../containers/cohortParticipant
 
 const CohortOverview = ({
   cohort,
-  activeInvite,
-  isEditor,
 }: {
   cohort: Cohort,
-  activeInvite: Invite | undefined,
-  isEditor: boolean
 }) => {
   return (
     <div className="py-4">

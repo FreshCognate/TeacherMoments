@@ -10,6 +10,7 @@ import Title from '~/uikit/content/components/title';
 import map from 'lodash/map';
 import truncate from 'lodash/truncate';
 import { Cohort } from '../cohorts.types';
+import canUserEditCohort from '~/modules/authentication/helpers/canUserEditCohort';
 
 const Cohorts = ({
   cohorts,
@@ -23,7 +24,6 @@ const Cohorts = ({
   sortByOptions,
   isSyncing,
   isLoading,
-  isEditor,
   onSearchValueChange,
   onFiltersChanged,
   onPaginationClicked,
@@ -32,7 +32,6 @@ const Cohorts = ({
   onDuplicateCohortClicked
 }: ActionBarProps & {
   cohorts: Cohort[],
-  isEditor: boolean,
   onDuplicateCohortClicked: (cohortId: string) => void
 }) => {
   return (
@@ -64,12 +63,13 @@ const Cohorts = ({
       </div>
       <div className="grid grid-cols-4 gap-4 py-4">
         {map(cohorts, (cohort: Cohort) => {
+          const isCohortEditor = canUserEditCohort(cohort);
           return (
             <Card key={cohort._id}>
               <CardContent>
                 <Title title={truncate(cohort.name, { length: 60 })} />
               </CardContent>
-              {(isEditor) && (
+              {(isCohortEditor) && (
                 <CardActions>
                   <Link to={`/cohorts/${cohort._id}/overview`}>
                     <FlatButton
@@ -80,7 +80,7 @@ const Cohorts = ({
                   <FlatButton icon="copy" text="Copy" onClick={() => onDuplicateCohortClicked(cohort._id)} />
                 </CardActions>
               )}
-              {(!isEditor) && (
+              {(!isCohortEditor) && (
                 <CardActions>
                   <Link to={`/cohorts/${cohort._id}/overview`}>
                     <FlatButton
