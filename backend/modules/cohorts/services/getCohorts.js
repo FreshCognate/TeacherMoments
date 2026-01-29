@@ -39,19 +39,26 @@ export default async (props, options, context) => {
     sort = 'createdAt';
   }
 
+  const usersCohortIds = map(user.cohorts, (cohort) => {
+    return cohort.cohort;
+  });
+
+  const orConditions = [
+    { _id: { $in: usersCohortIds } }
+  ];
+
   if (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN' || user.role === 'FACILITATOR') {
-    search.collaborators = {
-      $elemMatch: {
-        user: user._id,
-        role: { $in: ['OWNER', 'AUTHOR'] }
+    orConditions.push({
+      collaborators: {
+        $elemMatch: {
+          user: user._id,
+          role: { $in: ['OWNER', 'AUTHOR'] }
+        }
       }
-    }
-  } else {
-    const usersCohortIds = map(user.cohorts, (cohort) => {
-      return cohort.cohort;
-    })
-    search._id = { $in: usersCohortIds };
+    });
   }
+
+  search.$or = orConditions;
 
   const count = await models.Cohort.countDocuments(search);
 

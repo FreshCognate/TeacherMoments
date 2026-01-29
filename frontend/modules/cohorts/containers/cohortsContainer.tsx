@@ -9,7 +9,6 @@ import debounce from 'lodash/debounce';
 import WithRouter from '~/core/app/components/withRouter';
 import getCohortsActions from '../helpers/getCohortsActions';
 import getCohortsFilters from '../helpers/getCohortsFilters';
-import getIsEditor from '~/modules/authentication/helpers/getIsEditor';
 
 interface CohortsContainerProps {
   cohorts: any,
@@ -115,8 +114,6 @@ class CohortsContainer extends Component<CohortsContainerProps> {
     const isSyncing = status === 'syncing';
     const isLoading = status === 'loading' || status === 'unresolved';
 
-    const isEditor = getIsEditor();
-
     return (
       <Cohorts
         cohorts={data}
@@ -130,7 +127,6 @@ class CohortsContainer extends Component<CohortsContainerProps> {
         sortByOptions={[{ value: 'NAME', text: 'Name' }, { value: 'NEWEST', text: 'Newest' }, { value: 'OLDEST', text: 'Oldest' }]}
         isSyncing={isSyncing}
         isLoading={isLoading}
-        isEditor={isEditor}
         onActionClicked={this.onActionClicked}
         onSearchValueChange={this.onSearchValueChange}
         onFiltersChanged={this.onFiltersChanged}

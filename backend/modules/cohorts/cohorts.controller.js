@@ -41,14 +41,6 @@ export default {
 
   read: async function ({ param }, context) {
 
-    console.log(context.user.role);
-
-    if (context.user.role === 'PARTICIPANT') {
-      console.log('taka');
-      const cohort = await getPublishedCohortById({ cohortId: param }, {}, context);
-      return { cohort };
-    }
-
     const cohort = await getCohortById({ cohortId: param }, {}, context);
     return { cohort };
 

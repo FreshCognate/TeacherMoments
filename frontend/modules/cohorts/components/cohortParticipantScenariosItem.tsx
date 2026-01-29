@@ -4,10 +4,10 @@ import getString from '~/modules/ls/helpers/getString';
 import Button from '~/uikit/buttons/components/button';
 import { Scenario } from '~/modules/scenarios/scenarios.types';
 import { Run } from '~/modules/run/runs.types';
-import getUserRole from '~/modules/users/helpers/getUserRole';
-import getIsEditor from '~/modules/authentication/helpers/getIsEditor';
 import Body from '~/uikit/content/components/body';
 import Title from '~/uikit/content/components/title';
+import canUserEditCohort from '~/modules/authentication/helpers/canUserEditCohort';
+import getCache from '~/core/cache/helpers/getCache';
 
 const CohortParticipantScenariosItem = ({
   scenario,
@@ -20,6 +20,7 @@ const CohortParticipantScenariosItem = ({
   onPlayScenarioClicked: (scenarioId: string) => void,
   onViewScenarioResponseClicked: (scenarioId: string) => void,
 }) => {
+  const isCohortEditor = canUserEditCohort(getCache("cohort").data);
   return (
     <div className="p-4 bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-1 rounded-lg">
       <div className="font-bold text-sm text-black/90 dark:text-white/90">
@@ -33,7 +34,7 @@ const CohortParticipantScenariosItem = ({
       </div>
       <div className="flex gap-2 mt-3">
         <Button icon="play" text="Run scenario" color="primary" onClick={() => onPlayScenarioClicked(scenario._id)} />
-        {(getIsEditor()) && (
+        {(isCohortEditor) && (
           <Button icon="responses" text="View responses" onClick={() => onViewScenarioResponseClicked(scenario._id)} />
         )}
       </div>
