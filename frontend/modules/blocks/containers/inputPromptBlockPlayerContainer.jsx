@@ -12,12 +12,13 @@ class InputPromptBlockPlayerContainer extends Component {
 
   state = {
     isUploadingAudio: false,
+    isAudioUploaded: false,
+    isAudioProcessed: false,
+    isTranscriptProcessed: false,
     uploadProgress: 0,
     uploadAssetId: null,
     uploadStatus: ''
   }
-
-  transcriptReceived = false;
 
   componentDidMount = async () => {
     if (navigator.permissions) {
@@ -37,8 +38,7 @@ class InputPromptBlockPlayerContainer extends Component {
   }
 
   onAudioRecorded = async (mediaBlobUrl) => {
-    this.transcriptReceived = false;
-    this.setState({ isUploadingAudio: true });
+    this.setState({ isUploadingAudio: true, isAudioUploaded: false, isAudioProcessed: false, isTranscriptProcessed: false });
 
     const response = await fetch(mediaBlobUrl);
     const blob = await response.blob();
@@ -55,30 +55,30 @@ class InputPromptBlockPlayerContainer extends Component {
           this.setState({ uploadProgress: payload.progress });
           break;
         case 'ASSET_UPLOADED':
-          this.setState({ uploadProgress: 100 });
-          this.props.onUpdateBlockTracking({ isTranscribingAudio: true });
+          this.setState({ uploadProgress: 100, isAudioUploaded: true });
           break;
         case 'AUDIO_PROCESSING':
           this.setState({ uploadStatus: 'Converting audio' });
           break;
         case 'AUDIO_PROCESSED':
           const assetProcessedResponse = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
-          if (!this.transcriptReceived) {
-            this.props.onUpdateBlockTracking({
-              audio: assetProcessedResponse.data.asset,
-              isTranscribingAudio: true
-            });
-          }
+          this.setState({ isAudioProcessed: true });
+          this.props.onUpdateBlockTracking({
+            audio: assetProcessedResponse.data.asset
+          });
           break;
         case 'TRANSCRIPT_PROCESSING':
           this.setState({ uploadStatus: 'Creating transcript' });
           break;
         case 'TRANSCRIPT_PROCESSED':
-          this.transcriptReceived = true;
           const assetTranscribedResponse = await axios.get(`/api/assets/${this.state.uploadAssetId}`);
           const isAbleToComplete = assetTranscribedResponse.data.asset.transcript.length > 0;
-          this.props.onUpdateBlockTracking({ audio: assetTranscribedResponse.data.asset, isAbleToComplete, isTranscribingAudio: false, textValue: assetTranscribedResponse.data.asset.transcript });
-          this.setState({ isUploadingAudio: false, uploadStatus: null, uploadProgress: 0 });
+          this.setState({ isUploadingAudio: false, isTranscriptProcessed: true, uploadStatus: null, uploadProgress: 0 });
+          this.props.onUpdateBlockTracking({
+            audio: assetTranscribedResponse.data.asset,
+            isAbleToComplete,
+            textValue: assetTranscribedResponse.data.asset.transcript
+          });
           break;
         case 'ASSET_PROCESSED':
           break;
@@ -94,7 +94,12 @@ class InputPromptBlockPlayerContainer extends Component {
       if (this.props.blockTracking.audio._id) {
         axios.delete(`/api/assets/${this.props.blockTracking.audio._id}`);
       }
-      this.props.onUpdateBlockTracking({ audio: null, isComplete: false, isAbleToComplete: false });
+      this.setState({ isAudioUploaded: false, isAudioProcessed: false, isTranscriptProcessed: false });
+      this.props.onUpdateBlockTracking({
+        audio: null,
+        isComplete: false,
+        isAbleToComplete: false
+      });
     }
   }
 
@@ -106,13 +111,20 @@ class InputPromptBlockPlayerContainer extends Component {
     if (this.props.blockTracking.audio._id) {
       axios.delete(`/api/assets/${this.props.blockTracking.audio._id}`);
     }
-    this.props.onUpdateBlockTracking({ audio: null, isComplete: false, isAbleToComplete: false });
+    this.setState({ isAudioUploaded: false, isAudioProcessed: false, isTranscriptProcessed: false });
+    this.props.onUpdateBlockTracking({
+      audio: null,
+      isComplete: false,
+      isAbleToComplete: false
+    });
   }
 
   render() {
     const { block, blockTracking, isResponseBlock } = this.props;
-    const { isUploadingAudio, uploadProgress, uploadStatus } = this.state;
+    const { isUploadingAudio, isAudioUploaded, isTranscriptProcessed, uploadProgress, uploadStatus } = this.state;
     const { isAudioDisabled } = getUserPreferences();
+    const isTranscribingAudio = isAudioUploaded && !isTranscriptProcessed;
+
     return (
       <InputPromptBlockPlayer
         block={block}
@@ -120,7 +132,7 @@ class InputPromptBlockPlayerContainer extends Component {
         isAudioDisabled={isAudioDisabled}
         isResponseBlock={isResponseBlock}
         isUploadingAudio={isUploadingAudio}
-        isTranscribingAudio={blockTracking.isTranscribingAudio}
+        isTranscribingAudio={isTranscribingAudio}
         uploadProgress={uploadProgress}
         uploadStatus={uploadStatus}
         onTextInputChanged={this.onTextInputChanged}
