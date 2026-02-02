@@ -22,14 +22,16 @@ export default async ({ slideRef, blockRef, update }) => {
 
   let stages = cloneDeep(run.data.stages);
 
-  if (!isScenarioInPlay()) {
-    stages = [{
-      slideRef,
-      blocksByRef: {}
-    }];
-  }
-  
   const currentStage = find(stages, { slideRef });
+
+  if (!currentStage) {
+    if (!isScenarioInPlay()) {
+      stages = [{
+        slideRef,
+        blocksByRef: {}
+      }];
+    }
+  }
 
   const currentBlockTracking = currentStage.blocksByRef[blockRef] ? cloneDeep(currentStage.blocksByRef[blockRef]) : {};
 
