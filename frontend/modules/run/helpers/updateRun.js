@@ -2,19 +2,8 @@ import getCache from "~/core/cache/helpers/getCache";
 import cloneDeep from 'lodash/cloneDeep';
 import extend from 'lodash/extend';
 import getIsSlideComplete from './getIsSlideComplete';
-import trigger from "~/modules/triggers/helpers/trigger";
 import find from 'lodash/find';
-import debounce from 'lodash/debounce';
 import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
-
-const debouncedSave = debounce(() => {
-  if (isScenarioInPlay()) {
-    const run = getCache('run');
-
-    const stages = cloneDeep(run.data.stages);
-    run.mutate({ stages }, { method: 'put' });
-  }
-}, 1000);
 
 export default async ({ slideRef, blockRef, update }) => {
 
@@ -22,14 +11,16 @@ export default async ({ slideRef, blockRef, update }) => {
 
   let stages = cloneDeep(run.data.stages);
 
-  if (!isScenarioInPlay()) {
-    stages = [{
-      slideRef,
-      blocksByRef: {}
-    }];
-  }
-  
   const currentStage = find(stages, { slideRef });
+
+  if (!currentStage) {
+    if (!isScenarioInPlay()) {
+      stages = [{
+        slideRef,
+        blocksByRef: {}
+      }];
+    }
+  }
 
   const currentBlockTracking = currentStage.blocksByRef[blockRef] ? cloneDeep(currentStage.blocksByRef[blockRef]) : {};
 
@@ -46,8 +37,10 @@ export default async ({ slideRef, blockRef, update }) => {
     }
   }
 
-  debouncedSave({ run, stages });
-
+  if (isScenarioInPlay()) {
+    return run.mutate({ stages }, { method: 'put' });
+  }
+    
   return run.set({ stages });
 
 }

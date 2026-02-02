@@ -63,7 +63,6 @@ export default [{
           audio: Joi.alternatives().try(Joi.object(), Joi.string(), null),
           isAbleToComplete: Joi.boolean(),
           isComplete: Joi.boolean(),
-          isTranscribingAudio: Joi.boolean(),
           textValue: Joi.string().allow(''),
           selectedOptions: Joi.array().items(Joi.string())
         })),
