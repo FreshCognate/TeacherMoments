@@ -1,6 +1,7 @@
 import each from 'lodash/each';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import getBlockDisplayType from '~/modules/blocks/helpers/getBlockDisplayType';
 import getBlocksBySlideRef from '~/modules/blocks/helpers/getBlocksBySlideRef';
 import hasContent from '~/modules/ls/helpers/hasContent';
 
@@ -10,6 +11,11 @@ export default (trigger) => {
   switch (trigger.action) {
     case 'SHOW_FEEDBACK_FROM_PROMPTS': {
       const blocks = getBlocksBySlideRef({ slideRef: trigger.elementRef });
+      const promptBlocks = filter(blocks, block => getBlockDisplayType(block) === 'PROMPT');
+
+      if (!promptBlocks.length) {
+        errors.push({ message: 'Slide has no prompt blocks to base conditions on', action: 'OPEN_TRIGGER_EDITOR' });
+      }
 
       const itemsWithoutConditions = filter(trigger.items, item => !item.conditions?.length);
       if (itemsWithoutConditions.length > 1) {
@@ -29,7 +35,10 @@ export default (trigger) => {
             }
 
             const block = find(blocks, { ref: prompt.ref });
-            if (!block) return;
+            if (!block) {
+              errors.push({ message: 'Condition references a block that no longer exists', action: 'OPEN_TRIGGER_EDITOR' });
+              return;
+            }
 
             if (block.blockType === 'INPUT_PROMPT') {
               if (!prompt.text?.trim()) {

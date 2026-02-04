@@ -18,6 +18,7 @@ import getSockets from '~/core/sockets/helpers/getSockets';
 import addToast from '~/core/dialogs/helpers/addToast';
 import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
 import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
+import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlideRef';
 
 class BlocksEditorContainer extends Component {
 
@@ -78,11 +79,9 @@ class BlocksEditorContainer extends Component {
       const slide = find(slides.data, { _id: slideId })
       if (slide) {
         const slideRef = slide.ref;
-        return sortBy(filter(this.props.triggers.data, (trigger) => {
-          if (trigger.elementRef === slideRef && trigger.triggerType === 'SLIDE') {
-            return trigger;
-          }
-        }), 'sortOrder');
+
+        return getTriggersBySlideRef({ slideRef });
+
       }
 
       return [];
