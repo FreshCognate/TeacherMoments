@@ -3,7 +3,7 @@ import FormContainer from '~/core/forms/containers/formContainer';
 import classnames from 'classnames';
 import Options from '~/uikit/dropdowns/components/options';
 import getBlockDisplayName from '../helpers/getBlockDisplayName';
-import getIsBlockValid from '../helpers/getIsBlockValid';
+import getBlockErrors from '../helpers/getBlockErrors';
 import Badge from '~/uikit/badges/components/badge';
 import ValidationIndicator from '~/uikit/badges/components/validationIndicator';
 import FlatButton from '~/uikit/buttons/components/flatButton';
@@ -36,7 +36,7 @@ const EditBlock = ({
           <div className="px-6 h-14 flex items-center">
             <div className="flex gap-x-2 items-center">
               <Badge text={getBlockDisplayName(block)} className="border border-lm-2 dark:border-dm-2" />
-              <ValidationIndicator errors={getIsBlockValid(block)} variant='inline' onClick={() => { }} />
+              <ValidationIndicator errors={getBlockErrors(block)} variant='inline' onClick={() => { }} />
             </div>
           </div>
           <div className="px-6 py-2">

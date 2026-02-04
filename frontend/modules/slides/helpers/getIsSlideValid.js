@@ -1,6 +1,6 @@
 import each from 'lodash/each';
 import getBlocksBySlideRef from '~/modules/blocks/helpers/getBlocksBySlideRef';
-import getIsBlockValid from '~/modules/blocks/helpers/getIsBlockValid';
+import getBlockErrors from '~/modules/blocks/helpers/getBlockErrors';
 
 export default (slide) => {
   const errors = [];
@@ -11,7 +11,7 @@ export default (slide) => {
   }
 
   each(blocks, block => {
-    const blockErrors = getIsBlockValid(block);
+    const blockErrors = getBlockErrors(block);
     errors.push(...blockErrors);
   });
 
