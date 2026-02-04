@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import getIsScenarioValid from '~/modules/scenarios/helpers/getIsScenarioValid';
+import getScenarioErrors from '~/modules/scenarios/helpers/getScenarioErrors';
 import ValidationIndicator from '~/uikit/badges/components/validationIndicator';
 
 class ScenarioValidationContainer extends Component {
 
   render() {
     return (
-      <ValidationIndicator errors={getIsScenarioValid()} />
+      <ValidationIndicator errors={getScenarioErrors()} />
     );
   }
 };
