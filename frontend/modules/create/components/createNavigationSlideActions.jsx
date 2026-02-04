@@ -1,10 +1,12 @@
 import React from 'react';
+import ValidationIndicator from '~/uikit/badges/components/validationIndicator';
 import Options from '~/uikit/dropdowns/components/options';
 
 const CreateNavigationSlideActions = ({
   slideNumber,
   isOptionsOpen,
   options,
+  slideErrors,
   onSlideActionsToggle,
   onSlideActionClicked,
 }) => {
@@ -13,7 +15,8 @@ const CreateNavigationSlideActions = ({
       <div className="text-sm">
         {slideNumber}
       </div>
-      <div>
+      <div className="flex items-center gap-x-2">
+        <ValidationIndicator errors={slideErrors} variant="inline" />
         {(options.length > 0) && (
           <Options
             options={options}

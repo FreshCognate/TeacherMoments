@@ -36,7 +36,7 @@ const EditBlock = ({
           <div className="px-6 h-14 flex items-center">
             <div className="flex gap-x-2 items-center">
               <Badge text={getBlockDisplayName(block)} className="border border-lm-2 dark:border-dm-2" />
-              <ValidationIndicator errors={getIsBlockValid(block)} onClick={() => {}} />
+              <ValidationIndicator errors={getIsBlockValid(block)} variant='inline' onClick={() => { }} />
             </div>
           </div>
           <div className="px-6 py-2">

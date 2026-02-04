@@ -29,6 +29,7 @@ const CreateNavigationSlide = ({
     <Link to={`/scenarios/${scenarioId}/create?slide=${slide._id}`} replace>
       <div className={className} style={style} ref={setNodeRef} {...listeners} {...attributes}>
         <CreateNavigationSlideActionsContainer
+          slide={slide}
           slideNumber={slide.sortOrder + 1}
           canDeleteSlides={canDeleteSlides}
           onDuplicateSlideClicked={() => onDuplicateSlideClicked(slide._id)}
