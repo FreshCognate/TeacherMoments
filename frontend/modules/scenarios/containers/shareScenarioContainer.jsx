@@ -4,6 +4,7 @@ import WithCache from '~/core/cache/containers/withCache';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import axios from 'axios';
 import WithRouter from '~/core/app/components/withRouter';
+import getIsScenarioValid from '../helpers/getIsScenarioValid';
 
 class ShareScenarioContainer extends Component {
 

@@ -21,11 +21,11 @@ export default function ValidationIndicator({
 
   const classes = classnames(
     'flex items-center gap-x-1.5 text-xs cursor-pointer',
-    'text-yellow-600 dark:text-yellow-400',
+    'text-yellow-500 dark:text-yellow-200',
     {
-      'py-1 px-2 rounded-full': variant === 'pill',
+      'py-1 px-2 rounded-md': variant === 'pill',
       'bg-yellow-500/10 dark:bg-yellow-400/10': variant === 'pill',
-      'border border-yellow-500/30 dark:border-yellow-400/30': variant === 'pill',
+      'border border-yellow-500/30 dark:border-yellow-400/10': variant === 'pill',
       'hover:bg-yellow-500/20 dark:hover:bg-yellow-400/20': variant === 'pill',
       'hover:text-yellow-700 dark:hover:text-yellow-300': variant === 'inline',
     },
