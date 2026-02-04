@@ -79,10 +79,10 @@ const DialogSidePanel = ({
             <Title title={sidePanel.title} element="h5" className="text-lg font-normal" />
           </div>
           <div className="flex items-center gap-x-2">
+            <ScenarioSyncStatusContainer />
             {(sidePanel.icon === 'trigger') && (
               <TriggersValidationContainer />
             )}
-            <ScenarioSyncStatusContainer />
             <FlatButton icon="cancel" isCircular onClick={() => {
               setIsAnimatingOut(true);
               setTimeout(() => {

@@ -57,8 +57,8 @@ const ScenarioEditor = ({
             />
           </div>
           <div className="w-1/3 flex justify-end text-sm gap-x-2">
-            <ScenarioValidationContainer />
             <ScenarioSyncStatusContainer />
+            <ScenarioValidationContainer />
             <ScenarioPublishStatusContainer />
           </div>
         </div>

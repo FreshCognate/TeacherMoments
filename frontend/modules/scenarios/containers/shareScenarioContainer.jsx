@@ -25,6 +25,10 @@ class ShareScenarioContainer extends Component {
     }
   }
 
+  getIsScenarioValid = () => {
+    return getScenarioErrors().length === 0;
+  }
+
   onPublishScenarioClicked = () => {
     this.setState({ isPublishing: true });
     axios.post(`/api/publishes`, {
@@ -55,6 +59,7 @@ class ShareScenarioContainer extends Component {
         publishLink={this.getPublishLink()}
         isPublishing={isPublishing}
         hasCopied={hasCopied}
+        isScenarioValid={this.getIsScenarioValid()}
         onPublishScenarioClicked={this.onPublishScenarioClicked}
         onCopyLinkClicked={this.onCopyLinkClicked}
       />
