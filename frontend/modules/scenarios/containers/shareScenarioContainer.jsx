@@ -4,6 +4,7 @@ import WithCache from '~/core/cache/containers/withCache';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import axios from 'axios';
 import WithRouter from '~/core/app/components/withRouter';
+import getScenarioErrors from '../helpers/getScenarioErrors';
 
 class ShareScenarioContainer extends Component {
 
@@ -22,6 +23,10 @@ class ShareScenarioContainer extends Component {
     } else {
       return '';
     }
+  }
+
+  getIsScenarioValid = () => {
+    return getScenarioErrors().length === 0;
   }
 
   onPublishScenarioClicked = () => {
@@ -54,6 +59,7 @@ class ShareScenarioContainer extends Component {
         publishLink={this.getPublishLink()}
         isPublishing={isPublishing}
         hasCopied={hasCopied}
+        isScenarioValid={this.getIsScenarioValid()}
         onPublishScenarioClicked={this.onPublishScenarioClicked}
         onCopyLinkClicked={this.onCopyLinkClicked}
       />

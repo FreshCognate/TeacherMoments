@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import CreateNavigationSlideActions from '../components/createNavigationSlideActions';
+import getSlideErrors from '~/modules/slides/helpers/getSlideErrors';
 
 class CreateNavigationSlideActionsContainer extends Component {
 
@@ -25,6 +26,10 @@ class CreateNavigationSlideActionsContainer extends Component {
     return options;
   }
 
+  getSlideErrors = () => {
+    return getSlideErrors(this.props.slide);
+  }
+
   onSlideActionsToggle = (isOptionsOpen) => {
     this.setState({ isOptionsOpen })
   }
@@ -46,6 +51,7 @@ class CreateNavigationSlideActionsContainer extends Component {
         slideNumber={this.props.slideNumber}
         isOptionsOpen={this.state.isOptionsOpen}
         options={this.getOptions()}
+        slideErrors={this.getSlideErrors()}
         onSlideActionsToggle={this.onSlideActionsToggle}
         onSlideActionClicked={this.onSlideActionClicked}
       />

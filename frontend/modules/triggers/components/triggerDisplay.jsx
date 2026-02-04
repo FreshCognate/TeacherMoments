@@ -34,9 +34,11 @@ const TriggerDisplay = ({
             );
           })}
         </div>
-        <div className="mt-8">
-          <Button color="primary" text="Add trigger" icon="trigger" onClick={onAddTriggerClicked} />
-        </div>
+        {(triggers.length === 0) && (
+          <div className="mt-8">
+            <Button color="primary" text="Add trigger" icon="trigger" onClick={onAddTriggerClicked} />
+          </div>
+        )}
       </div>
     </div>
   );

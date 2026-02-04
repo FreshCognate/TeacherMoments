@@ -5,6 +5,7 @@ import ScenarioSyncStatusContainer from '../containers/scenarioSyncStatusContain
 import Loading from '~/uikit/loaders/components/loading';
 import truncate from 'lodash/truncate';
 import ScenarioPublishStatusContainer from '../containers/scenarioPublishStatusContainer';
+import ScenarioValidationContainer from '../containers/scenarioValidationContainer';
 
 const ScenarioEditor = ({
   scenario,
@@ -55,8 +56,9 @@ const ScenarioEditor = ({
               onClick={onToggleClicked}
             />
           </div>
-          <div className="w-1/3 flex justify-end text-sm">
+          <div className="w-1/3 flex justify-end text-sm gap-x-2">
             <ScenarioSyncStatusContainer />
+            <ScenarioValidationContainer />
             <ScenarioPublishStatusContainer />
           </div>
         </div>

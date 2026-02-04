@@ -5,6 +5,7 @@ import Title from '~/uikit/content/components/title';
 import classnames from 'classnames';
 import Icon from '~/uikit/icons/components/icon';
 import ScenarioSyncStatusContainer from '~/modules/scenarios/containers/scenarioSyncStatusContainer';
+import TriggersValidationContainer from '~/modules/triggers/containers/triggersValidationContainer';
 
 const DialogSidePanel = ({
   sidePanel,
@@ -79,6 +80,9 @@ const DialogSidePanel = ({
           </div>
           <div className="flex items-center gap-x-2">
             <ScenarioSyncStatusContainer />
+            {(sidePanel.icon === 'trigger') && (
+              <TriggersValidationContainer />
+            )}
             <FlatButton icon="cancel" isCircular onClick={() => {
               setIsAnimatingOut(true);
               setTimeout(() => {

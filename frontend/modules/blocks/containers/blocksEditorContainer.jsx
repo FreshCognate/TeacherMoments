@@ -238,7 +238,6 @@ class BlocksEditorContainer extends Component {
   }
 
   onOpenTriggersClicked = () => {
-    console.log('opening');
     addSidePanel({
       size: 'lg',
       icon: 'trigger',

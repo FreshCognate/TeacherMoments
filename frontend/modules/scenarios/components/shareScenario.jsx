@@ -8,6 +8,7 @@ const ShareScenario = ({
   publishLink,
   isPublishing,
   hasCopied,
+  isScenarioValid,
   onPublishScenarioClicked,
   onCopyLinkClicked
 }) => {
@@ -46,7 +47,7 @@ const ShareScenario = ({
             text="Publish"
             color="primary"
             className="ml-4"
-            isDisabled={isPublishing}
+            isDisabled={isPublishing || !isScenarioValid}
             onClick={onPublishScenarioClicked}
           />
         </div>
