@@ -1,4 +1,4 @@
-# AGENTS.md
+# CLAUDE.md
 
 This file provides guidance for AI agents working on the TeacherMoments codebase.
 
@@ -75,6 +75,16 @@ yarn workers:start   # Production workers
 ```
 
 ## Code Conventions
+
+### Code Style
+
+- Only add comments when absolutely necessary - the code should be self-documenting
+- ESLint with semistandard rules (relaxed)
+- Semicolons required
+- Single quotes for strings
+- 2-space indentation
+- Functional React components
+- CommonJS in backend, ES modules in frontend
 
 ### Backend Module Structure
 
@@ -239,15 +249,6 @@ Common patterns:
 - **Email**: Postmark
 - **AI**: OpenAI API
 - **CAPTCHA**: Cloudflare Turnstile
-
-## Code Style
-
-- ESLint with semistandard rules (relaxed)
-- Semicolons required
-- Single quotes for strings
-- 2-space indentation
-- Functional React components
-- CommonJS in backend, ES modules in frontend
 
 ## Testing
 
