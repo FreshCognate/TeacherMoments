@@ -3,7 +3,7 @@ import each from 'lodash/each';
 import filter from 'lodash/filter';
 import ValidationIndicator from '~/uikit/badges/components/validationIndicator';
 import WithCache from '~/core/cache/containers/withCache';
-import getIsTriggerValid from '~/modules/triggers/helpers/getIsTriggerValid';
+import getTriggerErrors from '~/modules/triggers/helpers/getTriggerErrors';
 
 class TriggersValidationContainer extends Component {
 
@@ -13,7 +13,7 @@ class TriggersValidationContainer extends Component {
     const errors = [];
 
     each(triggers, (trigger) => {
-      const triggerErrors = getIsTriggerValid(trigger);
+      const triggerErrors = getTriggerErrors(trigger);
       each(triggerErrors, (error) => errors.push(error));
     });
 

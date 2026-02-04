@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CreateNavigationSlideActions from '../components/createNavigationSlideActions';
-import getIsSlideValid from '~/modules/slides/helpers/getIsSlideValid';
+import getSlideErrors from '~/modules/slides/helpers/getSlideErrors';
 
 class CreateNavigationSlideActionsContainer extends Component {
 
@@ -27,7 +27,7 @@ class CreateNavigationSlideActionsContainer extends Component {
   }
 
   getSlideErrors = () => {
-    return getIsSlideValid(this.props.slide);
+    return getSlideErrors(this.props.slide);
   }
 
   onSlideActionsToggle = (isOptionsOpen) => {
