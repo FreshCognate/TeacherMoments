@@ -42,6 +42,9 @@ const ShareScenario = ({
             {(isPublishing) && (
               <Body className="text-black/60 dark:text-white/60" body="Publishing..." size="sm" />
             )}
+            {(!isPublishing && scenario.hasChanges && !isScenarioValid) && (
+              <Body className="text-yellow-500 dark:text-yellow-200 text-xs" body="Scenarios cannot be published whilst there are issues" />
+            )}
           </div>
           <Button
             text="Publish"
