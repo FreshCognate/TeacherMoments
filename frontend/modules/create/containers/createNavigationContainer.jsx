@@ -28,6 +28,13 @@ class CreateNavigationContainer extends Component {
     return find(this.props.slides.data, { _id: activeSlideId }).sortOrder;
   }
 
+  getNewSlideSortOrder = () => {
+    const { activeSlideId } = getScenarioDetails();
+    if (activeSlideId === 'CONSENT') return 0;
+    if (activeSlideId === 'SUMMARY') return this.getCurrentStemOfSlides().length;
+    return this.getSelectedSlideSortOrder() + 1;
+  }
+
   onAddSlideClicked = () => {
     let parentRef;
     this.setState({ isCreating: true });
@@ -35,7 +42,7 @@ class CreateNavigationContainer extends Component {
     axios.post(`/api/slides`, {
       scenarioId: this.props.scenario.data._id,
       parentRef,
-      sortOrder: this.getSelectedSlideSortOrder() + 1
+      sortOrder: this.getNewSlideSortOrder()
     }).then((response) => {
       const slideId = response.data.slide._id;
       this.props.slides.fetch().then(() => {
