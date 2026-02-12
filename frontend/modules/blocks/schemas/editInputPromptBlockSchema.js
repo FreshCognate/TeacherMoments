@@ -56,7 +56,7 @@ export default {
     requiredLength: {
       type: 'Text',
       label: 'Minimum required length',
-      help: 'This is used to make sure a participant fills out a minimum number of characters.',
+      help: 'Sets a minimum character count for the response. This applies to both text and audio inputs.',
       textType: 'number',
       size: 'sm',
       conditions: [{
