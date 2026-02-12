@@ -1,9 +1,6 @@
 import React from 'react';
 import { Scenario } from '~/modules/scenarios/scenarios.types';
 import map from 'lodash/map';
-import getString from '~/modules/ls/helpers/getString';
-import Button from '~/uikit/buttons/components/button';
-import getCohortScenarioStatus from '../helpers/getCohortScenarioStatus';
 import CohortParticipantScenariosItem from './cohortParticipantScenariosItem';
 
 const CohortParticipantScenarios = ({
