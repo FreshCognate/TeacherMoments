@@ -1,8 +1,9 @@
 import classNames from 'classnames';
-import { NavLink } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import Button from '~/uikit/buttons/components/button';
 import Dropdown from '~/uikit/dropdowns/components/dropdown';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
+import Image from '~/uikit/content/components/image';
 
 const userMenuOptions = [
   { icon: 'logout', text: 'Logout', action: 'logout' }
@@ -23,7 +24,19 @@ const Navigation = ({
           { "opacity-60": isLoggingOut }
         )}>
           <div>
-            <nav className="flex gap-x-4">
+            <nav className="flex items-center gap-x-4">
+              <Link
+                to="/"
+                className="flex items-center mr-4"
+              >
+                <img
+                  src={'/tm-logo.png'}
+                  className="w-16"
+                />
+                <span className="ml-2 font-extralight leading-4 text-sm">
+                  Teacher<br />Moments
+                </span>
+              </Link>
               <NavLink
                 to="/"
                 className={({ isActive }) =>
