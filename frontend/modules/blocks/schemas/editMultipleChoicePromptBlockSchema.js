@@ -44,7 +44,8 @@ export default {
         value: {
           type: 'Text',
           label: 'Option value',
-          tooltip: "This value is stored for analytics purposes. This can be left blank but it's a good idea to fill this out if you would like another value other than the option text to be saved."
+          isRequired: true,
+          tooltip: "This must be filled out and be unique from the other options in this block. This value is also stored for analytics purposes."
         }
       }
     }
