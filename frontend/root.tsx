@@ -20,6 +20,7 @@ import classnames from 'classnames';
 
 export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
+  { rel: "icon", href: "/tm-favicon.ico" },
 ];
 
 export function meta({ }) {
