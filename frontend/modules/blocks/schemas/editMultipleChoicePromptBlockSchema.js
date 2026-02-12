@@ -44,7 +44,6 @@ export default {
         value: {
           type: 'Text',
           label: 'Option value',
-          isRequired: true,
           tooltip: "This must be filled out and be unique from the other options in this block. This value is also stored for analytics purposes."
         }
       }
