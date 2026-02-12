@@ -8,6 +8,7 @@ import Body from '~/uikit/content/components/body';
 import Title from '~/uikit/content/components/title';
 import canUserEditCohort from '~/modules/authentication/helpers/canUserEditCohort';
 import getCache from '~/core/cache/helpers/getCache';
+import Badge from '~/uikit/badges/components/badge';
 
 const CohortParticipantScenariosItem = ({
   scenario,
@@ -21,13 +22,14 @@ const CohortParticipantScenariosItem = ({
   onViewScenarioResponseClicked: (scenarioId: string) => void,
 }) => {
   const isCohortEditor = canUserEditCohort(getCache("cohort").data);
+  const { icon, text } = getCohortScenarioStatus(run);
   return (
     <div className="p-4 bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-1 rounded-lg">
-      <div className="font-bold text-sm text-black/90 dark:text-white/90">
+      <div className="font-bold text-sm text-black/90 dark:text-white/90 mb-2">
         <Title title={scenario.name} />
       </div>
-      <div className="text-sm text-black/60 dark:text-white/60 mb-2">
-        {getCohortScenarioStatus(run)}
+      <div className="flex">
+        <Badge icon={icon} text={text} />
       </div>
       <div>
         <Body body={getString({ model: scenario, field: 'description' })} />

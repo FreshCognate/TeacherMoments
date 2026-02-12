@@ -9,6 +9,13 @@ const Badge = ({
   size = "rg",
   color,
   className
+}: {
+  icon?: string,
+  iconSize?: number,
+  text?: string,
+  size?: string,
+  color?: 'warning' | 'primary',
+  className?: string
 }) => {
   let iconSizeValue = size === 'rg' ? 12 : 16;
 
