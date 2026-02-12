@@ -12,6 +12,18 @@
     "description": "Display a single image or a gallery to visually set the context."
   },
   {
+    "blockType": "INPUT_PROMPT",
+    "displayType": "PROMPT",
+    "displayName": "Input prompt",
+    "description": "Collect an open-ended response via text or audio recording."
+  },
+  {
+    "blockType": "MULTIPLE_CHOICE_PROMPT",
+    "displayType": "PROMPT",
+    "displayName": "Multiple choice prompt",
+    "description": "Present a question with a list of predefined options."
+  },
+  {
     "blockType": "MEDIA",
     "displayType": "VISUAL",
     "displayName": "Media",
@@ -28,18 +40,6 @@
     "displayType": "VISUAL",
     "displayName": "Response",
     "description": "Re-display a learner's answer from a previous slide for reflection."
-  },
-  {
-    "blockType": "MULTIPLE_CHOICE_PROMPT",
-    "displayType": "PROMPT",
-    "displayName": "Multiple choice prompt",
-    "description": "Present a question with a list of predefined options."
-  },
-  {
-    "blockType": "INPUT_PROMPT",
-    "displayType": "PROMPT",
-    "displayName": "Input prompt",
-    "description": "Collect an open-ended response via text or audio recording."
   },
   {
     "blockType": "ACTIONS_PROMPT",
