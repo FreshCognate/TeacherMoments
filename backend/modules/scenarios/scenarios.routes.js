@@ -52,6 +52,13 @@ export default [{
       currentPage: Joi.number().default(1)
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
+  },
+  delete: {
+    param: 'id',
+    query: {
+      cohortId: Joi.string().required()
+    },
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   }
 }, {
   route: '/scenarioCollaborators',

@@ -61,7 +61,7 @@ const CohortUsers = ({
         )}
       </div>
       <Title title="Users in this Cohort" className="mb-2" />
-      <div className="bg-lm-1 dark:bg-dm-1 p-4 dark:border-dm-2 rounded-md">
+      <div>
         <Collection
           items={users}
           getItemActions={getItemActions}
