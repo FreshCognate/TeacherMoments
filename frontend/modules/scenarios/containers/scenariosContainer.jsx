@@ -107,6 +107,7 @@ export default WithRouter(WithCache(ScenariosContainer, {
   scenarios: {
     url: '/api/scenarios',
     transform: ({ data }) => data.scenarios,
+    getInitialData: () => ([]),
     getQuery: ({ }) => {
       return {
         searchValue: '',

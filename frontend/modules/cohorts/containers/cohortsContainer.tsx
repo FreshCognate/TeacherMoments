@@ -142,6 +142,7 @@ export default WithRouter(WithCache(CohortsContainer, {
   cohorts: {
     url: '/api/cohorts',
     transform: ({ data }: { data: any }) => data.cohorts,
+    getInitialData: () => ([]),
     getQuery: ({ }) => {
       return {
         searchValue: '',
