@@ -8,6 +8,7 @@ import debounce from 'lodash/debounce';
 import WithRouter from '~/core/app/components/withRouter';
 import getScenariosActions from '../helpers/getScenariosActions';
 import openCreateScenarioModal from '../helpers/openCreateScenarioModal';
+import getIsEditor from '~/modules/authentication/helpers/getIsEditor';
 
 class ScenariosContainer extends Component {
 
@@ -78,6 +79,8 @@ class ScenariosContainer extends Component {
     const isSyncing = status === 'syncing';
     const isLoading = status === 'loading' || status === 'unresolved';
 
+    const isEditor = getIsEditor();
+
     return (
       <Scenarios
         scenarios={data}
@@ -91,6 +94,7 @@ class ScenariosContainer extends Component {
         sortByOptions={[{ value: 'NAME', text: 'Name' }, { value: 'NEWEST', text: 'Newest' }, { value: 'OLDEST', text: 'Oldest' }]}
         isSyncing={isSyncing}
         isLoading={isLoading}
+        isEditor={isEditor}
         onSearchValueChange={this.onSearchValueChange}
         onPaginationClicked={this.onPaginationClicked}
         onCreateScenarioClicked={this.onCreateScenarioClicked}
@@ -107,6 +111,7 @@ export default WithRouter(WithCache(ScenariosContainer, {
   scenarios: {
     url: '/api/scenarios',
     transform: ({ data }) => data.scenarios,
+    getInitialData: () => ([]),
     getQuery: ({ }) => {
       return {
         searchValue: '',

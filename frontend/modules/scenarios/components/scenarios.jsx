@@ -23,6 +23,7 @@ const Scenarios = ({
   sortByOptions,
   isSyncing,
   isLoading,
+  isEditor,
   onSearchValueChange,
   onPaginationClicked,
   onFiltersChanged,
@@ -58,26 +59,55 @@ const Scenarios = ({
             onActionClicked={onActionClicked}
           />
         </div>
-        <div className="grid grid-cols-4 gap-4 py-4">
-          {map(scenarios, (scenario) => {
-            return (
-              <Card key={scenario._id}>
-                <CardContent>
-                  <Title title={truncate(scenario.name, { length: 60 })} />
-                </CardContent>
-                <CardActions>
-                  <Link to={`/scenarios/${scenario._id}/create`}>
-                    <FlatButton
-                      icon="edit"
-                      text="Edit"
-                    />
-                  </Link>
-                  <FlatButton icon="copy" text="Copy" onClick={() => onDuplicateScenarioClicked(scenario._id)} />
-                </CardActions>
-              </Card>
-            );
-          })}
-        </div>
+        {(scenarios.length === 0 && !isLoading && isEditor) && (
+          <>
+            {/* <Instructions
+              title="Welcome to Scenario Management"
+              instructions={[{
+                body: "In Teacher Moments, a Cohort is how you manage groups of learners. It acts as the bridge between your students and the scenarios they need to practice."
+              }, {
+                body: "To manage a class effectively, you will use three main features:",
+              }, {
+                title: "👥 Cohorts:",
+                body: "Think of these as your classes or sections. You create a cohort to group students together (e.g., 'Fall Semester 2026' or 'Workshop A')."
+              }, {
+                title: "📚 Scenarios:",
+                body: "Once a cohort is created, you add Scenarios to it. This grants the students in that group access to specific practice simulations."
+              }, {
+                title: "📊 View Responses:",
+                body: "As students complete scenarios, their data flows back here. You can monitor participation and review individual responses to track progress."
+              }]}
+            /> */}
+            <CollectionEmpty
+              attributes={{
+                title: "You haven't created any Scenarios yet.",
+                body: "Click + Create Scenario to start building your first Scenario."
+              }}
+            />
+          </>
+        )}
+        {(scenarios.length > 0) && (
+          <div className="grid grid-cols-4 gap-4 py-4">
+            {map(scenarios, (scenario) => {
+              return (
+                <Card key={scenario._id}>
+                  <CardContent>
+                    <Title title={truncate(scenario.name, { length: 60 })} />
+                  </CardContent>
+                  <CardActions>
+                    <Link to={`/scenarios/${scenario._id}/create`}>
+                      <FlatButton
+                        icon="edit"
+                        text="Edit"
+                      />
+                    </Link>
+                    <FlatButton icon="copy" text="Copy" onClick={() => onDuplicateScenarioClicked(scenario._id)} />
+                  </CardActions>
+                </Card>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
