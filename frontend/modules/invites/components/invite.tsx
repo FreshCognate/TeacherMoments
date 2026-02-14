@@ -5,7 +5,7 @@ import Loading from '~/uikit/loaders/components/loading';
 const Invite = ({
 }) => {
   return (
-    <div className="h-screen w-screen flex items-center justify-center">
+    <div className="h-screen flex items-center justify-center">
       <div className="flex items-center">
         <div>
           <Loading />

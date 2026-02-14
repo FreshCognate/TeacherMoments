@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import controller from './signup.controller.js';
+import generateUsernameController from './generateUsername.controller.js';
 
 export default [{
   route: '/signup',
@@ -17,4 +18,10 @@ export default [{
       otpCode: Joi.string().length(6).required()
     },
   }
+}, {
+  route: '/signup/username',
+  controller: generateUsernameController,
+  all: {
+    rateLimit: 20,
+  },
 }];

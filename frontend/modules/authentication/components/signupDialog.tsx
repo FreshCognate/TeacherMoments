@@ -23,7 +23,7 @@ const SignupDialog = ({
       <FormContainer
         schema={{
           username: {
-            type: 'Text',
+            type: 'Username',
             label: 'Username',
             help: 'Pick a unique username, this can also be your name without spaces.'
           },
