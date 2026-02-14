@@ -15,6 +15,7 @@ import '~/modules/slides/helpers/isRootSlide.condition';
 import '~/modules/ls/helpers/ls.condition'
 import '~/modules/triggers/showFeedbackFromPrompts.trigger';
 import '~/modules/triggers/containers/feedbackItemConditionsContainer.formField';
+import '~/modules/authentication/containers/usernameContainer.formField';
 
 axios.interceptors.response.use(function (response) {
   return response;
