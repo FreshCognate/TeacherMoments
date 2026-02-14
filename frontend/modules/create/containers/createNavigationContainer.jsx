@@ -5,6 +5,7 @@ import WithCache from '~/core/cache/containers/withCache';
 import filter from 'lodash/filter';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
+import setEditingMode from '../helpers/setEditingMode';
 import getScenarioDetails from '../../run/helpers/getScenarioDetails';
 import find from 'lodash/find';
 
@@ -46,6 +47,7 @@ class CreateNavigationContainer extends Component {
     }).then((response) => {
       const slideId = response.data.slide._id;
       this.props.slides.fetch().then(() => {
+        setEditingMode();
         this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideId}`, {
           replace: true
         })
@@ -68,6 +70,7 @@ class CreateNavigationContainer extends Component {
       const slideId = response.data.slide._id;
       this.props.blocks.fetch();
       this.props.slides.fetch().then(() => {
+        setEditingMode();
         this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideId}`, {
           replace: true
         })

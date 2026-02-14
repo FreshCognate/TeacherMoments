@@ -4,15 +4,15 @@ import WithCache from '~/core/cache/containers/withCache';
 import BlockSelectorContainer from '~/modules/blocks/containers/blockSelectorContainer';
 import addModal from '~/core/dialogs/helpers/addModal';
 import getCache from '~/core/cache/helpers/getCache';
+import setEditingMode from '../helpers/setEditingMode';
 import find from 'lodash/find';
 
 class CreateWorkspaceToolbarContainer extends Component {
   onDisplayModeChanged = (displayMode) => {
-    this.props.editor.set({ displayMode });
     if (displayMode === 'EDITING') {
-      const run = getCache('run');
-      run.reset();
+      setEditingMode();
     } else {
+      this.props.editor.set({ displayMode });
       document.getElementById("scenario-builder").scrollTo({ top: 0, behaviour: 'instant' });
     }
   }

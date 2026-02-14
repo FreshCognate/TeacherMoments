@@ -7,6 +7,7 @@ import Body from '~/uikit/content/components/body';
 import Title from '~/uikit/content/components/title';
 
 const BlocksEditor = ({
+  slides,
   blocks,
   triggers,
   isLockedFromEditing,
@@ -52,7 +53,16 @@ const BlocksEditor = ({
             )
           }))}
           {(blocks.length === 0) && (
-            <div className="p-8 text-center">
+            <div className="p-8 text-center max-w-xl mx-auto">
+              {(slides.length === 1) && (
+                <>
+                  <Title title="Welcome to the Scenario Creator" className="text-black dark:text-white/80 mb-2" />
+                  <Body body="Teacher Moments is a practice space for teachers to rehearse responses to real-life scenarios. To build your simulation, you will use three main elements:" size="sm" className="text-black/60 dark:text-white/60 mb-2" />
+                  <Body body="📰 Slides: Think of these as the scenes in your scenario. They are the largest containers that hold everything else." size="sm" className="text-black/60 dark:text-white/60 mb-2" />
+                  <Body body="📦 Blocks: These are the individual pieces of content that make up a scene. You can add text, images, or input prompts for the user to interact with. (Tip: Max. 3-4 blocks per slide)" size="sm" className="text-black/60 dark:text-white/60 mb-2" />
+                  <Body body="⚡ Triggers: These define the logic. You can add triggers to input prompts to give specific feedback or determine what happens next." size="sm" className="text-black/60 dark:text-white/60 mb-2" />
+                </>
+              )}
               <Title title="This slide has no blocks" className="text-black dark:text-white/80 mb-2" />
               <Body body="Click Add block to create a new block for this slide" size="sm" className="text-black/60 dark:text-white/60" />
             </div>

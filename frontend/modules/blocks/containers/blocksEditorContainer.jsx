@@ -249,6 +249,7 @@ class BlocksEditorContainer extends Component {
     const isLockedFromEditing = this.getIsLockedFromEditing();
     return (
       <BlocksEditor
+        slides={getCache('slides').data}
         blocks={this.getBlocksBySlide()}
         triggers={this.getTriggersBySlide()}
         isLockedFromEditing={isLockedFromEditing}
