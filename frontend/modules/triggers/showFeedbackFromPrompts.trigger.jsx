@@ -15,7 +15,7 @@ import setSlideStatus from "../run/helpers/setSlideStatus";
 
 const body = buildLanguageSchema('body', {
   type: 'TextArea',
-  label: 'Feedback text',
+  label: 'Feedback message',
   features: ['bold', 'italic', 'underline', 'strikethrough', 'code', 'blockquote', 'link', 'leftAlign', 'centerAlign', 'rightAlign', 'justifyAlign', 'bulletedList', 'numberedList']
 });
 
@@ -211,24 +211,24 @@ const ShowFeedbackFromPrompts = {
     return 'SHOW_FEEDBACK_FROM_PROMPTS';
   },
   getText: () => {
-    return 'Show feedback from prompts';
+    return 'Provide feedback based on prompt responses';
   },
   getDescription: (trigger) => {
-    return `Show feedback based upon the selected prompts in this slide.`
+    return `Evaluates user responses from input and multiple choice prompts and displays matching feedback when transitioning to the next slide.`
   },
   getSchema: (trigger) => {
     return {
       items: {
         type: 'Array',
-        label: 'Feedback items',
-        deleteTitleText: "Delete feedback item",
-        addButtonText: "Add feedback item",
+        label: 'Feedback responses',
+        deleteTitleText: "Delete conditional feedback",
+        addButtonText: "Add conditional feedback",
         shouldStopLastItemDelete: true,
         subSchema: {
           ...body,
           conditions: {
             type: 'FeedbackItemConditions',
-            label: 'Select this item if'
+            label: 'Show this feedback when the user:'
           }
         }
       },

@@ -5,6 +5,7 @@ import find from 'lodash/find';
 import { Cohort } from '../cohorts.types';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
+import addModal from '~/core/dialogs/helpers/addModal';
 import WithRouter from '~/core/app/components/withRouter';
 import { User } from '~/modules/users/users.types';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
@@ -38,7 +39,9 @@ class CohortUsersContainer extends Component<CohortUsersContainerProps> {
   }
 
   getItemActions = () => {
-    return []
+    return [
+      { action: 'REMOVE', text: 'Remove' }
+    ]
   }
 
   getEmptyAttributes = () => {
@@ -86,7 +89,26 @@ class CohortUsersContainer extends Component<CohortUsersContainerProps> {
   }
 
   onItemActionClicked = ({ itemId, action }: { itemId: string, action: string }) => {
-
+    if (action === 'REMOVE') {
+      addModal({
+        title: 'Remove user',
+        body: 'Are you sure you would like to remove this user from the cohort?',
+        actions: [{
+          type: 'CANCEL',
+          text: 'Cancel'
+        }, {
+          type: 'REMOVE',
+          text: 'Remove',
+          color: 'warning'
+        }]
+      }, (state: string, { type }: { type: string }) => {
+        if (state === 'ACTION' && type === 'REMOVE') {
+          axios.delete(`/api/cohorts/users/${itemId}`).then(() => {
+            this.props.cohortUsers.fetch();
+          }).catch(handleRequestError);
+        }
+      });
+    }
   }
 
 

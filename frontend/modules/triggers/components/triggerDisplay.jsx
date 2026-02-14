@@ -16,7 +16,7 @@ const TriggerDisplay = ({
   return (
     <div className="w-full pt-4 pb-8 px-4 max-w-screen-lg mx-auto">
       <div className="flex items-center justify-between text-black/60 dark:text-white/60 mb-2">
-        <Alert text="Triggers are extra functionality that can happen during the transition to the next slide." type="info" />
+        <Alert text="Triggers provide feedback to users based on their responses to Input and Multiple Choice Prompts. When a user submits a response and moves to the next slide, triggers evaluate their input and display personalized feedback." type="info" />
       </div>
       <div className=" p-2">
         <div>

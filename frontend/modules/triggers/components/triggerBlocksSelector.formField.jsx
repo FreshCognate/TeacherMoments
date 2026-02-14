@@ -16,7 +16,7 @@ const triggerBlocksSelector = ({
     <div>
       {(blocks.length === 0) && (
         <div>
-          <Alert type="warning" text="No available prompt blocks" />
+          <Alert type="warning" text="This slide needs input prompts before you can create feedback triggers. Add a Multiple Choice or Input Prompt block to this slide first, then return here to configure feedback." />
         </div>
       )}
       {map(blocks, (block) => {

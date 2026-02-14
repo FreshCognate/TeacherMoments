@@ -67,7 +67,7 @@ const BlocksEditor = ({
                 onClick={onOpenTriggersClicked}
               />
               <Body
-                body={`This slide has ${triggers.length} trigger${triggers.length > 1 ? 's' : ''}`}
+                body={triggers.length === 0 ? 'Add triggers to provide feedback on user responses' : `This slide has ${triggers.length} trigger${triggers.length > 1 || triggers.length === 0 ? 's' : ''}`}
                 size="xs"
                 className="text-black/60 dark:text-white/80"
               />
