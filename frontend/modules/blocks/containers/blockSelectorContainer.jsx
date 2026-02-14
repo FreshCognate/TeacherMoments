@@ -4,6 +4,7 @@ import WithRouter from '~/core/app/components/withRouter';
 import getCache from '~/core/cache/helpers/getCache';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
+import setEditingMode from '~/modules/create/helpers/setEditingMode';
 import find from 'lodash/find';
 import blocks from '../../../../config/blocks.json';
 import cloneDeep from 'lodash/cloneDeep';
@@ -38,6 +39,7 @@ class BlockSelectorContainer extends Component {
       const scenario = getCache('scenario')
       const scenarioId = scenario.data._id;
       axios.post(`/api/blocks`, { blockType, slideRef: slide.ref, scenarioId }).then(() => {
+        setEditingMode();
         const blocks = getCache('blocks');
         blocks.fetch();
       }).catch(handleRequestError);
