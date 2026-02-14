@@ -90,9 +90,11 @@ class CohortUsersContainer extends Component<CohortUsersContainerProps> {
 
   onItemActionClicked = ({ itemId, action }: { itemId: string, action: string }) => {
     if (action === 'REMOVE') {
+      const user = find(this.props.cohortUsers.data, { _id: itemId });
+      const displayName = user ? getUserDisplayName(user) : 'this user';
       addModal({
         title: 'Remove user',
-        body: 'Are you sure you would like to remove this user from the cohort?',
+        body: `Are you sure you would like to remove ${displayName} from the cohort?`,
         actions: [{
           type: 'CANCEL',
           text: 'Cancel'
@@ -103,7 +105,7 @@ class CohortUsersContainer extends Component<CohortUsersContainerProps> {
         }]
       }, (state: string, { type }: { type: string }) => {
         if (state === 'ACTION' && type === 'REMOVE') {
-          axios.delete(`/api/cohorts/users/${itemId}`).then(() => {
+          axios.delete(`/api/cohortUsers/${itemId}`, { params: { cohortId: this.props.cohort.data._id } }).then(() => {
             this.props.cohortUsers.fetch();
           }).catch(handleRequestError);
         }

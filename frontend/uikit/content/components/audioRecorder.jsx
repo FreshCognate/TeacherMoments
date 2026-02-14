@@ -35,7 +35,7 @@ const AudioRecorder = ({
   }
 
   if (status === 'recording') {
-    statusText = "To stop recording, press microphone.";
+    statusText = "Press microphone to stop recording";
   }
 
   if (isUploadingAudio) {

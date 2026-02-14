@@ -15,7 +15,7 @@ class ResponseBlockPlayerContainer extends Component {
     let blockType;
     if (!this.props.block.responseRef) {
       hasError = true;
-      error = "A response has not been chosen.";
+      error = "In order to use the Response Prompt, make sure to select an Input or Multiple Choice Prompt for this block.";
     } else {
 
       const blocks = getCache('blocks');
