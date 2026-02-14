@@ -4,6 +4,7 @@ import find from 'lodash/find';
 import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
 import { createStageForSlide } from "./getCurrentStage";
 import { createSearchParams } from "react-router";
+import getCohortFromSearchParams from "~/modules/cohorts/helpers/getCohortFromSearchParams";
 
 export default async ({ slideRef, router }) => {
 
@@ -23,8 +24,7 @@ export default async ({ slideRef, router }) => {
     run.set({ activeSlideRef: slideRef, stages });
   }
 
-  const searchParams = new URLSearchParams(router.location.search);
-  const cohort = searchParams.get('cohort');
+  const cohort = getCohortFromSearchParams(router);
 
   const newSearchParams = { slide: slideRef };
   if (cohort) {

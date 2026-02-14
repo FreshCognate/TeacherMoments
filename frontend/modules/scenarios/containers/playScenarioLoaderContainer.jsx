@@ -3,6 +3,7 @@ import PlayScenarioContainer from './playScenarioContainer';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 import getCache from '~/core/cache/helpers/getCache';
+import getCohortFromSearchParams from '~/modules/cohorts/helpers/getCohortFromSearchParams';
 import Loading from '~/uikit/loaders/components/loading';
 
 class PlayScenarioLoaderContainer extends Component {
@@ -89,8 +90,7 @@ export default WithRouter(WithCache(PlayScenarioLoaderContainer, {
       }
     },
     getQuery: ({ props }) => {
-      const searchParams = new URLSearchParams(props.router.location.search);
-      const cohort = searchParams.get('cohort');
+      const cohort = getCohortFromSearchParams(props.router);
       return {
         cohort
       }

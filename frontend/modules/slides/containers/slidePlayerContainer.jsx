@@ -21,6 +21,7 @@ import setShouldStopNavigation from '~/modules/run/helpers/setShouldStopNavigati
 import setSlideToSubmitted from '~/modules/run/helpers/setSlideToSubmitted';
 import setScenarioToArchived from '~/modules/run/helpers/setScenarioToArchived';
 import isScenarioInPlay from '~/modules/scenarios/helpers/isScenarioInPlay';
+import getCohortFromSearchParams from '~/modules/cohorts/helpers/getCohortFromSearchParams';
 
 class SlidePlayerContainer extends Component {
 
@@ -91,6 +92,7 @@ class SlidePlayerContainer extends Component {
         }
       } else {
         if (this.props.run.data.isComplete) {
+          const cohort = getCohortFromSearchParams(this.props.router);
           secondaryAction = {
             action: 'RERUN_SCENARIO',
             text: 'Rerun this scenario'
@@ -98,7 +100,7 @@ class SlidePlayerContainer extends Component {
           primaryAction = {
             action: 'RETURN_TO_SCENARIOS',
             color: 'primary',
-            text: 'Return to scenarios'
+            text: cohort ? 'Return to cohort' : 'Return to scenarios'
           }
         } else if (hasPrompts && !isSubmitted) {
           secondaryAction = {
@@ -223,9 +225,15 @@ class SlidePlayerContainer extends Component {
       case 'SUBMIT':
         this.onSubmitSlideClicked();
         break;
-      case 'RETURN_TO_SCENARIOS':
-        this.props.router.navigate(`/scenarios`);
+      case 'RETURN_TO_SCENARIOS': {
+        const cohort = getCohortFromSearchParams(this.props.router);
+        if (cohort) {
+          this.props.router.navigate(`/cohorts/${cohort}/overview`);
+        } else {
+          this.props.router.navigate(`/scenarios`);
+        }
         break;
+      }
       case 'RERUN_SCENARIO':
         if (!isScenarioInPlay()) {
           const run = getCache('run');
@@ -262,7 +270,8 @@ class SlidePlayerContainer extends Component {
           if (type === 'YES') {
             this.onActionClicked('FINISH_SCENARIO');
             setTimeout(() => {
-              this.props.router.navigate(`/scenarios`);
+              const cohort = getCohortFromSearchParams(this.props.router);
+              this.props.router.navigate(cohort ? `/cohorts/${cohort}/overview` : `/scenarios`);
             }, 1000);
           }
         }
