@@ -15,7 +15,7 @@ const Instructions = ({
   return (
     <div className="border border-lm-2 dark:border-dm-2 my-4 py-8 px-16 rounded-lg">
       {(title) && (
-        <Title title={title} className="font-light text-lg" />
+        <Title title={title} className="font-bold text-xl" />
       )}
       {map(instructions, (instruction) => {
         return (

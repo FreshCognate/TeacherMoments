@@ -23,6 +23,7 @@ const Scenarios = ({
   sortByOptions,
   isSyncing,
   isLoading,
+  isEditor,
   onSearchValueChange,
   onPaginationClicked,
   onFiltersChanged,
@@ -58,7 +59,7 @@ const Scenarios = ({
             onActionClicked={onActionClicked}
           />
         </div>
-        {(scenarios.length === 0 && !isLoading) && (
+        {(scenarios.length === 0 && !isLoading && isEditor) && (
           <>
             {/* <Instructions
               title="Welcome to Scenario Management"

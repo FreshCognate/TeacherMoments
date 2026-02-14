@@ -26,6 +26,7 @@ const Cohorts = ({
   sortByOptions,
   isSyncing,
   isLoading,
+  isEditor,
   onSearchValueChange,
   onFiltersChanged,
   onPaginationClicked,
@@ -34,6 +35,7 @@ const Cohorts = ({
   onDuplicateCohortClicked
 }: ActionBarProps & {
   cohorts: Cohort[],
+  isEditor: boolean,
   onDuplicateCohortClicked: (cohortId: string) => void
 }) => {
   return (
@@ -63,7 +65,7 @@ const Cohorts = ({
           onActionClicked={onActionClicked}
         />
       </div>
-      {(cohorts.length === 0 && !isLoading) && (
+      {(cohorts.length === 0 && !isLoading && isEditor) && (
         <div>
           <Instructions
             title="Welcome to Cohort Management"
