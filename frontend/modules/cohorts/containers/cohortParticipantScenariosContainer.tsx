@@ -6,6 +6,9 @@ import { Scenario } from '~/modules/scenarios/scenarios.types';
 import find from 'lodash/find';
 import keyBy from 'lodash/keyBy';
 import { Run } from '~/modules/run/runs.types';
+import addModal from '~/core/dialogs/helpers/addModal';
+import axios from 'axios';
+import handleRequestError from '~/core/app/helpers/handleRequestError';
 
 interface CohortParticipantScenariosProps {
   cohortParticipantScenarios: {
@@ -27,7 +30,36 @@ class CohortParticipantScenariosContainer extends Component<CohortParticipantSce
 
   onPlayScenarioClicked = (scenarioId: string) => {
     const scenario = find(this.props.cohortParticipantScenarios.data, { _id: scenarioId });
-    this.props.router.navigate(`/play/${scenario.publishLink}?cohort=${this.props.router.params.id}`);
+    const run = this.props.cohortParticipantRuns.data[scenarioId];
+    const playUrl = `/play/${scenario.publishLink}?cohort=${this.props.router.params.id}`;
+
+    if (run && run.isComplete) {
+      addModal({
+        title: 'Scenario already completed',
+        body: 'You have already completed this scenario. Would you like to continue your existing session or start a new one?',
+        actions: [{
+          type: 'CONTINUE',
+          text: 'Continue session',
+        }, {
+          type: 'NEW',
+          text: 'Start new session',
+          color: 'primary'
+        }]
+      }, (state: string, { type }: { type: string }) => {
+        if (state === 'ACTION') {
+          if (type === 'CONTINUE') {
+            this.props.router.navigate(playUrl);
+          }
+          if (type === 'NEW') {
+            axios.put(`/api/play/runs/${scenarioId}`, { isArchived: true }).then(() => {
+              this.props.router.navigate(playUrl);
+            }).catch(handleRequestError);
+          }
+        }
+      });
+    } else {
+      this.props.router.navigate(playUrl);
+    }
   }
 
   onViewScenarioResponseClicked = (scenarioId: string) => {
