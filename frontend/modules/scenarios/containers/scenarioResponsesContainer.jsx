@@ -9,10 +9,13 @@ class ScenarioResponsesContainer extends Component {
     const { scenarioResponses } = this.props;
 
     return (
-      <AnalyticsContainer
-        responses={scenarioResponses.data}
-        isLoading={scenarioResponses.status === 'loading' || scenarioResponses.status === 'unresolved'}
-      />
+      <div className="pt-4">
+
+        <AnalyticsContainer
+          responses={scenarioResponses.data}
+          isLoading={scenarioResponses.status === 'loading' || scenarioResponses.status === 'unresolved'}
+        />
+      </div>
     );
   }
 };
