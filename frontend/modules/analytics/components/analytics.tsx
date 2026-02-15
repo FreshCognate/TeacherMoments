@@ -35,19 +35,21 @@ const Analytics: React.FC<AnalyticsProps> = ({
       {!isLoading && title && (
         <h2 className="text-lg font-semibold mb-4">{title}</h2>
       )}
-      <div className="mb-4">
-        <ActionBar
-          hasSearch
-          hasPagination
-          searchValue={searchValue}
-          searchPlaceholder={viewType === 'byUserScenarios' ? 'Search by scenario name' : 'Search by username'}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          isSyncing={isSyncing}
-          onSearchValueChange={onSearchValueChange}
-          onPaginationClicked={onPaginationClicked}
-        />
-      </div>
+      {!isLoading && (
+        <div className="mb-4">
+          <ActionBar
+            hasSearch
+            hasPagination
+            searchValue={searchValue}
+            searchPlaceholder={viewType === 'byUserScenarios' ? 'Search by scenario name' : 'Search by username'}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            isSyncing={isSyncing}
+            onSearchValueChange={onSearchValueChange}
+            onPaginationClicked={onPaginationClicked}
+          />
+        </div>
+      )}
       {isLoading && (
         <div className="flex justify-center">
           <Loading />
