@@ -8,8 +8,10 @@ export default [{
   controller: controller,
   all: {
     query: {
-      cohortId: Joi.string().required(),
-      scenarioId: Joi.string().required()
+      cohortId: Joi.string(),
+      scenarioId: Joi.string().required(),
+      searchValue: Joi.string().allow('').default(''),
+      currentPage: Joi.number().default(1)
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])]
   },

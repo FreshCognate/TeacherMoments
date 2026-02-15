@@ -22,12 +22,14 @@ const CohortScenariosList = ({
   scenarios,
   isSyncing,
   onDragEnd,
-  onRemoveScenarioClicked
+  onRemoveScenarioClicked,
+  onViewResponsesClicked
 }: {
   scenarios: Scenario[],
   isSyncing: boolean,
   onDragEnd: (event: DragEndEvent) => void,
-  onRemoveScenarioClicked: (scenarioId: string) => void
+  onRemoveScenarioClicked: (scenarioId: string) => void,
+  onViewResponsesClicked: (scenarioId: string) => void
 }) => {
 
   const sensors = useSensors(useSensor(PointerSensor));
@@ -50,6 +52,7 @@ const CohortScenariosList = ({
               scenario={scenario}
               isSyncing={isSyncing}
               onRemoveScenarioClicked={onRemoveScenarioClicked}
+              onViewResponsesClicked={onViewResponsesClicked}
             />
           ))}
         </SortableContext>
