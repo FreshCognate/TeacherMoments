@@ -1,4 +1,5 @@
 import getUsersResponsesByCohortAndScenario from "./services/getUsersResponsesByCohortAndScenario.js";
+import getUsersResponsesByScenario from "./services/getUsersResponsesByScenario.js";
 
 export default {
 
@@ -8,6 +9,10 @@ export default {
 
     if (cohortId && scenarioId) {
       return await getUsersResponsesByCohortAndScenario({ cohortId, scenarioId }, {}, context);
+    }
+
+    if (scenarioId) {
+      return await getUsersResponsesByScenario({ scenarioId }, {}, context);
     }
 
     return {
