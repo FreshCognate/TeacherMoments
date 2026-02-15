@@ -10,6 +10,7 @@ import find from 'lodash/find';
 import each from 'lodash/each';
 import map from 'lodash/map';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
+import addModal from '~/core/dialogs/helpers/addModal';
 
 interface CohortScenariosListContainerProps {
   cohortScenarios: any,
@@ -61,15 +62,36 @@ class CohortScenariosListContainer extends Component<CohortScenariosListContaine
 
   }
 
+  onViewResponsesClicked = (scenarioId: string) => {
+    this.props.router.navigate(`/cohorts/${this.props.router.params.id}/scenarios/${scenarioId}`);
+  }
+
   onRemoveScenarioClicked = (scenarioId: string) => {
-    this.props.cohortScenarios.setStatus('syncing');
-    axios.put(`/api/cohorts/${this.props.router.params.id}`, {
-      scenarioId,
-      intent: 'REMOVE'
-    }).then(() => {
-      // @ts-ignore
-      getCache('availableScenarios').fetch();
-      this.props.cohortScenarios.fetch();
+    const scenario = find(this.props.cohortScenarios.data, { _id: scenarioId });
+    const scenarioName = scenario?.name || 'this scenario';
+    addModal({
+      title: 'Remove scenario',
+      body: `Are you sure you would like to remove ${scenarioName} from the cohort? This will not delete the scenario.`,
+      actions: [{
+        type: 'CANCEL',
+        text: 'Cancel'
+      }, {
+        type: 'REMOVE',
+        text: 'Remove',
+        color: 'warning'
+      }]
+    }, (state: string, { type }: { type: string }) => {
+      if (state === 'ACTION' && type === 'REMOVE') {
+        this.props.cohortScenarios.setStatus('syncing');
+        axios.put(`/api/cohorts/${this.props.router.params.id}`, {
+          scenarioId,
+          intent: 'REMOVE'
+        }).then(() => {
+          // @ts-ignore
+          getCache('availableScenarios').fetch();
+          this.props.cohortScenarios.fetch();
+        });
+      }
     });
   }
 
@@ -80,6 +102,7 @@ class CohortScenariosListContainer extends Component<CohortScenariosListContaine
         isSyncing={this.props.cohortScenarios.status === 'syncing'}
         onDragEnd={this.onDragEnd}
         onRemoveScenarioClicked={this.onRemoveScenarioClicked}
+        onViewResponsesClicked={this.onViewResponsesClicked}
       />
     );
   }
