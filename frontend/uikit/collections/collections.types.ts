@@ -1,6 +1,7 @@
 export interface CollectionAction {
   action: string,
   text: string,
+  icon?: string,
 }
 
 export interface CollectionFilter {

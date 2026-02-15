@@ -15,6 +15,7 @@ export default async (props, options, context) => {
 
   await checkHasAccessToScenario({ modelId: scenarioId, modelType: 'Scenario' }, context);
 
+  const scenario = await models.Scenario.findById(scenarioId).lean();
   const runs = await models.Run.find({ scenario: scenarioId, isDeleted: false }).lean();
 
   const userIds = map(uniqBy(runs, 'user'), 'user');
@@ -40,11 +41,12 @@ export default async (props, options, context) => {
   let responses = [];
 
   for (const user of users) {
-    const response = await buildUserScenarioResponse({ user, scenarioId, slidesByRef, blocksByRef }, context);
-    responses.push(response);
+    const response = await buildUserScenarioResponse({ userId: user._id, scenarioId, slidesByRef, blocksByRef }, context);
+    responses.push({ user, scenario, ...response });
   }
 
   return {
+    scenario,
     responses,
     count,
     currentPage,

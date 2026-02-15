@@ -33,10 +33,12 @@ class ScenarioResponsesContainer extends Component {
     const { scenarioResponses } = this.props;
     const { searchValue, currentPage } = scenarioResponses.query;
     const totalPages = scenarioResponses.response?.totalPages || 1;
+    const scenario = scenarioResponses.response?.scenario;
 
     return (
       <div className="pt-4">
         <AnalyticsContainer
+          scenario={scenario}
           responses={scenarioResponses.data}
           isLoading={scenarioResponses.status === 'loading' || scenarioResponses.status === 'unresolved'}
           isSyncing={scenarioResponses.status === 'syncing'}

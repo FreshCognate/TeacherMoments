@@ -13,9 +13,11 @@ export interface BlockResponse {
   };
 }
 
+export type AnalyticsViewType = 'byScenarioUsers' | 'byUserScenarios';
+
 export interface UserResponse {
-  username?: string;
-  role?: string;
+  user?: any;
+  scenario?: any;
   hasStarted?: boolean;
   isComplete?: boolean;
   hasBeenCompleted?: boolean;

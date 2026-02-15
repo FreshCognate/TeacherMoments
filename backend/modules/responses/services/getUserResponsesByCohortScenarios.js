@@ -7,19 +7,23 @@ import getSearchFromSearchValue from '#core/app/helpers/getSearchFromSearchValue
 
 export default async (props, options, context) => {
 
-  const { cohortId, scenarioId } = props;
+  const { userId, cohortId } = props;
   let { searchValue = '', currentPage = 1 } = options;
   const { models } = context;
 
   await checkHasAccessToViewCohort({ cohortId }, context);
 
-  const scenario = await models.Scenario.findById(scenarioId).lean();
+  const user = await models.User.findOne({ _id: userId, 'cohorts.cohort': cohortId }).lean();
 
-  let search = { 'cohorts.cohort': cohortId };
+  if (!user) {
+    throw { message: 'User is not in this cohort', statusCode: 404 };
+  }
+
+  let search = { 'cohorts.cohort': cohortId, isDeleted: false };
   let searchOptions = {};
 
   if (searchValue.length) {
-    getSearchFromSearchValue(searchValue, ['username'], search);
+    getSearchFromSearchValue(searchValue, ['name'], search);
   }
 
   if (currentPage) {
@@ -27,21 +31,20 @@ export default async (props, options, context) => {
     getModelPaginationByCurrentPage(currentPage, searchOptions);
   }
 
-  const count = await models.User.countDocuments(search);
+  const count = await models.Scenario.countDocuments(search);
   const totalPages = getTotalPages(count);
-  const users = await models.User.find(search, null, searchOptions).lean();
-
-  const { slidesByRef, blocksByRef } = await getScenarioSlidesAndBlocksByRef({ scenarioId }, context);
+  const scenarios = await models.Scenario.find(search, null, searchOptions).sort('name').lean();
 
   let responses = [];
 
-  for (const user of users) {
-    const response = await buildUserScenarioResponse({ userId: user._id, scenarioId, slidesByRef, blocksByRef }, context);
+  for (const scenario of scenarios) {
+    const { slidesByRef, blocksByRef } = await getScenarioSlidesAndBlocksByRef({ scenarioId: scenario._id }, context);
+    const response = await buildUserScenarioResponse({ userId: user._id, scenarioId: scenario._id, slidesByRef, blocksByRef }, context);
     responses.push({ user, scenario, ...response });
   }
 
   return {
-    scenario,
+    user,
     responses,
     count,
     currentPage,

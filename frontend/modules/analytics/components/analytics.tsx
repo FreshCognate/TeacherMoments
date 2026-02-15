@@ -3,9 +3,11 @@ import ActionBar from '~/uikit/actionBars/components/actionBar';
 import Loading from '~/uikit/loaders/components/loading';
 import CollectionEmpty from '~/uikit/collections/components/collectionEmpty';
 import AnalyticsResponses from './analyticsResponses';
-import { UserResponse } from '../analytics.types';
+import { AnalyticsViewType, UserResponse } from '../analytics.types';
 
 interface AnalyticsProps {
+  viewType: AnalyticsViewType;
+  title?: string;
   responses: UserResponse[];
   isLoading: boolean;
   isSyncing?: boolean;
@@ -17,6 +19,8 @@ interface AnalyticsProps {
 }
 
 const Analytics: React.FC<AnalyticsProps> = ({
+  viewType,
+  title,
   responses,
   isLoading,
   isSyncing,
@@ -28,12 +32,15 @@ const Analytics: React.FC<AnalyticsProps> = ({
 }) => {
   return (
     <div>
+      {!isLoading && title && (
+        <h2 className="text-lg font-semibold mb-4">{title}</h2>
+      )}
       <div className="mb-4">
         <ActionBar
           hasSearch
           hasPagination
           searchValue={searchValue}
-          searchPlaceholder="Search by username"
+          searchPlaceholder={viewType === 'byUserScenarios' ? 'Search by scenario name' : 'Search by username'}
           currentPage={currentPage}
           totalPages={totalPages}
           isSyncing={isSyncing}
@@ -55,7 +62,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
         />
       )}
       {!isLoading && responses.length > 0 && (
-        <AnalyticsResponses responses={responses} />
+        <AnalyticsResponses viewType={viewType} responses={responses} />
       )}
     </div>
   );

@@ -22,7 +22,7 @@ const CohortBreadcrumb = ({
           {truncate(cohort?.name, { length: 60 })}
         </span>
       )}
-      {(routeId === 'users' || routeId === 'scenarios' || routeId === 'settings' || routeId === 'scenario') && (
+      {(routeId === 'users' || routeId === 'scenarios' || routeId === 'settings' || routeId === 'scenario' || routeId === 'user') && (
         <>
           <Link
             to={`/cohorts/${cohort._id}/overview`}
@@ -47,6 +47,20 @@ const CohortBreadcrumb = ({
         <span className="text-black/60 dark:text-white/60">
           Responses
         </span>
+      )}
+      {(routeId === 'user') && (
+        <>
+          <Link
+            to={`/cohorts/${cohort._id}/users`}
+            className="text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 transition-colors"
+          >
+            Users
+          </Link>
+          <span className="text-black/60 dark:text-white/60">{` > `}</span>
+          <span className="text-black/60 dark:text-white/60">
+            Responses
+          </span>
+        </>
       )}
       {(routeId === 'settings') && (
         <span className="text-black/60 dark:text-white/60">
