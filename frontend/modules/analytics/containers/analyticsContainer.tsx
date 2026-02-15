@@ -1,35 +1,42 @@
 import React, { Component } from 'react';
 import Analytics from '../components/analytics';
-import Loading from '~/uikit/loaders/components/loading';
 import { UserResponse } from '../analytics.types';
 
 interface AnalyticsContainerProps {
   responses?: UserResponse[];
   isLoading: boolean;
+  isSyncing?: boolean;
+  searchValue?: string;
+  currentPage?: number;
+  totalPages?: number;
+  onSearchValueChange?: (searchValue: string) => void;
+  onPaginationClicked?: (direction: string) => void;
 }
 
 class AnalyticsContainer extends Component<AnalyticsContainerProps> {
   render() {
-    const { responses, isLoading } = this.props;
-
-    if (isLoading) {
-      return (
-        <div className="flex justify-center">
-          <Loading />
-        </div>
-      );
-    }
-
-    if (!responses || responses.length === 0) {
-      return (
-        <div className="text-black/60 dark:text-white/60">
-          No responses available
-        </div>
-      );
-    }
+    const {
+      responses,
+      isLoading,
+      isSyncing,
+      searchValue,
+      currentPage,
+      totalPages,
+      onSearchValueChange,
+      onPaginationClicked
+    } = this.props;
 
     return (
-      <Analytics responses={responses} />
+      <Analytics
+        responses={responses || []}
+        isLoading={isLoading}
+        isSyncing={isSyncing}
+        searchValue={searchValue}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onSearchValueChange={onSearchValueChange}
+        onPaginationClicked={onPaginationClicked}
+      />
     );
   }
 }

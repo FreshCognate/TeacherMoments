@@ -5,14 +5,14 @@ export default {
 
   all: async function ({ query, body }, context) {
 
-    const { cohortId, scenarioId } = query;
+    const { cohortId, scenarioId, searchValue, currentPage } = query;
 
     if (cohortId && scenarioId) {
-      return await getUsersResponsesByCohortAndScenario({ cohortId, scenarioId }, {}, context);
+      return await getUsersResponsesByCohortAndScenario({ cohortId, scenarioId }, { searchValue, currentPage }, context);
     }
 
     if (scenarioId) {
-      return await getUsersResponsesByScenario({ scenarioId }, {}, context);
+      return await getUsersResponsesByScenario({ scenarioId }, { searchValue, currentPage }, context);
     }
 
     return {
