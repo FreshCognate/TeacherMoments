@@ -1,4 +1,5 @@
-import getOpenAI from './getOpenAI.js';
+import getGemini from './getGemini.js';
+
 const DEFAULTS = { quality: 'medium', stream: false, format: 'json' };
 
 export default (options) => {
@@ -9,28 +10,50 @@ export default (options) => {
     }
 
     run = async () => {
-      const openai = getOpenAI();
+      const ai = getGemini();
 
-      const { stream, format, quality } = this.options;
-      const createObject = {
-        stream,
-        messages: this.messages,
-        model: quality === 'medium' ? "gpt-3.5-turbo" : "gpt-4o",
-      };
+      const { format, quality } = this.options;
+      const model = quality === 'medium' ? 'gemini-2.5-flash-lite' : 'gemini-3-flash-preview';
 
-      if (format === 'json') {
-        createObject.response_format = { type: "json_object" };
+      const systemMessage = this.messages.find(m => m.role === 'system');
+      const nonSystemMessages = this.messages.filter(m => m.role !== 'system');
+
+      const config = {};
+
+      if (systemMessage) {
+        config.systemInstruction = systemMessage.content;
       }
 
-      try {
-        const completion = await openai.chat.completions.create(createObject);
+      if (format === 'json') {
+        config.responseMimeType = 'application/json';
+      }
 
-        this.messages.push(completion.choices[0].message);
+      const lastMessage = nonSystemMessages[nonSystemMessages.length - 1];
+      const historyMessages = nonSystemMessages.slice(0, -1);
+
+      const history = historyMessages.map(m => ({
+        role: m.role === 'assistant' ? 'model' : m.role,
+        parts: [{ text: m.content }]
+      }));
+
+      try {
+        const chat = ai.chats.create({
+          model,
+          config,
+          history
+        });
+
+        const response = await chat.sendMessage({ message: lastMessage.content });
+
+        this.messages.push({
+          role: 'assistant',
+          content: response.text
+        });
 
         if (format === 'json') {
-          return JSON.parse(completion.choices[0].message.content);
+          return JSON.parse(response.text);
         } else {
-          return completion.choices[0].message.content;
+          return response.text;
         }
 
       } catch (error) {
