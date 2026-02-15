@@ -3,7 +3,7 @@ import AnalyticsContainer from '~/modules/analytics/containers/analyticsContaine
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 
-class ScenarioResultsContainer extends Component {
+class ScenarioResponsesContainer extends Component {
   render() {
 
     const { scenarioResponses } = this.props;
@@ -17,7 +17,7 @@ class ScenarioResultsContainer extends Component {
   }
 };
 
-export default WithRouter(WithCache(ScenarioResultsContainer, {
+export default WithRouter(WithCache(ScenarioResponsesContainer, {
   scenarioResponses: {
     url: '/api/responses',
     transform: ({ data }) => data.responses,

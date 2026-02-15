@@ -7,7 +7,7 @@ export default [
     layout("./modules/scenarios/routes/scenarioEditorLayout.tsx", [
       route(":id/create", "./modules/scenarios/routes/createScenarioRoute.tsx"),
       route(":id/share", "./modules/scenarios/routes/shareScenarioRoute.tsx"),
-      route(":id/results", "./modules/scenarios/routes/scenarioResultsRoute.tsx"),
+      route(":id/responses", "./modules/scenarios/routes/scenarioResponsesRoute.tsx"),
       route(":id/settings", "./modules/scenarios/routes/scenarioSettingsRoute.tsx"),
     ])
   ]),

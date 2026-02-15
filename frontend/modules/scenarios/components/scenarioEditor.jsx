@@ -47,8 +47,8 @@ const ScenarioEditor = ({
                 value: 'share',
                 text: 'Share'
               }, {
-                value: 'results',
-                text: 'Results'
+                value: 'responses',
+                text: 'Responses'
               }, {
                 value: 'settings',
                 text: 'Settings'
