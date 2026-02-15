@@ -1,12 +1,12 @@
 import populateRun from '../../runs/helpers/populateRun.js';
 import find from 'lodash/find.js';
 
-export default async ({ user, scenarioId, scenarioName, slidesByRef, blocksByRef }, context) => {
+export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context) => {
 
   const { models } = context;
 
-  let previousUserRuns = await models.Run.find({ scenario: scenarioId, user: user._id, isDeleted: false, isArchived: true }).sort('createdAt').lean();
-  let userRun = await models.Run.findOne({ scenario: scenarioId, user: user._id, isDeleted: false, isArchived: false }).lean();
+  let previousUserRuns = await models.Run.find({ scenario: scenarioId, user: userId, isDeleted: false, isArchived: true }).sort('createdAt').lean();
+  let userRun = await models.Run.findOne({ scenario: scenarioId, user: userId, isDeleted: false, isArchived: false }).lean();
 
   let currentRun = {
     hasStarted: false,
@@ -49,11 +49,6 @@ export default async ({ user, scenarioId, scenarioName, slidesByRef, blocksByRef
     }
   }
 
-  return {
-    username: user.username,
-    role: user.role,
-    scenarioName,
-    ...currentRun
-  };
+  return currentRun;
 
 };

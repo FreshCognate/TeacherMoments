@@ -39,8 +39,8 @@ export default async (props, options, context) => {
 
   for (const scenario of scenarios) {
     const { slidesByRef, blocksByRef } = await getScenarioSlidesAndBlocksByRef({ scenarioId: scenario._id }, context);
-    const response = await buildUserScenarioResponse({ user, scenarioId: scenario._id, scenarioName: scenario.name, slidesByRef, blocksByRef }, context);
-    responses.push(response);
+    const response = await buildUserScenarioResponse({ userId: user._id, scenarioId: scenario._id, slidesByRef, blocksByRef }, context);
+    responses.push({ user, scenario, ...response });
   }
 
   return {
