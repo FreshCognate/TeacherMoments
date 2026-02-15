@@ -40,6 +40,7 @@ class CohortUsersContainer extends Component<CohortUsersContainerProps> {
 
   getItemActions = () => {
     return [
+      { action: 'VIEW_RESPONSES', text: 'View responses', icon: 'responses' },
       { action: 'REMOVE', text: 'Remove' }
     ]
   }
@@ -89,6 +90,10 @@ class CohortUsersContainer extends Component<CohortUsersContainerProps> {
   }
 
   onItemActionClicked = ({ itemId, action }: { itemId: string, action: string }) => {
+    if (action === 'VIEW_RESPONSES') {
+      this.props.router.navigate(`/cohorts/${this.props.cohort.data._id}/users/${itemId}`);
+      return;
+    }
     if (action === 'REMOVE') {
       const user = find(this.props.cohortUsers.data, { _id: itemId });
       const displayName = user ? getUserDisplayName(user) : 'this user';

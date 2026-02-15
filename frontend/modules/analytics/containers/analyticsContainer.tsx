@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import Analytics from '../components/analytics';
-import { UserResponse } from '../analytics.types';
+import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
+import { AnalyticsViewType, UserResponse } from '../analytics.types';
 
 interface AnalyticsContainerProps {
+  viewType?: AnalyticsViewType;
+  scenario?: any;
+  user?: any;
   responses?: UserResponse[];
   isLoading: boolean;
   isSyncing?: boolean;
@@ -14,8 +18,18 @@ interface AnalyticsContainerProps {
 }
 
 class AnalyticsContainer extends Component<AnalyticsContainerProps> {
+
+  getTitle = () => {
+    const { viewType = 'byScenarioUsers', scenario, user } = this.props;
+    if (viewType === 'byUserScenarios') {
+      return `User: ${getUserDisplayName(user)}`;
+    }
+    return scenario?.name ? `Scenario: ${scenario.name}` : undefined;
+  }
+
   render() {
     const {
+      viewType = 'byScenarioUsers',
       responses,
       isLoading,
       isSyncing,
@@ -28,6 +42,8 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps> {
 
     return (
       <Analytics
+        viewType={viewType}
+        title={this.getTitle()}
         responses={responses || []}
         isLoading={isLoading}
         isSyncing={isSyncing}

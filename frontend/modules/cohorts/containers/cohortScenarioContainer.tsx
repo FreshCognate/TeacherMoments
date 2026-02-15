@@ -33,9 +33,11 @@ class CohortScenarioContainer extends Component {
     const { cohortScenarioResponses } = this.props as any;
     const { searchValue, currentPage } = cohortScenarioResponses.query;
     const totalPages = cohortScenarioResponses.response?.totalPages || 1;
+    const scenario = cohortScenarioResponses.response?.scenario;
 
     return (
       <AnalyticsContainer
+        scenario={scenario}
         responses={cohortScenarioResponses.data}
         isLoading={cohortScenarioResponses.status === 'loading' || cohortScenarioResponses.status === 'unresolved'}
         isSyncing={cohortScenarioResponses.status === 'syncing'}

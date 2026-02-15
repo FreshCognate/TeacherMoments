@@ -1,7 +1,7 @@
 import populateRun from '../../runs/helpers/populateRun.js';
 import find from 'lodash/find.js';
 
-export default async ({ user, scenarioId, slidesByRef, blocksByRef }, context) => {
+export default async ({ user, scenarioId, scenarioName, slidesByRef, blocksByRef }, context) => {
 
   const { models } = context;
 
@@ -52,6 +52,7 @@ export default async ({ user, scenarioId, slidesByRef, blocksByRef }, context) =
   return {
     username: user.username,
     role: user.role,
+    scenarioName,
     ...currentRun
   };
 

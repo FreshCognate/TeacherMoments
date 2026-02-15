@@ -9,7 +9,8 @@ export default [{
   all: {
     query: {
       cohortId: Joi.string(),
-      scenarioId: Joi.string().required(),
+      scenarioId: Joi.string(),
+      userId: Joi.string(),
       searchValue: Joi.string().allow('').default(''),
       currentPage: Joi.number().default(1)
     },

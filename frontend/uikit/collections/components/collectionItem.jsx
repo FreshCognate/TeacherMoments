@@ -29,11 +29,12 @@ const CollectionItem = ({
           </div>
         )}
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center gap-4">
         {map(actions, (action) => {
           return (
             <FlatButton
               key={action.action}
+              icon={action.icon}
               text={action.text}
               onClick={() => onActionClicked({ itemId: id, action: action.action })}
             />

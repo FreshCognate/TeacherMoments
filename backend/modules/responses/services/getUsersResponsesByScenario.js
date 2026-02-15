@@ -15,6 +15,7 @@ export default async (props, options, context) => {
 
   await checkHasAccessToScenario({ modelId: scenarioId, modelType: 'Scenario' }, context);
 
+  const scenario = await models.Scenario.findById(scenarioId).lean();
   const runs = await models.Run.find({ scenario: scenarioId, isDeleted: false }).lean();
 
   const userIds = map(uniqBy(runs, 'user'), 'user');
@@ -45,6 +46,7 @@ export default async (props, options, context) => {
   }
 
   return {
+    scenario,
     responses,
     count,
     currentPage,
