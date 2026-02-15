@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CohortScenario from '../components/cohortScenario';
+import AnalyticsContainer from '~/modules/analytics/containers/analyticsContainer';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 
@@ -9,7 +9,7 @@ class CohortScenarioContainer extends Component {
     const { cohortScenarioResponses } = this.props;
 
     return (
-      <CohortScenario
+      <AnalyticsContainer
         responses={cohortScenarioResponses.data}
         isLoading={cohortScenarioResponses.status === 'loading' || cohortScenarioResponses.status === 'unresolved'}
       />
