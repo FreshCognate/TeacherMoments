@@ -37,7 +37,7 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
                     key={brIndex}
                     className="px-4 py-2 text-left text-sm font-medium text-black/60 dark:text-white/60 border-r border-lm-3 dark:border-dm-2 last:border-r-0"
                   >
-                    {blockResponse.slideName ? `${blockResponse.slideName} - ` : ''}{blockResponse.ref || `Block ${blockResponse.sortOrder + 1}`}
+                    {blockResponse.slideName ? `${blockResponse.slideName} - ` : ''}{blockResponse.name || blockResponse.ref || `Block ${blockResponse.sortOrder + 1}`}
                   </th>
                 ))}
               </tr>

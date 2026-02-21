@@ -33,7 +33,7 @@ export default {
   update: {
     param: 'id',
     body: {
-      name: Joi.string(),
+      name: Joi.string().allow(''),
       sourceIndex: Joi.number(),
       destinationIndex: Joi.number(),
       ...buildLanguageValidation('title', Joi.array()),

@@ -19,6 +19,7 @@ const schema = {
   originalSlideRef: mongoose.Schema.Types.ObjectId,
   originalScenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario' },
   blockType: { type: String, enum: ['TEXT', 'IMAGES', 'MEDIA', 'SUGGESTION', 'RESPONSE', 'MULTIPLE_CHOICE_PROMPT', 'INPUT_PROMPT', 'ACTIONS_PROMPT'], default: 'TEXT' },
+  name: { type: String, default: '' },
   sortOrder: { type: Number },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
   ...title,

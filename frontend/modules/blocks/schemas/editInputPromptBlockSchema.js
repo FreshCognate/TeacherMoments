@@ -42,6 +42,11 @@ export default {
     // }
   },
   settingsSchema: {
+    name: {
+      type: 'Text',
+      label: 'Name',
+      help: 'An optional name to help identify this block in analytics.'
+    },
     isRequired: {
       type: 'Toggle',
       label: 'Required to complete slide',
