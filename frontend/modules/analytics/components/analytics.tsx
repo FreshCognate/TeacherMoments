@@ -20,6 +20,7 @@ interface AnalyticsProps {
   onSearchValueChange?: (searchValue: string) => void;
   onPaginationClicked?: (direction: string) => void;
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
+  onSlideNavigated: (blockResponseRef: string) => void;
   onSidePanelClose: () => void;
 }
 
@@ -37,6 +38,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
   onSearchValueChange,
   onPaginationClicked,
   onResponseClicked,
+  onSlideNavigated,
   onSidePanelClose
 }) => {
   return (
@@ -77,11 +79,8 @@ const Analytics: React.FC<AnalyticsProps> = ({
           <AnalyticsResponses viewType={viewType} responses={responses} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />
         )}
       </div>
-      <div className="w-[480px] shrink-0 ml-4">
-        <h2 className="text-lg font-semibold mb-4">Scenario preview</h2>
-        <div className="border border-lm-2 dark:border-dm-2 rounded-lg p-4 bg-lm-1 dark:bg-dm-1">
-          <AnalyticsSidePanel viewType={viewType} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onClose={onSidePanelClose} />
-        </div>
+      <div className="w-[480px] shrink-0 ml-4 sticky top-32 self-start">
+        <AnalyticsSidePanel viewType={viewType} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onSlideNavigated={onSlideNavigated} onClose={onSidePanelClose} />
       </div>
     </div>
   );

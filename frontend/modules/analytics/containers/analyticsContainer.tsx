@@ -37,8 +37,23 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     return scenario?.name ? `Scenario: ${scenario.name}` : undefined;
   }
 
+  scrollToBlockResponse = (blockResponseRef: string) => {
+    setTimeout(() => {
+      const element = document.getElementById(`block-response-${blockResponseRef}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 0);
+  }
+
   onResponseClicked = (response: UserResponse, blockResponseRef: string) => {
     this.setState({ selectedResponse: response, selectedBlockResponseRef: blockResponseRef });
+    this.scrollToBlockResponse(blockResponseRef);
+  }
+
+  onSlideNavigated = (blockResponseRef: string) => {
+    this.setState({ selectedBlockResponseRef: blockResponseRef });
+    this.scrollToBlockResponse(blockResponseRef);
   }
 
   onSidePanelClose = () => {
@@ -75,6 +90,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         onSearchValueChange={onSearchValueChange}
         onPaginationClicked={onPaginationClicked}
         onResponseClicked={this.onResponseClicked}
+        onSlideNavigated={this.onSlideNavigated}
         onSidePanelClose={this.onSidePanelClose}
       />
     );

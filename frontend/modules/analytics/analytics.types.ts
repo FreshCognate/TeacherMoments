@@ -19,6 +19,7 @@ export type AnalyticsViewType = 'byScenarioUsers' | 'byUserScenarios';
 export interface UserResponse {
   user?: any;
   scenario?: any;
+  scenarioId?: string;
   hasStarted?: boolean;
   isComplete?: boolean;
   hasBeenCompleted?: boolean;

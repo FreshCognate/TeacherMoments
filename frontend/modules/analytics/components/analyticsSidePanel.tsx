@@ -9,6 +9,7 @@ interface AnalyticsSidePanelProps {
   viewType: AnalyticsViewType;
   selectedResponse: UserResponse | null;
   selectedBlockResponseRef: string | null;
+  onSlideNavigated: (blockResponseRef: string) => void;
   onClose: () => void;
 }
 
@@ -16,35 +17,43 @@ const AnalyticsSidePanel: React.FC<AnalyticsSidePanelProps> = ({
   viewType,
   selectedResponse,
   selectedBlockResponseRef,
+  onSlideNavigated,
   onClose
 }) => {
-  if (!selectedResponse) {
-    return (
-      <div className="h-full flex items-center justify-center">
-        <CollectionEmpty
-          attributes={{
-            title: 'No response selected',
-            body: 'Select a response to view it in the slide context'
-          }}
-        />
-      </div>
-    );
-  }
-
-  const title = viewType === 'byUserScenarios'
-    ? selectedResponse.scenario?.name || 'Unknown scenario'
-    : getUserDisplayName(selectedResponse.user);
+  const title = selectedResponse
+    ? viewType === 'byUserScenarios'
+      ? selectedResponse.scenario?.name || 'Unknown scenario'
+      : getUserDisplayName(selectedResponse.user)
+    : null;
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold">{title}</h3>
-        <FlatButton icon="close" size="sm" onClick={onClose} />
+      <h2 className="text-lg font-semibold mb-4">Scenario preview</h2>
+      <div className="border border-lm-2 dark:border-dm-2 rounded-lg p-4 bg-lm-1 dark:bg-dm-1">
+        {!selectedResponse && (
+          <div className="flex items-center justify-center">
+            <CollectionEmpty
+              attributes={{
+                title: 'No response selected',
+                body: 'Select a response to view it in the slide context'
+              }}
+            />
+          </div>
+        )}
+        {selectedResponse && (
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold">{title}</h3>
+              <FlatButton icon="close" size="sm" onClick={onClose} />
+            </div>
+            <AnalyticsSidePanelContainer
+              selectedResponse={selectedResponse}
+              selectedBlockResponseRef={selectedBlockResponseRef}
+              onSlideNavigated={onSlideNavigated}
+            />
+          </div>
+        )}
       </div>
-      <AnalyticsSidePanelContainer
-        selectedResponse={selectedResponse}
-        selectedBlockResponseRef={selectedBlockResponseRef}
-      />
     </div>
   );
 };
