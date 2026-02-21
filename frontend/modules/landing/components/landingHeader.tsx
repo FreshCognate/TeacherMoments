@@ -2,9 +2,9 @@ const LandingHeader = ({ onAuthClicked }: { onAuthClicked: () => void }) => {
   return (
     <header className="bg-[#f6f6ee]">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <img src="/tm-logo.png" alt="" className="h-8" />
-          <span className="text-lg font-black text-[#174650]">Teacher<br />Moments</span>
+        <div className="flex items-center">
+          <img src="/tm-logo.png" alt="" className="w-16" />
+          <span className="ml-2 font-extralight leading-4 text-sm text-[#174650]">Teacher<br />Moments</span>
         </div>
         <nav>
           <ul className="flex items-center gap-4">
