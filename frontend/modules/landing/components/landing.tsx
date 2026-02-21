@@ -1,4 +1,3 @@
-import React from 'react';
 import LandingHeader from './landingHeader';
 import LandingHero from './landingHero';
 import LandingStepper from './landingStepper';

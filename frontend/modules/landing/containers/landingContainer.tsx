@@ -1,4 +1,3 @@
-import React from 'react';
 import Landing from '../components/landing';
 import openLoginModal from '~/modules/authentication/helpers/openLoginModal';
 
