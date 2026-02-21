@@ -11,7 +11,7 @@ export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context)
   let currentRun = {
     hasStarted: false,
     isComplete: false,
-    hasBeenCompleted: find(previousUserRuns, { isComplete: true }),
+    hasBeenCompleted: !!find(previousUserRuns, { isComplete: true }),
     previousRunsCount: previousUserRuns.length,
     blockResponses: []
   };
@@ -30,6 +30,8 @@ export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context)
           const blockTracking = stage.blocksByRef[blockByRefKey];
           const blockSlide = slidesByRef[String(block.slideRef)] || {};
 
+          blockResponse.ref = block.ref;
+          blockResponse.slideRef = block.slideRef;
           blockResponse.slideName = blockSlide.name;
 
           blockResponse.sortOrder = block.sortOrder;

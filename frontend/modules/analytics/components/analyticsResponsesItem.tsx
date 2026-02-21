@@ -7,11 +7,15 @@ import { AnalyticsViewType, UserResponse } from '../analytics.types';
 interface AnalyticsResponsesItemProps {
   viewType: AnalyticsViewType;
   response: UserResponse;
+  selectedBlockResponseRef: string | null;
+  onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
 }
 
 const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
   viewType,
-  response
+  response,
+  selectedBlockResponseRef,
+  onResponseClicked
 }) => {
   return (
     <div className="bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-2 rounded-lg overflow-hidden">
@@ -42,7 +46,8 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
                 {map(response.blockResponses, (blockResponse, brIndex) => (
                   <td
                     key={brIndex}
-                    className="px-4 py-3 text-sm min-w-72 align-top text-black/60 dark:text-white/60 border-r border-lm-3 dark:border-dm-2 last:border-r-0"
+                    className={`px-4 py-3 text-sm min-w-72 align-top text-black/60 dark:text-white/60 border-r border-lm-3 dark:border-dm-2 last:border-r-0 cursor-pointer hover:bg-lm-1 dark:hover:bg-dm-2 ${selectedBlockResponseRef === blockResponse.ref ? 'ring-2 ring-inset ring-primary-regular' : ''}`}
+                    onClick={() => onResponseClicked(response, blockResponse.ref)}
                   >
                     <div>
                       {`Type: ${getBlockDisplayName(blockResponse)}`}

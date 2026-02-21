@@ -86,6 +86,7 @@ yarn workers:start   # Production workers
 - Functional React components
 - CommonJS in backend, ES modules in frontend
 - Prefer lodash utilities (e.g., `each`, `map`, `filter`) over native array methods unless there are performance implications such as async operations
+- Use descriptive, full variable names — no abbreviations (e.g., `blockResponse` not `br`, `selectedOption` not `so`)
 
 ### Backend Module Structure
 

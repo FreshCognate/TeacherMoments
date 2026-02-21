@@ -10,6 +10,8 @@ interface AnalyticsProps {
   viewType: AnalyticsViewType;
   title?: string;
   responses: UserResponse[];
+  selectedResponse: UserResponse | null;
+  selectedBlockResponseRef: string | null;
   isLoading: boolean;
   isSyncing?: boolean;
   searchValue?: string;
@@ -17,19 +19,25 @@ interface AnalyticsProps {
   totalPages?: number;
   onSearchValueChange?: (searchValue: string) => void;
   onPaginationClicked?: (direction: string) => void;
+  onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
+  onSidePanelClose: () => void;
 }
 
 const Analytics: React.FC<AnalyticsProps> = ({
   viewType,
   title,
   responses,
+  selectedResponse,
+  selectedBlockResponseRef,
   isLoading,
   isSyncing,
   searchValue,
   currentPage,
   totalPages,
   onSearchValueChange,
-  onPaginationClicked
+  onPaginationClicked,
+  onResponseClicked,
+  onSidePanelClose
 }) => {
   return (
     <div className="flex">
@@ -66,13 +74,13 @@ const Analytics: React.FC<AnalyticsProps> = ({
           />
         )}
         {!isLoading && responses.length > 0 && (
-          <AnalyticsResponses viewType={viewType} responses={responses} />
+          <AnalyticsResponses viewType={viewType} responses={responses} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />
         )}
       </div>
       <div className="w-[480px] shrink-0 ml-4">
         <h2 className="text-lg font-semibold mb-4">Scenario preview</h2>
         <div className="border border-lm-2 dark:border-dm-2 rounded-lg p-4 bg-lm-1 dark:bg-dm-1">
-          <AnalyticsSidePanel />
+          <AnalyticsSidePanel viewType={viewType} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onClose={onSidePanelClose} />
         </div>
       </div>
     </div>
