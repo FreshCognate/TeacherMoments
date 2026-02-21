@@ -1,19 +1,28 @@
-import React from 'react';
-import axios from 'axios';
-import Title from '~/uikit/content/components/title';
-import Body from '~/uikit/content/components/body';
-import Icon from '~/uikit/icons/components/icon';
+import { useOutletContext } from 'react-router';
 import DashboardContainer from '../containers/dashboardContainer';
+import LandingContainer from '~/modules/landing/containers/landingContainer';
+
+type OutletContext = {
+  loaderData: {
+    isAuthenticated: boolean;
+    authentication: any;
+  };
+};
 
 export function meta({ }) {
   return [
     { title: "Teacher Moments" },
-    { name: "description", content: "Welcome to Teacher Moments!" },
+    { name: "description", content: "Preparing teachers for challenging situations through digital simulations" },
   ];
 }
 
 export default function HomeRoute() {
-  return (
-    <DashboardContainer />
-  );
+  const { loaderData } = useOutletContext<OutletContext>();
+  const isAuthenticated = loaderData?.isAuthenticated;
+
+  if (!isAuthenticated) {
+    return <LandingContainer />;
+  }
+
+  return <DashboardContainer />;
 }
