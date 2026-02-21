@@ -1,6 +1,7 @@
 export interface BlockResponse {
   ref: string;
   slideRef: string;
+  name?: string;
   blockType: string;
   inputType?: string;
   mediaType?: string;

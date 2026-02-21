@@ -28,6 +28,11 @@ export default {
     ...mediaAsset
   },
   settingsSchema: {
+    name: {
+      type: 'Text',
+      label: 'Name',
+      help: 'An optional name to help identify this block in analytics.'
+    },
     mediaCompleteOn: {
       type: 'Toggle',
       label: 'Media is complete when',

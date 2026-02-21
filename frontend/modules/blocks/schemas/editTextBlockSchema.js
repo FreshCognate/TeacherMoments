@@ -17,5 +17,11 @@ export default {
     ...title,
     ...body
   },
-  settingsSchema: {}
+  settingsSchema: {
+    name: {
+      type: 'Text',
+      label: 'Name',
+      help: 'An optional name to help identify this block in analytics.'
+    }
+  }
 }

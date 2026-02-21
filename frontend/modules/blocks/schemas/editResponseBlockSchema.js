@@ -5,5 +5,11 @@ export default {
       label: 'Previous response',
     },
   },
-  settingsSchema: {}
+  settingsSchema: {
+    name: {
+      type: 'Text',
+      label: 'Name',
+      help: 'An optional name to help identify this block in analytics.'
+    }
+  }
 }

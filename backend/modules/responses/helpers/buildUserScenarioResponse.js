@@ -34,6 +34,7 @@ export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context)
           blockResponse.ref = block.ref;
           blockResponse.slideRef = block.slideRef;
           blockResponse.slideName = blockSlide.name;
+          blockResponse.name = block.name;
 
           blockResponse.sortOrder = block.sortOrder;
           blockResponse.blockType = block.blockType;

@@ -11,6 +11,11 @@ export default {
     ...body,
   },
   settingsSchema: {
+    name: {
+      type: 'Text',
+      label: 'Name',
+      help: 'An optional name to help identify this block in analytics.'
+    },
     suggestionType: {
       type: 'Toggle',
       label: 'Suggestion type',
