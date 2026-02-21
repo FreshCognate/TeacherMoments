@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
   useMatches,
 } from "react-router";
 
@@ -85,7 +86,10 @@ export default function App(props) {
 
   const matches = useMatches();
 
+  const location = useLocation();
   let isNavigationVisible = true;
+  let isFullWidth = false;
+  const isAuthenticated = props.loaderData?.isAuthenticated;
 
   each(matches, match => {
 
@@ -93,7 +97,16 @@ export default function App(props) {
       isNavigationVisible = false;
     }
 
+    if (match.handle && match.handle.isFullWidth === true) {
+      isFullWidth = true;
+    }
+
   });
+
+  if (location.pathname === '/' && !isAuthenticated) {
+    isNavigationVisible = false;
+    isFullWidth = true;
+  }
 
   if (typeof window !== 'undefined') {
     window.NODE_ENV = props.loaderData.NODE_ENV;
@@ -109,7 +122,7 @@ export default function App(props) {
       {(isNavigationVisible) && (
         <NavigationContainer loaderData={props.loaderData} />
       )}
-      <div className="max-w-7xl mx-auto">
+      <div className={classnames({ "max-w-7xl mx-auto": !isFullWidth })}>
         <Outlet context={{ loaderData: props.loaderData }} />
       </div>
     </div >
