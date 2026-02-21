@@ -9,6 +9,7 @@ export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context)
   let userRun = await models.Run.findOne({ scenario: scenarioId, user: userId, isDeleted: false, isArchived: false }).lean();
 
   let currentRun = {
+    scenarioId,
     hasStarted: false,
     isComplete: false,
     hasBeenCompleted: !!find(previousUserRuns, { isComplete: true }),

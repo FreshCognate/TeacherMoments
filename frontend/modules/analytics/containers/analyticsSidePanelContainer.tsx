@@ -10,26 +10,25 @@ import { UserResponse } from '../analytics.types';
 interface AnalyticsSidePanelContainerProps {
   selectedResponse: UserResponse;
   selectedBlockResponseRef: string | null;
-  slides?: any;
-  blocks?: any;
-  scenario?: any;
+  previewSlides?: any;
+  previewBlocks?: any;
 }
 
 class AnalyticsSidePanelContainer extends Component<AnalyticsSidePanelContainerProps> {
 
   getActiveSlide = () => {
-    const { selectedResponse, selectedBlockResponseRef, slides } = this.props;
+    const { selectedResponse, selectedBlockResponseRef, previewSlides } = this.props;
     if (!selectedBlockResponseRef) return null;
 
     const selectedBlockResponse = find(selectedResponse.blockResponses, { ref: selectedBlockResponseRef });
     if (!selectedBlockResponse) return null;
 
-    return find(slides.data, { _id: selectedBlockResponse.slideRef });
+    return find(previewSlides.data, { _id: selectedBlockResponse.slideRef });
   }
 
   getActiveBlocks = (slideId: string) => {
-    const { blocks } = this.props;
-    const slideBlocks = filter(blocks.data, { slideRef: slideId });
+    const { previewBlocks } = this.props;
+    const slideBlocks = filter(previewBlocks.data, { slideRef: slideId });
     return sortBy(slideBlocks, 'sortOrder');
   }
 
@@ -62,9 +61,29 @@ class AnalyticsSidePanelContainer extends Component<AnalyticsSidePanelContainerP
         activeSlide={activeSlide}
         activeBlocks={activeBlocks}
         blockTrackingByRef={blockTrackingByRef}
+        selectedBlockResponseRef={this.props.selectedBlockResponseRef}
       />
     );
   }
 }
 
-export default WithCache(AnalyticsSidePanelContainer, {}, ['slides', 'blocks', 'scenario']);
+export default WithCache(AnalyticsSidePanelContainer, {
+  previewSlides: {
+    url: '/api/slides',
+    getInitialData: () => ([]),
+    transform: ({ data }: any) => data.slides,
+    getParams: ({ props }: any) => ({ scenarioId: props.selectedResponse.scenarioId }),
+    getQuery: ({ props }: any) => ({ scenarioId: props.selectedResponse.scenarioId }),
+    lifeTime: 0,
+    staleTime: 0
+  },
+  previewBlocks: {
+    url: '/api/blocks',
+    getInitialData: () => ([]),
+    transform: ({ data }: any) => data.blocks,
+    getParams: ({ props }: any) => ({ scenarioId: props.selectedResponse.scenarioId }),
+    getQuery: ({ props }: any) => ({ scenarioId: props.selectedResponse.scenarioId }),
+    lifeTime: 0,
+    staleTime: 0
+  }
+});

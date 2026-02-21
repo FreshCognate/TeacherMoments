@@ -1,18 +1,21 @@
 import React from 'react';
 import map from 'lodash/map';
 import noop from 'lodash/noop';
+import classnames from 'classnames';
 import getBlockComponent from '~/modules/blocks/helpers/getBlockComponent';
 
 interface AnalyticsSlideViewerProps {
   activeSlide: any;
   activeBlocks: any[];
   blockTrackingByRef: Record<string, any>;
+  selectedBlockResponseRef: string | null;
 }
 
 const AnalyticsSlideViewer: React.FC<AnalyticsSlideViewerProps> = ({
   activeSlide,
   activeBlocks,
-  blockTrackingByRef
+  blockTrackingByRef,
+  selectedBlockResponseRef
 }) => {
   return (
     <div>
@@ -26,7 +29,9 @@ const AnalyticsSlideViewer: React.FC<AnalyticsSlideViewerProps> = ({
         const blockTracking = blockTrackingByRef[block.ref] || {};
 
         return (
-          <div key={block._id} className="mb-4 last:mb-0 p-4 bg-lm-2 rounded-md dark:bg-dm-2">
+          <div key={block._id} className={classnames('mb-4 last:mb-0 p-4 bg-lm-2 rounded-md dark:bg-dm-2', {
+            'ring-1 ring-inset ring-primary-regular': selectedBlockResponseRef === block.ref
+          })}>
             <Block
               block={block}
               blockTracking={blockTracking}
