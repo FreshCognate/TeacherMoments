@@ -41,6 +41,10 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     this.setState({ selectedResponse: response, selectedBlockResponseRef: blockResponseRef });
   }
 
+  onSlideNavigated = (blockResponseRef: string) => {
+    this.setState({ selectedBlockResponseRef: blockResponseRef });
+  }
+
   onSidePanelClose = () => {
     this.setState({ selectedResponse: null, selectedBlockResponseRef: null });
   }
@@ -75,6 +79,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         onSearchValueChange={onSearchValueChange}
         onPaginationClicked={onPaginationClicked}
         onResponseClicked={this.onResponseClicked}
+        onSlideNavigated={this.onSlideNavigated}
         onSidePanelClose={this.onSidePanelClose}
       />
     );

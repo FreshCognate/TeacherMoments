@@ -9,6 +9,7 @@ interface AnalyticsSidePanelProps {
   viewType: AnalyticsViewType;
   selectedResponse: UserResponse | null;
   selectedBlockResponseRef: string | null;
+  onSlideNavigated: (blockResponseRef: string) => void;
   onClose: () => void;
 }
 
@@ -16,6 +17,7 @@ const AnalyticsSidePanel: React.FC<AnalyticsSidePanelProps> = ({
   viewType,
   selectedResponse,
   selectedBlockResponseRef,
+  onSlideNavigated,
   onClose
 }) => {
   const title = selectedResponse
@@ -47,6 +49,7 @@ const AnalyticsSidePanel: React.FC<AnalyticsSidePanelProps> = ({
             <AnalyticsSidePanelContainer
               selectedResponse={selectedResponse}
               selectedBlockResponseRef={selectedBlockResponseRef}
+              onSlideNavigated={onSlideNavigated}
             />
           </div>
         )}
