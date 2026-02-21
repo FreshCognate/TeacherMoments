@@ -13,6 +13,7 @@ interface AnalyticsSlideViewerProps {
   currentSlideIndex: number;
   totalSlides: number;
   onNavigateSlide: (direction: string) => void;
+  onBlockClicked: (blockRef: string) => void;
 }
 
 const AnalyticsSlideViewer: React.FC<AnalyticsSlideViewerProps> = ({
@@ -22,7 +23,8 @@ const AnalyticsSlideViewer: React.FC<AnalyticsSlideViewerProps> = ({
   selectedBlockResponseRef,
   currentSlideIndex,
   totalSlides,
-  onNavigateSlide
+  onNavigateSlide,
+  onBlockClicked
 }) => {
   return (
     <div>
@@ -43,9 +45,13 @@ const AnalyticsSlideViewer: React.FC<AnalyticsSlideViewerProps> = ({
         const blockTracking = blockTrackingByRef[block.ref] || {};
 
         return (
-          <div key={block._id} className={classnames('mb-4 last:mb-0 p-4 bg-lm-2 rounded-md dark:bg-dm-2', {
-            'ring-1 ring-inset ring-primary-regular': selectedBlockResponseRef === block.ref
-          })}>
+          <div
+            key={block._id}
+            className={classnames('mb-4 last:mb-0 p-4 bg-lm-2 rounded-md dark:bg-dm-2 cursor-pointer', {
+              'ring-1 ring-inset ring-primary-regular': selectedBlockResponseRef === block.ref
+            })}
+            onClick={() => onBlockClicked(block.ref)}
+          >
             <Block
               block={block}
               blockTracking={blockTracking}

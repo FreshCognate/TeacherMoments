@@ -59,12 +59,16 @@ class AnalyticsSidePanelContainer extends Component<AnalyticsSidePanelContainerP
 
   getCurrentSlideIndex = (responseSlides: ResponseSlide[]) => {
     const { selectedResponse, selectedBlockResponseRef } = this.props;
-    if (!selectedResponse.blockResponses) return -1;
+    if (!selectedBlockResponseRef || !selectedResponse.blockResponses) return -1;
 
     const selectedBlockResponse = find(selectedResponse.blockResponses, { ref: selectedBlockResponseRef });
     if (!selectedBlockResponse) return -1;
 
     return findIndex(responseSlides, { slideRef: selectedBlockResponse.slideRef });
+  }
+
+  onBlockClicked = (blockRef: string) => {
+    this.props.onSlideNavigated(blockRef);
   }
 
   onNavigateSlide = (direction: string) => {
@@ -112,6 +116,7 @@ class AnalyticsSidePanelContainer extends Component<AnalyticsSidePanelContainerP
         currentSlideIndex={currentSlideIndex}
         totalSlides={responseSlides.length}
         onNavigateSlide={this.onNavigateSlide}
+        onBlockClicked={this.onBlockClicked}
       />
     );
   }
