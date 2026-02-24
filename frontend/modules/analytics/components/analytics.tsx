@@ -76,7 +76,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
           />
         )}
         {!isLoading && responses.length > 0 && (
-          <AnalyticsResponses viewType={viewType} responses={responses} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />
+          <AnalyticsResponses viewType={viewType} responses={responses} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />
         )}
       </div>
       <div className="w-[480px] shrink-0 ml-4 sticky top-32 self-start">

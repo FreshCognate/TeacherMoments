@@ -41,7 +41,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     setTimeout(() => {
       const element = document.getElementById(`block-response-${blockResponseRef}`);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
       }
     }, 0);
   }
