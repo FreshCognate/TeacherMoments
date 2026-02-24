@@ -15,16 +15,17 @@ export default function openLoginModal() {
   addModal({
     title: 'Login or create an account',
     body: 'Please choose one of the following options:',
-    component: <LoginAndSignupDialogContainer />
+    component: <LoginAndSignupDialogContainer />,
+    hasCloseButton: true
   }, (state: string, payload: any) => {
     if (state === 'ACTION') {
       const { type } = payload;
       switch (type) {
         case 'LOGIN':
-          addModal({ title: 'Login', component: <LoginDialogContainer /> }, () => { });
+          addModal({ title: 'Login', component: <LoginDialogContainer />, hasCloseButton: true }, () => { });
           break;
         case 'CREATE':
-          addModal({ title: 'Create an account', component: <SignupDialogContainer /> }, () => { });
+          addModal({ title: 'Create an account', component: <SignupDialogContainer />, hasCloseButton: true }, () => { });
           break;
       }
     }
