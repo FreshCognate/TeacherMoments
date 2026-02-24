@@ -22,17 +22,27 @@ const RichDataIcon = () => (
   </svg>
 );
 
+const AIFeedbackIcon = () => (
+  <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M30 2l3.09 9.51h10l-8.09 5.878 3.09 9.512L30 21l-8.09 5.9 3.09-9.512-8.09-5.878h10L30 2Z" stroke="#000" strokeWidth="2" fill="none" />
+    <path d="M14 28l1.854 5.706h6l-4.854 3.527 1.854 5.707L14 39.413l-4.854 3.527 1.854-5.707-4.854-3.527h6L14 28Z" stroke="#000" strokeWidth="1.5" fill="none" />
+    <path d="M46 28l1.854 5.706h6l-4.854 3.527 1.854 5.707L46 39.413l-4.854 3.527 1.854-5.707-4.854-3.527h6L46 28Z" stroke="#000" strokeWidth="1.5" fill="none" />
+    <path d="M30 40l1.236 3.804h4l-3.236 2.351 1.236 3.805L30 47.609l-3.236 2.351 1.236-3.805-3.236-2.351h4L30 40Z" stroke="#000" strokeWidth="1.5" fill="none" />
+  </svg>
+);
+
 const steps = [
   { icon: <CreateScenarioIcon />, title: 'Create your own scenario' },
   { icon: <AssignCohortsIcon />, title: 'Assign scenarios to your student cohorts' },
   { icon: <RichDataIcon />, title: 'Gather rich data from your cohorts' },
+  { icon: <AIFeedbackIcon />, title: 'Deliver AI-powered feedback to learners' },
 ];
 
 const LandingStepper = ({ onAuthClicked }: { onAuthClicked: () => void }) => {
   return (
     <section className="bg-white py-12 px-6 relative z-10">
       <div className="max-w-4xl mx-auto">
-        <ol className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 -mt-24">
+        <ol className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10 -mt-24">
           {steps.map((step, index) => (
             <li key={index} className="flex flex-col items-center text-center border border-[#e6e6e6] bg-white p-8">
               <div className="mb-4 h-16 flex items-center justify-center">

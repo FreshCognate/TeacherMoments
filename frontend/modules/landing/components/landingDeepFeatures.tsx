@@ -1,27 +1,24 @@
 const features = [
   {
-    title: 'Track participant choices for facilitation and debrief',
-    description: 'Rich data dashboards allow facilitators to see participant choices and prepare for debriefing, while complete data downloads support rigorous research on teacher learning.',
+    title: 'Track responses for facilitation and research',
+    description: 'Review audio recordings, transcripts, and text responses from your participants. Export complete datasets for research or use them to prepare for debrief discussions.',
     image: '/static/images/landing/deep-feature-data-frame.png',
-    alt: 'Track participation choices',
+    alt: 'Participant response with audio playback and transcript',
+    doodle: '/static/images/landing/red-squiggle-doodle.svg',
   },
   {
-    title: 'Choices matter',
-    description: 'Through scenario branching, create "choose-your-own" adventure scenarios that let participants understand the consequences of their choices.',
-    image: '/static/images/landing/deep-feature-branching-frame.png',
-    alt: 'Choice branching',
-  },
-  {
-    title: 'AI coaches',
-    description: 'Artificially intelligent coaching agents can listen to participants as they play scenarios and offer dynamic supports to help learners reflect and practice.',
+    title: 'AI-generated coaching feedback',
+    description: 'Set up triggers that analyze participant responses and deliver personalized coaching feedback with teaching tips — powered by AI.',
     image: '/static/images/landing/deep-feature-ai-frame.png',
-    alt: 'AI coaching',
+    alt: 'AI coaching feedback with teaching tips',
+    doodle: '/static/images/landing/purple-scenario-doodle.svg',
   },
   {
-    title: 'Multiplayer scenarios',
-    description: 'Real-time chat allows for participants to roleplay together as teachers and students.',
-    image: '/static/images/landing/deep-feature-multiplayer-frame.png',
-    alt: 'Real-time chat',
+    title: 'Capture rich learner responses',
+    description: 'Ask learners to respond through text, audio recording, or multiple choice — all within a single scenario. Audio responses are automatically transcribed.',
+    image: '/static/images/landing/deep-feature-prompts-frame.png',
+    alt: 'Scenario player with text, audio, and multiple choice prompts',
+    doodle: '/static/images/landing/triple-circle-doodle.svg',
   },
 ];
 
@@ -33,9 +30,15 @@ const LandingDeepFeatures = ({ onAuthClicked }: { onAuthClicked: () => void }) =
           <h2 className="text-3xl md:text-4xl font-black text-[#174650] mb-4">Dive deeper into Teacher Moments</h2>
           <p className="text-lg text-[#174650]/80">Become a power user and explore even more features for creating and running your simulations.</p>
         </div>
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+        <ul className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {features.map((feature) => (
-            <li key={feature.title}>
+            <li key={feature.title} className="relative">
+              <img
+                src={feature.doodle}
+                alt=""
+                className="absolute -top-6 -right-6 w-16 opacity-80 pointer-events-none hidden md:block"
+                aria-hidden="true"
+              />
               <img className="w-full mb-6" src={feature.image} alt={feature.alt} />
               <h3 className="text-2xl font-black text-[#174650] mb-2">{feature.title}</h3>
               <p className="text-[#174650]/80">{feature.description}</p>

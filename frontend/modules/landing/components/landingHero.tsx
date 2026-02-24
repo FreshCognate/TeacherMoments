@@ -8,7 +8,7 @@ const LandingHero = () => {
         <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold leading-snug text-[#174650]">
           Preparing{' '}
           <span className="relative inline-block">
-            <span className="relative z-10">teachers</span>
+            <span className="relative z-10">educators</span>
             <img
               src="/static/images/landing/hero-circle-doodle.svg"
               alt=""
@@ -16,7 +16,7 @@ const LandingHero = () => {
               aria-hidden="true"
             />
           </span>{' '}
-          for challenging situations through digital simulations
+          for real classroom moments through AI-powered digital simulations
         </h1>
       </div>
     </section>

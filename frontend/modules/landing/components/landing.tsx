@@ -4,6 +4,7 @@ import LandingStepper from './landingStepper';
 import LandingMainFeatures from './landingMainFeatures';
 import LandingTestimonial from './landingTestimonial';
 import LandingDeepFeatures from './landingDeepFeatures';
+import LandingFacilitatorSignup from './landingFacilitatorSignup';
 import LandingFooter from './landingFooter';
 
 const Landing = ({ onAuthClicked }: { onAuthClicked: () => void }) => {
@@ -15,6 +16,7 @@ const Landing = ({ onAuthClicked }: { onAuthClicked: () => void }) => {
       <LandingMainFeatures />
       <LandingTestimonial />
       <LandingDeepFeatures onAuthClicked={onAuthClicked} />
+      <LandingFacilitatorSignup />
       <LandingFooter />
     </div>
   );
