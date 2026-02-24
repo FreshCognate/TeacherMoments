@@ -29,7 +29,7 @@ const CohortParticipantScenariosItem = ({
         <Title title={scenario.name} />
       </div>
       <div className="flex">
-        <Badge icon={icon} text={text} />
+        <Badge icon={icon} iconSize={16} text={text} />
       </div>
       <div>
         <Body body={getString({ model: scenario, field: 'description' })} />
