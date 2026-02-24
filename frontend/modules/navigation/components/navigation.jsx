@@ -69,6 +69,16 @@ const Navigation = ({
                   >
                     Cohorts
                   </NavLink>
+                  <NavLink
+                    to="/history"
+                    className={({ isActive }) =>
+                      classNames("text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 transition-colors", {
+                        "underline": isActive
+                      })
+                    }
+                  >
+                    History
+                  </NavLink>
                 </>
               )}
             </nav>
