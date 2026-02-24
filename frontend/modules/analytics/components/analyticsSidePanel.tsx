@@ -44,7 +44,7 @@ const AnalyticsSidePanel: React.FC<AnalyticsSidePanelProps> = ({
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold">{title}</h3>
-              <FlatButton icon="close" size="sm" onClick={onClose} />
+              <FlatButton icon="cancel" onClick={onClose} />
             </div>
             <AnalyticsSidePanelContainer
               selectedResponse={selectedResponse}

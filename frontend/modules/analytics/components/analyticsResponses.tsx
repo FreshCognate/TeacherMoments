@@ -6,6 +6,7 @@ import { AnalyticsViewType, UserResponse } from '../analytics.types';
 interface AnalyticsResponsesProps {
   viewType: AnalyticsViewType;
   responses: UserResponse[];
+  selectedResponse: UserResponse | null;
   selectedBlockResponseRef: string | null;
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
 }
@@ -13,13 +14,14 @@ interface AnalyticsResponsesProps {
 const AnalyticsResponses: React.FC<AnalyticsResponsesProps> = ({
   viewType,
   responses,
+  selectedResponse,
   selectedBlockResponseRef,
   onResponseClicked
 }) => {
   return (
     <div className="space-y-6">
       {map(responses, (response, index) => (
-        <AnalyticsResponsesItem key={index} viewType={viewType} response={response} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />
+        <AnalyticsResponsesItem key={index} viewType={viewType} response={response} isSelected={response === selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />
       ))}
     </div>
   );
