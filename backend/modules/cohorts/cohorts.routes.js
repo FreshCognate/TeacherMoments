@@ -2,6 +2,7 @@ import Joi from 'joi';
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
 import controller from './cohorts.controller.js';
+import cohortCompletionStatsController from './cohortCompletionStats.controller.js';
 import buildLanguageValidation from '#core/app/helpers/buildLanguageValidation.js';
 
 export default [{
@@ -49,6 +50,15 @@ export default [{
   },
   delete: {
     param: 'id',
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
+  }
+}, {
+  route: '/cohortCompletionStats',
+  controller: cohortCompletionStatsController,
+  all: {
+    query: {
+      cohortId: Joi.string().required(),
+    },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   }
 }];

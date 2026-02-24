@@ -124,20 +124,20 @@ class AnalyticsSidePanelContainer extends Component<AnalyticsSidePanelContainerP
 
 export default WithCache(AnalyticsSidePanelContainer, {
   previewSlides: {
-    url: '/api/slides',
+    url: '/api/play/slides',
     getInitialData: () => ([]),
     transform: ({ data }: any) => data.slides,
-    getParams: ({ props }: any) => ({ scenarioId: props.selectedResponse.scenarioId }),
-    getQuery: ({ props }: any) => ({ scenarioId: props.selectedResponse.scenarioId }),
+    getParams: ({ props }: any) => ({ scenario: props.selectedResponse.scenarioId }),
+    getQuery: ({ props }: any) => ({ scenario: props.selectedResponse.scenarioId }),
     lifeTime: 0,
     staleTime: 0
   },
   previewBlocks: {
-    url: '/api/blocks',
+    url: '/api/play/blocks',
     getInitialData: () => ([]),
     transform: ({ data }: any) => data.blocks,
-    getParams: ({ props }: any) => ({ scenarioId: props.selectedResponse.scenarioId }),
-    getQuery: ({ props }: any) => ({ scenarioId: props.selectedResponse.scenarioId }),
+    getParams: ({ props }: any) => ({ scenario: props.selectedResponse.scenarioId }),
+    getQuery: ({ props }: any) => ({ scenario: props.selectedResponse.scenarioId }),
     lifeTime: 0,
     staleTime: 0
   }
