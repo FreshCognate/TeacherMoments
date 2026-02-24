@@ -27,7 +27,7 @@ const ShowFeedbackFromPrompts = {
 
       // Gather block and block tracking info
 
-      setSlideStatus('Analysing prompts');
+      setSlideStatus('Analyzing prompts');
 
       let items = [];
 
