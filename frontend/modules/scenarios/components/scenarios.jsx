@@ -10,6 +10,7 @@ import CardContent from '~/uikit/cards/components/cardContent';
 import CardActions from '~/uikit/cards/components/cardActions';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import truncate from 'lodash/truncate';
+import CollectionEmpty from '~/uikit/collections/components/collectionEmpty';
 
 const Scenarios = ({
   scenarios,
