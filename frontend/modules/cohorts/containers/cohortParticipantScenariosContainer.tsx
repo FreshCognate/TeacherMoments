@@ -23,6 +23,9 @@ interface CohortParticipantScenariosProps {
   cohortParticipantRuns: {
     data: any
   }
+  cohortCompletionStats: {
+    data: any
+  }
   router: any
 }
 
@@ -68,10 +71,13 @@ class CohortParticipantScenariosContainer extends Component<CohortParticipantSce
 
   render() {
     const { data, status } = this.props.cohortParticipantScenarios;
+    const completionStats = this.props.cohortCompletionStats?.data;
     return (
       <CohortParticipantScenarios
         scenarios={data}
         runs={this.props.cohortParticipantRuns.data}
+        scenarioCompletions={completionStats?.scenarioCompletions || []}
+        totalUsers={completionStats?.totalUsers || 0}
         onPlayScenarioClicked={this.onPlayScenarioClicked}
         onViewScenarioResponseClicked={this.onViewScenarioResponseClicked}
       />
@@ -99,4 +105,4 @@ export default WithRouter(WithCache(CohortParticipantScenariosContainer, {
       }
     },
   }
-}));
+}, ['cohortCompletionStats']));

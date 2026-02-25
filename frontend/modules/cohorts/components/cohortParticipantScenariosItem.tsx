@@ -13,11 +13,15 @@ import Badge from '~/uikit/badges/components/badge';
 const CohortParticipantScenariosItem = ({
   scenario,
   run,
+  completedCount,
+  totalUsers,
   onPlayScenarioClicked,
   onViewScenarioResponseClicked
 }: {
   scenario: Scenario,
   run: Run,
+  completedCount?: number,
+  totalUsers?: number,
   onPlayScenarioClicked: (scenarioId: string) => void,
   onViewScenarioResponseClicked: (scenarioId: string) => void,
 }) => {
@@ -28,8 +32,11 @@ const CohortParticipantScenariosItem = ({
       <div className="font-bold text-sm text-black/90 dark:text-white/90 mb-2">
         <Title title={scenario.name} />
       </div>
-      <div className="flex">
+      <div className="flex gap-2">
         <Badge icon={icon} iconSize={16} text={text} />
+        {(isCohortEditor && typeof completedCount === 'number' && typeof totalUsers === 'number') && (
+          <Badge icon="complete" iconSize={16} text={`${completedCount} / ${totalUsers} users have completed this scenario`} />
+        )}
       </div>
       <div>
         <Body body={getString({ model: scenario, field: 'description' })} />

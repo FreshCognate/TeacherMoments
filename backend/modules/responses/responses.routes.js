@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
 import controller from './responses.controller.js';
+import historyController from './history.controller.js';
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 
 export default [{
@@ -15,5 +16,15 @@ export default [{
       currentPage: Joi.number().default(1)
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])]
+  },
+}, {
+  route: '/history',
+  controller: historyController,
+  all: {
+    query: {
+      searchValue: Joi.string().allow('').default(''),
+      currentPage: Joi.number().default(1)
+    },
+    middleware: [isAuthenticated]
   },
 }];
