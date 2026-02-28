@@ -3,6 +3,7 @@ import AnalyticsContainer from '~/modules/analytics/containers/analyticsContaine
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 import debounce from 'lodash/debounce';
+import triggerExport from '~/modules/analytics/helpers/triggerExport';
 
 class ScenarioResponsesContainer extends Component {
 
@@ -13,6 +14,11 @@ class ScenarioResponsesContainer extends Component {
     scenarioResponses.setStatus('syncing');
     scenarioResponses.setQuery({ searchValue, currentPage: 1 });
     this.debounceFetch(scenarioResponses.fetch);
+  }
+
+  onExportClicked = () => {
+    const { id } = this.props.router.params;
+    triggerExport({ exportType: 'SCENARIO_RESPONSES', scenarioId: id });
   }
 
   onPaginationClicked = (direction) => {
@@ -47,6 +53,7 @@ class ScenarioResponsesContainer extends Component {
           totalPages={totalPages}
           onSearchValueChange={this.onSearchValueChange}
           onPaginationClicked={this.onPaginationClicked}
+          onExportClicked={this.onExportClicked}
         />
       </div>
     );

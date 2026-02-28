@@ -26,6 +26,7 @@ interface AnalyticsProps {
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
   onSlideNavigated: (blockResponseRef: string) => void;
   onUserNavigated?: (direction: string) => void;
+  onExportClicked?: () => void;
   onSidePanelClose: () => void;
 }
 
@@ -48,6 +49,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
   onResponseClicked,
   onSlideNavigated,
   onUserNavigated,
+  onExportClicked,
   onSidePanelClose
 }) => {
   return (
@@ -66,8 +68,14 @@ const Analytics: React.FC<AnalyticsProps> = ({
               currentPage={currentPage}
               totalPages={totalPages}
               isSyncing={isSyncing}
+              actions={onExportClicked ? [{ action: 'EXPORT_CSV', text: 'Export CSV' }] : undefined}
               onSearchValueChange={onSearchValueChange}
               onPaginationClicked={onPaginationClicked}
+              onActionClicked={({ action }) => {
+                if (action === 'EXPORT_CSV' && onExportClicked) {
+                  onExportClicked();
+                }
+              }}
             />
           </div>
         )}
