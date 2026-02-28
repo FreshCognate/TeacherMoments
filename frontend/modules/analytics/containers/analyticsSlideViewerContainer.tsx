@@ -107,11 +107,15 @@ class AnalyticsSlideViewerContainer extends Component<AnalyticsSlideViewerContai
     const responseSlides = this.getResponseSlides();
     const currentSlideIndex = this.getCurrentSlideIndex(responseSlides);
 
+    const stage = find(this.props.selectedResponse.stages, { slideRef: activeSlide._id });
+    const feedbackItems = stage?.feedbackItems || [];
+
     return (
       <AnalyticsSlideViewer
         activeSlide={activeSlide}
         activeBlocks={activeBlocks}
         blockTrackingByRef={blockTrackingByRef}
+        feedbackItems={feedbackItems}
         selectedBlockResponseRef={this.props.selectedBlockResponseRef}
         currentSlideIndex={currentSlideIndex}
         totalSlides={responseSlides.length}
