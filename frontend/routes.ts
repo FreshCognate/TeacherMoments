@@ -26,5 +26,6 @@ export default [
   route("/play/:publishLink", "./modules/scenarios/routes/playScenarioRoute.tsx"),
   route("/play/:publishLink/verify/:userId", "./modules/scenarios/routes/playVerifyRoute.tsx"),
   route("/invite/:inviteId", "./modules/invites/routes/inviteRoute.tsx"),
-  route("/invite/:inviteId/verify/:userId", "./modules/invites/routes/inviteVerifyRoute.tsx")
+  route("/invite/:inviteId/verify/:userId", "./modules/invites/routes/inviteVerifyRoute.tsx"),
+  route("/verify/:userId", "./modules/authentication/routes/signupVerifyRoute.tsx")
 ] satisfies RouteConfig;

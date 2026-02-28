@@ -71,7 +71,8 @@ class SignupDialogContainer extends Component {
     const { username, email } = this.state;
     axios.post(`/api/signup`, { username, email }).then((response) => {
       const userId = response.data.user._id;
-      window.location.href = `${window.location.href}/verify/${userId}?email=${encodeURIComponent(email)}`;
+      const baseUrl = window.location.href.replace(/\/$/, '');
+      window.location.href = `${baseUrl}/verify/${userId}?email=${encodeURIComponent(email)}`;
     }).catch((error) => {
       if (error.response?.data) {
         const { message } = error.response.data;
