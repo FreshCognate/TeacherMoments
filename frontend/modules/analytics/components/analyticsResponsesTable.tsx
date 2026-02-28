@@ -96,18 +96,28 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
 
           {map(responses, (response, responseIndex) => (
             <React.Fragment key={responseIndex}>
-              {/* Sub-row 1: Value */}
               <div
                 className={usernameCellClass}
                 style={{ gridRow: 'span 3' }}
               >
                 {getUserDisplayName(response.user)}
               </div>
-              <div className={subRowLabelClass}>
-                Value
+              <div className="row-span-3 grid grid-rows-subgrid sticky left-40 z-10">
+                <div className={subRowLabelClass}>
+                  Value
+                </div>
+                <div className={subRowLabelClass}>
+                  Feedback
+                </div>
+                <div className={subRowLabelClass}>
+                  Time: {formatTimeSpent(response.totalTimeSpentMs)}
+                </div>
               </div>
               {map(blockColumns, (blockColumn, blockIndex) => {
                 const blockResponse = find(response.blockResponses, { ref: blockColumn.ref });
+                const stage = getStageForBlock(response.stages, blockColumn);
+                const hasFeedback = stage?.feedbackItems && stage.feedbackItems.length > 0;
+                const showOnThisColumn = isFirstBlockOfSlide(blockColumns, blockIndex);
                 const isSelected = selectedResponse === response && selectedBlockResponseRef === blockColumn.ref;
 
                 return (
@@ -116,45 +126,24 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
                     data-block-ref={blockColumn.ref}
                     data-user-id={response.user?._id}
                     className={classnames(
-                      'px-4 py-3 text-sm text-black/60 dark:text-white/60 border-r border-b border-lm-3 dark:border-dm-2 cursor-pointer hover:bg-lm-1 dark:hover:bg-dm-2',
+                      'row-span-3 grid grid-rows-subgrid cursor-pointer hover:bg-lm-1 dark:hover:bg-dm-2',
                       { 'outline outline-2 -outline-offset-2 outline-primary-regular': isSelected }
                     )}
                     onClick={() => onResponseClicked(response, blockColumn.ref)}
                   >
-                    {renderBlockAnswer(blockResponse)}
-                  </div>
-                );
-              })}
-
-              <div className={subRowLabelClass}>
-                Feedback
-              </div>
-              {map(blockColumns, (blockColumn, blockIndex) => {
-                const stage = getStageForBlock(response.stages, blockColumn);
-                const hasFeedback = stage?.feedbackItems && stage.feedbackItems.length > 0;
-                const showOnThisColumn = isFirstBlockOfSlide(blockColumns, blockIndex);
-
-                return (
-                  <div key={`feedback-${blockIndex}`} className={subRowCellClass}>
-                    {showOnThisColumn && hasFeedback && (
-                      <div className="line-clamp-2">{stage!.feedbackItems!.join('; ')}</div>
-                    )}
-                  </div>
-                );
-              })}
-
-              <div className={subRowLabelClass}>
-                Time: {formatTimeSpent(response.totalTimeSpentMs)}
-              </div>
-              {map(blockColumns, (blockColumn, blockIndex) => {
-                const stage = getStageForBlock(response.stages, blockColumn);
-                const showOnThisColumn = isFirstBlockOfSlide(blockColumns, blockIndex);
-
-                return (
-                  <div key={`time-${blockIndex}`} className={subRowCellClass}>
-                    {showOnThisColumn && stage?.timeSpentMs != null && (
-                      <span>{formatTimeSpent(stage.timeSpentMs)}</span>
-                    )}
+                    <div className="px-4 py-3 text-sm text-black/60 dark:text-white/60 border-r border-b border-lm-3 dark:border-dm-2">
+                      {renderBlockAnswer(blockResponse)}
+                    </div>
+                    <div className={subRowCellClass}>
+                      {showOnThisColumn && hasFeedback && (
+                        <div className="line-clamp-2">{stage!.feedbackItems!.join('; ')}</div>
+                      )}
+                    </div>
+                    <div className={subRowCellClass}>
+                      {showOnThisColumn && stage?.timeSpentMs != null && (
+                        <span>{formatTimeSpent(stage.timeSpentMs)}</span>
+                      )}
+                    </div>
                   </div>
                 );
               })}

@@ -53,7 +53,6 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
               gridTemplateRows: 'auto auto auto auto auto'
             }}
           >
-            {/* Sticky left column: row labels */}
             <div className="row-span-5 grid grid-rows-subgrid sticky left-0 z-10 min-w-28 bg-lm-2 dark:bg-dm-3">
               <div className={classnames(labelClass, 'text-sm font-bold text-black/80 dark:text-white/80')}>
                 Block ID
@@ -72,7 +71,6 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
               </div>
             </div>
 
-            {/* Block columns */}
             {map(response.blockResponses, (blockResponse, brIndex) => {
               const stage = getStageForBlock(response.stages, blockResponse);
               const showSlideData = isFirstBlockOfSlide(response.blockResponses!, brIndex);
@@ -84,12 +82,10 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
                   id={`block-response-${blockResponse.ref}`}
                   className="row-span-5 grid grid-rows-subgrid"
                 >
-                  {/* Block ID */}
                   <div className="px-4 py-2 text-left text-sm font-medium text-black/60 dark:text-white/60 bg-lm-2 dark:bg-dm-3 border-r border-b border-lm-3 dark:border-dm-2">
                     {blockResponse.slideName ? `${blockResponse.slideName} - ` : ''}{blockResponse.name || blockResponse.ref || `Block ${blockResponse.sortOrder + 1}`}
                   </div>
 
-                  {/* Block type */}
                   <div className="px-4 py-3 text-sm text-black/60 dark:text-white/60 border-r border-b border-lm-3 dark:border-dm-2">
                     {blockResponse.blockType === 'INPUT_PROMPT' && (
                       <Icon icon={blockResponse.inputType === 'AUDIO' ? 'audioPrompt' : 'textPrompt'} size={16} className="inline-block mr-2 align-text-bottom" />
@@ -97,37 +93,34 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
                     {getBlockDisplayName(blockResponse)}{blockResponse.blockType === 'INPUT_PROMPT' && blockResponse.inputType === 'AUDIO' ? ' - audio' : ''}
                   </div>
 
-                  {/* Value */}
                   <div
                     className={classnames(
-                      'px-4 py-3 text-sm text-black/60 dark:text-white/60 border-r border-b border-lm-3 dark:border-dm-2 cursor-pointer hover:bg-lm-1 dark:hover:bg-dm-2',
+                      'row-span-3 grid grid-rows-subgrid cursor-pointer hover:bg-lm-1 dark:hover:bg-dm-2',
                       { 'outline outline-2 -outline-offset-2 outline-primary-regular': isSelected && selectedBlockResponseRef === blockResponse.ref }
                     )}
                     onClick={() => onResponseClicked(response, blockResponse.ref)}
                   >
-                    {blockResponse.blockType === 'MULTIPLE_CHOICE_PROMPT' && (
-                      <div>{blockResponse.selectedOptions}</div>
-                    )}
-                    {blockResponse.blockType === 'INPUT_PROMPT' && blockResponse.inputType === 'TEXT' && (
-                      <div>{blockResponse.textValue}</div>
-                    )}
-                    {blockResponse.blockType === 'INPUT_PROMPT' && blockResponse.inputType === 'AUDIO' && blockResponse.audio && (
-                      <div>{blockResponse.audio.transcript}</div>
-                    )}
-                  </div>
-
-                  {/* Feedback */}
-                  <div className={subCellClass}>
-                    {showSlideData && hasFeedback && (
-                      <div className="line-clamp-2">{stage!.feedbackItems!.join('; ')}</div>
-                    )}
-                  </div>
-
-                  {/* Time spent */}
-                  <div className={subCellClass}>
-                    {showSlideData && stage?.timeSpentMs != null && (
-                      <span>{formatTimeSpent(stage.timeSpentMs)}</span>
-                    )}
+                    <div className="px-4 py-3 text-sm text-black/60 dark:text-white/60 border-r border-b border-lm-3 dark:border-dm-2">
+                      {blockResponse.blockType === 'MULTIPLE_CHOICE_PROMPT' && (
+                        <div>{blockResponse.selectedOptions}</div>
+                      )}
+                      {blockResponse.blockType === 'INPUT_PROMPT' && blockResponse.inputType === 'TEXT' && (
+                        <div>{blockResponse.textValue}</div>
+                      )}
+                      {blockResponse.blockType === 'INPUT_PROMPT' && blockResponse.inputType === 'AUDIO' && blockResponse.audio && (
+                        <div>{blockResponse.audio.transcript}</div>
+                      )}
+                    </div>
+                    <div className={subCellClass}>
+                      {showSlideData && hasFeedback && (
+                        <div className="line-clamp-2">{stage!.feedbackItems!.join('; ')}</div>
+                      )}
+                    </div>
+                    <div className={subCellClass}>
+                      {showSlideData && stage?.timeSpentMs != null && (
+                        <span>{formatTimeSpent(stage.timeSpentMs)}</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
