@@ -39,9 +39,17 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
 
   scrollToBlockResponse = (blockResponseRef: string) => {
     setTimeout(() => {
-      const element = document.getElementById(`block-response-${blockResponseRef}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+      const { selectedResponse } = this.state;
+      const userId = selectedResponse?.user?._id;
+
+      const element = userId
+        ? document.querySelector(`[data-block-ref="${blockResponseRef}"][data-user-id="${userId}"]`) as HTMLElement
+        : null;
+      const fallbackElement = document.getElementById(`block-response-${blockResponseRef}`);
+
+      const targetElement = element || fallbackElement;
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
       }
     }, 0);
   }
@@ -63,6 +71,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
   render() {
     const {
       viewType = 'byScenarioUsers',
+      scenario,
       responses,
       isLoading,
       isSyncing,
@@ -78,6 +87,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     return (
       <Analytics
         viewType={viewType}
+        scenarioId={scenario?._id}
         title={this.getTitle()}
         responses={responses || []}
         selectedResponse={selectedResponse}

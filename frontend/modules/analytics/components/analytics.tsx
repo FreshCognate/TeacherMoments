@@ -3,11 +3,13 @@ import ActionBar from '~/uikit/actionBars/components/actionBar';
 import Loading from '~/uikit/loaders/components/loading';
 import CollectionEmpty from '~/uikit/collections/components/collectionEmpty';
 import AnalyticsResponses from './analyticsResponses';
+import AnalyticsResponsesTableContainer from '../containers/analyticsResponsesTableContainer';
 import AnalyticsSidePanel from './analyticsSidePanel';
 import { AnalyticsViewType, UserResponse } from '../analytics.types';
 
 interface AnalyticsProps {
   viewType: AnalyticsViewType;
+  scenarioId?: string;
   title?: string;
   responses: UserResponse[];
   selectedResponse: UserResponse | null;
@@ -26,6 +28,7 @@ interface AnalyticsProps {
 
 const Analytics: React.FC<AnalyticsProps> = ({
   viewType,
+  scenarioId,
   title,
   responses,
   selectedResponse,
@@ -75,7 +78,10 @@ const Analytics: React.FC<AnalyticsProps> = ({
             }}
           />
         )}
-        {!isLoading && responses.length > 0 && (
+        {!isLoading && responses.length > 0 && viewType === 'byScenarioUsers' && scenarioId && (
+          <AnalyticsResponsesTableContainer scenarioId={scenarioId} responses={responses} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />
+        )}
+        {!isLoading && responses.length > 0 && viewType === 'byUserScenarios' && (
           <AnalyticsResponses viewType={viewType} responses={responses} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />
         )}
       </div>

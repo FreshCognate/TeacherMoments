@@ -15,6 +15,17 @@ export interface BlockResponse {
   };
 }
 
+export interface BlockColumn {
+  ref: string;
+  slideRef: string;
+  slideName?: string;
+  slideSortOrder: number;
+  name?: string;
+  blockType: string;
+  inputType?: string;
+  sortOrder: number;
+}
+
 export type AnalyticsViewType = 'byScenarioUsers' | 'byUserScenarios';
 
 export interface UserResponse {

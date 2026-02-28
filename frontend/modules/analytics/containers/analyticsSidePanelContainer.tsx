@@ -24,13 +24,13 @@ interface AnalyticsSidePanelContainerProps {
 class AnalyticsSidePanelContainer extends Component<AnalyticsSidePanelContainerProps> {
 
   getActiveSlide = () => {
-    const { selectedResponse, selectedBlockResponseRef, previewSlides } = this.props;
+    const { selectedBlockResponseRef, previewSlides, previewBlocks } = this.props;
     if (!selectedBlockResponseRef) return null;
 
-    const selectedBlockResponse = find(selectedResponse.blockResponses, { ref: selectedBlockResponseRef });
-    if (!selectedBlockResponse) return null;
+    const selectedBlock = find(previewBlocks.data, { ref: selectedBlockResponseRef });
+    if (!selectedBlock) return null;
 
-    return find(previewSlides.data, { _id: selectedBlockResponse.slideRef });
+    return find(previewSlides.data, { _id: selectedBlock.slideRef });
   }
 
   getActiveBlocks = (slideId: string) => {
@@ -40,16 +40,16 @@ class AnalyticsSidePanelContainer extends Component<AnalyticsSidePanelContainerP
   }
 
   getResponseSlides = (): ResponseSlide[] => {
-    const { selectedResponse } = this.props;
+    const { previewSlides, previewBlocks } = this.props;
     const responseSlides: ResponseSlide[] = [];
-    const seenSlideRefs = new Set<string>();
+    const sortedSlides = sortBy(previewSlides.data, 'sortOrder');
 
-    each(selectedResponse.blockResponses, (blockResponse) => {
-      if (!seenSlideRefs.has(blockResponse.slideRef)) {
-        seenSlideRefs.add(blockResponse.slideRef);
+    each(sortedSlides, (slide: any) => {
+      const slideBlocks = sortBy(filter(previewBlocks.data, { slideRef: slide._id }), 'sortOrder');
+      if (slideBlocks.length > 0) {
         responseSlides.push({
-          slideRef: blockResponse.slideRef,
-          firstBlockRef: blockResponse.ref
+          slideRef: slide._id,
+          firstBlockRef: slideBlocks[0].ref
         });
       }
     });
@@ -58,13 +58,13 @@ class AnalyticsSidePanelContainer extends Component<AnalyticsSidePanelContainerP
   }
 
   getCurrentSlideIndex = (responseSlides: ResponseSlide[]) => {
-    const { selectedResponse, selectedBlockResponseRef } = this.props;
-    if (!selectedBlockResponseRef || !selectedResponse.blockResponses) return -1;
+    const { selectedBlockResponseRef, previewBlocks } = this.props;
+    if (!selectedBlockResponseRef) return -1;
 
-    const selectedBlockResponse = find(selectedResponse.blockResponses, { ref: selectedBlockResponseRef });
-    if (!selectedBlockResponse) return -1;
+    const selectedBlock = find(previewBlocks.data, { ref: selectedBlockResponseRef });
+    if (!selectedBlock) return -1;
 
-    return findIndex(responseSlides, { slideRef: selectedBlockResponse.slideRef });
+    return findIndex(responseSlides, { slideRef: selectedBlock.slideRef });
   }
 
   onBlockClicked = (blockRef: string) => {
