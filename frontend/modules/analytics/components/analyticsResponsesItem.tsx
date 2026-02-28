@@ -3,6 +3,7 @@ import map from 'lodash/map';
 import classnames from 'classnames';
 import getBlockDisplayName from '~/modules/blocks/helpers/getBlockDisplayName';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
+import Icon from '~/uikit/icons/components/icon';
 import { AnalyticsViewType, UserResponse } from '../analytics.types';
 
 interface AnalyticsResponsesItemProps {
@@ -63,7 +64,10 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
                   {blockResponse.slideName ? `${blockResponse.slideName} - ` : ''}{blockResponse.name || blockResponse.ref || `Block ${blockResponse.sortOrder + 1}`}
                 </div>
                 <div className="px-4 py-3 text-sm text-black/60 dark:text-white/60 border-r border-b border-lm-3 dark:border-dm-2">
-                  {getBlockDisplayName(blockResponse)}
+                  {blockResponse.blockType === 'INPUT_PROMPT' && (
+                    <Icon icon={blockResponse.inputType === 'AUDIO' ? 'audioPrompt' : 'textPrompt'} size={16} className="inline-block mr-2 align-text-bottom" />
+                  )}
+                  {getBlockDisplayName(blockResponse)}{blockResponse.blockType === 'INPUT_PROMPT' && blockResponse.inputType === 'AUDIO' ? ' - audio' : ''}
                 </div>
                 <div className="px-4 py-3 text-sm text-black/60 dark:text-white/60 border-r border-b border-lm-3 dark:border-dm-2">
                   {(blockResponse.blockType === 'MULTIPLE_CHOICE_PROMPT') && (
