@@ -19,10 +19,13 @@ interface AnalyticsProps {
   searchValue?: string;
   currentPage?: number;
   totalPages?: number;
+  isUserUpDisabled?: boolean;
+  isUserDownDisabled?: boolean;
   onSearchValueChange?: (searchValue: string) => void;
   onPaginationClicked?: (direction: string) => void;
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
   onSlideNavigated: (blockResponseRef: string) => void;
+  onUserNavigated?: (direction: string) => void;
   onSidePanelClose: () => void;
 }
 
@@ -38,10 +41,13 @@ const Analytics: React.FC<AnalyticsProps> = ({
   searchValue,
   currentPage,
   totalPages,
+  isUserUpDisabled,
+  isUserDownDisabled,
   onSearchValueChange,
   onPaginationClicked,
   onResponseClicked,
   onSlideNavigated,
+  onUserNavigated,
   onSidePanelClose
 }) => {
   return (
@@ -86,7 +92,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
         )}
       </div>
       <div className="w-[480px] shrink-0 ml-4 sticky top-32 self-start">
-        <AnalyticsSidePanel viewType={viewType} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onSlideNavigated={onSlideNavigated} onClose={onSidePanelClose} />
+        <AnalyticsSidePanel viewType={viewType} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} isUserUpDisabled={isUserUpDisabled} isUserDownDisabled={isUserDownDisabled} onSlideNavigated={onSlideNavigated} onUserNavigated={onUserNavigated} onClose={onSidePanelClose} />
       </div>
     </div>
   );

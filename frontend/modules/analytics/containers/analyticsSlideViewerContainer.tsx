@@ -13,7 +13,7 @@ interface ResponseSlide {
   firstBlockRef: string;
 }
 
-interface AnalyticsSidePanelContainerProps {
+interface AnalyticsSlideViewerContainerProps {
   selectedResponse: UserResponse;
   selectedBlockResponseRef: string | null;
   onSlideNavigated: (blockResponseRef: string) => void;
@@ -21,7 +21,7 @@ interface AnalyticsSidePanelContainerProps {
   previewBlocks?: any;
 }
 
-class AnalyticsSidePanelContainer extends Component<AnalyticsSidePanelContainerProps> {
+class AnalyticsSlideViewerContainer extends Component<AnalyticsSlideViewerContainerProps> {
 
   getActiveSlide = () => {
     const { selectedBlockResponseRef, previewSlides, previewBlocks } = this.props;
@@ -122,7 +122,7 @@ class AnalyticsSidePanelContainer extends Component<AnalyticsSidePanelContainerP
   }
 }
 
-export default WithCache(AnalyticsSidePanelContainer, {
+export default WithCache(AnalyticsSlideViewerContainer, {
   previewSlides: {
     url: '/api/play/slides',
     getInitialData: () => ([]),

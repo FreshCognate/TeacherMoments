@@ -69,6 +69,8 @@ export default [{
         isComplete: Joi.boolean(),
         isSubmitted: Joi.boolean(),
         slideRef: Joi.string(),
+        startedAt: Joi.date(),
+        completedAt: Joi.date(),
         feedbackItems: Joi.array(),
         shouldStopNavigation: Joi.boolean(),
         triggersByRef: Joi.object(),

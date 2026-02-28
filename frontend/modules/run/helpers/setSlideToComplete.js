@@ -15,6 +15,7 @@ export default ({ slideRef }) => {
 
   if (!currentStage.isComplete) {
     currentStage.isComplete = true;
+    currentStage.completedAt = new Date();
 
     forEach(currentStage.blocksByRef, (blockTracking) => {
       blockTracking.isComplete = true;

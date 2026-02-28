@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import findIndex from 'lodash/findIndex';
 import Analytics from '../components/analytics';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import { AnalyticsViewType, UserResponse } from '../analytics.types';
@@ -20,13 +21,15 @@ interface AnalyticsContainerProps {
 interface AnalyticsContainerState {
   selectedResponse: UserResponse | null;
   selectedBlockResponseRef: string | null;
+  pendingUserSelection: 'first' | 'last' | null;
 }
 
 class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsContainerState> {
 
   state: AnalyticsContainerState = {
     selectedResponse: null,
-    selectedBlockResponseRef: null
+    selectedBlockResponseRef: null,
+    pendingUserSelection: null
   }
 
   getTitle = () => {
@@ -35,6 +38,74 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
       return `User: ${getUserDisplayName(user)}`;
     }
     return scenario?.name ? `Scenario: ${scenario.name}` : undefined;
+  }
+
+  componentDidUpdate(prevProps: AnalyticsContainerProps) {
+    const { responses = [] } = this.props;
+    const { pendingUserSelection, selectedBlockResponseRef } = this.state;
+
+    if (pendingUserSelection && responses.length > 0 && responses !== prevProps.responses) {
+      const targetResponse = pendingUserSelection === 'first'
+        ? responses[0]
+        : responses[responses.length - 1];
+
+      this.setState({
+        selectedResponse: targetResponse,
+        pendingUserSelection: null
+      });
+
+      if (selectedBlockResponseRef) {
+        this.scrollToBlockResponse(selectedBlockResponseRef);
+      }
+    }
+  }
+
+  getUserNavigationState = () => {
+    const { responses = [], currentPage = 1, totalPages = 1 } = this.props;
+    const { selectedResponse } = this.state;
+
+    if (!selectedResponse || responses.length === 0) {
+      return { isUserUpDisabled: true, isUserDownDisabled: true };
+    }
+
+    const currentIndex = findIndex(responses, (r: UserResponse) => r.user?._id === selectedResponse.user?._id);
+
+    return {
+      isUserUpDisabled: currentIndex <= 0 && currentPage <= 1,
+      isUserDownDisabled: currentIndex >= responses.length - 1 && currentPage >= totalPages
+    };
+  }
+
+  onUserNavigated = (direction: string) => {
+    const { responses = [], currentPage = 1, totalPages = 1, onPaginationClicked } = this.props;
+    const { selectedResponse, selectedBlockResponseRef } = this.state;
+
+    if (!selectedResponse || responses.length === 0) return;
+
+    const currentIndex = findIndex(responses, (r: UserResponse) => r.user?._id === selectedResponse.user?._id);
+    if (currentIndex === -1) return;
+
+    if (direction === 'down') {
+      if (currentIndex < responses.length - 1) {
+        this.setState({ selectedResponse: responses[currentIndex + 1] });
+        if (selectedBlockResponseRef) {
+          this.scrollToBlockResponse(selectedBlockResponseRef);
+        }
+      } else if (currentPage < totalPages && onPaginationClicked) {
+        this.setState({ pendingUserSelection: 'first' });
+        onPaginationClicked('up');
+      }
+    } else {
+      if (currentIndex > 0) {
+        this.setState({ selectedResponse: responses[currentIndex - 1] });
+        if (selectedBlockResponseRef) {
+          this.scrollToBlockResponse(selectedBlockResponseRef);
+        }
+      } else if (currentPage > 1 && onPaginationClicked) {
+        this.setState({ pendingUserSelection: 'last' });
+        onPaginationClicked('down');
+      }
+    }
   }
 
   scrollToBlockResponse = (blockResponseRef: string) => {
@@ -83,6 +154,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     } = this.props;
 
     const { selectedResponse, selectedBlockResponseRef } = this.state;
+    const { isUserUpDisabled, isUserDownDisabled } = this.getUserNavigationState();
 
     return (
       <Analytics
@@ -97,10 +169,13 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         searchValue={searchValue}
         currentPage={currentPage}
         totalPages={totalPages}
+        isUserUpDisabled={isUserUpDisabled}
+        isUserDownDisabled={isUserDownDisabled}
         onSearchValueChange={onSearchValueChange}
         onPaginationClicked={onPaginationClicked}
         onResponseClicked={this.onResponseClicked}
         onSlideNavigated={this.onSlideNavigated}
+        onUserNavigated={this.onUserNavigated}
         onSidePanelClose={this.onSidePanelClose}
       />
     );

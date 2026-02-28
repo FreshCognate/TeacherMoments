@@ -65,6 +65,7 @@ export function createStageForSlide(slideRef) {
   return {
     slideRef,
     blocksByRef,
-    isComplete: isSlideComplete
+    isComplete: isSlideComplete,
+    startedAt: new Date()
   };
 }

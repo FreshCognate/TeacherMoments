@@ -1,4 +1,5 @@
 import populateRun from "../helpers/populateRun.js";
+import each from 'lodash/each.js';
 
 export default async (props, options, context) => {
 
@@ -27,6 +28,17 @@ export default async (props, options, context) => {
 
   if (update.hasGivenConsent && !originalRun.hasGivenConsent) {
     update.givenConsentAt = new Date();
+  }
+
+  if (update.stages) {
+    let totalTimeSpentMs = 0;
+    each(update.stages, (stage) => {
+      if (stage.startedAt && stage.completedAt) {
+        stage.timeSpentMs = new Date(stage.completedAt) - new Date(stage.startedAt);
+        totalTimeSpentMs += stage.timeSpentMs;
+      }
+    });
+    update.totalTimeSpentMs = totalTimeSpentMs;
   }
 
   let run = await models.Run.findOneAndUpdate(search, { ...update, updatedAt: new Date(), updatedBy: user._id }, { new: true }).lean();

@@ -2,14 +2,17 @@ import React from 'react';
 import CollectionEmpty from '~/uikit/collections/components/collectionEmpty';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
-import AnalyticsSidePanelContainer from '../containers/analyticsSidePanelContainer';
+import AnalyticsSlideViewerContainer from '../containers/analyticsSlideViewerContainer';
 import { AnalyticsViewType, UserResponse } from '../analytics.types';
 
 interface AnalyticsSidePanelProps {
   viewType: AnalyticsViewType;
   selectedResponse: UserResponse | null;
   selectedBlockResponseRef: string | null;
+  isUserUpDisabled?: boolean;
+  isUserDownDisabled?: boolean;
   onSlideNavigated: (blockResponseRef: string) => void;
+  onUserNavigated?: (direction: string) => void;
   onClose: () => void;
 }
 
@@ -17,7 +20,10 @@ const AnalyticsSidePanel: React.FC<AnalyticsSidePanelProps> = ({
   viewType,
   selectedResponse,
   selectedBlockResponseRef,
+  isUserUpDisabled,
+  isUserDownDisabled,
   onSlideNavigated,
+  onUserNavigated,
   onClose
 }) => {
   const title = selectedResponse
@@ -42,11 +48,18 @@ const AnalyticsSidePanel: React.FC<AnalyticsSidePanelProps> = ({
         )}
         {selectedResponse && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-1">
               <h3 className="font-semibold">{title}</h3>
               <FlatButton icon="cancel" onClick={onClose} />
             </div>
-            <AnalyticsSidePanelContainer
+            {viewType === 'byScenarioUsers' && onUserNavigated && (
+              <div className="flex items-center gap-1 mb-3">
+                <FlatButton icon="paginationUp" color="primary" isDisabled={isUserUpDisabled} ariaLabel="Previous user" onClick={() => onUserNavigated('up')} />
+                <FlatButton icon="paginationDown" color="primary" isDisabled={isUserDownDisabled} ariaLabel="Next user" onClick={() => onUserNavigated('down')} />
+              </div>
+            )}
+            {(viewType !== 'byScenarioUsers' || !onUserNavigated) && <div className="mb-3" />}
+            <AnalyticsSlideViewerContainer
               selectedResponse={selectedResponse}
               selectedBlockResponseRef={selectedBlockResponseRef}
               onSlideNavigated={onSlideNavigated}
