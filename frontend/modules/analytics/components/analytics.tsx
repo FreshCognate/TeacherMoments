@@ -53,7 +53,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
               hasSearch
               hasPagination
               searchValue={searchValue}
-              searchPlaceholder={viewType === 'byUserScenarios' ? 'Search by scenario name' : 'Search by username'}
+              searchPlaceholder={viewType === 'byUserScenarios' ? 'Search by scenario' : 'Search by username'}
               currentPage={currentPage}
               totalPages={totalPages}
               isSyncing={isSyncing}
