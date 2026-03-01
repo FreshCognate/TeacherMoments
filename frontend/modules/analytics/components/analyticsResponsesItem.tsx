@@ -37,7 +37,7 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
 }) => {
   return (
     <div className="bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-2 rounded-lg overflow-hidden">
-      <div className="bg-lm-1 dark:bg-dm-2 px-4 py-3 font-semibold border-b border-lm-3 dark:border-dm-2">
+      <div className="bg-lm-1 dark:bg-dm-2 px-4 py-3 font-semibold border-b border-lm-3 dark:border-dm-2 break-words">
         {viewType === 'byUserScenarios'
           ? response.scenario?.name || 'Unknown scenario'
           : `Participant: ${getUserDisplayName(response.user)}`
