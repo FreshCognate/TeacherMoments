@@ -1,5 +1,6 @@
 import populateRun from '../../runs/helpers/populateRun.js';
 import find from 'lodash/find.js';
+import map from 'lodash/map.js';
 
 export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context) => {
 
@@ -14,13 +15,21 @@ export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context)
     isComplete: false,
     hasBeenCompleted: !!find(previousUserRuns, { isComplete: true }),
     previousRunsCount: previousUserRuns.length,
-    blockResponses: []
+    blockResponses: [],
+    totalTimeSpentMs: 0,
+    stages: []
   };
 
   if (userRun) {
     userRun = await populateRun({ run: userRun }, context);
     currentRun.hasStarted = true;
     currentRun.isComplete = userRun.isComplete;
+    currentRun.totalTimeSpentMs = userRun.totalTimeSpentMs || 0;
+    currentRun.stages = map(userRun.stages, (stage) => ({
+      slideRef: stage.slideRef,
+      timeSpentMs: stage.timeSpentMs,
+      feedbackItems: stage.feedbackItems || []
+    }));
     currentRun.blockResponses = [];
     if (userRun.stages && userRun.stages.length > 0) {
       for (const stage of userRun.stages) {

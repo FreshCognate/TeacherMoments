@@ -26,6 +26,12 @@ export interface BlockColumn {
   sortOrder: number;
 }
 
+export interface StageResponse {
+  slideRef: string;
+  timeSpentMs?: number;
+  feedbackItems?: string[];
+}
+
 export type AnalyticsViewType = 'byScenarioUsers' | 'byUserScenarios';
 
 export interface UserResponse {
@@ -37,4 +43,6 @@ export interface UserResponse {
   hasBeenCompleted?: boolean;
   previousRunsCount?: number;
   blockResponses?: BlockResponse[];
+  totalTimeSpentMs?: number;
+  stages?: StageResponse[];
 }
