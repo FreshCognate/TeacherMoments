@@ -11,6 +11,7 @@ interface UserHistoryProps {
   totalPages?: number;
   onSearchValueChange?: (searchValue: string) => void;
   onPaginationClicked?: (direction: string) => void;
+  onExportClicked?: () => void;
 }
 
 const UserHistory = ({
@@ -22,7 +23,8 @@ const UserHistory = ({
   currentPage,
   totalPages,
   onSearchValueChange,
-  onPaginationClicked
+  onPaginationClicked,
+  onExportClicked
 }: UserHistoryProps) => {
   return (
     <div className="pt-20">
@@ -37,6 +39,7 @@ const UserHistory = ({
         totalPages={totalPages}
         onSearchValueChange={onSearchValueChange}
         onPaginationClicked={onPaginationClicked}
+        onExportClicked={onExportClicked}
       />
     </div>
   );

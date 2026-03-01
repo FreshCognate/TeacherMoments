@@ -19,7 +19,7 @@ export default [{
       cohortId: Joi.string(),
       userId: Joi.string()
     },
-    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])]
+    middleware: [isAuthenticated]
   },
   read: {
     param: 'id',

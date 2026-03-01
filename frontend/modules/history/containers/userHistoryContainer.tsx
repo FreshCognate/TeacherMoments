@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import UserHistory from '../components/userHistory';
 import WithCache from '~/core/cache/containers/withCache';
+import triggerExport from '~/modules/analytics/helpers/triggerExport';
 import debounce from 'lodash/debounce';
 
 class UserHistoryContainer extends Component {
@@ -12,6 +13,10 @@ class UserHistoryContainer extends Component {
     historyResponses.setStatus('syncing');
     historyResponses.setQuery({ searchValue, currentPage: 1 });
     this.debounceFetch(historyResponses.fetch);
+  }
+
+  onExportClicked = () => {
+    triggerExport({ exportType: 'USER_HISTORY' });
   }
 
   onPaginationClicked = (direction: string) => {
@@ -45,6 +50,7 @@ class UserHistoryContainer extends Component {
         totalPages={totalPages}
         onSearchValueChange={this.onSearchValueChange}
         onPaginationClicked={this.onPaginationClicked}
+        onExportClicked={this.onExportClicked}
       />
     );
   }

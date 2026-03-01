@@ -1,11 +1,29 @@
 import createJob from '#core/queues/helpers/createJob.js';
+import hasUserGotPermissions from '#core/authentication/helpers/hasUserGotPermissions.js';
 import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
 import checkHasAccessToViewCohort from '../../cohorts/helpers/checkHasAccessToViewCohort.js';
+import includes from 'lodash/includes.js';
+
+const adminExportTypes = ['SCENARIO_RESPONSES', 'COHORT_SCENARIO', 'COHORT_USER', 'COHORT_ALL'];
 
 export default async (props, options, context) => {
 
-  const { exportType, scenarioId, cohortId, userId } = props;
+  const { exportType, scenarioId, cohortId } = props;
   const { models, user } = context;
+
+  if (includes(adminExportTypes, exportType)) {
+    if (!hasUserGotPermissions(user, ['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])) {
+      throw { message: 'You do not have permission to perform this export', statusCode: 403 };
+    }
+  }
+
+  let resolvedUserId;
+
+  if (exportType === 'USER_HISTORY') {
+    resolvedUserId = String(user._id);
+  } else {
+    resolvedUserId = props.userId;
+  }
 
   if (exportType === 'SCENARIO_RESPONSES' && !scenarioId) {
     throw { message: 'scenarioId is required for this export type', statusCode: 400 };
@@ -13,7 +31,7 @@ export default async (props, options, context) => {
   if (exportType === 'COHORT_SCENARIO' && (!cohortId || !scenarioId)) {
     throw { message: 'cohortId and scenarioId are required', statusCode: 400 };
   }
-  if (exportType === 'COHORT_USER' && (!cohortId || !userId)) {
+  if (exportType === 'COHORT_USER' && (!cohortId || !resolvedUserId)) {
     throw { message: 'cohortId and userId are required', statusCode: 400 };
   }
   if (exportType === 'COHORT_ALL' && !cohortId) {
@@ -32,7 +50,7 @@ export default async (props, options, context) => {
     exportType,
     scenarioId: scenarioId || undefined,
     cohortId: cohortId || undefined,
-    userId: userId || undefined,
+    userId: resolvedUserId || undefined,
     createdBy: user._id,
     status: { $in: ['PENDING', 'PROCESSING'] }
   }).lean();
@@ -45,7 +63,7 @@ export default async (props, options, context) => {
     exportType,
     scenarioId,
     cohortId,
-    userId,
+    userId: resolvedUserId,
     status: 'PENDING',
     createdBy: user._id
   });
@@ -58,7 +76,7 @@ export default async (props, options, context) => {
       exportType,
       scenarioId: scenarioId ? String(scenarioId) : undefined,
       cohortId: cohortId ? String(cohortId) : undefined,
-      userId: userId ? String(userId) : undefined
+      userId: resolvedUserId ? String(resolvedUserId) : undefined
     }
   });
 
