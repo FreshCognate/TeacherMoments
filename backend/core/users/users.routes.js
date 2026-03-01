@@ -31,6 +31,7 @@ export default [{
     body: {
       firstName: Joi.string(),
       lastName: Joi.string(),
+      email: Joi.string().email({ minDomainSegments: 2 }),
       role: Joi.string().allow('ADMIN', 'FACILITATOR', 'RESEARCHER', 'PARTICIPANT').default('user'),
       selectedLanguage: Joi.string().allow(...Object.keys(languages)),
       isDeleted: Joi.boolean().invalid(true),

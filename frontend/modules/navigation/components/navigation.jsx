@@ -79,6 +79,18 @@ const Navigation = ({
                   >
                     History
                   </NavLink>
+                  {(authentication.role === 'SUPER_ADMIN' || authentication.role === 'ADMIN') && (
+                    <NavLink
+                      to="/users"
+                      className={({ isActive }) =>
+                        classNames("text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 transition-colors", {
+                          "underline": isActive
+                        })
+                      }
+                    >
+                      Users
+                    </NavLink>
+                  )}
                 </>
               )}
             </nav>

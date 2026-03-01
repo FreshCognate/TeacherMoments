@@ -12,19 +12,19 @@ interface AnalyticsResponsesTableContainerProps {
   selectedResponse: UserResponse | null;
   selectedBlockResponseRef: string | null;
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
-  slides?: any;
-  blocks?: any;
+  analyticsSlides?: any;
+  analyticsBlocks?: any;
 }
 
 class AnalyticsResponsesTableContainer extends Component<AnalyticsResponsesTableContainerProps> {
 
   getBlockColumns = (): BlockColumn[] => {
-    const { slides, blocks } = this.props;
+    const { analyticsSlides, analyticsBlocks } = this.props;
 
-    if (!slides?.data?.length || !blocks?.data?.length) return [];
+    if (!analyticsSlides?.data?.length || !analyticsBlocks?.data?.length) return [];
 
-    const blockColumns: BlockColumn[] = map(blocks.data, (block: any) => {
-      const slide = find(slides.data, { _id: block.slideRef });
+    const blockColumns: BlockColumn[] = map(analyticsBlocks.data, (block: any) => {
+      const slide = find(analyticsSlides.data, { _id: block.slideRef });
       return {
         ref: block.ref,
         slideRef: block.slideRef,
@@ -57,7 +57,7 @@ class AnalyticsResponsesTableContainer extends Component<AnalyticsResponsesTable
 }
 
 export default WithCache(AnalyticsResponsesTableContainer, {
-  slides: {
+  analyticsSlides: {
     url: '/api/play/slides',
     getInitialData: () => ([]),
     transform: ({ data }: any) => data.slides,
@@ -66,7 +66,7 @@ export default WithCache(AnalyticsResponsesTableContainer, {
     lifeTime: 0,
     staleTime: 0
   },
-  blocks: {
+  analyticsBlocks: {
     url: '/api/play/blocks',
     getInitialData: () => ([]),
     transform: ({ data }: any) => data.blocks,
