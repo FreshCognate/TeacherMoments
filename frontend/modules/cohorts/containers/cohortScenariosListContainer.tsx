@@ -11,6 +11,7 @@ import each from 'lodash/each';
 import map from 'lodash/map';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import addModal from '~/core/dialogs/helpers/addModal';
+import triggerExport from '~/modules/analytics/helpers/triggerExport';
 
 interface CohortScenariosListContainerProps {
   cohortScenarios: any,
@@ -66,6 +67,10 @@ class CohortScenariosListContainer extends Component<CohortScenariosListContaine
     this.props.router.navigate(`/cohorts/${this.props.router.params.id}/scenarios/${scenarioId}`);
   }
 
+  onExportClicked = () => {
+    triggerExport({ exportType: 'COHORT_ALL', cohortId: this.props.router.params.id });
+  }
+
   onRemoveScenarioClicked = (scenarioId: string) => {
     const scenario = find(this.props.cohortScenarios.data, { _id: scenarioId });
     const scenarioName = scenario?.name || 'this scenario';
@@ -103,6 +108,7 @@ class CohortScenariosListContainer extends Component<CohortScenariosListContaine
         onDragEnd={this.onDragEnd}
         onRemoveScenarioClicked={this.onRemoveScenarioClicked}
         onViewResponsesClicked={this.onViewResponsesClicked}
+        onExportClicked={this.onExportClicked}
       />
     );
   }

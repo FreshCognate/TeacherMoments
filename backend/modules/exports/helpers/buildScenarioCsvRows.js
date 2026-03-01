@@ -65,7 +65,7 @@ export default async ({ scenarioId, users, models }) => {
 
     const valueRow = [displayName, 'Value'];
     for (const blockColumn of blockColumns) {
-      const blockResponse = find(response.blockResponses, { ref: blockColumn.ref });
+      const blockResponse = find(response.blockResponses, (blockResp) => String(blockResp.ref) === blockColumn.ref);
       valueRow.push(getBlockValue(blockResponse));
     }
     valueRow.push(formatTimeSpent(response.totalTimeSpentMs));
@@ -74,7 +74,7 @@ export default async ({ scenarioId, users, models }) => {
     const feedbackRow = ['', 'Feedback'];
     for (let i = 0; i < blockColumns.length; i++) {
       const blockColumn = blockColumns[i];
-      const stage = find(response.stages, { slideRef: blockColumn.slideRef });
+      const stage = find(response.stages, (stageItem) => String(stageItem.slideRef) === blockColumn.slideRef);
       const showOnThisColumn = isFirstBlockOfSlide(blockColumns, i);
       if (showOnThisColumn && stage?.feedbackItems?.length > 0) {
         feedbackRow.push(stage.feedbackItems.join('; '));
@@ -88,7 +88,7 @@ export default async ({ scenarioId, users, models }) => {
     const timeRow = ['', 'Time'];
     for (let i = 0; i < blockColumns.length; i++) {
       const blockColumn = blockColumns[i];
-      const stage = find(response.stages, { slideRef: blockColumn.slideRef });
+      const stage = find(response.stages, (stageItem) => String(stageItem.slideRef) === blockColumn.slideRef);
       const showOnThisColumn = isFirstBlockOfSlide(blockColumns, i);
       if (showOnThisColumn && stage?.timeSpentMs != null) {
         timeRow.push(formatTimeSpent(stage.timeSpentMs));

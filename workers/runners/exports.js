@@ -7,6 +7,7 @@ import '../../backend/modules/blocks/index.js';
 import '../../backend/modules/runs/index.js';
 import '../../backend/modules/assets/index.js';
 import generateScenarioExport from '../tasks/generateScenarioExport.js';
+import generateMultiScenarioExport from '../tasks/generateMultiScenarioExport.js';
 import getSockets from '../getSockets.js';
 
 export default async (job) => {
@@ -27,6 +28,10 @@ export default async (job) => {
 
         if (exportType === 'SCENARIO_RESPONSES' || exportType === 'COHORT_SCENARIO') {
           await generateScenarioExport(job.data);
+        }
+
+        if (exportType === 'COHORT_USER' || exportType === 'COHORT_ALL' || exportType === 'USER_HISTORY') {
+          await generateMultiScenarioExport(job.data);
         }
 
         sockets = await getSockets();
