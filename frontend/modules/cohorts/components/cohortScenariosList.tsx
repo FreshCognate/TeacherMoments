@@ -16,6 +16,7 @@ import CohortScenarioListItem from './cohortScenariosListItem';
 import map from 'lodash/map';
 import Title from '~/uikit/content/components/title';
 import Body from '~/uikit/content/components/body';
+import Button from '~/uikit/buttons/components/button';
 
 
 const CohortScenariosList = ({
@@ -23,19 +24,26 @@ const CohortScenariosList = ({
   isSyncing,
   onDragEnd,
   onRemoveScenarioClicked,
-  onViewResponsesClicked
+  onViewResponsesClicked,
+  onExportClicked
 }: {
   scenarios: Scenario[],
   isSyncing: boolean,
   onDragEnd: (event: DragEndEvent) => void,
   onRemoveScenarioClicked: (scenarioId: string) => void,
-  onViewResponsesClicked: (scenarioId: string) => void
+  onViewResponsesClicked: (scenarioId: string) => void,
+  onExportClicked: () => void
 }) => {
 
   const sensors = useSensors(useSensor(PointerSensor));
 
   return (
     <div className="flex gap-y-2 flex-col">
+      {scenarios?.length > 0 && (
+        <div className="flex justify-end">
+          <Button text="Export CSV" icon="download" onClick={onExportClicked} />
+        </div>
+      )}
       {(scenarios?.length === 0) && (
         <div className="text-center py-8 px-6 rounded-xl bg-lm-2 dark:bg-dm-2">
           <div className="max-w-md mx-auto">

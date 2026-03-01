@@ -4,7 +4,6 @@ import filter from 'lodash/filter';
 import each from 'lodash/each';
 import cloneDeep from 'lodash/cloneDeep';
 import getScenarioDetails from "./getScenarioDetails";
-import getIsSlideComplete from "./getIsSlideComplete";
 import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
 
 export default function getCurrentStage() {
@@ -60,12 +59,10 @@ export function createStageForSlide(slideRef) {
     blocksByRef[block.ref] = defaultBlockTracking;
   });
 
-  const isSlideComplete = getIsSlideComplete({ blocksByRef });
-
   return {
     slideRef,
     blocksByRef,
-    isComplete: isSlideComplete,
+    isComplete: false,
     startedAt: new Date()
   };
 }

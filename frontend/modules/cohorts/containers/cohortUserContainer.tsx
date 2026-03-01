@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import AnalyticsContainer from '~/modules/analytics/containers/analyticsContainer';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
+import triggerExport from '~/modules/analytics/helpers/triggerExport';
 import debounce from 'lodash/debounce';
 
 class CohortUserContainer extends Component {
@@ -13,6 +14,12 @@ class CohortUserContainer extends Component {
     cohortUserResponses.setStatus('syncing');
     cohortUserResponses.setQuery({ searchValue, currentPage: 1 });
     this.debounceFetch(cohortUserResponses.fetch);
+  }
+
+  onExportClicked = () => {
+    const { router } = this.props as any;
+    const { id, userId } = router.params;
+    triggerExport({ exportType: 'COHORT_USER', cohortId: id, userId });
   }
 
   onPaginationClicked = (direction: string) => {
@@ -47,6 +54,7 @@ class CohortUserContainer extends Component {
         totalPages={totalPages}
         onSearchValueChange={this.onSearchValueChange}
         onPaginationClicked={this.onPaginationClicked}
+        onExportClicked={this.onExportClicked}
       />
     );
   }

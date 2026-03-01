@@ -71,6 +71,7 @@ export default [{
         slideRef: Joi.string(),
         startedAt: Joi.date(),
         completedAt: Joi.date(),
+        timeSpentMs: Joi.number(),
         feedbackItems: Joi.array(),
         shouldStopNavigation: Joi.boolean(),
         triggersByRef: Joi.object(),

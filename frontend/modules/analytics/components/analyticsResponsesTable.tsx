@@ -41,7 +41,7 @@ const getStageForBlock = (stages: StageResponse[] | undefined, blockColumn: Bloc
 
 const usernameHeaderClass = 'sticky left-0 z-20 bg-lm-2 dark:bg-dm-3 px-4 py-2 text-left text-sm font-bold text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2';
 const labelHeaderClass = 'sticky left-40 z-10 bg-lm-2 dark:bg-dm-3 px-4 py-2 text-left text-sm font-bold text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2';
-const usernameCellClass = 'sticky left-0 z-20 bg-lm-2 dark:bg-dm-3 px-4 py-3 text-sm font-medium text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2';
+const usernameCellClass = 'sticky left-0 z-20 bg-lm-2 dark:bg-dm-3 px-4 py-3 text-sm font-medium text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2 break-words';
 const subRowLabelClass = 'sticky left-40 z-10 bg-lm-1 dark:bg-dm-2 px-4 py-2 text-xs text-black/40 dark:text-white/40 border-r border-b border-lm-3 dark:border-dm-2';
 const subRowCellClass = 'px-4 py-2 text-xs text-black/40 dark:text-white/40 border-r border-b border-lm-3 dark:border-dm-2';
 

@@ -16,6 +16,7 @@ interface AnalyticsContainerProps {
   totalPages?: number;
   onSearchValueChange?: (searchValue: string) => void;
   onPaginationClicked?: (direction: string) => void;
+  onExportClicked?: () => void;
 }
 
 interface AnalyticsContainerState {
@@ -150,7 +151,8 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
       currentPage,
       totalPages,
       onSearchValueChange,
-      onPaginationClicked
+      onPaginationClicked,
+      onExportClicked
     } = this.props;
 
     const { selectedResponse, selectedBlockResponseRef } = this.state;
@@ -173,6 +175,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         isUserDownDisabled={isUserDownDisabled}
         onSearchValueChange={onSearchValueChange}
         onPaginationClicked={onPaginationClicked}
+        onExportClicked={onExportClicked}
         onResponseClicked={this.onResponseClicked}
         onSlideNavigated={this.onSlideNavigated}
         onUserNavigated={this.onUserNavigated}
