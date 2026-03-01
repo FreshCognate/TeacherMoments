@@ -15,6 +15,14 @@ export default async (props, options, context) => {
     }
   }
 
+  if (updateObject.email) {
+    updateObject.email = updateObject.email.toLowerCase();
+    const existingUser = await models.User.findOne({ email: updateObject.email, _id: { $ne: userId } });
+    if (existingUser) {
+      throw { message: 'A user with this email already exists.', statusCode: 400 };
+    }
+  }
+
   updateObject.updatedAt = new Date();
   updateObject.updatedBy = update.userId;
 
