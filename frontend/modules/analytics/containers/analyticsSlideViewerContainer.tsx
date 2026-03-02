@@ -114,6 +114,7 @@ class AnalyticsSlideViewerContainer extends Component<AnalyticsSlideViewerContai
       <AnalyticsSlideViewer
         activeSlide={activeSlide}
         activeBlocks={activeBlocks}
+        allBlocks={this.props.previewBlocks?.data || []}
         blockTrackingByRef={blockTrackingByRef}
         feedbackItems={feedbackItems}
         selectedBlockResponseRef={this.props.selectedBlockResponseRef}

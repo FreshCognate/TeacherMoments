@@ -93,7 +93,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
           />
         )}
         {!isLoading && responses.length > 0 && viewType === 'byScenarioUsers' && scenarioId && (
-          <AnalyticsResponsesTableContainer scenarioId={scenarioId} responses={responses} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />
+          <AnalyticsResponsesTableContainer responses={responses} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />
         )}
         {!isLoading && responses.length > 0 && viewType === 'byUserScenarios' && (
           <AnalyticsResponses viewType={viewType} responses={responses} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />

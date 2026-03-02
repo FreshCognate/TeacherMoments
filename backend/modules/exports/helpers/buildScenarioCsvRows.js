@@ -2,9 +2,8 @@ import getScenarioSlidesAndBlocksByRef from '../../responses/helpers/getScenario
 import buildUserScenarioResponse from '../../responses/helpers/buildUserScenarioResponse.js';
 import getUserDisplayName from '#core/users/helpers/getUserDisplayName.js';
 import formatTimeSpent from '../../scenarios/helpers/formatTimeSpent.js';
-import sortBy from 'lodash/sortBy.js';
 import find from 'lodash/find.js';
-import map from 'lodash/map.js';
+import each from 'lodash/each.js';
 
 const getBlockValue = (blockResponse) => {
   if (!blockResponse) return '';
@@ -20,8 +19,8 @@ const getBlockValue = (blockResponse) => {
   return '';
 };
 
-const isFirstBlockOfSlide = (blockColumns, index) => {
-  return index === 0 || blockColumns[index].slideRef !== blockColumns[index - 1].slideRef;
+const isFirstBlockOfSlide = (blockResponses, index) => {
+  return index === 0 || blockResponses[index].slideRef !== blockResponses[index - 1].slideRef;
 };
 
 export default async ({ scenarioId, users, models }) => {
@@ -29,73 +28,59 @@ export default async ({ scenarioId, users, models }) => {
   const context = { models };
   const { slidesByRef, blocksByRef } = await getScenarioSlidesAndBlocksByRef({ scenarioId }, context);
 
-  const blockColumns = sortBy(
-    map(Object.values(blocksByRef), (block) => {
-      const slide = slidesByRef[String(block.slideRef)] || {};
-      return {
-        ref: String(block.ref),
-        slideRef: String(block.slideRef),
-        slideName: slide.name,
-        slideSortOrder: slide.sortOrder ?? 0,
-        name: block.name,
-        blockType: block.blockType,
-        inputType: block.inputType,
-        sortOrder: block.sortOrder
-      };
-    }),
-    ['slideSortOrder', 'sortOrder']
-  );
-
   const rows = [];
-
-  const headerRow = ['Username', 'Row Type'];
-  for (const blockColumn of blockColumns) {
-    const prefix = blockColumn.slideName ? `${blockColumn.slideName} - ` : '';
-    headerRow.push(prefix + (blockColumn.name || blockColumn.ref || `Block ${blockColumn.sortOrder + 1}`));
-  }
-  headerRow.push('Total Time');
-  rows.push(headerRow);
+  let headerBuilt = false;
 
   for (const user of users) {
     const response = await buildUserScenarioResponse(
       { userId: user._id, scenarioId, slidesByRef, blocksByRef }, context
     );
 
+    const { blockResponses = [] } = response;
+
+    if (!headerBuilt) {
+      const headerRow = ['Username', 'Row Type'];
+      each(blockResponses, (blockResponse) => {
+        const prefix = blockResponse.slideName ? `${blockResponse.slideName} - ` : '';
+        headerRow.push(prefix + (blockResponse.name || blockResponse.ref || `Block ${blockResponse.sortOrder + 1}`));
+      });
+      headerRow.push('Total Time');
+      rows.push(headerRow);
+      headerBuilt = true;
+    }
+
     const displayName = getUserDisplayName(user);
 
     const valueRow = [displayName, 'Value'];
-    for (const blockColumn of blockColumns) {
-      const blockResponse = find(response.blockResponses, (blockResp) => String(blockResp.ref) === blockColumn.ref);
+    each(blockResponses, (blockResponse) => {
       valueRow.push(getBlockValue(blockResponse));
-    }
+    });
     valueRow.push(formatTimeSpent(response.totalTimeSpentMs));
     rows.push(valueRow);
 
     const feedbackRow = ['', 'Feedback'];
-    for (let i = 0; i < blockColumns.length; i++) {
-      const blockColumn = blockColumns[i];
-      const stage = find(response.stages, (stageItem) => String(stageItem.slideRef) === blockColumn.slideRef);
-      const showOnThisColumn = isFirstBlockOfSlide(blockColumns, i);
+    each(blockResponses, (blockResponse, index) => {
+      const stage = find(response.stages, (stageItem) => String(stageItem.slideRef) === String(blockResponse.slideRef));
+      const showOnThisColumn = isFirstBlockOfSlide(blockResponses, index);
       if (showOnThisColumn && stage?.feedbackItems?.length > 0) {
         feedbackRow.push(stage.feedbackItems.join('; '));
       } else {
         feedbackRow.push('');
       }
-    }
+    });
     feedbackRow.push('');
     rows.push(feedbackRow);
 
     const timeRow = ['', 'Time'];
-    for (let i = 0; i < blockColumns.length; i++) {
-      const blockColumn = blockColumns[i];
-      const stage = find(response.stages, (stageItem) => String(stageItem.slideRef) === blockColumn.slideRef);
-      const showOnThisColumn = isFirstBlockOfSlide(blockColumns, i);
+    each(blockResponses, (blockResponse, index) => {
+      const stage = find(response.stages, (stageItem) => String(stageItem.slideRef) === String(blockResponse.slideRef));
+      const showOnThisColumn = isFirstBlockOfSlide(blockResponses, index);
       if (showOnThisColumn && stage?.timeSpentMs != null) {
         timeRow.push(formatTimeSpent(stage.timeSpentMs));
       } else {
         timeRow.push('');
       }
-    }
+    });
     timeRow.push('');
     rows.push(timeRow);
   }

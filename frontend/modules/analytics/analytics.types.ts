@@ -7,6 +7,7 @@ export interface BlockResponse {
   mediaType?: string;
   suggestionType?: string;
   slideName?: string;
+  slideSortOrder: number;
   sortOrder: number;
   selectedOptions?: string[];
   textValue?: string;
