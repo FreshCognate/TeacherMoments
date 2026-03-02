@@ -18,8 +18,8 @@ class ResponseBlockPlayerContainer extends Component {
       error = "In order to use the Response Prompt, make sure to select an Input or Multiple Choice Prompt for this block.";
     } else {
 
-      const blocks = getCache('blocks');
-      block = find(blocks.data, { ref: this.props.block.responseRef });
+      const blocksData = this.props.allBlocks || getCache('blocks')?.data || [];
+      block = find(blocksData, { ref: this.props.block.responseRef });
       const slideStage = findSlideStage({ slideRef: block.slideRef });
 
       if (slideStage) {

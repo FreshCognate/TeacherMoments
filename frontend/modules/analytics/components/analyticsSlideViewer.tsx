@@ -8,6 +8,7 @@ import Pagination from '~/uikit/pagination/components/pagination';
 interface AnalyticsSlideViewerProps {
   activeSlide: any;
   activeBlocks: any[];
+  allBlocks: any[];
   blockTrackingByRef: Record<string, any>;
   feedbackItems: string[];
   selectedBlockResponseRef: string | null;
@@ -20,6 +21,7 @@ interface AnalyticsSlideViewerProps {
 const AnalyticsSlideViewer: React.FC<AnalyticsSlideViewerProps> = ({
   activeSlide,
   activeBlocks,
+  allBlocks,
   blockTrackingByRef,
   feedbackItems,
   selectedBlockResponseRef,
@@ -56,6 +58,7 @@ const AnalyticsSlideViewer: React.FC<AnalyticsSlideViewerProps> = ({
           >
             <Block
               block={block}
+              allBlocks={allBlocks}
               blockTracking={blockTracking}
               isResponseBlock={true}
               onUpdateBlockTracking={noop}

@@ -278,6 +278,7 @@ No automated test suite is currently configured. Manual testing is required.
 
 ## Notes for AI Agents
 
+- **IMPORTANT**: This is a Yarn workspaces monorepo with separate `package.json` files for `frontend/`, `backend/`, and `workers/`. When adding dependencies, install them in the correct workspace using `yarn workspace <name> add <package>` (e.g., `yarn workspace workers add archiver`). Do not install workspace-specific dependencies at the root level.
 - Always validate inputs with Joi schemas on backend routes
 - Use the existing module patterns when adding new features
 - Check `hasPermissions()` for proper authorization

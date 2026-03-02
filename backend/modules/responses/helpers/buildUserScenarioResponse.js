@@ -1,6 +1,7 @@
 import populateRun from '../../runs/helpers/populateRun.js';
 import find from 'lodash/find.js';
 import map from 'lodash/map.js';
+import sortBy from 'lodash/sortBy.js';
 
 export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context) => {
 
@@ -20,6 +21,8 @@ export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context)
     stages: []
   };
 
+  let trackingByRef = {};
+
   if (userRun) {
     userRun = await populateRun({ run: userRun }, context);
     currentRun.hasStarted = true;
@@ -30,37 +33,43 @@ export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context)
       timeSpentMs: stage.timeSpentMs,
       feedbackItems: stage.feedbackItems || []
     }));
-    currentRun.blockResponses = [];
     if (userRun.stages && userRun.stages.length > 0) {
       for (const stage of userRun.stages) {
         for (const blockByRefKey of Object.keys(stage.blocksByRef)) {
-          let blockResponse = {};
-
-          const block = blocksByRef[blockByRefKey];
-          const blockTracking = stage.blocksByRef[blockByRefKey];
-          const blockSlide = slidesByRef[String(block.slideRef)] || {};
-
-          blockResponse.ref = block.ref;
-          blockResponse.slideRef = block.slideRef;
-          blockResponse.slideName = blockSlide.name;
-          blockResponse.name = block.name;
-
-          blockResponse.sortOrder = block.sortOrder;
-          blockResponse.blockType = block.blockType;
-          blockResponse.inputType = block.inputType;
-          blockResponse.mediaType = block.mediaType;
-          blockResponse.suggestionType = block.suggestionType;
-
-          blockResponse.selectedOptions = blockTracking.selectedOptions;
-          blockResponse.textValue = blockTracking.textValue;
-          blockResponse.audio = blockTracking.audio;
-
-          currentRun.blockResponses.push(blockResponse);
-
+          trackingByRef[blockByRefKey] = stage.blocksByRef[blockByRefKey];
         }
       }
     }
   }
+
+  currentRun.blockResponses = sortBy(
+    map(Object.values(blocksByRef), (block) => {
+      const blockSlide = slidesByRef[String(block.slideRef)] || {};
+      const blockTracking = trackingByRef[String(block.ref)];
+
+      const blockResponse = {
+        ref: block.ref,
+        slideRef: block.slideRef,
+        slideName: blockSlide.name,
+        slideSortOrder: blockSlide.sortOrder ?? 0,
+        name: block.name,
+        sortOrder: block.sortOrder,
+        blockType: block.blockType,
+        inputType: block.inputType,
+        mediaType: block.mediaType,
+        suggestionType: block.suggestionType
+      };
+
+      if (blockTracking) {
+        blockResponse.selectedOptions = blockTracking.selectedOptions;
+        blockResponse.textValue = blockTracking.textValue;
+        blockResponse.audio = blockTracking.audio;
+      }
+
+      return blockResponse;
+    }),
+    ['slideSortOrder', 'sortOrder']
+  );
 
   return currentRun;
 
