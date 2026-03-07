@@ -3,6 +3,8 @@ import findIndex from 'lodash/findIndex';
 import Analytics from '../components/analytics';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import addModal from '~/core/dialogs/helpers/addModal';
+import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
+import AnalyticsBlockResponsesSummaryContainer from './analyticsBlockResponsesSummaryContainer';
 import { AnalyticsViewType, BlockColumn, UserResponse } from '../analytics.types';
 
 interface AnalyticsContainerProps {
@@ -142,6 +144,8 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
   }
 
   onSummarizeColumn = (blockColumn: BlockColumn) => {
+    const { responses = [] } = this.props;
+
     addModal({
       title: 'Summarize responses',
       body: 'This will generate a summary of responses in this column.',
@@ -151,7 +155,12 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
       ]
     }, (state: string, { type }: any) => {
       if (state === 'ACTION' && type === 'CONTINUE') {
-        // Future: trigger summary generation
+        addSidePanel({
+          size: 'lg',
+          icon: 'ai',
+          title: 'Prompt summary of responses',
+          component: <AnalyticsBlockResponsesSummaryContainer blockColumn={blockColumn} responses={responses} />
+        });
       }
     });
   }
