@@ -19,5 +19,16 @@ export default {
     help: 'Used whilst editing'
   },
   ...title,
-  ...description
+  ...description,
+  accessType: {
+    type: 'Toggle',
+    label: 'Access type',
+    options: [{
+      value: 'PRIVATE',
+      text: 'Private'
+    }, {
+      value: 'PUBLIC',
+      text: 'Public'
+    }]
+  }
 }
