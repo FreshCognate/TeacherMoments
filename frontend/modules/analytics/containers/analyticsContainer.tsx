@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import findIndex from 'lodash/findIndex';
 import Analytics from '../components/analytics';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
-import { AnalyticsViewType, UserResponse } from '../analytics.types';
+import addModal from '~/core/dialogs/helpers/addModal';
+import { AnalyticsViewType, BlockColumn, UserResponse } from '../analytics.types';
 
 interface AnalyticsContainerProps {
   viewType?: AnalyticsViewType;
@@ -140,6 +141,21 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     this.setState({ selectedResponse: null, selectedBlockResponseRef: null });
   }
 
+  onSummarizeColumn = (blockColumn: BlockColumn) => {
+    addModal({
+      title: 'Summarize responses',
+      body: 'This will generate a summary of responses in this column.',
+      actions: [
+        { type: 'CANCEL', text: 'Cancel' },
+        { type: 'CONTINUE', text: 'Continue', color: 'primary' }
+      ]
+    }, (state: string, { type }: any) => {
+      if (state === 'ACTION' && type === 'CONTINUE') {
+        // Future: trigger summary generation
+      }
+    });
+  }
+
   render() {
     const {
       viewType = 'byScenarioUsers',
@@ -180,6 +196,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         onSlideNavigated={this.onSlideNavigated}
         onUserNavigated={this.onUserNavigated}
         onSidePanelClose={this.onSidePanelClose}
+        onSummarizeColumn={this.onSummarizeColumn}
       />
     );
   }
