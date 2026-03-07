@@ -97,15 +97,6 @@ class CohortsContainer extends Component<CohortsContainerProps> {
     cohorts.fetch();
   }
 
-  onDuplicateCohortClicked = (cohortId: string) => {
-    const { cohorts } = this.props;
-    cohorts.setStatus('syncing');
-    axios.post(`/api/cohorts`, { cohortId }).then((response) => {
-      const newCohortId = response.data.cohort._id;
-      this.props.router.navigate(`/cohorts/${newCohortId}/overview`);
-    }).catch(handleRequestError);
-  }
-
   render() {
 
     const { query, status, data } = this.props.cohorts;
@@ -136,7 +127,6 @@ class CohortsContainer extends Component<CohortsContainerProps> {
         onFiltersChanged={this.onFiltersChanged}
         onPaginationClicked={this.onPaginationClicked}
         onSortByChanged={this.onSortByChanged}
-        onDuplicateCohortClicked={this.onDuplicateCohortClicked}
       />
     );
   }

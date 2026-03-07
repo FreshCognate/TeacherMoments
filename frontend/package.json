@@ -18,6 +18,7 @@
     "@react-router/serve": "*",
     "axios": "^1.7.9",
     "classnames": "^2.5.1",
+    "dayjs": "^1.11.19",
     "debounce-promise": "^3.1.2",
     "dotenv": "^16.4.7",
     "fluent-ffmpeg": "^2.1.3",
