@@ -2,13 +2,15 @@ import React from 'react';
 import { Link } from 'react-router';
 import { ActionBarProps } from '~/uikit/actionBars/actionBars.types';
 import ActionBar from '~/uikit/actionBars/components/actionBar';
-import FlatButton from '~/uikit/buttons/components/flatButton';
 import Card from '~/uikit/cards/components/card';
-import CardActions from '~/uikit/cards/components/cardActions';
 import CardContent from '~/uikit/cards/components/cardContent';
 import Title from '~/uikit/content/components/title';
+import Body from '~/uikit/content/components/body';
+import getString from '~/modules/ls/helpers/getString';
 import map from 'lodash/map';
+import size from 'lodash/size';
 import truncate from 'lodash/truncate';
+import getDateString from '~/core/app/helpers/getDateString';
 import { Cohort } from '../cohorts.types';
 import canUserEditCohort from '~/modules/authentication/helpers/canUserEditCohort';
 import Instructions from '~/uikit/alerts/components/instructions';
@@ -32,11 +34,9 @@ const Cohorts = ({
   onPaginationClicked,
   onSortByChanged,
   onActionClicked,
-  onDuplicateCohortClicked
 }: ActionBarProps & {
   cohorts: Cohort[],
-  isEditor: boolean,
-  onDuplicateCohortClicked: (cohortId: string) => void
+  isEditor: boolean
 }) => {
   return (
     <div className="p-4">
@@ -97,32 +97,27 @@ const Cohorts = ({
           {map(cohorts, (cohort: Cohort) => {
             const isCohortEditor = canUserEditCohort(cohort);
             return (
-              <Card key={cohort._id}>
-                <CardContent>
-                  <Title title={truncate(cohort.name, { length: 60 })} />
-                </CardContent>
-                {(isCohortEditor) && (
-                  <CardActions>
-                    <Link to={`/cohorts/${cohort._id}/overview`}>
-                      <FlatButton
-                        icon="edit"
-                        text="Edit"
-                      />
-                    </Link>
-                    <FlatButton icon="copy" text="Copy" onClick={() => onDuplicateCohortClicked(cohort._id)} />
-                  </CardActions>
-                )}
-                {(!isCohortEditor) && (
-                  <CardActions>
-                    <Link to={`/cohorts/${cohort._id}/overview`}>
-                      <FlatButton
-                        icon="view"
-                        text="View"
-                      />
-                    </Link>
-                  </CardActions>
-                )}
-              </Card>
+              <Link to={`/cohorts/${cohort._id}/overview`} className="h-full">
+                <Card key={cohort._id}>
+                  <CardContent>
+                    <Title title={truncate(cohort.name, { length: 60 })} />
+                    <Body body={getString({ model: cohort, field: 'description' })} />
+                    {isCohortEditor && (
+                      <div className="flex flex-col gap-1 mt-2 text-xs text-gray-500">
+                        {cohort.createdAt && (
+                          <span>Created {getDateString(cohort.createdAt)}</span>
+                        )}
+                        {cohort.updatedAt && (
+                          <span>Last edited {getDateString(cohort.updatedAt)}</span>
+                        )}
+                        {cohort.collaborators && (
+                          <span>{size(cohort.collaborators)} {size(cohort.collaborators) === 1 ? 'collaborator' : 'collaborators'}</span>
+                        )}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </Link>
             );
           })}
         </div>

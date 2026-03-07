@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Scenarios from '../components/scenarios';
-import axios from 'axios';
 import WithCache from '~/core/cache/containers/withCache';
-import handleRequestError from '~/core/app/helpers/handleRequestError';
 import get from 'lodash/get';
 import debounce from 'lodash/debounce';
 import WithRouter from '~/core/app/components/withRouter';
@@ -61,15 +59,6 @@ class ScenariosContainer extends Component {
     scenarios.fetch();
   }
 
-  onDuplicateScenarioClicked = (scenarioId) => {
-    const { scenarios } = this.props;
-    scenarios.setStatus('syncing');
-    axios.post(`/api/scenarios`, { scenarioId }).then((response) => {
-      const newScenarioId = response.data.scenario._id;
-      this.props.router.navigate(`/scenarios/${newScenarioId}/create`);
-    }).catch(handleRequestError);
-  }
-
   render() {
 
     const { query, status, data } = this.props.scenarios;
@@ -100,7 +89,6 @@ class ScenariosContainer extends Component {
         onCreateScenarioClicked={this.onCreateScenarioClicked}
         onFiltersChanged={this.onFiltersChanged}
         onSortByChanged={this.onSortByChanged}
-        onDuplicateScenarioClicked={this.onDuplicateScenarioClicked}
         onActionClicked={this.onActionClicked}
       />
     );

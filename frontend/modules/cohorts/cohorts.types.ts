@@ -6,8 +6,11 @@ interface Collaborator {
 export interface Cohort {
   _id: string,
   name: string,
+  description: object,
   invites: Invite[],
   collaborators?: Collaborator[];
+  createdAt?: string,
+  updatedAt?: string,
 }
 
 export interface Invite {

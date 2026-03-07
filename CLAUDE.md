@@ -88,6 +88,7 @@ yarn workers:start   # Production workers
 - Prefer lodash utilities (e.g., `each`, `map`, `filter`) over native array methods unless there are performance implications such as async operations
 - Use descriptive, full variable names — no abbreviations (e.g., `blockResponse` not `br`, `selectedOption` not `so`)
 - Use `classnames` library for conditional CSS classes instead of template literal string concatenation
+- Always use `dayjs` for date formatting and manipulation — never use `new Date().toLocaleDateString()` or other native date methods
 
 ### Backend Module Structure
 
