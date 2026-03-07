@@ -10,6 +10,26 @@ import axios from 'axios';
 class ScenarioSettingsContainer extends Component {
 
   onUpdateScenario = ({ update }) => {
+    if (update.accessType === 'PUBLIC') {
+      return addModal({
+        title: 'Make scenario public',
+        body: 'Are you sure? This will enable anyone logged in to take your scenario.',
+        actions: [{
+          type: 'CANCEL',
+          text: 'Cancel'
+        }, {
+          type: 'CONFIRM',
+          text: 'Confirm',
+          color: 'primary'
+        }]
+      }, (state, { type }) => {
+        if (state === 'ACTION') {
+          if (type === 'CONFIRM') {
+            this.props.scenario.mutate(update, { method: 'put' });
+          }
+        }
+      });
+    }
     return this.props.scenario.mutate(update, { method: 'put' });
   }
 
