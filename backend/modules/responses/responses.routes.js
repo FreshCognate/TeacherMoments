@@ -2,9 +2,21 @@ import Joi from 'joi';
 import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
 import controller from './responses.controller.js';
 import historyController from './history.controller.js';
+import summaryController from './summary.controller.js';
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 
 export default [{
+  route: '/responses/summary',
+  controller: summaryController,
+  all: {
+    query: {
+      cohortId: Joi.string().required(),
+      scenarioId: Joi.string().required(),
+      blockRef: Joi.string().required()
+    },
+    middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])]
+  }
+}, {
   route: '/responses',
   controller: controller,
   all: {
