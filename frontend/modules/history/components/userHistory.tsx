@@ -27,7 +27,7 @@ const UserHistory = ({
   onExportClicked
 }: UserHistoryProps) => {
   return (
-    <div className="pt-20">
+    <div className="pt-20 px-4">
       <AnalyticsContainer
         viewType="byUserScenarios"
         user={user}
