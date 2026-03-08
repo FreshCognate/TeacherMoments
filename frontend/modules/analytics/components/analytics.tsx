@@ -29,6 +29,7 @@ interface AnalyticsProps {
   onExportClicked?: () => void;
   onSidePanelClose: () => void;
   onSummarizeColumn: (blockColumn: BlockColumn) => void;
+  onSummarizeScenario: () => void;
 }
 
 const Analytics: React.FC<AnalyticsProps> = ({
@@ -52,7 +53,8 @@ const Analytics: React.FC<AnalyticsProps> = ({
   onUserNavigated,
   onExportClicked,
   onSidePanelClose,
-  onSummarizeColumn
+  onSummarizeColumn,
+  onSummarizeScenario
 }) => {
   return (
     <div className="flex">
@@ -95,14 +97,36 @@ const Analytics: React.FC<AnalyticsProps> = ({
           />
         )}
         {!isLoading && responses.length > 0 && viewType === 'byScenarioUsers' && scenarioId && (
-          <AnalyticsResponsesTableContainer responses={responses} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} onSummarizeColumn={onSummarizeColumn} />
+          <AnalyticsResponsesTableContainer
+            responses={responses}
+            selectedResponse={selectedResponse}
+            selectedBlockResponseRef={selectedBlockResponseRef}
+            onResponseClicked={onResponseClicked}
+            onSummarizeColumn={onSummarizeColumn}
+            onSummarizeScenario={onSummarizeScenario}
+          />
         )}
         {!isLoading && responses.length > 0 && viewType === 'byUserScenarios' && (
-          <AnalyticsResponses viewType={viewType} responses={responses} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />
+          <AnalyticsResponses
+            viewType={viewType}
+            responses={responses}
+            selectedResponse={selectedResponse}
+            selectedBlockResponseRef={selectedBlockResponseRef}
+            onResponseClicked={onResponseClicked}
+          />
         )}
       </div>
       <div className="w-[480px] shrink-0 ml-4 sticky top-32 self-start">
-        <AnalyticsSidePanel viewType={viewType} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} isUserUpDisabled={isUserUpDisabled} isUserDownDisabled={isUserDownDisabled} onSlideNavigated={onSlideNavigated} onUserNavigated={onUserNavigated} onClose={onSidePanelClose} />
+        <AnalyticsSidePanel
+          viewType={viewType}
+          selectedResponse={selectedResponse}
+          selectedBlockResponseRef={selectedBlockResponseRef}
+          isUserUpDisabled={isUserUpDisabled}
+          isUserDownDisabled={isUserDownDisabled}
+          onSlideNavigated={onSlideNavigated}
+          onUserNavigated={onUserNavigated}
+          onClose={onSidePanelClose}
+        />
       </div>
     </div>
   );

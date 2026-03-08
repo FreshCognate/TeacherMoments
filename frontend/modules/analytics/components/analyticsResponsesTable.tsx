@@ -18,6 +18,7 @@ interface AnalyticsResponsesTableProps {
   selectedBlockResponseRef: string | null;
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
   onSummarizeColumn: (blockColumn: BlockColumn) => void;
+  onSummarizeScenario: () => void;
 }
 
 const renderBlockAnswer = (blockResponse: BlockResponse | undefined) => {
@@ -55,7 +56,8 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
   selectedResponse,
   selectedBlockResponseRef,
   onResponseClicked,
-  onSummarizeColumn
+  onSummarizeColumn,
+  onSummarizeScenario
 }) => {
   if (blockColumns.length === 0) {
     return (
@@ -74,7 +76,9 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
             gridTemplateColumns: `10rem 7rem repeat(${blockColumns.length}, minmax(18rem, 1fr))`
           }}
         >
-          <div className={usernameHeaderClass} />
+          <div className={classnames(usernameHeaderClass, 'flex items-center justify-center')}>
+            <FlatButton icon="ai" size="sm" ariaLabel="Summarize scenario" onClick={onSummarizeScenario} />
+          </div>
           <div className={labelHeaderClass}>
             Block ID
           </div>

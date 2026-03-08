@@ -6,6 +6,7 @@ import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import addModal from '~/core/dialogs/helpers/addModal';
 import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
 import AnalyticsBlockResponsesSummaryContainer from './analyticsBlockResponsesSummaryContainer';
+import AnalyticsScenarioResponsesSummaryContainer from './analyticsScenarioResponsesSummaryContainer';
 import { AnalyticsViewType, BlockColumn, UserResponse } from '../analytics.types';
 
 interface AnalyticsContainerProps {
@@ -152,6 +153,39 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     }).length;
   }
 
+  onSummarizeScenario = () => {
+    const { responses = [] } = this.props;
+
+    if (responses.length < 2) {
+      addModal({
+        title: 'Not enough responses',
+        body: 'There must be at least 2 responses to generate a summary.',
+        actions: [
+          { type: 'CANCEL', text: 'OK' }
+        ]
+      }, () => {});
+      return;
+    }
+
+    addModal({
+      title: 'Summarize scenario',
+      body: 'This will generate a summary of all responses across the entire scenario.',
+      actions: [
+        { type: 'CANCEL', text: 'Cancel' },
+        { type: 'CONTINUE', text: 'Continue', color: 'primary' }
+      ]
+    }, (state: string, { type }: any) => {
+      if (state === 'ACTION' && type === 'CONTINUE') {
+        addSidePanel({
+          size: 'lg',
+          icon: 'ai',
+          title: 'Scenario summary',
+          component: <AnalyticsScenarioResponsesSummaryContainer />
+        });
+      }
+    });
+  }
+
   onSummarizeColumn = (blockColumn: BlockColumn) => {
     const { responses = [] } = this.props;
 
@@ -228,6 +262,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         onUserNavigated={this.onUserNavigated}
         onSidePanelClose={this.onSidePanelClose}
         onSummarizeColumn={this.onSummarizeColumn}
+        onSummarizeScenario={this.onSummarizeScenario}
       />
     );
   }
