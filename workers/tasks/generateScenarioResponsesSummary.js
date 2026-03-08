@@ -8,6 +8,8 @@ import each from 'lodash/each.js';
 import filter from 'lodash/filter.js';
 import sortBy from 'lodash/sortBy.js';
 import values from 'lodash/values.js';
+import uniqBy from 'lodash/uniqBy.js';
+import map from 'lodash/map.js';
 
 const PROMPT_BLOCK_TYPES = ['INPUT_PROMPT', 'MULTIPLE_CHOICE_PROMPT'];
 
@@ -30,15 +32,23 @@ export default async ({ cohortId, scenarioId }) => {
     throw new Error('No prompt blocks found in this scenario');
   }
 
-  const users = await models.User.find({ 'cohorts.cohort': cohortId }).lean();
+  let userIds;
+
+  if (cohortId) {
+    const users = await models.User.find({ 'cohorts.cohort': cohortId }).lean();
+    userIds = map(users, '_id');
+  } else {
+    const runs = await models.Run.find({ scenario: scenarioId, isDeleted: false }).lean();
+    userIds = map(uniqBy(runs, 'user'), 'user');
+  }
 
   const blockResponsesMap = {};
   each(promptBlocks, (block) => {
     blockResponsesMap[String(block.ref)] = [];
   });
 
-  for (const user of users) {
-    const { blockResponses, stages } = await buildUserScenarioResponse({ userId: user._id, scenarioId, slidesByRef, blocksByRef }, context);
+  for (const userId of userIds) {
+    const { blockResponses, stages } = await buildUserScenarioResponse({ userId, scenarioId, slidesByRef, blocksByRef }, context);
 
     each(promptBlocks, (block) => {
       const blockRef = String(block.ref);

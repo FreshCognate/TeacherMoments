@@ -4,6 +4,8 @@ import getScenarioSlidesAndBlocksByRef from '../../backend/modules/responses/hel
 import buildUserScenarioResponse from '../../backend/modules/responses/helpers/buildUserScenarioResponse.js';
 import find from 'lodash/find.js';
 import each from 'lodash/each.js';
+import uniqBy from 'lodash/uniqBy.js';
+import map from 'lodash/map.js';
 import getBlockText from '../helpers/getBlockText.js';
 
 export default async ({ cohortId, scenarioId, blockRef }) => {
@@ -19,12 +21,20 @@ export default async ({ cohortId, scenarioId, blockRef }) => {
     throw new Error('Block not found');
   }
 
-  const users = await models.User.find({ 'cohorts.cohort': cohortId }).lean();
+  let userIds;
+
+  if (cohortId) {
+    const users = await models.User.find({ 'cohorts.cohort': cohortId }).lean();
+    userIds = map(users, '_id');
+  } else {
+    const runs = await models.Run.find({ scenario: scenarioId, isDeleted: false }).lean();
+    userIds = map(uniqBy(runs, 'user'), 'user');
+  }
 
   let responses = [];
 
-  for (const user of users) {
-    const { blockResponses, stages } = await buildUserScenarioResponse({ userId: user._id, scenarioId, slidesByRef, blocksByRef }, context);
+  for (const userId of userIds) {
+    const { blockResponses, stages } = await buildUserScenarioResponse({ userId, scenarioId, slidesByRef, blocksByRef }, context);
     const blockResponse = find(blockResponses, (br) => String(br.ref) === String(blockRef));
 
     if (blockResponse) {

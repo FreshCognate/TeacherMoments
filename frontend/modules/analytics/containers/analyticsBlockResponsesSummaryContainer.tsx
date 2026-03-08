@@ -33,7 +33,9 @@ class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockRe
 
   fetchSummary = async () => {
     try {
-      const { id: cohortId, scenarioId } = this.props.router.params;
+      const { id, scenarioId: scenarioIdParam } = this.props.router.params;
+      const cohortId = scenarioIdParam ? id : undefined;
+      const scenarioId = scenarioIdParam || id;
       const { blockColumn } = this.props;
 
       const response = await axios.post('/api/responses/summary', {

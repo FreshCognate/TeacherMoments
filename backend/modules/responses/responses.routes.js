@@ -10,7 +10,7 @@ export default [{
   controller: summaryController,
   create: {
     body: {
-      cohortId: Joi.string().required(),
+      cohortId: Joi.string(),
       scenarioId: Joi.string().required(),
       blockRef: Joi.string()
     },
