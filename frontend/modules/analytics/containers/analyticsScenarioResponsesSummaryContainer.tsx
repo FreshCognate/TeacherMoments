@@ -3,27 +3,23 @@ import axios from 'axios';
 import WithRouter from '~/core/app/components/withRouter';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
-import AnalyticsBlockResponsesSummary from '../components/analyticsBlockResponsesSummary';
-import { BlockColumn, UserResponse } from '../analytics.types';
+import AnalyticsScenarioResponsesSummary from '../components/analyticsScenarioResponsesSummary';
 
-interface AnalyticsBlockResponsesSummaryContainerProps {
-  blockColumn: BlockColumn;
-  responses: UserResponse[];
+interface AnalyticsScenarioResponsesSummaryContainerProps {
+  scenarioName?: string;
   actions?: any;
   router?: any;
 }
 
-interface AnalyticsBlockResponsesSummaryContainerState {
+interface AnalyticsScenarioResponsesSummaryContainerState {
   summary: string | null;
-  block: any;
   isLoading: boolean;
 }
 
-class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockResponsesSummaryContainerProps, AnalyticsBlockResponsesSummaryContainerState> {
+class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScenarioResponsesSummaryContainerProps, AnalyticsScenarioResponsesSummaryContainerState> {
 
   state = {
     summary: null,
-    block: null,
     isLoading: true
   };
 
@@ -36,19 +32,17 @@ class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockRe
       const { id, scenarioId: scenarioIdParam } = this.props.router.params;
       const cohortId = scenarioIdParam ? id : undefined;
       const scenarioId = scenarioIdParam || id;
-      const { blockColumn } = this.props;
 
       const response = await axios.post('/api/responses/summary', {
         cohortId,
-        scenarioId,
-        blockRef: blockColumn.ref
+        scenarioId
       });
 
       const sockets = await getSockets();
 
       sockets.on(`workers:generate:${response.data.jobId}`, (data: any) => {
         if (data.event === 'GENERATED') {
-          this.setState({ summary: data.payload?.summary || null, block: data.payload?.block || null, isLoading: false });
+          this.setState({ summary: data.payload?.summary || null, isLoading: false });
         }
       });
     } catch (error) {
@@ -58,14 +52,11 @@ class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockRe
   };
 
   render() {
-    const { blockColumn, responses } = this.props;
-    const { summary, block, isLoading } = this.state;
+    const { summary, isLoading } = this.state;
 
     return (
-      <AnalyticsBlockResponsesSummary
-        blockColumn={blockColumn}
-        block={block}
-        responses={responses}
+      <AnalyticsScenarioResponsesSummary
+        scenarioName={this.props.scenarioName}
         summary={summary}
         isLoading={isLoading}
       />
@@ -73,4 +64,4 @@ class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockRe
   }
 }
 
-export default WithRouter(AnalyticsBlockResponsesSummaryContainer);
+export default WithRouter(AnalyticsScenarioResponsesSummaryContainer);

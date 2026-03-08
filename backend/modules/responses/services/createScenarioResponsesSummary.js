@@ -2,7 +2,7 @@ import checkHasAccessToEditCohort from '../../cohorts/helpers/checkHasAccessToEd
 import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
 import createJob from '#core/queues/helpers/createJob.js';
 
-export default async function createBlockResponsesSummary({ cohortId, scenarioId, blockRef }, context) {
+export default async function createScenarioResponsesSummary({ cohortId, scenarioId }, context) {
 
   const { user } = context;
 
@@ -14,12 +14,11 @@ export default async function createBlockResponsesSummary({ cohortId, scenarioId
 
   const job = await createJob({
     queue: 'generate',
-    name: 'BLOCK_RESPONSES_SUMMARY',
+    name: 'SCENARIO_RESPONSES_SUMMARY',
     job: {
       payload: {
         cohortId,
-        scenarioId,
-        blockRef
+        scenarioId
       },
       createdBy: user._id,
       createdAt: new Date()

@@ -7,6 +7,7 @@ import generateShowFeedbackFromPrompts from '../tasks/generateShowFeedbackFromPr
 import generateMatchUserFeedbackToConditions from '../tasks/generateMatchUserFeedbackToConditions.js';
 import generatedFeedbackFromFeedbackItems from '../tasks/generatedFeedbackFromFeedbackItems.js';
 import generateBlockResponsesSummary from '../tasks/generateBlockResponsesSummary.js';
+import generateScenarioResponsesSummary from '../tasks/generateScenarioResponsesSummary.js';
 import getSockets from '../getSockets.js';
 
 export default async (job) => {
@@ -66,13 +67,30 @@ export default async (job) => {
           event: 'GENERATING'
         });
 
-        const payload = await generateBlockResponsesSummary(job.data.payload);
+        const blockPayload = await generateBlockResponsesSummary(job.data.payload);
 
         sockets = await getSockets();
 
         sockets.emit(`workers:generate:${job.id}`, {
           event: 'GENERATED',
-          payload
+          payload: blockPayload
+        });
+        break;
+      }
+      case 'SCENARIO_RESPONSES_SUMMARY': {
+        sockets = await getSockets();
+
+        sockets.emit(`workers:generate:${job.id}`, {
+          event: 'GENERATING'
+        });
+
+        const scenarioPayload = await generateScenarioResponsesSummary(job.data.payload);
+
+        sockets = await getSockets();
+
+        sockets.emit(`workers:generate:${job.id}`, {
+          event: 'GENERATED',
+          payload: scenarioPayload
         });
         break;
       }

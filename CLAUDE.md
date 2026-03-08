@@ -89,6 +89,7 @@ yarn workers:start   # Production workers
 - Use descriptive, full variable names — no abbreviations (e.g., `blockResponse` not `br`, `selectedOption` not `so`)
 - Use `classnames` library for conditional CSS classes instead of template literal string concatenation
 - Always use `dayjs` for date formatting and manipulation — never use `new Date().toLocaleDateString()` or other native date methods
+- Keep lines short and readable — never allow long single-line JSX props. When a component has more than 2-3 props, put each prop on its own line
 
 ### Backend Module Structure
 
