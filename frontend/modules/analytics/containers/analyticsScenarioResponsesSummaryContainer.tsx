@@ -6,6 +6,7 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import AnalyticsScenarioResponsesSummary from '../components/analyticsScenarioResponsesSummary';
 
 interface AnalyticsScenarioResponsesSummaryContainerProps {
+  scenarioName?: string;
   actions?: any;
   router?: any;
 }
@@ -53,6 +54,7 @@ class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScen
 
     return (
       <AnalyticsScenarioResponsesSummary
+        scenarioName={this.props.scenarioName}
         summary={summary}
         isLoading={isLoading}
       />

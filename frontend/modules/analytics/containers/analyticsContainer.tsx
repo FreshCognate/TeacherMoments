@@ -180,7 +180,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
           size: 'lg',
           icon: 'ai',
           title: 'Scenario summary',
-          component: <AnalyticsScenarioResponsesSummaryContainer />
+          component: <AnalyticsScenarioResponsesSummaryContainer scenarioName={this.props.scenario?.name} />
         });
       }
     });
