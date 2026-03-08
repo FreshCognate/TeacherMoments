@@ -2,6 +2,7 @@ import connectDatabase from '../../backend/core/databases/helpers/connectDatabas
 import buildScenarioCsvRows from '../../backend/modules/exports/helpers/buildScenarioCsvRows.js';
 import rowsToCsvBuffer from '../../backend/modules/exports/helpers/rowsToCsvBuffer.js';
 import uploadExportToS3 from '../../backend/modules/exports/helpers/uploadExportToS3.js';
+import waitForS3Object from '../../backend/modules/exports/helpers/waitForS3Object.js';
 import uniqBy from 'lodash/uniqBy.js';
 import map from 'lodash/map.js';
 
@@ -36,6 +37,8 @@ export default async ({ exportId, exportType, scenarioId, cohortId }) => {
     contentType: 'text/csv',
     contentDisposition: `attachment; filename="${fileName}"`
   });
+
+  await waitForS3Object(filePath);
 
   await models.Export.findByIdAndUpdate(exportId, {
     status: 'COMPLETED',
