@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import findIndex from 'lodash/findIndex';
+import filter from 'lodash/filter';
 import Analytics from '../components/analytics';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
-import { AnalyticsViewType, UserResponse } from '../analytics.types';
+import addModal from '~/core/dialogs/helpers/addModal';
+import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
+import AnalyticsBlockResponsesSummaryContainer from './analyticsBlockResponsesSummaryContainer';
+import { AnalyticsViewType, BlockColumn, UserResponse } from '../analytics.types';
 
 interface AnalyticsContainerProps {
   viewType?: AnalyticsViewType;
@@ -140,6 +144,49 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     this.setState({ selectedResponse: null, selectedBlockResponseRef: null });
   }
 
+  getBlockResponseCount = (blockColumn: BlockColumn) => {
+    const { responses = [] } = this.props;
+    return filter(responses, (response: UserResponse) => {
+      const blockResponse = response.blockResponses?.find((br: any) => br.ref === blockColumn.ref);
+      return blockResponse && (blockResponse.textValue || (blockResponse.selectedOptions && blockResponse.selectedOptions.length));
+    }).length;
+  }
+
+  onSummarizeColumn = (blockColumn: BlockColumn) => {
+    const { responses = [] } = this.props;
+
+    const responseCount = this.getBlockResponseCount(blockColumn);
+
+    if (responseCount < 2) {
+      addModal({
+        title: 'Not enough responses',
+        body: 'There must be at least 2 responses to generate a summary.',
+        actions: [
+          { type: 'CANCEL', text: 'OK' }
+        ]
+      }, () => {});
+      return;
+    }
+
+    addModal({
+      title: 'Summarize responses',
+      body: 'This will generate a summary of responses in this column.',
+      actions: [
+        { type: 'CANCEL', text: 'Cancel' },
+        { type: 'CONTINUE', text: 'Continue', color: 'primary' }
+      ]
+    }, (state: string, { type }: any) => {
+      if (state === 'ACTION' && type === 'CONTINUE') {
+        addSidePanel({
+          size: 'lg',
+          icon: 'ai',
+          title: 'Prompt summary of responses',
+          component: <AnalyticsBlockResponsesSummaryContainer blockColumn={blockColumn} responses={responses} />
+        });
+      }
+    });
+  }
+
   render() {
     const {
       viewType = 'byScenarioUsers',
@@ -180,6 +227,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         onSlideNavigated={this.onSlideNavigated}
         onUserNavigated={this.onUserNavigated}
         onSidePanelClose={this.onSidePanelClose}
+        onSummarizeColumn={this.onSummarizeColumn}
       />
     );
   }

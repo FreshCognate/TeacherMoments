@@ -8,6 +8,7 @@ interface AnalyticsResponsesTableContainerProps {
   selectedResponse: UserResponse | null;
   selectedBlockResponseRef: string | null;
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
+  onSummarizeColumn: (blockColumn: BlockColumn) => void;
 }
 
 class AnalyticsResponsesTableContainer extends Component<AnalyticsResponsesTableContainerProps> {
@@ -31,7 +32,7 @@ class AnalyticsResponsesTableContainer extends Component<AnalyticsResponsesTable
   }
 
   render() {
-    const { responses, selectedResponse, selectedBlockResponseRef, onResponseClicked } = this.props;
+    const { responses, selectedResponse, selectedBlockResponseRef, onResponseClicked, onSummarizeColumn } = this.props;
     const blockColumns = this.getBlockColumns();
 
     return (
@@ -41,6 +42,7 @@ class AnalyticsResponsesTableContainer extends Component<AnalyticsResponsesTable
         selectedResponse={selectedResponse}
         selectedBlockResponseRef={selectedBlockResponseRef}
         onResponseClicked={onResponseClicked}
+        onSummarizeColumn={onSummarizeColumn}
       />
     );
   }

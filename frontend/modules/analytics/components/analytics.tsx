@@ -5,7 +5,7 @@ import CollectionEmpty from '~/uikit/collections/components/collectionEmpty';
 import AnalyticsResponses from './analyticsResponses';
 import AnalyticsResponsesTableContainer from '../containers/analyticsResponsesTableContainer';
 import AnalyticsSidePanel from './analyticsSidePanel';
-import { AnalyticsViewType, UserResponse } from '../analytics.types';
+import { AnalyticsViewType, BlockColumn, UserResponse } from '../analytics.types';
 
 interface AnalyticsProps {
   viewType: AnalyticsViewType;
@@ -28,6 +28,7 @@ interface AnalyticsProps {
   onUserNavigated?: (direction: string) => void;
   onExportClicked?: () => void;
   onSidePanelClose: () => void;
+  onSummarizeColumn: (blockColumn: BlockColumn) => void;
 }
 
 const Analytics: React.FC<AnalyticsProps> = ({
@@ -50,7 +51,8 @@ const Analytics: React.FC<AnalyticsProps> = ({
   onSlideNavigated,
   onUserNavigated,
   onExportClicked,
-  onSidePanelClose
+  onSidePanelClose,
+  onSummarizeColumn
 }) => {
   return (
     <div className="flex">
@@ -93,7 +95,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
           />
         )}
         {!isLoading && responses.length > 0 && viewType === 'byScenarioUsers' && scenarioId && (
-          <AnalyticsResponsesTableContainer responses={responses} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />
+          <AnalyticsResponsesTableContainer responses={responses} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} onSummarizeColumn={onSummarizeColumn} />
         )}
         {!isLoading && responses.length > 0 && viewType === 'byUserScenarios' && (
           <AnalyticsResponses viewType={viewType} responses={responses} selectedResponse={selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />

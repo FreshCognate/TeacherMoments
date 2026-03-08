@@ -3,9 +3,12 @@ import map from 'lodash/map';
 import find from 'lodash/find';
 import classnames from 'classnames';
 import getBlockDisplayName from '~/modules/blocks/helpers/getBlockDisplayName';
+import getBlockDisplayType from '~/modules/blocks/helpers/getBlockDisplayType';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import Icon from '~/uikit/icons/components/icon';
+import FlatButton from '~/uikit/buttons/components/flatButton';
 import formatTimeSpent from '../helpers/formatTimeSpent';
+import getBlockLabel from '../helpers/getBlockLabel';
 import { BlockColumn, BlockResponse, StageResponse, UserResponse } from '../analytics.types';
 
 interface AnalyticsResponsesTableProps {
@@ -14,6 +17,7 @@ interface AnalyticsResponsesTableProps {
   selectedResponse: UserResponse | null;
   selectedBlockResponseRef: string | null;
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
+  onSummarizeColumn: (blockColumn: BlockColumn) => void;
 }
 
 const renderBlockAnswer = (blockResponse: BlockResponse | undefined) => {
@@ -50,7 +54,8 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
   blockColumns,
   selectedResponse,
   selectedBlockResponseRef,
-  onResponseClicked
+  onResponseClicked,
+  onSummarizeColumn
 }) => {
   if (blockColumns.length === 0) {
     return (
@@ -74,8 +79,11 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
             Block ID
           </div>
           {map(blockColumns, (blockColumn, index) => (
-            <div key={`name-${index}`} className="px-4 py-2 text-left text-sm font-medium text-black/60 dark:text-white/60 bg-lm-2 dark:bg-dm-3 border-r border-b border-lm-3 dark:border-dm-2">
-              {blockColumn.slideName ? `${blockColumn.slideName} - ` : ''}{blockColumn.name || blockColumn.ref || `Block ${blockColumn.sortOrder + 1}`}
+            <div key={`name-${index}`} className="px-4 py-2 text-left text-sm font-medium text-black/60 dark:text-white/60 bg-lm-2 dark:bg-dm-3 border-r border-b border-lm-3 dark:border-dm-2 flex items-center justify-between gap-2">
+              <span>{getBlockLabel(blockColumn)}</span>
+              {getBlockDisplayType(blockColumn) === 'PROMPT' && (
+                <FlatButton icon="ai" size="sm" ariaLabel="Summarize column" onClick={() => onSummarizeColumn(blockColumn)} />
+              )}
             </div>
           ))}
 
