@@ -77,7 +77,7 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
           }}
         >
           <div className={classnames(usernameHeaderClass, 'flex items-center justify-center')}>
-            <FlatButton icon="ai" size="sm" ariaLabel="Summarize scenario" onClick={onSummarizeScenario} />
+            <FlatButton icon="ai" size="sm" text="Summarize" ariaLabel="Summarize scenario" onClick={onSummarizeScenario} />
           </div>
           <div className={labelHeaderClass}>
             Block ID
