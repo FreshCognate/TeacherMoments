@@ -101,7 +101,10 @@ export default async ({ cohortId, scenarioId, blockRef }) => {
 
   const response = await agent.run();
 
-  return response;
+  return {
+    ...response,
+    block
+  };
 
 };
 
