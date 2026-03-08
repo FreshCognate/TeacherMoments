@@ -1,9 +1,9 @@
-import getBlockResponsesSummary from './services/getBlockResponsesSummary.js';
+import createBlockResponsesSummary from './services/createBlockResponsesSummary.js';
 
 export default {
 
-  all: async function ({ query }, context) {
-    return await getBlockResponsesSummary(query, context);
+  create: async function ({ body }, context) {
+    return await createBlockResponsesSummary(body, context);
   }
 
 };

@@ -1,6 +1,12 @@
+import '../../backend/core/users/index.js';
+import '../../backend/modules/slides/index.js';
+import '../../backend/modules/blocks/index.js';
+import '../../backend/modules/runs/index.js';
+import '../../backend/modules/assets/index.js';
 import generateShowFeedbackFromPrompts from '../tasks/generateShowFeedbackFromPrompts.js';
 import generateMatchUserFeedbackToConditions from '../tasks/generateMatchUserFeedbackToConditions.js';
 import generatedFeedbackFromFeedbackItems from '../tasks/generatedFeedbackFromFeedbackItems.js';
+import generateBlockResponsesSummary from '../tasks/generateBlockResponsesSummary.js';
 import getSockets from '../getSockets.js';
 
 export default async (job) => {
@@ -44,6 +50,23 @@ export default async (job) => {
         } = job.data.payload;
 
         const payload = await generatedFeedbackFromFeedbackItems({ feedbackItems, items });
+
+        sockets = await getSockets();
+
+        sockets.emit(`workers:generate:${job.id}`, {
+          event: 'GENERATED',
+          payload
+        });
+        break;
+      }
+      case 'BLOCK_RESPONSES_SUMMARY': {
+        sockets = await getSockets();
+
+        sockets.emit(`workers:generate:${job.id}`, {
+          event: 'GENERATING'
+        });
+
+        const payload = await generateBlockResponsesSummary(job.data.payload);
 
         sockets = await getSockets();
 

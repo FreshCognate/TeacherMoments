@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import WithRouter from '~/core/app/components/withRouter';
-import WithCache from '~/core/cache/containers/withCache';
+import getSockets from '~/core/sockets/helpers/getSockets';
+import handleRequestError from '~/core/app/helpers/handleRequestError';
 import AnalyticsBlockResponsesSummary from '../components/analyticsBlockResponsesSummary';
 import { BlockColumn, UserResponse } from '../analytics.types';
 
@@ -9,37 +11,61 @@ interface AnalyticsBlockResponsesSummaryContainerProps {
   responses: UserResponse[];
   actions?: any;
   router?: any;
-  blockResponsesSummary?: any;
 }
 
-class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockResponsesSummaryContainerProps> {
+interface AnalyticsBlockResponsesSummaryContainerState {
+  summary: string | null;
+  isLoading: boolean;
+}
+
+class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockResponsesSummaryContainerProps, AnalyticsBlockResponsesSummaryContainerState> {
+
+  state = {
+    summary: null,
+    isLoading: true
+  };
+
+  componentDidMount() {
+    this.fetchSummary();
+  }
+
+  fetchSummary = async () => {
+    try {
+      const { id: cohortId, scenarioId } = this.props.router.params;
+      const { blockColumn } = this.props;
+
+      const response = await axios.post('/api/responses/summary', {
+        cohortId,
+        scenarioId,
+        blockRef: blockColumn.ref
+      });
+
+      const sockets = await getSockets();
+
+      sockets.on(`workers:generate:${response.data.jobId}`, (data: any) => {
+        if (data.event === 'GENERATED') {
+          this.setState({ summary: data.payload?.summary || null, isLoading: false });
+        }
+      });
+    } catch (error) {
+      handleRequestError(error);
+      this.setState({ isLoading: false });
+    }
+  };
 
   render() {
-    const { blockColumn, responses, blockResponsesSummary } = this.props;
+    const { blockColumn, responses } = this.props;
+    const { summary, isLoading } = this.state;
 
     return (
       <AnalyticsBlockResponsesSummary
         blockColumn={blockColumn}
         responses={responses}
-        summary={blockResponsesSummary?.data?.summary || null}
-        isLoading={blockResponsesSummary?.status === 'loading'}
+        summary={summary}
+        isLoading={isLoading}
       />
     );
   }
 }
 
-export default WithRouter(WithCache(AnalyticsBlockResponsesSummaryContainer, {
-  blockResponsesSummary: {
-    url: '/api/responses/summary',
-    transform: ({ data }: any) => data,
-    getQuery: ({ props }: any) => {
-      const { id: cohortId, scenarioId } = props.router.params;
-      return {
-        cohortId,
-        scenarioId,
-        blockRef: props.blockColumn.ref
-      };
-    },
-    getInitialData: () => ({})
-  }
-}));
+export default WithRouter(AnalyticsBlockResponsesSummaryContainer);

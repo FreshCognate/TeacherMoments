@@ -8,8 +8,8 @@ import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 export default [{
   route: '/responses/summary',
   controller: summaryController,
-  all: {
-    query: {
+  create: {
+    body: {
       cohortId: Joi.string().required(),
       scenarioId: Joi.string().required(),
       blockRef: Joi.string().required()

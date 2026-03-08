@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import findIndex from 'lodash/findIndex';
+import filter from 'lodash/filter';
 import Analytics from '../components/analytics';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import addModal from '~/core/dialogs/helpers/addModal';
@@ -143,8 +144,29 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     this.setState({ selectedResponse: null, selectedBlockResponseRef: null });
   }
 
+  getBlockResponseCount = (blockColumn: BlockColumn) => {
+    const { responses = [] } = this.props;
+    return filter(responses, (response: UserResponse) => {
+      const blockResponse = response.blockResponses?.find((br: any) => br.ref === blockColumn.ref);
+      return blockResponse && (blockResponse.textValue || (blockResponse.selectedOptions && blockResponse.selectedOptions.length));
+    }).length;
+  }
+
   onSummarizeColumn = (blockColumn: BlockColumn) => {
     const { responses = [] } = this.props;
+
+    const responseCount = this.getBlockResponseCount(blockColumn);
+
+    if (responseCount < 2) {
+      addModal({
+        title: 'Not enough responses',
+        body: 'There must be at least 2 responses to generate a summary.',
+        actions: [
+          { type: 'CANCEL', text: 'OK' }
+        ]
+      }, () => {});
+      return;
+    }
 
     addModal({
       title: 'Summarize responses',

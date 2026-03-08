@@ -1,6 +1,7 @@
 import React from 'react';
 import Loading from '~/uikit/loaders/components/loading';
 import { BlockColumn, UserResponse } from '../analytics.types';
+import getBlockLabel from '../helpers/getBlockLabel';
 
 interface AnalyticsBlockResponsesSummaryProps {
   blockColumn: BlockColumn;
@@ -18,7 +19,7 @@ const AnalyticsBlockResponsesSummary: React.FC<AnalyticsBlockResponsesSummaryPro
   return (
     <div className="p-4">
       <p className="text-sm font-medium text-black/80 dark:text-white/80 mb-4">
-        {blockColumn.name || blockColumn.ref || `Block ${blockColumn.sortOrder + 1}`}
+        {getBlockLabel(blockColumn)}
       </p>
       {isLoading && <Loading />}
       {!isLoading && summary && (
