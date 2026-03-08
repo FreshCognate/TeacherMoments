@@ -12,7 +12,7 @@ export default [{
     body: {
       cohortId: Joi.string().required(),
       scenarioId: Joi.string().required(),
-      blockRef: Joi.string().required()
+      blockRef: Joi.string()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])]
   }
