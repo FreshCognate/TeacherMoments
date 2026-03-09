@@ -23,6 +23,7 @@ export default async (props, options, context) => {
     duplicatedScenarioObject.originalScenario = existingScenario._id;
     duplicatedScenarioObject.createdAt = new Date();
     duplicatedScenarioObject.createdBy = user._id;
+    duplicatedScenarioObject.collaborators = [{ user: user._id, role: 'OWNER' }];
     duplicatedScenarioObject.cohorts = [];
     duplicatedScenarioObject.hasChanges = true;
     duplicatedScenarioObject.isPublished = false;

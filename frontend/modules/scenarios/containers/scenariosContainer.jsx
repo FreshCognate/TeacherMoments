@@ -6,6 +6,7 @@ import debounce from 'lodash/debounce';
 import WithRouter from '~/core/app/components/withRouter';
 import getScenariosActions from '../helpers/getScenariosActions';
 import openCreateScenarioModal from '../helpers/openCreateScenarioModal';
+import openDuplicateScenarioModal from '../helpers/openDuplicateScenarioModal';
 import getIsEditor from '~/modules/authentication/helpers/getIsEditor';
 
 class ScenariosContainer extends Component {
@@ -59,6 +60,10 @@ class ScenariosContainer extends Component {
     scenarios.fetch();
   }
 
+  onDuplicateScenarioClicked = (scenarioId) => {
+    openDuplicateScenarioModal({ scenarioId, router: this.props.router });
+  }
+
   render() {
 
     const { query, status, data } = this.props.scenarios;
@@ -90,6 +95,7 @@ class ScenariosContainer extends Component {
         onFiltersChanged={this.onFiltersChanged}
         onSortByChanged={this.onSortByChanged}
         onActionClicked={this.onActionClicked}
+        onDuplicateScenarioClicked={this.onDuplicateScenarioClicked}
       />
     );
   }
