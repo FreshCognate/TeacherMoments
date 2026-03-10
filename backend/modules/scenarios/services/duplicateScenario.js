@@ -54,6 +54,15 @@ export default async (props, options, context) => {
       }
     }
 
+    // Remap responseRef on duplicated blocks to point to new block refs
+    const blocksWithResponseRef = newBlocks.filter(block => block.responseRef);
+    for (const block of blocksWithResponseRef) {
+      const newRef = blockRefMap.get(block.responseRef.toString());
+      if (newRef) {
+        await models.Block.updateOne({ _id: block._id }, { $set: { responseRef: newRef } }, { session });
+      }
+    }
+
     await duplicateTriggers({ scenarioId: existingScenario._id, newScenarioId: newScenario._id, slideRefMap, blockRefMap }, { ...context, session });
 
   }).catch(err => {

@@ -20,6 +20,13 @@ class ResponseBlockPlayerContainer extends Component {
 
       const blocksData = this.props.allBlocks || getCache('blocks')?.data || [];
       block = find(blocksData, { ref: this.props.block.responseRef });
+
+      if (!block) {
+        hasError = true;
+        error = "The referenced block could not be found. Please re-select the Input or Multiple Choice Prompt for this block.";
+        return { hasError, error, block, blockTracking, blockType };
+      }
+
       const slideStage = findSlideStage({ slideRef: block.slideRef });
 
       if (slideStage) {
