@@ -29,7 +29,7 @@ const LandingMainFeatures = () => {
     <section className="bg-white py-16 px-6">
       <div className="max-w-6xl mx-auto">
         <h2 className="sr-only">How do I use Teacher Moments?</h2>
-        <ul className="flex flex-col gap-24">
+        <ul className="flex flex-col gap-12 md:gap-24">
           {features.map((feature, index) => {
             const isReversed = index % 2 !== 0;
             return (
@@ -45,9 +45,9 @@ const LandingMainFeatures = () => {
                   { 'md:flex-row-reverse': isReversed }
                 )}>
                   <div className="md:w-1/2">
-                    <img className="w-full max-w-lg" src={feature.image} alt={feature.alt} />
+                    <img className="w-full max-w-sm mx-auto md:max-w-lg" src={feature.image} alt={feature.alt} />
                   </div>
-                  <div className="md:w-1/2">
+                  <div className="md:w-1/2 text-center md:text-left">
                     <h3 className="text-3xl md:text-4xl font-black text-[#174650] mb-4">{feature.title}</h3>
                     <p className="text-lg text-[#174650]/80">{feature.description}</p>
                   </div>

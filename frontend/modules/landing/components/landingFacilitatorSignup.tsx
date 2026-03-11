@@ -32,7 +32,7 @@ const LandingFacilitatorSignup = () => {
                     href="https://forms.gle/CeirVbWNcQowXjN49"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block bg-[#853d61] text-white text-xl md:text-2xl px-10 py-4 rounded-full font-bold hover:bg-[#5c1a3b] transition-colors"
+                    className="inline-block bg-[#853d61] text-white text-xl md:text-2xl px-6 md:px-10 py-4 rounded-full font-bold hover:bg-[#5c1a3b] transition-colors"
                 >
                     Sign Up as a Facilitator
                 </a>

@@ -1,11 +1,11 @@
 const LandingHero = () => {
   return (
     <section
-      className="relative bg-[#f6f6ee] py-24 px-6 overflow-hidden bg-no-repeat bg-center bg-contain"
+      className="relative bg-[#f6f6ee] py-12 md:py-24 px-6 overflow-hidden bg-no-repeat bg-center bg-contain"
       style={{ backgroundImage: 'url(/static/images/landing/doodles-hero.svg)' }}
     >
       <div className="max-w-5xl mx-auto text-center relative z-10">
-        <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold leading-snug text-[#174650]">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight md:leading-snug text-[#174650]">
           Preparing{' '}
           <span className="relative inline-block">
             <span className="relative z-10">educators</span>

@@ -30,7 +30,7 @@ const LandingDeepFeatures = ({ onAuthClicked }: { onAuthClicked: () => void }) =
           <h2 className="text-3xl md:text-4xl font-black text-[#174650] mb-4">Dive deeper into Teacher Moments</h2>
           <p className="text-lg text-[#174650]/80">Become a power user and explore even more features for creating and running your simulations.</p>
         </div>
-        <ul className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <ul className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 mb-16">
           {features.map((feature) => (
             <li key={feature.title} className="relative">
               <img

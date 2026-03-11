@@ -42,9 +42,9 @@ const LandingStepper = ({ onAuthClicked }: { onAuthClicked: () => void }) => {
   return (
     <section className="bg-white py-12 px-6 relative z-10">
       <div className="max-w-4xl mx-auto">
-        <ol className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10 -mt-24">
+        <ol className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 -mt-12 md:-mt-24">
           {steps.map((step, index) => (
-            <li key={index} className="flex flex-col items-center text-center border border-[#e6e6e6] bg-white p-8">
+            <li key={index} className="flex flex-col items-center text-center border border-[#e6e6e6] bg-white p-4 md:p-8">
               <div className="mb-4 h-16 flex items-center justify-center">
                 {step.icon}
               </div>
