@@ -119,7 +119,10 @@ const Analytics: React.FC<AnalyticsProps> = ({
             responses={responses}
             selectedResponse={selectedResponse}
             selectedBlockResponseRef={selectedBlockResponseRef}
+            selectedSlideRef={selectedSlideRef}
             onResponseClicked={onResponseClicked}
+            onSlideNavigated={onSlideNavigated}
+            onBlockNavigated={onBlockNavigated}
           />
         )}
       </div>

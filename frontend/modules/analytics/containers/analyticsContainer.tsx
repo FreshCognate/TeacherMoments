@@ -140,31 +140,35 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
 
   onSlideNavigated = (slideRef: string) => {
     const { responses = [] } = this.props;
-    const { selectedResponse } = this.state;
-    const response = selectedResponse || (responses.length > 0 ? responses[0] : null);
-    const firstBlock = response?.blockResponses?.find((blockResponse) => blockResponse.slideRef === slideRef);
 
-    this.setState({
-      selectedResponse: response,
-      selectedSlideRef: slideRef,
-      selectedBlockResponseRef: null
+    this.setState((prevState) => {
+      const response = prevState.selectedResponse || (responses.length > 0 ? responses[0] : null);
+      const firstBlock = response?.blockResponses?.find((blockResponse) => blockResponse.slideRef === slideRef);
+
+      if (firstBlock) this.scrollToBlockResponse(firstBlock.ref);
+
+      return {
+        selectedResponse: response,
+        selectedSlideRef: slideRef,
+        selectedBlockResponseRef: null
+      };
     });
-
-    if (firstBlock) this.scrollToBlockResponse(firstBlock.ref);
   }
 
   onBlockNavigated = (blockRef: string) => {
     const { responses = [] } = this.props;
-    const { selectedResponse } = this.state;
-    const response = selectedResponse || (responses.length > 0 ? responses[0] : null);
 
-    this.setState({
-      selectedResponse: response,
-      selectedSlideRef: null,
-      selectedBlockResponseRef: blockRef
+    this.setState((prevState) => {
+      const response = prevState.selectedResponse || (responses.length > 0 ? responses[0] : null);
+
+      this.scrollToBlockResponse(blockRef);
+
+      return {
+        selectedResponse: response,
+        selectedSlideRef: null,
+        selectedBlockResponseRef: blockRef
+      };
     });
-
-    this.scrollToBlockResponse(blockRef);
   }
 
   onSidePanelClose = () => {
