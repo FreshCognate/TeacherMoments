@@ -13,6 +13,7 @@ interface AnalyticsSidePanelProps {
   isUserUpDisabled?: boolean;
   isUserDownDisabled?: boolean;
   onSlideNavigated: (slideRef: string) => void;
+  onBlockNavigated: (blockRef: string) => void;
   onUserNavigated?: (direction: string) => void;
   onClose: () => void;
 }
@@ -25,6 +26,7 @@ const AnalyticsSidePanel: React.FC<AnalyticsSidePanelProps> = ({
   isUserUpDisabled,
   isUserDownDisabled,
   onSlideNavigated,
+  onBlockNavigated,
   onUserNavigated,
   onClose
 }) => {
@@ -66,6 +68,7 @@ const AnalyticsSidePanel: React.FC<AnalyticsSidePanelProps> = ({
               selectedBlockResponseRef={selectedBlockResponseRef}
               selectedSlideRef={selectedSlideRef}
               onSlideNavigated={onSlideNavigated}
+              onBlockNavigated={onBlockNavigated}
             />
           </div>
         )}

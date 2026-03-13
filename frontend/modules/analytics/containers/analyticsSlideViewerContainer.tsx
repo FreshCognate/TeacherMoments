@@ -18,6 +18,7 @@ interface AnalyticsSlideViewerContainerProps {
   selectedBlockResponseRef: string | null;
   selectedSlideRef: string | null;
   onSlideNavigated: (slideRef: string) => void;
+  onBlockNavigated: (blockRef: string) => void;
   previewSlides?: any;
   previewBlocks?: any;
 }
@@ -79,7 +80,7 @@ class AnalyticsSlideViewerContainer extends Component<AnalyticsSlideViewerContai
   }
 
   onBlockClicked = (blockRef: string) => {
-    this.props.onSlideNavigated(blockRef);
+    this.props.onBlockNavigated(blockRef);
   }
 
   onNavigateSlide = (direction: string) => {

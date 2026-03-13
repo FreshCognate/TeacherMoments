@@ -132,6 +132,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
           isUserUpDisabled={isUserUpDisabled}
           isUserDownDisabled={isUserDownDisabled}
           onSlideNavigated={onSlideNavigated}
+          onBlockNavigated={onBlockNavigated}
           onUserNavigated={onUserNavigated}
           onClose={onSidePanelClose}
         />
