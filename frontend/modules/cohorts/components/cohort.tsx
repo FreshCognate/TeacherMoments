@@ -23,12 +23,12 @@ const Cohort = ({
   return (
     <div className="p-4">
       <div className="sticky top-14 z-30">
-        <div className="flex items-center justify-stretch px-4 py-6 h-7 bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-1 rounded-lg">
-          <div className="w-1/3 flex items-center">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 px-4 py-3 bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-1 rounded-lg">
+          <div className="flex-1 flex justify-center sm:justify-start items-center">
             <CohortBreadcrumbContainer />
           </div>
           {(isEditor) && (
-            <div className="w-1/3 flex justify-center">
+            <div className="flex-1 flex justify-center items-center">
               <NavigationToggle
                 value={pathValue}
                 size="sm"
@@ -49,7 +49,7 @@ const Cohort = ({
               />
             </div>
           )}
-          <div className="w-1/3 flex justify-end text-sm">
+          <div className="flex-1 flex justify-center sm:justify-end items-center text-sm">
             {/* <ScenarioSyncStatusContainer /> */}
           </div>
         </div>
