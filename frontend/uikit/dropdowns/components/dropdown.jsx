@@ -1,10 +1,12 @@
 import React, { useRef } from 'react';
 import map from 'lodash/map';
+import classNames from 'classnames';
 import useOnClickOutside from '~/core/app/hooks/useOnClickOutside';
 
 const Dropdown = ({
   options,
   placeholder,
+  position = 'right',
   isOpen,
   onToggle,
   onOptionClicked
@@ -31,7 +33,10 @@ const Dropdown = ({
         </svg>
       </button>
       {isOpen && (
-        <div className="absolute right-0 top-full mt-1 min-w-40 bg-lm-0 dark:bg-dm-0 border border-lm-2 dark:border-dm-2 rounded-md shadow-lg py-1 px-1">
+        <div className={classNames("absolute top-full mt-1 min-w-40 z-10 bg-lm-0 dark:bg-dm-0 border border-lm-2 dark:border-dm-2 rounded-md shadow-lg py-1 px-1", {
+            "right-0": position === 'right',
+            "left-0": position === 'left'
+          })}>
           {map(options, (option, index) => {
             if (option.separator) {
               return <div key={`sep-${index}`} className="h-px my-1 bg-lm-1 dark:bg-dm-1" />;
