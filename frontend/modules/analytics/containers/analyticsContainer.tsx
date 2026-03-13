@@ -27,6 +27,7 @@ interface AnalyticsContainerProps {
 interface AnalyticsContainerState {
   selectedResponse: UserResponse | null;
   selectedBlockResponseRef: string | null;
+  selectedSlideRef: string | null;
   pendingUserSelection: 'first' | 'last' | null;
 }
 
@@ -35,6 +36,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
   state: AnalyticsContainerState = {
     selectedResponse: null,
     selectedBlockResponseRef: null,
+    selectedSlideRef: null,
     pendingUserSelection: null
   }
 
@@ -132,17 +134,45 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
   }
 
   onResponseClicked = (response: UserResponse, blockResponseRef: string) => {
-    this.setState({ selectedResponse: response, selectedBlockResponseRef: blockResponseRef });
+    this.setState({ selectedResponse: response, selectedBlockResponseRef: blockResponseRef, selectedSlideRef: null });
     this.scrollToBlockResponse(blockResponseRef);
   }
 
-  onSlideNavigated = (blockResponseRef: string) => {
-    this.setState({ selectedBlockResponseRef: blockResponseRef });
-    this.scrollToBlockResponse(blockResponseRef);
+  onSlideNavigated = (slideRef: string) => {
+    const { responses = [] } = this.props;
+
+    this.setState((prevState) => {
+      const response = prevState.selectedResponse || (responses.length > 0 ? responses[0] : null);
+      const firstBlock = response?.blockResponses?.find((blockResponse) => blockResponse.slideRef === slideRef);
+
+      if (firstBlock) this.scrollToBlockResponse(firstBlock.ref);
+
+      return {
+        selectedResponse: response,
+        selectedSlideRef: slideRef,
+        selectedBlockResponseRef: null
+      };
+    });
+  }
+
+  onBlockNavigated = (blockRef: string) => {
+    const { responses = [] } = this.props;
+
+    this.setState((prevState) => {
+      const response = prevState.selectedResponse || (responses.length > 0 ? responses[0] : null);
+
+      this.scrollToBlockResponse(blockRef);
+
+      return {
+        selectedResponse: response,
+        selectedSlideRef: null,
+        selectedBlockResponseRef: blockRef
+      };
+    });
   }
 
   onSidePanelClose = () => {
-    this.setState({ selectedResponse: null, selectedBlockResponseRef: null });
+    this.setState({ selectedResponse: null, selectedBlockResponseRef: null, selectedSlideRef: null });
   }
 
   getBlockResponseCount = (blockColumn: BlockColumn) => {
@@ -236,7 +266,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
       onExportClicked
     } = this.props;
 
-    const { selectedResponse, selectedBlockResponseRef } = this.state;
+    const { selectedResponse, selectedBlockResponseRef, selectedSlideRef } = this.state;
     const { isUserUpDisabled, isUserDownDisabled } = this.getUserNavigationState();
 
     return (
@@ -247,6 +277,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         responses={responses || []}
         selectedResponse={selectedResponse}
         selectedBlockResponseRef={selectedBlockResponseRef}
+        selectedSlideRef={selectedSlideRef}
         isLoading={isLoading}
         isSyncing={isSyncing}
         searchValue={searchValue}
@@ -259,6 +290,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         onExportClicked={onExportClicked}
         onResponseClicked={this.onResponseClicked}
         onSlideNavigated={this.onSlideNavigated}
+        onBlockNavigated={this.onBlockNavigated}
         onUserNavigated={this.onUserNavigated}
         onSidePanelClose={this.onSidePanelClose}
         onSummarizeColumn={this.onSummarizeColumn}

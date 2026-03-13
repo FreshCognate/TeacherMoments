@@ -8,7 +8,10 @@ interface AnalyticsResponsesProps {
   responses: UserResponse[];
   selectedResponse: UserResponse | null;
   selectedBlockResponseRef: string | null;
+  selectedSlideRef: string | null;
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
+  onSlideNavigated: (slideRef: string) => void;
+  onBlockNavigated: (blockRef: string) => void;
 }
 
 const AnalyticsResponses: React.FC<AnalyticsResponsesProps> = ({
@@ -16,12 +19,25 @@ const AnalyticsResponses: React.FC<AnalyticsResponsesProps> = ({
   responses,
   selectedResponse,
   selectedBlockResponseRef,
-  onResponseClicked
+  selectedSlideRef,
+  onResponseClicked,
+  onSlideNavigated,
+  onBlockNavigated
 }) => {
   return (
     <div className="space-y-6">
       {map(responses, (response, index) => (
-        <AnalyticsResponsesItem key={index} viewType={viewType} response={response} isSelected={response === selectedResponse} selectedBlockResponseRef={selectedBlockResponseRef} onResponseClicked={onResponseClicked} />
+        <AnalyticsResponsesItem
+          key={index}
+          viewType={viewType}
+          response={response}
+          isSelected={response === selectedResponse}
+          selectedBlockResponseRef={selectedBlockResponseRef}
+          selectedSlideRef={selectedSlideRef}
+          onResponseClicked={onResponseClicked}
+          onSlideNavigated={onSlideNavigated}
+          onBlockNavigated={onBlockNavigated}
+        />
       ))}
     </div>
   );

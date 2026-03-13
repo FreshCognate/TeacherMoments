@@ -1,22 +1,26 @@
 import React from 'react';
 import map from 'lodash/map';
 import find from 'lodash/find';
+import some from 'lodash/some';
+import reduce from 'lodash/reduce';
 import classnames from 'classnames';
 import getBlockDisplayName from '~/modules/blocks/helpers/getBlockDisplayName';
-import getBlockDisplayType from '~/modules/blocks/helpers/getBlockDisplayType';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import Icon from '~/uikit/icons/components/icon';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import formatTimeSpent from '../helpers/formatTimeSpent';
-import getBlockLabel from '../helpers/getBlockLabel';
-import { BlockColumn, BlockResponse, StageResponse, UserResponse } from '../analytics.types';
+import { BlockColumn, BlockResponse, SlideGroup, StageResponse, UserResponse } from '../analytics.types';
 
 interface AnalyticsResponsesTableProps {
   responses: UserResponse[];
   blockColumns: BlockColumn[];
+  slideGroups: SlideGroup[];
   selectedResponse: UserResponse | null;
   selectedBlockResponseRef: string | null;
+  selectedSlideRef: string | null;
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
+  onSlideNavigated: (slideRef: string) => void;
+  onBlockNavigated: (blockRef: string) => void;
   onSummarizeColumn: (blockColumn: BlockColumn) => void;
   onSummarizeScenario: () => void;
 }
@@ -36,15 +40,21 @@ const renderBlockAnswer = (blockResponse: BlockResponse | undefined) => {
   return null;
 };
 
-const isFirstBlockOfSlide = (blockColumns: BlockColumn[], index: number): boolean => {
-  return index === 0 || blockColumns[index].slideRef !== blockColumns[index - 1].slideRef;
+const getStageForSlide = (stages: StageResponse[] | undefined, slideRef: string): StageResponse | undefined => {
+  return find(stages, { slideRef });
 };
 
-const getStageForBlock = (stages: StageResponse[] | undefined, blockColumn: BlockColumn): StageResponse | undefined => {
-  return find(stages, { slideRef: blockColumn.slideRef });
+const getColumnCount = (slideGroups: SlideGroup[]): number => {
+  return reduce(slideGroups, (total, group) => total + Math.max(1, group.promptColumns.length), 0);
 };
 
-const usernameHeaderClass = 'sticky left-0 z-20 bg-lm-2 dark:bg-dm-3 px-4 py-2 text-left text-sm font-bold text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2';
+const isSlideSelected = (slideGroup: SlideGroup, selectedSlideRef: string | null, selectedBlockResponseRef: string | null): boolean => {
+  if (selectedSlideRef === slideGroup.slideRef) return true;
+  if (selectedBlockResponseRef && some(slideGroup.promptColumns, { ref: selectedBlockResponseRef })) return true;
+  return false;
+};
+
+const usernameHeaderClass = 'sticky left-0 z-10 bg-lm-2 dark:bg-dm-3 px-4 py-2 text-left text-sm font-bold text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2';
 const labelHeaderClass = 'sticky left-40 z-10 bg-lm-2 dark:bg-dm-3 px-4 py-2 text-left text-sm font-bold text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2';
 const usernameCellClass = 'sticky left-0 z-20 bg-lm-2 dark:bg-dm-3 px-4 py-3 text-sm font-medium text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2 break-words';
 const subRowLabelClass = 'sticky left-40 z-10 bg-lm-1 dark:bg-dm-2 px-4 py-2 text-xs text-black/40 dark:text-white/40 border-r border-b border-lm-3 dark:border-dm-2';
@@ -52,14 +62,17 @@ const subRowCellClass = 'px-4 py-2 text-xs text-black/40 dark:text-white/40 bord
 
 const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
   responses,
-  blockColumns,
+  slideGroups,
   selectedResponse,
   selectedBlockResponseRef,
+  selectedSlideRef,
   onResponseClicked,
+  onSlideNavigated,
+  onBlockNavigated,
   onSummarizeColumn,
   onSummarizeScenario
 }) => {
-  if (blockColumns.length === 0) {
+  if (slideGroups.length === 0) {
     return (
       <div className="px-4 py-3 text-sm text-neutral-500 dark:text-neutral-400">
         No block responses
@@ -67,53 +80,145 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
     );
   }
 
+  const columnCount = getColumnCount(slideGroups);
+  const gridColumns = `10rem 7rem repeat(${columnCount}, minmax(18rem, 1fr))`;
+
   return (
     <div className="bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-2 rounded-lg overflow-hidden">
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-12rem)]">
+        {/* Sticky header grid */}
         <div
-          className="grid w-fit min-w-full"
-          style={{
-            gridTemplateColumns: `10rem 7rem repeat(${blockColumns.length}, minmax(18rem, 1fr))`
-          }}
+          className="grid w-fit min-w-full sticky top-0 z-30 bg-lm-2 dark:bg-dm-3"
+          style={{ gridTemplateColumns: gridColumns }}
         >
+          {/* Row 1: Slide headers with AI summary buttons */}
           <div className={classnames(usernameHeaderClass, 'flex items-center justify-center')}>
-            <FlatButton icon="ai" size="sm" text="Summarize" ariaLabel="Summarize scenario" onClick={onSummarizeScenario} />
+            <FlatButton
+              icon="ai"
+              size="sm"
+              text="Summarize"
+              ariaLabel="Summarize scenario"
+              onClick={onSummarizeScenario}
+            />
           </div>
           <div className={labelHeaderClass}>
-            Block ID
+            Slide
           </div>
-          {map(blockColumns, (blockColumn, index) => (
-            <div key={`name-${index}`} className="px-4 py-2 text-left text-sm font-medium text-black/60 dark:text-white/60 bg-lm-2 dark:bg-dm-3 border-r border-b border-lm-3 dark:border-dm-2 flex items-center justify-between gap-2">
-              <span>{getBlockLabel(blockColumn)}</span>
-              {getBlockDisplayType(blockColumn) === 'PROMPT' && (
-                <FlatButton icon="ai" size="sm" ariaLabel="Summarize column" onClick={() => onSummarizeColumn(blockColumn)} />
-              )}
-            </div>
-          ))}
+          {map(slideGroups, (slideGroup) => {
+            const colSpan = Math.max(1, slideGroup.promptColumns.length);
+            const isSelected = isSlideSelected(slideGroup, selectedSlideRef, selectedBlockResponseRef);
 
+            return (
+              <div
+                key={`slide-${slideGroup.slideRef}`}
+                className={classnames(
+                  'px-4 py-2 text-left text-sm font-bold text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2 cursor-pointer flex items-center justify-between gap-2',
+                  isSelected ? 'bg-primary-light/10 dark:bg-primary-light/10 hover:bg-primary-light/20 dark:hover:bg-primary-light/20' : 'bg-lm-2 dark:bg-dm-3 hover:bg-lm-1 dark:hover:bg-dm-2'
+                )}
+                style={{ gridColumn: `span ${colSpan}` }}
+                onClick={() => onSlideNavigated(slideGroup.slideRef)}
+              >
+                <span>{slideGroup.slideName || `Slide ${slideGroup.slideSortOrder + 1}`}</span>
+                {slideGroup.promptColumns.length > 0 && (
+                  <FlatButton
+                    icon="ai"
+                    size="sm"
+                    ariaLabel="Summarize slide"
+                    onClick={(event: React.MouseEvent) => {
+                      event.stopPropagation();
+                      onSummarizeColumn(slideGroup.promptColumns[0]);
+                    }}
+                  />
+                )}
+              </div>
+            );
+          })}
+
+          {/* Row 2: Block names (prompt columns) */}
           <div className={classnames(usernameHeaderClass, 'py-3')}>
             Username
           </div>
           <div className={classnames(labelHeaderClass, 'py-3')}>
-            Block type
+            Block
           </div>
-          {map(blockColumns, (blockColumn, index) => (
-            <div key={`type-${index}`} className="px-4 py-3 text-sm text-black/60 dark:text-white/60 border-r border-b border-lm-3 dark:border-dm-2">
-              {blockColumn.blockType === 'INPUT_PROMPT' && (
-                <Icon icon={blockColumn.inputType === 'AUDIO' ? 'audioPrompt' : 'textPrompt'} size={16} className="inline-block mr-2 align-text-bottom" />
-              )}
-              {getBlockDisplayName(blockColumn)}{blockColumn.blockType === 'INPUT_PROMPT' && blockColumn.inputType === 'AUDIO' ? ' - audio' : ''}
-            </div>
-          ))}
+          {map(slideGroups, (slideGroup) => {
+            if (slideGroup.promptColumns.length === 0) {
+              return (
+                <div
+                  key={`name-empty-${slideGroup.slideRef}`}
+                  className="px-4 py-2 text-left text-sm text-black/30 dark:text-white/30 border-r border-b border-lm-3 dark:border-dm-2 bg-lm-2 dark:bg-dm-3"
+                >
+                  No prompts
+                </div>
+              );
+            }
 
+            return map(slideGroup.promptColumns, (blockColumn) => (
+              <div
+                key={`name-${blockColumn.ref}`}
+                className={classnames(
+                  'px-4 py-2 text-left text-sm font-medium text-black/60 dark:text-white/60 border-r border-b border-lm-3 dark:border-dm-2 cursor-pointer',
+                  selectedBlockResponseRef === blockColumn.ref ? 'bg-primary-light/10 dark:bg-primary-light/10 hover:bg-primary-light/20 dark:hover:bg-primary-light/20' : 'bg-lm-2 dark:bg-dm-3 hover:bg-lm-1 dark:hover:bg-dm-2'
+                )}
+                onClick={() => onBlockNavigated(blockColumn.ref)}
+              >
+                {blockColumn.name || `Block ${blockColumn.sortOrder + 1}`}
+              </div>
+            ));
+          })}
+
+          {/* Row 3: Block types */}
+          <div className={classnames(usernameHeaderClass, 'border-b-2')} />
+          <div className={classnames(labelHeaderClass, 'py-3 border-b-2')}>
+            Type
+          </div>
+          {map(slideGroups, (slideGroup) => {
+            if (slideGroup.promptColumns.length === 0) {
+              return (
+                <div
+                  key={`type-empty-${slideGroup.slideRef}`}
+                  className="px-4 py-3 text-sm text-black/30 dark:text-white/30 border-r border-b-2 border-lm-3 dark:border-dm-2 bg-lm-2 dark:bg-dm-3"
+                >
+                  —
+                </div>
+              );
+            }
+
+            return map(slideGroup.promptColumns, (blockColumn) => (
+              <div
+                key={`type-${blockColumn.ref}`}
+                className="px-4 py-3 text-sm text-black/60 dark:text-white/60 border-r border-b-2 border-lm-3 dark:border-dm-2 bg-lm-2 dark:bg-dm-3"
+              >
+                {blockColumn.blockType === 'INPUT_PROMPT' && (
+                  <Icon
+                    icon={blockColumn.inputType === 'AUDIO' ? 'audioPrompt' : 'textPrompt'}
+                    size={16}
+                    className="inline-block mr-2 align-text-bottom"
+                  />
+                )}
+                {getBlockDisplayName(blockColumn)}
+                {blockColumn.blockType === 'INPUT_PROMPT' && blockColumn.inputType === 'AUDIO' ? ' - audio' : ''}
+              </div>
+            ));
+          })}
+        </div>
+
+        {/* Scrollable body grid */}
+        <div
+          className="grid w-fit min-w-full"
+          style={{ gridTemplateColumns: gridColumns }}
+        >
           {map(responses, (response, responseIndex) => (
             <React.Fragment key={responseIndex}>
+              {/* Username cell spans all 3 sub-rows */}
               <div
                 className={usernameCellClass}
                 style={{ gridRow: 'span 3' }}
               >
                 {getUserDisplayName(response.user)}
               </div>
+
+              {/* Sub-row labels span all 3 sub-rows */}
               <div className="row-span-3 grid grid-rows-subgrid sticky left-40 z-10">
                 <div className={subRowLabelClass}>
                   Value
@@ -125,37 +230,75 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
                   Time: {formatTimeSpent(response.totalTimeSpentMs)}
                 </div>
               </div>
-              {map(blockColumns, (blockColumn, blockIndex) => {
-                const blockResponse = find(response.blockResponses, { ref: blockColumn.ref });
-                const stage = getStageForBlock(response.stages, blockColumn);
+
+              {/* Row 1 of response: Value cells (one per block column) */}
+              {map(slideGroups, (slideGroup) => {
+                if (slideGroup.promptColumns.length === 0) {
+                  return (
+                    <div
+                      key={`val-empty-${slideGroup.slideRef}`}
+                      className="px-4 py-3 text-sm text-black/30 dark:text-white/30 border-r border-b border-lm-3 dark:border-dm-2 cursor-pointer hover:bg-lm-1 dark:hover:bg-dm-2"
+                      onClick={() => onResponseClicked(response, slideGroup.firstBlockRef)}
+                    >
+                      —
+                    </div>
+                  );
+                }
+
+                return map(slideGroup.promptColumns, (blockColumn) => {
+                  const blockResponse = find(response.blockResponses, { ref: blockColumn.ref });
+                  const isBlockSelected = selectedResponse === response && selectedBlockResponseRef === blockColumn.ref;
+
+                  return (
+                    <div
+                      key={`val-${blockColumn.ref}`}
+                      data-block-ref={blockColumn.ref}
+                      data-user-id={response.user?._id}
+                      className={classnames(
+                        'px-4 py-3 text-sm text-black/60 dark:text-white/60 border-r border-b border-lm-3 dark:border-dm-2 cursor-pointer',
+                        isBlockSelected ? 'outline outline-2 -outline-offset-2 outline-primary-regular hover:bg-primary-light/10 dark:hover:bg-primary-light/10' : 'hover:bg-lm-1 dark:hover:bg-dm-2'
+                      )}
+                      onClick={() => onResponseClicked(response, blockColumn.ref)}
+                    >
+                      {renderBlockAnswer(blockResponse)}
+                    </div>
+                  );
+                });
+              })}
+
+              {/* Row 2 of response: Feedback cells (one per slide, spanning slide width) */}
+              {map(slideGroups, (slideGroup) => {
+                const colSpan = Math.max(1, slideGroup.promptColumns.length);
+                const stage = getStageForSlide(response.stages, slideGroup.slideRef);
                 const hasFeedback = stage?.feedbackItems && stage.feedbackItems.length > 0;
-                const showOnThisColumn = isFirstBlockOfSlide(blockColumns, blockIndex);
-                const isSelected = selectedResponse === response && selectedBlockResponseRef === blockColumn.ref;
 
                 return (
                   <div
-                    key={blockIndex}
-                    data-block-ref={blockColumn.ref}
-                    data-user-id={response.user?._id}
-                    className={classnames(
-                      'row-span-3 grid grid-rows-subgrid cursor-pointer hover:bg-lm-1 dark:hover:bg-dm-2',
-                      { 'outline outline-2 -outline-offset-2 outline-primary-regular': isSelected }
-                    )}
-                    onClick={() => onResponseClicked(response, blockColumn.ref)}
+                    key={`fb-${slideGroup.slideRef}`}
+                    className={subRowCellClass}
+                    style={{ gridColumn: `span ${colSpan}` }}
                   >
-                    <div className="px-4 py-3 text-sm text-black/60 dark:text-white/60 border-r border-b border-lm-3 dark:border-dm-2">
-                      {renderBlockAnswer(blockResponse)}
-                    </div>
-                    <div className={subRowCellClass}>
-                      {showOnThisColumn && hasFeedback && (
-                        <div className="line-clamp-2">{stage!.feedbackItems!.join('; ')}</div>
-                      )}
-                    </div>
-                    <div className={subRowCellClass}>
-                      {showOnThisColumn && stage?.timeSpentMs != null && (
-                        <span>{formatTimeSpent(stage.timeSpentMs)}</span>
-                      )}
-                    </div>
+                    {hasFeedback && (
+                      <div className="line-clamp-2">{stage!.feedbackItems!.join('; ')}</div>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Row 3 of response: Time cells (one per slide, spanning slide width) */}
+              {map(slideGroups, (slideGroup) => {
+                const colSpan = Math.max(1, slideGroup.promptColumns.length);
+                const stage = getStageForSlide(response.stages, slideGroup.slideRef);
+
+                return (
+                  <div
+                    key={`time-${slideGroup.slideRef}`}
+                    className={subRowCellClass}
+                    style={{ gridColumn: `span ${colSpan}` }}
+                  >
+                    {stage?.timeSpentMs != null && (
+                      <span>{formatTimeSpent(stage.timeSpentMs)}</span>
+                    )}
                   </div>
                 );
               })}

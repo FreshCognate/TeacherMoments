@@ -3,6 +3,7 @@ import map from 'lodash/map';
 import noop from 'lodash/noop';
 import classnames from 'classnames';
 import getBlockComponent from '~/modules/blocks/helpers/getBlockComponent';
+import getBlockDisplayType from '~/modules/blocks/helpers/getBlockDisplayType';
 import Pagination from '~/uikit/pagination/components/pagination';
 
 interface AnalyticsSlideViewerProps {
@@ -47,14 +48,16 @@ const AnalyticsSlideViewer: React.FC<AnalyticsSlideViewerProps> = ({
         if (!Block) return null;
 
         const blockTracking = blockTrackingByRef[block.ref] || {};
+        const isPrompt = getBlockDisplayType(block) === 'PROMPT';
 
         return (
           <div
             key={block._id}
-            className={classnames('mb-4 last:mb-0 p-4 bg-lm-2 rounded-md dark:bg-dm-2 cursor-pointer', {
+            className={classnames('mb-4 last:mb-0 p-4 bg-lm-2 rounded-md dark:bg-dm-2', {
+              'cursor-pointer': isPrompt,
               'ring-1 ring-inset ring-primary-regular': selectedBlockResponseRef === block.ref
             })}
-            onClick={() => onBlockClicked(block.ref)}
+            onClick={isPrompt ? () => onBlockClicked(block.ref) : undefined}
           >
             <Block
               block={block}

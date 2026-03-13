@@ -27,6 +27,14 @@ export interface BlockColumn {
   sortOrder: number;
 }
 
+export interface SlideGroup {
+  slideRef: string;
+  slideName?: string;
+  slideSortOrder: number;
+  promptColumns: BlockColumn[];
+  firstBlockRef: string;
+}
+
 export interface StageResponse {
   slideRef: string;
   timeSpentMs?: number;
