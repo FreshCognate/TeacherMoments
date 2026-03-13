@@ -16,7 +16,8 @@ interface ResponseSlide {
 interface AnalyticsSlideViewerContainerProps {
   selectedResponse: UserResponse;
   selectedBlockResponseRef: string | null;
-  onSlideNavigated: (blockResponseRef: string) => void;
+  selectedSlideRef: string | null;
+  onSlideNavigated: (slideRef: string) => void;
   previewSlides?: any;
   previewBlocks?: any;
 }
@@ -24,7 +25,12 @@ interface AnalyticsSlideViewerContainerProps {
 class AnalyticsSlideViewerContainer extends Component<AnalyticsSlideViewerContainerProps> {
 
   getActiveSlide = () => {
-    const { selectedBlockResponseRef, previewSlides, previewBlocks } = this.props;
+    const { selectedSlideRef, selectedBlockResponseRef, previewSlides, previewBlocks } = this.props;
+
+    if (selectedSlideRef) {
+      return find(previewSlides.data, { _id: selectedSlideRef });
+    }
+
     if (!selectedBlockResponseRef) return null;
 
     const selectedBlock = find(previewBlocks.data, { ref: selectedBlockResponseRef });
@@ -58,7 +64,12 @@ class AnalyticsSlideViewerContainer extends Component<AnalyticsSlideViewerContai
   }
 
   getCurrentSlideIndex = (responseSlides: ResponseSlide[]) => {
-    const { selectedBlockResponseRef, previewBlocks } = this.props;
+    const { selectedSlideRef, selectedBlockResponseRef, previewBlocks } = this.props;
+
+    if (selectedSlideRef) {
+      return findIndex(responseSlides, { slideRef: selectedSlideRef });
+    }
+
     if (!selectedBlockResponseRef) return -1;
 
     const selectedBlock = find(previewBlocks.data, { ref: selectedBlockResponseRef });
@@ -78,7 +89,7 @@ class AnalyticsSlideViewerContainer extends Component<AnalyticsSlideViewerContai
     const newIndex = direction === 'up' ? currentIndex + 1 : currentIndex - 1;
     if (newIndex < 0 || newIndex >= responseSlides.length) return;
 
-    this.props.onSlideNavigated(responseSlides[newIndex].firstBlockRef);
+    this.props.onSlideNavigated(responseSlides[newIndex].slideRef);
   }
 
   getBlockTrackingByRef = () => {

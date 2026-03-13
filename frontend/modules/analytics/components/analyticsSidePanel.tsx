@@ -9,9 +9,10 @@ interface AnalyticsSidePanelProps {
   viewType: AnalyticsViewType;
   selectedResponse: UserResponse | null;
   selectedBlockResponseRef: string | null;
+  selectedSlideRef: string | null;
   isUserUpDisabled?: boolean;
   isUserDownDisabled?: boolean;
-  onSlideNavigated: (blockResponseRef: string) => void;
+  onSlideNavigated: (slideRef: string) => void;
   onUserNavigated?: (direction: string) => void;
   onClose: () => void;
 }
@@ -20,6 +21,7 @@ const AnalyticsSidePanel: React.FC<AnalyticsSidePanelProps> = ({
   viewType,
   selectedResponse,
   selectedBlockResponseRef,
+  selectedSlideRef,
   isUserUpDisabled,
   isUserDownDisabled,
   onSlideNavigated,
@@ -62,6 +64,7 @@ const AnalyticsSidePanel: React.FC<AnalyticsSidePanelProps> = ({
             <AnalyticsSlideViewerContainer
               selectedResponse={selectedResponse}
               selectedBlockResponseRef={selectedBlockResponseRef}
+              selectedSlideRef={selectedSlideRef}
               onSlideNavigated={onSlideNavigated}
             />
           </div>

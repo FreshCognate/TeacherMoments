@@ -14,6 +14,7 @@ interface AnalyticsProps {
   responses: UserResponse[];
   selectedResponse: UserResponse | null;
   selectedBlockResponseRef: string | null;
+  selectedSlideRef: string | null;
   isLoading: boolean;
   isSyncing?: boolean;
   searchValue?: string;
@@ -24,7 +25,8 @@ interface AnalyticsProps {
   onSearchValueChange?: (searchValue: string) => void;
   onPaginationClicked?: (direction: string) => void;
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
-  onSlideNavigated: (blockResponseRef: string) => void;
+  onSlideNavigated: (slideRef: string) => void;
+  onBlockNavigated: (blockRef: string) => void;
   onUserNavigated?: (direction: string) => void;
   onExportClicked?: () => void;
   onSidePanelClose: () => void;
@@ -39,6 +41,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
   responses,
   selectedResponse,
   selectedBlockResponseRef,
+  selectedSlideRef,
   isLoading,
   isSyncing,
   searchValue,
@@ -50,6 +53,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
   onPaginationClicked,
   onResponseClicked,
   onSlideNavigated,
+  onBlockNavigated,
   onUserNavigated,
   onExportClicked,
   onSidePanelClose,
@@ -101,7 +105,10 @@ const Analytics: React.FC<AnalyticsProps> = ({
             responses={responses}
             selectedResponse={selectedResponse}
             selectedBlockResponseRef={selectedBlockResponseRef}
+            selectedSlideRef={selectedSlideRef}
             onResponseClicked={onResponseClicked}
+            onSlideNavigated={onSlideNavigated}
+            onBlockNavigated={onBlockNavigated}
             onSummarizeColumn={onSummarizeColumn}
             onSummarizeScenario={onSummarizeScenario}
           />
@@ -121,6 +128,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
           viewType={viewType}
           selectedResponse={selectedResponse}
           selectedBlockResponseRef={selectedBlockResponseRef}
+          selectedSlideRef={selectedSlideRef}
           isUserUpDisabled={isUserUpDisabled}
           isUserDownDisabled={isUserDownDisabled}
           onSlideNavigated={onSlideNavigated}
