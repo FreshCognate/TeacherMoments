@@ -2,6 +2,7 @@ import getCache from "~/core/cache/helpers/getCache";
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import getScenarioDetails from "./getScenarioDetails";
+import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
 
 export default (status) => {
   const run = getCache('run');
@@ -11,6 +12,11 @@ export default (status) => {
   const currentStage = find(stages, { slideRef: activeSlideRef });
 
   currentStage.status = status;
+
+  if (isScenarioInPlay()) {
+    return run.mutate({ stages }, { method: 'put' });
+  }
+
   return run.set({ stages });
 
 }
