@@ -1,11 +1,11 @@
-import createBlockResponsesSummary from './services/createBlockResponsesSummary.js';
+import createSlideResponsesSummary from './services/createSlideResponsesSummary.js';
 import createScenarioResponsesSummary from './services/createScenarioResponsesSummary.js';
 
 export default {
 
   create: async function ({ body }, context) {
-    if (body.blockRef) {
-      return await createBlockResponsesSummary(body, context);
+    if (body.slideRef) {
+      return await createSlideResponsesSummary(body, context);
     }
     return await createScenarioResponsesSummary(body, context);
   }

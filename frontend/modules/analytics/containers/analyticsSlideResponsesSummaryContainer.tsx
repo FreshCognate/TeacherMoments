@@ -3,11 +3,11 @@ import axios from 'axios';
 import WithRouter from '~/core/app/components/withRouter';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
-import AnalyticsBlockResponsesSummary from '../components/analyticsBlockResponsesSummary';
-import { BlockColumn, UserResponse } from '../analytics.types';
+import AnalyticsSlideResponsesSummary from '../components/analyticsSlideResponsesSummary';
+import { SlideGroup, UserResponse } from '../analytics.types';
 
-interface AnalyticsBlockResponsesSummaryContainerProps {
-  blockColumn: BlockColumn;
+interface AnalyticsSlideResponsesSummaryContainerProps {
+  slideGroup: SlideGroup;
   responses: UserResponse[];
   actions?: any;
   router?: any;
@@ -24,17 +24,19 @@ interface SummaryData {
   summary: string;
 }
 
-interface AnalyticsBlockResponsesSummaryContainerState {
+interface AnalyticsSlideResponsesSummaryContainerState {
   summaryData: SummaryData | null;
-  block: any;
+  slide: any;
+  blocks: any[];
   isLoading: boolean;
 }
 
-class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockResponsesSummaryContainerProps, AnalyticsBlockResponsesSummaryContainerState> {
+class AnalyticsSlideResponsesSummaryContainer extends Component<AnalyticsSlideResponsesSummaryContainerProps, AnalyticsSlideResponsesSummaryContainerState> {
 
   state = {
     summaryData: null,
-    block: null,
+    slide: null,
+    blocks: [],
     isLoading: true
   };
 
@@ -47,12 +49,12 @@ class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockRe
       const { id, scenarioId: scenarioIdParam } = this.props.router.params;
       const cohortId = scenarioIdParam ? id : undefined;
       const scenarioId = scenarioIdParam || id;
-      const { blockColumn } = this.props;
+      const { slideGroup } = this.props;
 
       const response = await axios.post('/api/responses/summary', {
         cohortId,
         scenarioId,
-        blockRef: blockColumn.ref
+        slideRef: slideGroup.slideRef
       });
 
       const sockets = await getSockets();
@@ -65,7 +67,12 @@ class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockRe
             sections: payload.sections || [],
             summary: payload.summary || ''
           } : null;
-          this.setState({ summaryData, block: payload.block || null, isLoading: false });
+          this.setState({
+            summaryData,
+            slide: payload.slide || null,
+            blocks: payload.blocks || [],
+            isLoading: false
+          });
         }
       });
     } catch (error) {
@@ -75,13 +82,14 @@ class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockRe
   };
 
   render() {
-    const { blockColumn, responses } = this.props;
-    const { summaryData, block, isLoading } = this.state;
+    const { slideGroup, responses } = this.props;
+    const { summaryData, slide, blocks, isLoading } = this.state;
 
     return (
-      <AnalyticsBlockResponsesSummary
-        blockColumn={blockColumn}
-        block={block}
+      <AnalyticsSlideResponsesSummary
+        slideGroup={slideGroup}
+        slide={slide}
+        blocks={blocks}
         responses={responses}
         summaryData={summaryData}
         isLoading={isLoading}
@@ -90,4 +98,4 @@ class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockRe
   }
 }
 
-export default WithRouter(AnalyticsBlockResponsesSummaryContainer);
+export default WithRouter(AnalyticsSlideResponsesSummaryContainer);

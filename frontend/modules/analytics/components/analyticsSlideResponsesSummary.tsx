@@ -1,9 +1,10 @@
 import React from 'react';
+import map from 'lodash/map';
+import each from 'lodash/each';
+import noop from 'lodash/noop';
 import Loading from '~/uikit/loaders/components/loading';
 import getBlockComponent from '~/modules/blocks/helpers/getBlockComponent';
-import { BlockColumn, UserResponse } from '../analytics.types';
-import getBlockLabel from '../helpers/getBlockLabel';
-import each from 'lodash/each';
+import { SlideGroup, UserResponse } from '../analytics.types';
 
 interface SummarySection {
   title: string;
@@ -16,24 +17,23 @@ interface SummaryData {
   summary: string;
 }
 
-interface AnalyticsBlockResponsesSummaryProps {
-  blockColumn: BlockColumn;
-  block: any;
+interface AnalyticsSlideResponsesSummaryProps {
+  slideGroup: SlideGroup;
+  slide: any;
+  blocks: any[];
   responses: UserResponse[];
   summaryData: SummaryData | null;
   isLoading: boolean;
 }
 
-const noop = () => {};
-
-const AnalyticsBlockResponsesSummary: React.FC<AnalyticsBlockResponsesSummaryProps> = ({
-  blockColumn,
-  block,
+const AnalyticsSlideResponsesSummary: React.FC<AnalyticsSlideResponsesSummaryProps> = ({
+  slideGroup,
+  slide,
+  blocks,
   responses,
   summaryData,
   isLoading
 }) => {
-  const Block = block ? getBlockComponent({ blockType: block.blockType }) : null;
 
   const renderSections = () => {
     if (!summaryData?.sections?.length) return null;
@@ -63,25 +63,34 @@ const AnalyticsBlockResponsesSummary: React.FC<AnalyticsBlockResponsesSummaryPro
 
   return (
     <div className="p-4">
-      <h1 className="text-xl font-semibold text-black/80 dark:text-white/80 mb-4">
-        Block label: {getBlockLabel(blockColumn)}
-      </h1>
       {isLoading && <Loading />}
       {!isLoading && (
         <div className="grid grid-cols-2 gap-6">
           <div>
-            <p className="text-sm font-medium text-black/80 dark:text-white/80 mb-2">Prompt</p>
-            {Block && block && (
-              <div className="p-4 bg-lm-2 rounded-md dark:bg-dm-2">
-                <Block
-                  block={block}
-                  blockTracking={{}}
-                  isResponseBlock={true}
-                  onUpdateBlockTracking={noop}
-                  navigateTo={noop}
-                />
+            {slide?.name && (
+              <div className="text-sm font-medium text-black/60 dark:text-white/60 mb-4">
+                {slide.name}
               </div>
             )}
+            {map(blocks, (block) => {
+              const Block = getBlockComponent({ blockType: block.blockType });
+              if (!Block) return null;
+
+              return (
+                <div
+                  key={block._id}
+                  className="mb-4 last:mb-0 p-4 bg-lm-2 rounded-md dark:bg-dm-2"
+                >
+                  <Block
+                    block={block}
+                    blockTracking={{}}
+                    isResponseBlock={true}
+                    onUpdateBlockTracking={noop}
+                    navigateTo={noop}
+                  />
+                </div>
+              );
+            })}
           </div>
           <div>
             {summaryData && (
@@ -111,4 +120,4 @@ const AnalyticsBlockResponsesSummary: React.FC<AnalyticsBlockResponsesSummaryPro
   );
 };
 
-export default AnalyticsBlockResponsesSummary;
+export default AnalyticsSlideResponsesSummary;

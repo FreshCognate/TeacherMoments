@@ -6,7 +6,7 @@ import '../../backend/modules/assets/index.js';
 import generateShowFeedbackFromPrompts from '../tasks/generateShowFeedbackFromPrompts.js';
 import generateMatchUserFeedbackToConditions from '../tasks/generateMatchUserFeedbackToConditions.js';
 import generatedFeedbackFromFeedbackItems from '../tasks/generatedFeedbackFromFeedbackItems.js';
-import generateBlockResponsesSummary from '../tasks/generateBlockResponsesSummary.js';
+import generateSlideResponsesSummary from '../tasks/generateSlideResponsesSummary.js';
 import generateScenarioResponsesSummary from '../tasks/generateScenarioResponsesSummary.js';
 import getSockets from '../getSockets.js';
 
@@ -60,14 +60,14 @@ export default async (job) => {
         });
         break;
       }
-      case 'BLOCK_RESPONSES_SUMMARY': {
+      case 'SLIDE_RESPONSES_SUMMARY': {
         sockets = await getSockets();
 
         sockets.emit(`workers:generate:${job.id}`, {
           event: 'GENERATING'
         });
 
-        const blockPayload = await generateBlockResponsesSummary(job.data.payload);
+        const blockPayload = await generateSlideResponsesSummary(job.data.payload);
 
         sockets = await getSockets();
 

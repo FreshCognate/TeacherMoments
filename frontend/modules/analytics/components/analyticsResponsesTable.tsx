@@ -21,7 +21,7 @@ interface AnalyticsResponsesTableProps {
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
   onSlideNavigated: (slideRef: string) => void;
   onBlockNavigated: (blockRef: string) => void;
-  onSummarizeColumn: (blockColumn: BlockColumn) => void;
+  onSummarizeSlide: (slideGroup: SlideGroup) => void;
   onSummarizeScenario: () => void;
 }
 
@@ -69,7 +69,7 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
   onResponseClicked,
   onSlideNavigated,
   onBlockNavigated,
-  onSummarizeColumn,
+  onSummarizeSlide,
   onSummarizeScenario
 }) => {
   if (slideGroups.length === 0) {
@@ -126,7 +126,7 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
                     ariaLabel="Summarize slide"
                     onClick={(event: React.MouseEvent) => {
                       event.stopPropagation();
-                      onSummarizeColumn(slideGroup.promptColumns[0]);
+                      onSummarizeSlide(slideGroup);
                     }}
                   />
                 )}

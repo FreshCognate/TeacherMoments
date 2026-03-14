@@ -5,9 +5,9 @@ import Analytics from '../components/analytics';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import addModal from '~/core/dialogs/helpers/addModal';
 import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
-import AnalyticsBlockResponsesSummaryContainer from './analyticsBlockResponsesSummaryContainer';
+import AnalyticsSlideResponsesSummaryContainer from './analyticsSlideResponsesSummaryContainer';
 import AnalyticsScenarioResponsesSummaryContainer from './analyticsScenarioResponsesSummaryContainer';
-import { AnalyticsViewType, BlockColumn, UserResponse } from '../analytics.types';
+import { AnalyticsViewType, SlideGroup, UserResponse } from '../analytics.types';
 
 interface AnalyticsContainerProps {
   viewType?: AnalyticsViewType;
@@ -175,13 +175,6 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     this.setState({ selectedResponse: null, selectedBlockResponseRef: null, selectedSlideRef: null });
   }
 
-  getBlockResponseCount = (blockColumn: BlockColumn) => {
-    const { responses = [] } = this.props;
-    return filter(responses, (response: UserResponse) => {
-      const blockResponse = response.blockResponses?.find((br: any) => br.ref === blockColumn.ref);
-      return blockResponse && (blockResponse.textValue || (blockResponse.selectedOptions && blockResponse.selectedOptions.length));
-    }).length;
-  }
 
   onSummarizeScenario = () => {
     const { responses = [] } = this.props;
@@ -216,10 +209,20 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     });
   }
 
-  onSummarizeColumn = (blockColumn: BlockColumn) => {
+  getSlideResponseCount = (slideGroup: SlideGroup) => {
+    const { responses = [] } = this.props;
+    return filter(responses, (response: UserResponse) => {
+      return slideGroup.promptColumns.some((column) => {
+        const blockResponse = response.blockResponses?.find((br: any) => br.ref === column.ref);
+        return blockResponse && (blockResponse.textValue || (blockResponse.selectedOptions && blockResponse.selectedOptions.length));
+      });
+    }).length;
+  }
+
+  onSummarizeSlide = (slideGroup: SlideGroup) => {
     const { responses = [] } = this.props;
 
-    const responseCount = this.getBlockResponseCount(blockColumn);
+    const responseCount = this.getSlideResponseCount(slideGroup);
 
     if (responseCount < 2) {
       addModal({
@@ -234,7 +237,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
 
     addModal({
       title: 'Summarize responses',
-      body: 'This will generate a summary of responses in this column.',
+      body: 'This will generate a summary of responses for this slide.',
       actions: [
         { type: 'CANCEL', text: 'Cancel' },
         { type: 'CONTINUE', text: 'Continue', color: 'primary' }
@@ -244,8 +247,8 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         addSidePanel({
           size: 'lg',
           icon: 'ai',
-          title: 'Prompt summary of responses',
-          component: <AnalyticsBlockResponsesSummaryContainer blockColumn={blockColumn} responses={responses} />
+          title: 'Slide summary of responses',
+          component: <AnalyticsSlideResponsesSummaryContainer slideGroup={slideGroup} responses={responses} />
         });
       }
     });
@@ -293,7 +296,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         onBlockNavigated={this.onBlockNavigated}
         onUserNavigated={this.onUserNavigated}
         onSidePanelClose={this.onSidePanelClose}
-        onSummarizeColumn={this.onSummarizeColumn}
+        onSummarizeSlide={this.onSummarizeSlide}
         onSummarizeScenario={this.onSummarizeScenario}
       />
     );
