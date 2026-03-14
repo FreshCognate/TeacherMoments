@@ -32,6 +32,7 @@ interface AnalyticsProps {
   onSidePanelClose: () => void;
   onSummarizeSlide: (slideGroup: SlideGroup) => void;
   onSummarizeScenario: () => void;
+  onSummarizeUser: (response: UserResponse) => void;
 }
 
 const Analytics: React.FC<AnalyticsProps> = ({
@@ -58,7 +59,8 @@ const Analytics: React.FC<AnalyticsProps> = ({
   onExportClicked,
   onSidePanelClose,
   onSummarizeSlide,
-  onSummarizeScenario
+  onSummarizeScenario,
+  onSummarizeUser
 }) => {
   return (
     <div className="flex">
@@ -111,6 +113,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
             onBlockNavigated={onBlockNavigated}
             onSummarizeSlide={onSummarizeSlide}
             onSummarizeScenario={onSummarizeScenario}
+            onSummarizeUser={onSummarizeUser}
           />
         )}
         {!isLoading && responses.length > 0 && viewType === 'byUserScenarios' && (
@@ -123,6 +126,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
             onResponseClicked={onResponseClicked}
             onSlideNavigated={onSlideNavigated}
             onBlockNavigated={onBlockNavigated}
+            onSummarizeUser={onSummarizeUser}
           />
         )}
       </div>

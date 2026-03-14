@@ -23,6 +23,7 @@ interface AnalyticsResponsesTableProps {
   onBlockNavigated: (blockRef: string) => void;
   onSummarizeSlide: (slideGroup: SlideGroup) => void;
   onSummarizeScenario: () => void;
+  onSummarizeUser: (response: UserResponse) => void;
 }
 
 const renderBlockAnswer = (blockResponse: BlockResponse | undefined) => {
@@ -70,7 +71,8 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
   onSlideNavigated,
   onBlockNavigated,
   onSummarizeSlide,
-  onSummarizeScenario
+  onSummarizeScenario,
+  onSummarizeUser
 }) => {
   if (slideGroups.length === 0) {
     return (
@@ -212,10 +214,16 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
             <React.Fragment key={responseIndex}>
               {/* Username cell spans all 3 sub-rows */}
               <div
-                className={usernameCellClass}
+                className={classnames(usernameCellClass, 'flex flex-col items-start gap-1')}
                 style={{ gridRow: 'span 3' }}
               >
                 {getUserDisplayName(response.user)}
+                <FlatButton
+                  icon="ai"
+                  size="sm"
+                  ariaLabel="Summarize user"
+                  onClick={() => onSummarizeUser(response)}
+                />
               </div>
 
               {/* Sub-row labels span all 3 sub-rows */}

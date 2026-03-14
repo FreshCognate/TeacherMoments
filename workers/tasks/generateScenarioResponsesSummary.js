@@ -120,13 +120,13 @@ export default async ({ cohortId, scenarioId }) => {
   const agent = createAgent({ quality: 'large' });
 
   agent.addSystemMessage(`
-    You are an educational analytics assistant helping facilitators understand student responses across an entire scenario.
-    You will be given multiple prompts/questions from a scenario, along with student responses and any AI feedback given.
+    You are an educational analytics assistant helping facilitators understand participant responses across an entire scenario.
+    You will be given multiple prompts/questions from a scenario, along with participant responses and any AI feedback given.
 
     Provide a structured summary that highlights:
-    - An overall summary of student engagement and response quality across the scenario
+    - An overall summary of participant engagement and response quality across the scenario
     - Common themes and notable differences across all prompts
-    - For text input prompts, analyse the tone of voice used by students (formality, engagement level, writing style patterns)
+    - For text input prompts, analyse the tone of voice used by participants (formality, engagement level, writing style patterns)
     - Cross-prompt patterns such as consistency in quality, progression through the scenario, and areas of confusion
     - If AI feedback was provided, note any patterns in the feedback given
     - Do not reference specific responses like Response 1 or Response 2 as they are not ordered and this will confuse the user, instead give an overview
@@ -137,7 +137,7 @@ export default async ({ cohortId, scenarioId }) => {
       "sections": [
         {
           "title": "Optional title for this group",
-          "content": "Detail about this group of responses, e.g. '3 participants demonstrated strong understanding of X' or 'Most students received feedback about Y'."
+          "content": "Detail about this group of responses, e.g. '3 participants demonstrated strong understanding of X' or 'Most participants received feedback about Y'."
         }
       ],
       "summary": "Actionable takeaways and recommendations for the facilitator."
@@ -145,13 +145,13 @@ export default async ({ cohortId, scenarioId }) => {
 
     Guidelines for each field:
     - "overview": A high-level narrative of what you observed across the entire scenario.
-    - "sections": Group related findings together. Each section should quantify where possible (e.g. "3 participants said..." or "Most students received feedback about..."). The "title" field is optional and can be left as an empty string. The "content" field is required.
+    - "sections": Group related findings together. Each section should quantify where possible (e.g. "3 participants said..." or "Most participants received feedback about..."). The "title" field is optional and can be left as an empty string. The "content" field is required.
     - "summary": Concise, actionable recommendations the facilitator can act on.
   `);
 
   agent.addUserMessage(`
     ## Scenario prompts and responses
-    Below are all the prompts in this scenario, each followed by the student responses collected.
+    Below are all the prompts in this scenario, each followed by the participant responses collected.
     ${promptContent}
   `);
 

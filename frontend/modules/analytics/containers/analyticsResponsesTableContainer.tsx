@@ -15,6 +15,7 @@ interface AnalyticsResponsesTableContainerProps {
   onBlockNavigated: (blockRef: string) => void;
   onSummarizeSlide: (slideGroup: SlideGroup) => void;
   onSummarizeScenario: () => void;
+  onSummarizeUser: (response: UserResponse) => void;
 }
 
 class AnalyticsResponsesTableContainer extends Component<AnalyticsResponsesTableContainerProps> {
@@ -64,7 +65,7 @@ class AnalyticsResponsesTableContainer extends Component<AnalyticsResponsesTable
   }
 
   render() {
-    const { responses, selectedResponse, selectedBlockResponseRef, selectedSlideRef, onResponseClicked, onSlideNavigated, onBlockNavigated, onSummarizeSlide, onSummarizeScenario } = this.props;
+    const { responses, selectedResponse, selectedBlockResponseRef, selectedSlideRef, onResponseClicked, onSlideNavigated, onBlockNavigated, onSummarizeSlide, onSummarizeScenario, onSummarizeUser } = this.props;
     const blockColumns = this.getBlockColumns();
     const slideGroups = this.getSlideGroups(blockColumns);
 
@@ -81,6 +82,7 @@ class AnalyticsResponsesTableContainer extends Component<AnalyticsResponsesTable
         onBlockNavigated={onBlockNavigated}
         onSummarizeSlide={onSummarizeSlide}
         onSummarizeScenario={onSummarizeScenario}
+        onSummarizeUser={onSummarizeUser}
       />
     );
   }

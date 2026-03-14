@@ -7,6 +7,7 @@ import addModal from '~/core/dialogs/helpers/addModal';
 import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
 import AnalyticsSlideResponsesSummaryContainer from './analyticsSlideResponsesSummaryContainer';
 import AnalyticsScenarioResponsesSummaryContainer from './analyticsScenarioResponsesSummaryContainer';
+import AnalyticsUserResponsesSummaryContainer from './analyticsUserResponsesSummaryContainer';
 import { AnalyticsViewType, SlideGroup, UserResponse } from '../analytics.types';
 
 interface AnalyticsContainerProps {
@@ -219,6 +220,40 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     }).length;
   }
 
+  onSummarizeUser = (response: UserResponse) => {
+    const { viewType = 'byScenarioUsers' } = this.props;
+    const isUserView = viewType === 'byUserScenarios';
+    const userId = isUserView ? this.props.user?._id : response.user?._id;
+    const userName = isUserView ? getUserDisplayName(this.props.user) : getUserDisplayName(response.user);
+    const scenarioId = isUserView ? response.scenario?._id : undefined;
+    const scenarioName = isUserView ? response.scenario?.name : this.props.scenario?.name;
+
+    addModal({
+      title: 'Summarize user',
+      body: 'This will generate a summary of this user\'s responses across the entire scenario.',
+      actions: [
+        { type: 'CANCEL', text: 'Cancel' },
+        { type: 'CONTINUE', text: 'Continue', color: 'primary' }
+      ]
+    }, (state: string, { type }: any) => {
+      if (state === 'ACTION' && type === 'CONTINUE') {
+        addSidePanel({
+          size: 'lg',
+          icon: 'ai',
+          title: 'User summary',
+          component: (
+            <AnalyticsUserResponsesSummaryContainer
+              userId={userId}
+              userName={userName}
+              scenarioId={scenarioId}
+              scenarioName={scenarioName}
+            />
+          )
+        });
+      }
+    });
+  }
+
   onSummarizeSlide = (slideGroup: SlideGroup) => {
     const { responses = [] } = this.props;
 
@@ -298,6 +333,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         onSidePanelClose={this.onSidePanelClose}
         onSummarizeSlide={this.onSummarizeSlide}
         onSummarizeScenario={this.onSummarizeScenario}
+        onSummarizeUser={this.onSummarizeUser}
       />
     );
   }

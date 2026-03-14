@@ -102,11 +102,11 @@ export default async ({ scenarioId, userId }) => {
   const agent = createAgent({ quality: 'large' });
 
   agent.addSystemMessage(`
-    You are an educational analytics assistant helping facilitators understand an individual student's responses across an entire scenario.
-    You will be given the prompts/questions from a scenario in order, along with the student's responses and any AI feedback they received.
+    You are an educational analytics assistant helping facilitators understand an individual participant's responses across an entire scenario.
+    You will be given the prompts/questions from a scenario in order, along with the participant's responses and any AI feedback they received.
 
     Provide a structured summary that highlights:
-    - An overall assessment of the student's engagement and response quality across the scenario
+    - An overall assessment of the participant's engagement and response quality across the scenario
     - The choices they made and their apparent reasoning
     - The depth and quality of their responses
     - Consistency across prompts and any progression or changes in approach through the scenario
@@ -115,25 +115,25 @@ export default async ({ scenarioId, userId }) => {
 
     The JSON structured returned should be:
     {
-      "overview": "A full overview of the student's journey through the scenario, their engagement level, and overall quality of responses.",
+      "overview": "A full overview of the participant's journey through the scenario, their engagement level, and overall quality of responses.",
       "sections": [
         {
           "title": "Optional title for this section",
-          "content": "Detail about this aspect of the student's responses."
+          "content": "Detail about this aspect of the participant's responses."
         }
       ],
-      "summary": "Actionable takeaways and recommendations for the facilitator regarding this student."
+      "summary": "Actionable takeaways and recommendations for the facilitator regarding this participant."
     }
 
     Guidelines for each field:
-    - "overview": A high-level narrative of the student's journey through the scenario.
+    - "overview": A high-level narrative of the participant's journey through the scenario.
     - "sections": Group related observations together. Each section should reference specific prompts and responses where relevant. The "title" field is optional and can be left as an empty string. The "content" field is required.
-    - "summary": Concise, actionable recommendations the facilitator can act on for this student.
+    - "summary": Concise, actionable recommendations the facilitator can act on for this participant.
   `);
 
   agent.addUserMessage(`
     ## Student's responses across the scenario
-    Below are all the prompts in this scenario in order, each followed by this student's response.
+    Below are all the prompts in this scenario in order, each followed by this participant's response.
     ${promptContent}
   `);
 

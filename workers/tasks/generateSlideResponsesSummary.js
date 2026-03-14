@@ -141,8 +141,8 @@ export default async ({ cohortId, scenarioId, slideRef }) => {
   const agent = createAgent({ quality: 'medium' });
 
   agent.addSystemMessage(`
-    You are an educational analytics assistant helping facilitators understand student responses.
-    You will be given the context of a slide, the prompts that were asked to students, their responses, and any AI feedback that was given to them.
+    You are an educational analytics assistant helping facilitators understand participant responses.
+    You will be given the context of a slide, the prompts that were asked to participants, their responses, and any AI feedback that was given to them.
 
     ## Slide context
     ${slideContext}
@@ -160,7 +160,7 @@ export default async ({ cohortId, scenarioId, slideRef }) => {
       "sections": [
         {
           "title": "Optional title for this group",
-          "content": "Detail about this group of responses, e.g. '3 participants demonstrated strong understanding of X' or 'Several students received feedback about Y'."
+          "content": "Detail about this group of responses, e.g. '3 participants demonstrated strong understanding of X' or 'Several participants received feedback about Y'."
         }
       ],
       "summary": "Actionable takeaways and recommendations for the facilitator."
@@ -168,13 +168,13 @@ export default async ({ cohortId, scenarioId, slideRef }) => {
 
     Guidelines for each field:
     - "overview": A high-level narrative of what you observed across all responses.
-    - "sections": Group related findings together. Each section should quantify where possible (e.g. "3 participants said..." or "Most students received feedback about..."). The "title" field is optional and can be left as an empty string. The "content" field is required.
+    - "sections": Group related findings together. Each section should quantify where possible (e.g. "3 participants said..." or "Most participants received feedback about..."). The "title" field is optional and can be left as an empty string. The "content" field is required.
     - "summary": Concise, actionable recommendations the facilitator can act on.
   `);
 
   agent.addUserMessage(`
     ## Slide prompts and responses
-    Below are the prompts on this slide, each followed by the student responses collected.
+    Below are the prompts on this slide, each followed by the participant responses collected.
     ${promptContent}
   `);
 
