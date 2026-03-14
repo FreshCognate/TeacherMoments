@@ -56,9 +56,9 @@ const isSlideSelected = (slideGroup: SlideGroup, selectedSlideRef: string | null
 };
 
 const usernameHeaderClass = 'sticky left-0 z-10 bg-lm-2 dark:bg-dm-3 px-4 py-2 text-left text-sm font-bold text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2';
-const labelHeaderClass = 'sticky left-40 z-10 bg-lm-2 dark:bg-dm-3 px-4 py-2 text-left text-sm font-bold text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2';
+const labelHeaderClass = 'sticky left-[11.25rem] z-10 bg-lm-2 dark:bg-dm-3 px-4 py-2 text-left text-sm font-bold text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2';
 const usernameCellClass = 'sticky left-0 z-20 bg-lm-2 dark:bg-dm-3 px-4 py-3 text-sm font-medium text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2 break-words';
-const subRowLabelClass = 'sticky left-40 z-10 bg-lm-1 dark:bg-dm-2 px-4 py-2 text-xs text-black/40 dark:text-white/40 border-r border-b border-lm-3 dark:border-dm-2';
+const subRowLabelClass = 'sticky left-[11.25rem] z-10 bg-lm-1 dark:bg-dm-2 px-4 py-2 text-xs text-black/40 dark:text-white/40 border-r border-b border-lm-3 dark:border-dm-2';
 const subRowCellClass = 'px-4 py-2 text-xs text-black/40 dark:text-white/40 border-r border-b border-lm-3 dark:border-dm-2';
 
 const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
@@ -83,7 +83,7 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
   }
 
   const columnCount = getColumnCount(slideGroups);
-  const gridColumns = `10rem 7rem repeat(${columnCount}, minmax(18rem, 1fr))`;
+  const gridColumns = `11.25rem 7rem repeat(${columnCount}, minmax(18rem, 1fr))`;
 
   return (
     <div className="bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-2 rounded-lg overflow-hidden">
@@ -100,6 +100,7 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
               size="sm"
               text="Summarize scenario"
               ariaLabel="Summarize scenario"
+              className="font-normal text-xs"
               onClick={onSummarizeScenario}
             />
           </div>
@@ -114,7 +115,7 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
               <div
                 key={`slide-${slideGroup.slideRef}`}
                 className={classnames(
-                  'px-4 py-2 text-left text-sm font-bold text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2 cursor-pointer flex items-center justify-between gap-2',
+                  'px-4 py-2 text-left text-sm font-bold text-black/80 dark:text-white/80 border-r border-b border-lm-3 dark:border-dm-2 cursor-pointer flex items-center gap-4',
                   isSelected ? 'bg-primary-light/10 dark:bg-primary-light/10 hover:bg-primary-light/20 dark:hover:bg-primary-light/20' : 'bg-lm-2 dark:bg-dm-3 hover:bg-lm-1 dark:hover:bg-dm-2'
                 )}
                 style={{ gridColumn: `span ${colSpan}` }}
@@ -126,6 +127,7 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
                     text="Summarize slide"
                     icon="ai"
                     size="sm"
+                    className="font-normal text-xs"
                     ariaLabel="Summarize slide"
                     onClick={(event: React.MouseEvent) => {
                       event.stopPropagation();
@@ -223,13 +225,14 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
                   text="Summarize user"
                   icon="ai"
                   size="sm"
+                  className="font-normal text-xs"
                   ariaLabel="Summarize user"
                   onClick={() => onSummarizeUser(response)}
                 />
               </div>
 
               {/* Sub-row labels span all 3 sub-rows */}
-              <div className="row-span-3 grid grid-rows-subgrid sticky left-40 z-10">
+              <div className="row-span-3 grid grid-rows-subgrid sticky left-[11.25rem] z-10">
                 <div className={subRowLabelClass}>
                   Value
                 </div>

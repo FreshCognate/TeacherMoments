@@ -87,7 +87,7 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
 }) => {
   return (
     <div className="bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-2 rounded-lg overflow-hidden">
-      <div className="bg-lm-1 dark:bg-dm-2 px-4 py-3 font-semibold border-b border-lm-3 dark:border-dm-2 break-words flex items-center justify-between gap-2">
+      <div className="bg-lm-1 dark:bg-dm-2 px-4 py-3 font-semibold border-b border-lm-3 dark:border-dm-2 break-words flex items-center gap-4">
         <span>
           {viewType === 'byUserScenarios'
             ? response.scenario?.name || 'Unknown scenario'
@@ -98,6 +98,7 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
           text="Summarize user"
           icon="ai"
           size="sm"
+          className="font-normal text-xs"
           ariaLabel="Summarize user"
           onClick={() => onSummarizeUser(response)}
         />
