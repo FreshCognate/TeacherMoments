@@ -2,6 +2,7 @@ import getCache from "~/core/cache/helpers/getCache";
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import getScenarioDetails from "./getScenarioDetails";
+import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
 
 export default () => {
   const run = getCache('run');
@@ -13,6 +14,11 @@ export default () => {
 
   if (!currentStage.isSubmitted) {
     currentStage.isSubmitted = true;
+
+    if (isScenarioInPlay()) {
+      return run.mutate({ stages }, { method: 'put' });
+    }
+
     return run.set({ stages });
   }
 

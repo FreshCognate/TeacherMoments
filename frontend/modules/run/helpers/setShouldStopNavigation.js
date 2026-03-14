@@ -3,6 +3,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import trigger from "~/modules/triggers/helpers/trigger";
 import find from 'lodash/find';
 import getScenarioDetails from "./getScenarioDetails";
+import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
 
 export default (shouldStopNavigation) => {
   const run = getCache('run');
@@ -13,6 +14,10 @@ export default (shouldStopNavigation) => {
 
 
   currentStage.shouldStopNavigation = shouldStopNavigation;
+
+  if (isScenarioInPlay()) {
+    return run.mutate({ stages }, { method: 'put' });
+  }
 
   return run.set({ stages });
 
