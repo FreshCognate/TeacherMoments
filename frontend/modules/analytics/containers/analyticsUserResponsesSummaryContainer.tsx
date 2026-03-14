@@ -3,9 +3,12 @@ import axios from 'axios';
 import WithRouter from '~/core/app/components/withRouter';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
-import AnalyticsScenarioResponsesSummary from '../components/analyticsScenarioResponsesSummary';
+import AnalyticsUserResponsesSummary from '../components/analyticsUserResponsesSummary';
 
-interface AnalyticsScenarioResponsesSummaryContainerProps {
+interface AnalyticsUserResponsesSummaryContainerProps {
+  userId: string;
+  userName: string;
+  scenarioId?: string;
   scenarioName?: string;
   actions?: any;
   router?: any;
@@ -22,12 +25,12 @@ interface SummaryData {
   summary: string;
 }
 
-interface AnalyticsScenarioResponsesSummaryContainerState {
+interface AnalyticsUserResponsesSummaryContainerState {
   summaryData: SummaryData | null;
   isLoading: boolean;
 }
 
-class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScenarioResponsesSummaryContainerProps, AnalyticsScenarioResponsesSummaryContainerState> {
+class AnalyticsUserResponsesSummaryContainer extends Component<AnalyticsUserResponsesSummaryContainerProps, AnalyticsUserResponsesSummaryContainerState> {
 
   state = {
     summaryData: null,
@@ -40,13 +43,19 @@ class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScen
 
   fetchSummary = async () => {
     try {
-      const { id, scenarioId: scenarioIdParam } = this.props.router.params;
-      const cohortId = scenarioIdParam ? id : undefined;
-      const scenarioId = scenarioIdParam || id;
+      let cohortId;
+      let scenarioId = this.props.scenarioId;
+
+      if (!scenarioId) {
+        const { id, scenarioId: scenarioIdParam } = this.props.router.params;
+        cohortId = scenarioIdParam ? id : undefined;
+        scenarioId = scenarioIdParam || id;
+      }
 
       const response = await axios.post('/api/responses/summary', {
         cohortId,
-        scenarioId
+        scenarioId,
+        userId: this.props.userId
       });
 
       const sockets = await getSockets();
@@ -72,7 +81,8 @@ class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScen
     const { summaryData, isLoading } = this.state;
 
     return (
-      <AnalyticsScenarioResponsesSummary
+      <AnalyticsUserResponsesSummary
+        userName={this.props.userName}
         scenarioName={this.props.scenarioName}
         summaryData={summaryData}
         isLoading={isLoading}
@@ -81,4 +91,4 @@ class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScen
   }
 }
 
-export default WithRouter(AnalyticsScenarioResponsesSummaryContainer);
+export default WithRouter(AnalyticsUserResponsesSummaryContainer);

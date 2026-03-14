@@ -12,6 +12,7 @@ interface AnalyticsResponsesProps {
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
   onSlideNavigated: (slideRef: string) => void;
   onBlockNavigated: (blockRef: string) => void;
+  onSummarizeUser: (response: UserResponse) => void;
 }
 
 const AnalyticsResponses: React.FC<AnalyticsResponsesProps> = ({
@@ -22,7 +23,8 @@ const AnalyticsResponses: React.FC<AnalyticsResponsesProps> = ({
   selectedSlideRef,
   onResponseClicked,
   onSlideNavigated,
-  onBlockNavigated
+  onBlockNavigated,
+  onSummarizeUser
 }) => {
   return (
     <div className="space-y-6">
@@ -37,6 +39,7 @@ const AnalyticsResponses: React.FC<AnalyticsResponsesProps> = ({
           onResponseClicked={onResponseClicked}
           onSlideNavigated={onSlideNavigated}
           onBlockNavigated={onBlockNavigated}
+          onSummarizeUser={onSummarizeUser}
         />
       ))}
     </div>

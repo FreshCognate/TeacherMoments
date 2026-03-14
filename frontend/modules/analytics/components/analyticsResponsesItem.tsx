@@ -8,6 +8,7 @@ import getBlockDisplayName from '~/modules/blocks/helpers/getBlockDisplayName';
 import getBlockDisplayType from '~/modules/blocks/helpers/getBlockDisplayType';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import Icon from '~/uikit/icons/components/icon';
+import FlatButton from '~/uikit/buttons/components/flatButton';
 import formatTimeSpent from '../helpers/formatTimeSpent';
 import { AnalyticsViewType, BlockResponse, StageResponse, UserResponse } from '../analytics.types';
 
@@ -28,6 +29,7 @@ interface AnalyticsResponsesItemProps {
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
   onSlideNavigated: (slideRef: string) => void;
   onBlockNavigated: (blockRef: string) => void;
+  onSummarizeUser: (response: UserResponse) => void;
 }
 
 const getSlideResponseGroups = (blockResponses: BlockResponse[]): SlideResponseGroup[] => {
@@ -80,15 +82,26 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
   selectedSlideRef,
   onResponseClicked,
   onSlideNavigated,
-  onBlockNavigated
+  onBlockNavigated,
+  onSummarizeUser
 }) => {
   return (
     <div className="bg-lm-0 dark:bg-dm-1 border border-lm-3 dark:border-dm-2 rounded-lg overflow-hidden">
-      <div className="bg-lm-1 dark:bg-dm-2 px-4 py-3 font-semibold border-b border-lm-3 dark:border-dm-2 break-words">
-        {viewType === 'byUserScenarios'
-          ? response.scenario?.name || 'Unknown scenario'
-          : `Participant: ${getUserDisplayName(response.user)}`
-        }
+      <div className="bg-lm-1 dark:bg-dm-2 px-4 py-3 font-semibold border-b border-lm-3 dark:border-dm-2 break-words flex items-center gap-4">
+        <span>
+          {viewType === 'byUserScenarios'
+            ? response.scenario?.name || 'Unknown scenario'
+            : `Participant: ${getUserDisplayName(response.user)}`
+          }
+        </span>
+        <FlatButton
+          text="Summarize user"
+          icon="ai"
+          size="sm"
+          className="font-normal text-xs"
+          ariaLabel="Summarize user"
+          onClick={() => onSummarizeUser(response)}
+        />
       </div>
 
       {response.blockResponses && response.blockResponses.length > 0 ? (() => {

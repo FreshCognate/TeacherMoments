@@ -2,7 +2,6 @@ import createAgent from '../agents/helpers/createAgent.js';
 import connectDatabase from '../../backend/core/databases/helpers/connectDatabase.js';
 import getScenarioSlidesAndBlocksByRef from '../../backend/modules/responses/helpers/getScenarioSlidesAndBlocksByRef.js';
 import buildUserScenarioResponse from '../../backend/modules/responses/helpers/buildUserScenarioResponse.js';
-import getBlockText from '../helpers/getBlockText.js';
 import find from 'lodash/find.js';
 import each from 'lodash/each.js';
 import filter from 'lodash/filter.js';
@@ -10,26 +9,32 @@ import sortBy from 'lodash/sortBy.js';
 import values from 'lodash/values.js';
 import uniqBy from 'lodash/uniqBy.js';
 import map from 'lodash/map.js';
+import getBlockText from '../helpers/getBlockText.js';
 
 const PROMPT_BLOCK_TYPES = ['INPUT_PROMPT', 'MULTIPLE_CHOICE_PROMPT'];
 
-export default async ({ cohortId, scenarioId }) => {
+export default async ({ cohortId, scenarioId, slideRef }) => {
 
   const { models } = await connectDatabase();
   const context = { models };
 
   const { slidesByRef, blocksByRef } = await getScenarioSlidesAndBlocksByRef({ scenarioId }, context);
 
-  const promptBlocks = sortBy(
-    filter(values(blocksByRef), (block) => PROMPT_BLOCK_TYPES.includes(block.blockType)),
-    [(block) => {
-      const slide = slidesByRef[block.slideRef];
-      return slide ? slide.sortOrder : 0;
-    }, 'sortOrder']
+  const slide = slidesByRef[slideRef];
+
+  if (!slide) {
+    throw new Error('Slide not found');
+  }
+
+  const slideBlocks = sortBy(
+    filter(values(blocksByRef), (block) => String(block.slideRef) === String(slideRef)),
+    'sortOrder'
   );
 
+  const promptBlocks = filter(slideBlocks, (block) => PROMPT_BLOCK_TYPES.includes(block.blockType));
+
   if (promptBlocks.length === 0) {
-    throw new Error('No prompt blocks found in this scenario');
+    throw new Error('No prompt blocks found on this slide');
   }
 
   let userIds;
@@ -49,6 +54,8 @@ export default async ({ cohortId, scenarioId }) => {
 
   for (const userId of userIds) {
     const { blockResponses, stages } = await buildUserScenarioResponse({ userId, scenarioId, slidesByRef, blocksByRef }, context);
+    const stage = find(stages, (s) => String(s.slideRef) === String(slideRef));
+    const feedbackItems = stage?.feedbackItems || [];
 
     each(promptBlocks, (block) => {
       const blockRef = String(block.ref);
@@ -64,9 +71,6 @@ export default async ({ cohortId, scenarioId }) => {
         }
 
         if (responseText) {
-          const stage = find(stages, (s) => String(s.slideRef) === String(block.slideRef));
-          const feedbackItems = stage?.feedbackItems || [];
-
           blockResponsesMap[blockRef].push({
             response: responseText,
             feedback: feedbackItems.length ? feedbackItems.join(', ') : null
@@ -84,6 +88,23 @@ export default async ({ cohortId, scenarioId }) => {
   if (totalResponses < 2) {
     throw new Error('Not enough responses to generate a summary');
   }
+
+  let slideContext = '';
+
+  if (slide.name) {
+    slideContext += `Slide title: ${slide.name}\n`;
+  }
+
+  slideContext += '\nThe slide contains the following content:\n';
+
+  each(slideBlocks, (block) => {
+    const blockBody = getBlockText(block, 'body');
+    const blockTypeLabel = block.blockType === 'INPUT_PROMPT' ? 'Text input prompt'
+      : block.blockType === 'MULTIPLE_CHOICE_PROMPT' ? 'Multiple choice prompt'
+        : 'Content';
+
+    slideContext += `- [${blockTypeLabel}] ${blockBody}\n`;
+  });
 
   let promptContent = '';
 
@@ -117,46 +138,52 @@ export default async ({ cohortId, scenarioId }) => {
     });
   });
 
-  const agent = createAgent({ quality: 'large' });
+  const agent = createAgent({ quality: 'medium' });
 
   agent.addSystemMessage(`
-    You are an educational analytics assistant helping facilitators understand participant responses across an entire scenario.
-    You will be given multiple prompts/questions from a scenario, along with participant responses and any AI feedback given.
+    You are an educational analytics assistant helping facilitators understand participant responses.
+    You will be given the context of a slide, the prompts that were asked to participants, their responses, and any AI feedback that was given to them.
+
+    ## Slide context
+    ${slideContext}
 
     Provide a structured summary that highlights:
-    - An overall summary of participant engagement and response quality across the scenario
-    - Common themes and notable differences across all prompts
-    - For text input prompts, analyse the tone of voice used by participants (formality, engagement level, writing style patterns)
-    - Cross-prompt patterns such as consistency in quality, progression through the scenario, and areas of confusion
+    - Common themes across responses
+    - Notable differences or unique perspectives
+    - Overall quality and depth of responses
     - If AI feedback was provided, note any patterns in the feedback given
     - Do not reference specific responses like Response 1 or Response 2 as they are not ordered and this will confuse the user, instead give an overview
 
     The JSON structured returned should be:
     {
-      "overview": "A full overview of patterns, themes, engagement, and quality across all responses in the scenario.",
+      "overview": "A full overview of patterns, themes, and quality across the responses.",
       "sections": [
         {
           "title": "Optional title for this group",
-          "content": "Detail about this group of responses, e.g. '3 participants demonstrated strong understanding of X' or 'Most participants received feedback about Y'."
+          "content": "Detail about this group of responses, e.g. '3 participants demonstrated strong understanding of X' or 'Several participants received feedback about Y'."
         }
       ],
       "summary": "Actionable takeaways and recommendations for the facilitator."
     }
 
     Guidelines for each field:
-    - "overview": A high-level narrative of what you observed across the entire scenario.
+    - "overview": A high-level narrative of what you observed across all responses.
     - "sections": Group related findings together. Each section should quantify where possible (e.g. "3 participants said..." or "Most participants received feedback about..."). The "title" field is optional and can be left as an empty string. The "content" field is required.
     - "summary": Concise, actionable recommendations the facilitator can act on.
   `);
 
   agent.addUserMessage(`
-    ## Scenario prompts and responses
-    Below are all the prompts in this scenario, each followed by the participant responses collected.
+    ## Slide prompts and responses
+    Below are the prompts on this slide, each followed by the participant responses collected.
     ${promptContent}
   `);
 
   const response = await agent.run();
 
-  return response;
+  return {
+    ...response,
+    slide,
+    blocks: slideBlocks
+  };
 
 };

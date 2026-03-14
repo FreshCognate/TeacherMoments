@@ -5,7 +5,7 @@ import CollectionEmpty from '~/uikit/collections/components/collectionEmpty';
 import AnalyticsResponses from './analyticsResponses';
 import AnalyticsResponsesTableContainer from '../containers/analyticsResponsesTableContainer';
 import AnalyticsSidePanel from './analyticsSidePanel';
-import { AnalyticsViewType, BlockColumn, UserResponse } from '../analytics.types';
+import { AnalyticsViewType, SlideGroup, UserResponse } from '../analytics.types';
 
 interface AnalyticsProps {
   viewType: AnalyticsViewType;
@@ -30,8 +30,9 @@ interface AnalyticsProps {
   onUserNavigated?: (direction: string) => void;
   onExportClicked?: () => void;
   onSidePanelClose: () => void;
-  onSummarizeColumn: (blockColumn: BlockColumn) => void;
+  onSummarizeSlide: (slideGroup: SlideGroup) => void;
   onSummarizeScenario: () => void;
+  onSummarizeUser: (response: UserResponse) => void;
 }
 
 const Analytics: React.FC<AnalyticsProps> = ({
@@ -57,8 +58,9 @@ const Analytics: React.FC<AnalyticsProps> = ({
   onUserNavigated,
   onExportClicked,
   onSidePanelClose,
-  onSummarizeColumn,
-  onSummarizeScenario
+  onSummarizeSlide,
+  onSummarizeScenario,
+  onSummarizeUser
 }) => {
   return (
     <div className="flex">
@@ -109,8 +111,9 @@ const Analytics: React.FC<AnalyticsProps> = ({
             onResponseClicked={onResponseClicked}
             onSlideNavigated={onSlideNavigated}
             onBlockNavigated={onBlockNavigated}
-            onSummarizeColumn={onSummarizeColumn}
+            onSummarizeSlide={onSummarizeSlide}
             onSummarizeScenario={onSummarizeScenario}
+            onSummarizeUser={onSummarizeUser}
           />
         )}
         {!isLoading && responses.length > 0 && viewType === 'byUserScenarios' && (
@@ -123,6 +126,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
             onResponseClicked={onResponseClicked}
             onSlideNavigated={onSlideNavigated}
             onBlockNavigated={onBlockNavigated}
+            onSummarizeUser={onSummarizeUser}
           />
         )}
       </div>

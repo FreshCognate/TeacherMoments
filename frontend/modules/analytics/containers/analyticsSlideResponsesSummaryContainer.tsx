@@ -3,10 +3,12 @@ import axios from 'axios';
 import WithRouter from '~/core/app/components/withRouter';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
-import AnalyticsScenarioResponsesSummary from '../components/analyticsScenarioResponsesSummary';
+import AnalyticsSlideResponsesSummary from '../components/analyticsSlideResponsesSummary';
+import { SlideGroup, UserResponse } from '../analytics.types';
 
-interface AnalyticsScenarioResponsesSummaryContainerProps {
-  scenarioName?: string;
+interface AnalyticsSlideResponsesSummaryContainerProps {
+  slideGroup: SlideGroup;
+  responses: UserResponse[];
   actions?: any;
   router?: any;
 }
@@ -22,15 +24,19 @@ interface SummaryData {
   summary: string;
 }
 
-interface AnalyticsScenarioResponsesSummaryContainerState {
+interface AnalyticsSlideResponsesSummaryContainerState {
   summaryData: SummaryData | null;
+  slide: any;
+  blocks: any[];
   isLoading: boolean;
 }
 
-class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScenarioResponsesSummaryContainerProps, AnalyticsScenarioResponsesSummaryContainerState> {
+class AnalyticsSlideResponsesSummaryContainer extends Component<AnalyticsSlideResponsesSummaryContainerProps, AnalyticsSlideResponsesSummaryContainerState> {
 
   state = {
     summaryData: null,
+    slide: null,
+    blocks: [],
     isLoading: true
   };
 
@@ -43,10 +49,12 @@ class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScen
       const { id, scenarioId: scenarioIdParam } = this.props.router.params;
       const cohortId = scenarioIdParam ? id : undefined;
       const scenarioId = scenarioIdParam || id;
+      const { slideGroup } = this.props;
 
       const response = await axios.post('/api/responses/summary', {
         cohortId,
-        scenarioId
+        scenarioId,
+        slideRef: slideGroup.slideRef
       });
 
       const sockets = await getSockets();
@@ -59,7 +67,12 @@ class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScen
             sections: payload.sections || [],
             summary: payload.summary || ''
           } : null;
-          this.setState({ summaryData, isLoading: false });
+          this.setState({
+            summaryData,
+            slide: payload.slide || null,
+            blocks: payload.blocks || [],
+            isLoading: false
+          });
         }
       });
     } catch (error) {
@@ -69,11 +82,15 @@ class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScen
   };
 
   render() {
-    const { summaryData, isLoading } = this.state;
+    const { slideGroup, responses } = this.props;
+    const { summaryData, slide, blocks, isLoading } = this.state;
 
     return (
-      <AnalyticsScenarioResponsesSummary
-        scenarioName={this.props.scenarioName}
+      <AnalyticsSlideResponsesSummary
+        slideGroup={slideGroup}
+        slide={slide}
+        blocks={blocks}
+        responses={responses}
         summaryData={summaryData}
         isLoading={isLoading}
       />
@@ -81,4 +98,4 @@ class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScen
   }
 }
 
-export default WithRouter(AnalyticsScenarioResponsesSummaryContainer);
+export default WithRouter(AnalyticsSlideResponsesSummaryContainer);

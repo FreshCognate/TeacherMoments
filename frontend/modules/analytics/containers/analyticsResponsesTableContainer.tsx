@@ -13,8 +13,9 @@ interface AnalyticsResponsesTableContainerProps {
   onResponseClicked: (response: UserResponse, blockResponseRef: string) => void;
   onSlideNavigated: (slideRef: string) => void;
   onBlockNavigated: (blockRef: string) => void;
-  onSummarizeColumn: (blockColumn: BlockColumn) => void;
+  onSummarizeSlide: (slideGroup: SlideGroup) => void;
   onSummarizeScenario: () => void;
+  onSummarizeUser: (response: UserResponse) => void;
 }
 
 class AnalyticsResponsesTableContainer extends Component<AnalyticsResponsesTableContainerProps> {
@@ -64,7 +65,7 @@ class AnalyticsResponsesTableContainer extends Component<AnalyticsResponsesTable
   }
 
   render() {
-    const { responses, selectedResponse, selectedBlockResponseRef, selectedSlideRef, onResponseClicked, onSlideNavigated, onBlockNavigated, onSummarizeColumn, onSummarizeScenario } = this.props;
+    const { responses, selectedResponse, selectedBlockResponseRef, selectedSlideRef, onResponseClicked, onSlideNavigated, onBlockNavigated, onSummarizeSlide, onSummarizeScenario, onSummarizeUser } = this.props;
     const blockColumns = this.getBlockColumns();
     const slideGroups = this.getSlideGroups(blockColumns);
 
@@ -79,8 +80,9 @@ class AnalyticsResponsesTableContainer extends Component<AnalyticsResponsesTable
         onResponseClicked={onResponseClicked}
         onSlideNavigated={onSlideNavigated}
         onBlockNavigated={onBlockNavigated}
-        onSummarizeColumn={onSummarizeColumn}
+        onSummarizeSlide={onSummarizeSlide}
         onSummarizeScenario={onSummarizeScenario}
+        onSummarizeUser={onSummarizeUser}
       />
     );
   }

@@ -13,13 +13,15 @@ interface SummaryData {
   summary: string;
 }
 
-interface AnalyticsScenarioResponsesSummaryProps {
+interface AnalyticsUserResponsesSummaryProps {
+  userName: string;
   scenarioName?: string;
   summaryData: SummaryData | null;
   isLoading: boolean;
 }
 
-const AnalyticsScenarioResponsesSummary: React.FC<AnalyticsScenarioResponsesSummaryProps> = ({
+const AnalyticsUserResponsesSummary: React.FC<AnalyticsUserResponsesSummaryProps> = ({
+  userName,
   scenarioName,
   summaryData,
   isLoading
@@ -53,10 +55,13 @@ const AnalyticsScenarioResponsesSummary: React.FC<AnalyticsScenarioResponsesSumm
 
   return (
     <div className="p-4">
+      <h1 className="text-xl font-semibold text-black/80 dark:text-white/80 mb-1">
+        User: {userName}
+      </h1>
       {scenarioName && (
-        <h1 className="text-xl font-semibold text-black/80 dark:text-white/80 mb-4">
-          Scenario: {scenarioName}
-        </h1>
+        <p className="text-sm text-black/40 dark:text-white/40 mb-4">
+          {scenarioName}
+        </p>
       )}
       {isLoading && <Loading />}
       {!isLoading && summaryData && (
@@ -83,4 +88,4 @@ const AnalyticsScenarioResponsesSummary: React.FC<AnalyticsScenarioResponsesSumm
   );
 };
 
-export default AnalyticsScenarioResponsesSummary;
+export default AnalyticsUserResponsesSummary;
