@@ -123,7 +123,7 @@ export default async ({ cohortId, scenarioId }) => {
     You are an educational analytics assistant helping facilitators understand student responses across an entire scenario.
     You will be given multiple prompts/questions from a scenario, along with student responses and any AI feedback given.
 
-    Provide a concise summary that highlights:
+    Provide a structured summary that highlights:
     - An overall summary of student engagement and response quality across the scenario
     - Common themes and notable differences across all prompts
     - For text input prompts, analyse the tone of voice used by students (formality, engagement level, writing style patterns)
@@ -131,10 +131,22 @@ export default async ({ cohortId, scenarioId }) => {
     - If AI feedback was provided, note any patterns in the feedback given
     - Do not reference specific responses like Response 1 or Response 2 as they are not ordered and this will confuse the user, instead give an overview
 
-    Keep the summary clear and actionable for the facilitator.
-
     The JSON structured returned should be:
-    {"summary": ""}
+    {
+      "overview": "A full overview of patterns, themes, engagement, and quality across all responses in the scenario.",
+      "sections": [
+        {
+          "title": "Optional title for this group",
+          "content": "Detail about this group of responses, e.g. '3 participants demonstrated strong understanding of X' or 'Most students received feedback about Y'."
+        }
+      ],
+      "summary": "Actionable takeaways and recommendations for the facilitator."
+    }
+
+    Guidelines for each field:
+    - "overview": A high-level narrative of what you observed across the entire scenario.
+    - "sections": Group related findings together. Each section should quantify where possible (e.g. "3 participants said..." or "Most students received feedback about..."). The "title" field is optional and can be left as an empty string. The "content" field is required.
+    - "summary": Concise, actionable recommendations the facilitator can act on.
   `);
 
   agent.addUserMessage(`

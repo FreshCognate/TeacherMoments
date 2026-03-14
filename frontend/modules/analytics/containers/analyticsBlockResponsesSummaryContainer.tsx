@@ -13,8 +13,19 @@ interface AnalyticsBlockResponsesSummaryContainerProps {
   router?: any;
 }
 
+interface SummarySection {
+  title: string;
+  content: string;
+}
+
+interface SummaryData {
+  overview: string;
+  sections: SummarySection[];
+  summary: string;
+}
+
 interface AnalyticsBlockResponsesSummaryContainerState {
-  summary: string | null;
+  summaryData: SummaryData | null;
   block: any;
   isLoading: boolean;
 }
@@ -22,7 +33,7 @@ interface AnalyticsBlockResponsesSummaryContainerState {
 class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockResponsesSummaryContainerProps, AnalyticsBlockResponsesSummaryContainerState> {
 
   state = {
-    summary: null,
+    summaryData: null,
     block: null,
     isLoading: true
   };
@@ -48,7 +59,13 @@ class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockRe
 
       sockets.on(`workers:generate:${response.data.jobId}`, (data: any) => {
         if (data.event === 'GENERATED') {
-          this.setState({ summary: data.payload?.summary || null, block: data.payload?.block || null, isLoading: false });
+          const payload = data.payload || {};
+          const summaryData = payload.overview ? {
+            overview: payload.overview,
+            sections: payload.sections || [],
+            summary: payload.summary || ''
+          } : null;
+          this.setState({ summaryData, block: payload.block || null, isLoading: false });
         }
       });
     } catch (error) {
@@ -59,14 +76,14 @@ class AnalyticsBlockResponsesSummaryContainer extends Component<AnalyticsBlockRe
 
   render() {
     const { blockColumn, responses } = this.props;
-    const { summary, block, isLoading } = this.state;
+    const { summaryData, block, isLoading } = this.state;
 
     return (
       <AnalyticsBlockResponsesSummary
         blockColumn={blockColumn}
         block={block}
         responses={responses}
-        summary={summary}
+        summaryData={summaryData}
         isLoading={isLoading}
       />
     );

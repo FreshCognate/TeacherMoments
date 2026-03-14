@@ -3,12 +3,24 @@ import Loading from '~/uikit/loaders/components/loading';
 import getBlockComponent from '~/modules/blocks/helpers/getBlockComponent';
 import { BlockColumn, UserResponse } from '../analytics.types';
 import getBlockLabel from '../helpers/getBlockLabel';
+import each from 'lodash/each';
+
+interface SummarySection {
+  title: string;
+  content: string;
+}
+
+interface SummaryData {
+  overview: string;
+  sections: SummarySection[];
+  summary: string;
+}
 
 interface AnalyticsBlockResponsesSummaryProps {
   blockColumn: BlockColumn;
   block: any;
   responses: UserResponse[];
-  summary: string | null;
+  summaryData: SummaryData | null;
   isLoading: boolean;
 }
 
@@ -18,10 +30,36 @@ const AnalyticsBlockResponsesSummary: React.FC<AnalyticsBlockResponsesSummaryPro
   blockColumn,
   block,
   responses,
-  summary,
+  summaryData,
   isLoading
 }) => {
   const Block = block ? getBlockComponent({ blockType: block.blockType }) : null;
+
+  const renderSections = () => {
+    if (!summaryData?.sections?.length) return null;
+
+    const sectionElements: React.ReactNode[] = [];
+
+    each(summaryData.sections, (section, index) => {
+      sectionElements.push(
+        <div
+          key={index}
+          className="py-3 border-b border-black/10 dark:border-white/10 last:border-b-0"
+        >
+          {section.title && (
+            <h3 className="text-sm font-medium text-black/80 dark:text-white/80 mb-1">
+              {section.title}
+            </h3>
+          )}
+          <p className="text-sm text-black/60 dark:text-white/60">
+            {section.content}
+          </p>
+        </div>
+      );
+    });
+
+    return sectionElements;
+  };
 
   return (
     <div className="p-4">
@@ -46,9 +84,25 @@ const AnalyticsBlockResponsesSummary: React.FC<AnalyticsBlockResponsesSummaryPro
             )}
           </div>
           <div>
-            <p className="text-sm font-medium text-black/80 dark:text-white/80 mb-2">Summary</p>
-            {summary && (
-              <p className="text-sm text-black/60 dark:text-white/60">{summary}</p>
+            {summaryData && (
+              <div className="space-y-4">
+                <div>
+                  <h2 className="text-sm font-medium text-black/80 dark:text-white/80 mb-2">Overview</h2>
+                  <p className="text-sm text-black/60 dark:text-white/60">{summaryData.overview}</p>
+                </div>
+                {summaryData.sections?.length > 0 && (
+                  <div>
+                    <h2 className="text-sm font-medium text-black/80 dark:text-white/80 mb-2">Key findings</h2>
+                    {renderSections()}
+                  </div>
+                )}
+                {summaryData.summary && (
+                  <div>
+                    <h2 className="text-sm font-medium text-black/80 dark:text-white/80 mb-2">Summary</h2>
+                    <p className="text-sm text-black/60 dark:text-white/60">{summaryData.summary}</p>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>

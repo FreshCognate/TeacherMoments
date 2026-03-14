@@ -11,15 +11,26 @@ interface AnalyticsScenarioResponsesSummaryContainerProps {
   router?: any;
 }
 
+interface SummarySection {
+  title: string;
+  content: string;
+}
+
+interface SummaryData {
+  overview: string;
+  sections: SummarySection[];
+  summary: string;
+}
+
 interface AnalyticsScenarioResponsesSummaryContainerState {
-  summary: string | null;
+  summaryData: SummaryData | null;
   isLoading: boolean;
 }
 
 class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScenarioResponsesSummaryContainerProps, AnalyticsScenarioResponsesSummaryContainerState> {
 
   state = {
-    summary: null,
+    summaryData: null,
     isLoading: true
   };
 
@@ -42,7 +53,13 @@ class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScen
 
       sockets.on(`workers:generate:${response.data.jobId}`, (data: any) => {
         if (data.event === 'GENERATED') {
-          this.setState({ summary: data.payload?.summary || null, isLoading: false });
+          const payload = data.payload || {};
+          const summaryData = payload.overview ? {
+            overview: payload.overview,
+            sections: payload.sections || [],
+            summary: payload.summary || ''
+          } : null;
+          this.setState({ summaryData, isLoading: false });
         }
       });
     } catch (error) {
@@ -52,12 +69,12 @@ class AnalyticsScenarioResponsesSummaryContainer extends Component<AnalyticsScen
   };
 
   render() {
-    const { summary, isLoading } = this.state;
+    const { summaryData, isLoading } = this.state;
 
     return (
       <AnalyticsScenarioResponsesSummary
         scenarioName={this.props.scenarioName}
-        summary={summary}
+        summaryData={summaryData}
         isLoading={isLoading}
       />
     );
