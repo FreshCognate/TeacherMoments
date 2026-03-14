@@ -95,6 +95,7 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
           }
         </span>
         <FlatButton
+          text="Summarize user"
           icon="ai"
           size="sm"
           ariaLabel="Summarize user"

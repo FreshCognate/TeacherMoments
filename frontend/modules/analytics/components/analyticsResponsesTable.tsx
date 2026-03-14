@@ -98,7 +98,7 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
             <FlatButton
               icon="ai"
               size="sm"
-              text="Summarize"
+              text="Summarize scenario"
               ariaLabel="Summarize scenario"
               onClick={onSummarizeScenario}
             />
@@ -123,6 +123,7 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
                 <span>{slideGroup.slideName || `Slide ${slideGroup.slideSortOrder + 1}`}</span>
                 {slideGroup.promptColumns.length > 0 && (
                   <FlatButton
+                    text="Summarize slide"
                     icon="ai"
                     size="sm"
                     ariaLabel="Summarize slide"
@@ -219,6 +220,7 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
               >
                 {getUserDisplayName(response.user)}
                 <FlatButton
+                  text="Summarize user"
                   icon="ai"
                   size="sm"
                   ariaLabel="Summarize user"
