@@ -63,9 +63,9 @@ const AnalyticsBlockResponsesSummary: React.FC<AnalyticsBlockResponsesSummaryPro
 
   return (
     <div className="p-4">
-      <p className="text-sm font-medium text-black/80 dark:text-white/80 mb-4">
+      <h1 className="text-xl font-semibold text-black/80 dark:text-white/80 mb-4">
         Block label: {getBlockLabel(blockColumn)}
-      </p>
+      </h1>
       {isLoading && <Loading />}
       {!isLoading && (
         <div className="grid grid-cols-2 gap-6">
@@ -87,18 +87,18 @@ const AnalyticsBlockResponsesSummary: React.FC<AnalyticsBlockResponsesSummaryPro
             {summaryData && (
               <div className="space-y-4">
                 <div>
-                  <h2 className="text-sm font-medium text-black/80 dark:text-white/80 mb-2">Overview</h2>
+                  <h2 className="text-base font-semibold text-black/80 dark:text-white/80 mb-2 underline">Overview</h2>
                   <p className="text-sm text-black/60 dark:text-white/60">{summaryData.overview}</p>
                 </div>
                 {summaryData.sections?.length > 0 && (
                   <div>
-                    <h2 className="text-sm font-medium text-black/80 dark:text-white/80 mb-2">Key findings</h2>
+                    <h2 className="text-base font-semibold text-black/80 dark:text-white/80 mb-2 underline">Key findings</h2>
                     {renderSections()}
                   </div>
                 )}
                 {summaryData.summary && (
                   <div>
-                    <h2 className="text-sm font-medium text-black/80 dark:text-white/80 mb-2">Summary</h2>
+                    <h2 className="text-base font-semibold text-black/80 dark:text-white/80 mb-2 underline">Summary</h2>
                     <p className="text-sm text-black/60 dark:text-white/60">{summaryData.summary}</p>
                   </div>
                 )}
