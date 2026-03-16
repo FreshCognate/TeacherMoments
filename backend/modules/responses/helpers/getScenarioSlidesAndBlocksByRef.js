@@ -1,3 +1,6 @@
+import getBlockPopulate from '../../blocks/helpers/getBlockPopulate.js';
+import getBlockItemsPopulate from '../../blocks/helpers/getBlockItemsPopulate.js';
+
 export default async ({ scenarioId }, { models }) => {
 
   const scenarioSlides = await models.Slide.find({ scenario: scenarioId, isDeleted: false });
@@ -8,7 +11,9 @@ export default async ({ scenarioId }, { models }) => {
     slidesByRef[String(scenarioSlide.ref)] = scenarioSlide;
   }
 
-  const scenarioBlocks = await models.Block.find({ scenario: scenarioId, isDeleted: false });
+  const scenarioBlocks = await models.Block.find({ scenario: scenarioId, isDeleted: false })
+    .populate(getBlockPopulate())
+    .populate(getBlockItemsPopulate());
 
   const blocksByRef = {};
 
