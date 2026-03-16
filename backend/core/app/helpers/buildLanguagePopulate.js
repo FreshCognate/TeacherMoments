@@ -18,11 +18,11 @@ export default function (languagePopulates, populate = '') {
     });
     const populateObject = {
       path: languagePopulates.path,
-      populate
+      populate: populate.trim()
     };
     return populateObject;
   }
 
-  return populate;
+  return populate.trim();
 
 };
