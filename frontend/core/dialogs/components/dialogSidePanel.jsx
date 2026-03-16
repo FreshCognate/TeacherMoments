@@ -54,6 +54,7 @@ const DialogSidePanel = ({
     <div
       className={elementClassName}
       onClick={(event) => {
+        if (sidePanel.canTriggerOutsideClickClose === false) return;
         if (event.target === event.currentTarget) {
           setIsAnimatingOut(true);
           setTimeout(() => {

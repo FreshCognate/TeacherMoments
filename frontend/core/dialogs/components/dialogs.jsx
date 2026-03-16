@@ -26,7 +26,7 @@ const Dialogs = ({
             />
           )}
           {(dialogs.sidePanel) && (
-            <DialogModalLightbox isSidePanel onClick={() => dialogs.sidePanel.triggerClose()}>
+            <DialogModalLightbox isSidePanel>
               <DialogSidePanel
                 sidePanel={dialogs.sidePanel}
               />

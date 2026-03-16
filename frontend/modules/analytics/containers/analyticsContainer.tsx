@@ -204,6 +204,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
           size: 'lg',
           icon: 'ai',
           title: 'Scenario summary',
+          canTriggerOutsideClickClose: false,
           component: <AnalyticsScenarioResponsesSummaryContainer scenarioName={this.props.scenario?.name} />
         });
       }
@@ -241,6 +242,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
           size: 'lg',
           icon: 'ai',
           title: 'User summary',
+          canTriggerOutsideClickClose: false,
           component: (
             <AnalyticsUserResponsesSummaryContainer
               userId={userId}
@@ -283,6 +285,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
           size: 'lg',
           icon: 'ai',
           title: 'Slide summary of responses',
+          canTriggerOutsideClickClose: false,
           component: <AnalyticsSlideResponsesSummaryContainer slideGroup={slideGroup} responses={responses} />
         });
       }
