@@ -7,12 +7,12 @@ export default async () => {
 
   const { models } = await connectDatabase();
 
-  await models.Stem.deleteMany({});
-  await models.Published_Stem.deleteMany({});
-  await models.Slide.updateMany({}, { $unset: { stemRef: '' } });
-  await models.Published_Slide.updateMany({}, { $unset: { stemRef: '' } });
+  // await models.Stem.deleteMany({});
+  // await models.Published_Stem.deleteMany({});
+  // await models.Slide.updateMany({}, { $unset: { stemRef: '' } });
+  // await models.Published_Slide.updateMany({}, { $unset: { stemRef: '' } });
 
-  console.log('Cleaned up existing stems and stemRef references');
+  // console.log('Cleaned up existing stems and stemRef references');
 
   const scenarios = await models.Scenario.find({});
   const publishedScenarios = await models.Published_Scenario.find({});
