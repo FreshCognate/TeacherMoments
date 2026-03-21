@@ -1,5 +1,6 @@
 import setScenarioHasChanges from '../../scenarios/services/setScenarioHasChanges.js';
 import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
+import createSlide from '../../slides/services/createSlide.js';
 
 export default async (props, options, context) => {
 
@@ -23,6 +24,10 @@ export default async (props, options, context) => {
   };
 
   const newStem = await models.Stem.create(newStemObject);
+
+  if (!isRoot) {
+    await createSlide({ scenario, sortOrder: 0, stemRef: newStem.ref }, {}, context);
+  }
 
   setScenarioHasChanges({ scenarioId: scenario }, {}, context);
 

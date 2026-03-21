@@ -115,7 +115,8 @@ export default WithRouter(WithCache(ScenarioEditorContainer, {
   editor: {
     getInitialData: () => ({
       displayMode: 'EDITING',
-      navigationMode: 'SLIDES'
+      navigationMode: 'SLIDES',
+      activeStemRef: null
     }),
     lifeTime: 0
   },
@@ -146,6 +147,19 @@ export default WithRouter(WithCache(ScenarioEditorContainer, {
     url: '/api/blocks',
     getInitialData: () => ([]),
     transform: ({ data }) => data.blocks,
+    getParams: ({ props }) => {
+      return { id: props.router.params.id };
+    },
+    getQuery: ({ props }) => {
+      return { scenarioId: props.router.params.id };
+    },
+    lifeTime: 0,
+    staleTime: 0
+  },
+  stems: {
+    url: '/api/stems',
+    getInitialData: () => ([]),
+    transform: ({ data }) => data.stems,
     getParams: ({ props }) => {
       return { id: props.router.params.id };
     },
