@@ -15,3 +15,4 @@ import './invites/index.js';
 import './trackings/index.js';
 import './responses/index.js';
 import './exports/index.js';
+import './upgrades/index.js';
