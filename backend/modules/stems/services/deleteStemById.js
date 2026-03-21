@@ -1,23 +1,52 @@
 import setScenarioHasChanges from '../../scenarios/services/setScenarioHasChanges.js';
 import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
 
+const deleteStemAndDescendants = async ({ stemRef, deletedAt, models, user, session }) => {
+  await models.Slide.updateMany(
+    { stemRef, isDeleted: false },
+    { isDeleted: true, deletedAt, deletedBy: user._id }
+  ).session(session);
+
+  await models.Block.updateMany(
+    { stemRef, isDeleted: false },
+    { isDeleted: true, deletedAt, deletedBy: user._id }
+  ).session(session);
+
+  const childStems = await models.Stem.find({ stemRef, isDeleted: false }).session(session);
+
+  for (const childStem of childStems) {
+    childStem.isDeleted = true;
+    childStem.deletedAt = deletedAt;
+    childStem.deletedBy = user._id;
+    await childStem.save({ session });
+    await deleteStemAndDescendants({ stemRef: childStem.ref, deletedAt, models, user, session });
+  }
+};
+
 export default async (props, options, context) => {
 
   const { stemId } = props;
 
-  const { models, user } = context;
+  const { models, user, connection } = context;
 
   await checkHasAccessToScenario({ modelId: stemId, modelType: 'Stem' }, context);
 
-  const deletedAt = new Date();
-
-  const stem = await models.Stem.findByIdAndUpdate(stemId, {
-    isDeleted: true,
-    deletedAt,
-    deletedBy: user._id
-  }, { new: true });
+  const stem = await models.Stem.findById(stemId);
 
   if (!stem) throw { message: 'This stem does not exist', statusCode: 404 };
+
+  await connection.transaction(async (session) => {
+    const deletedAt = new Date();
+
+    stem.isDeleted = true;
+    stem.deletedAt = deletedAt;
+    stem.deletedBy = user._id;
+    await stem.save({ session });
+
+    await deleteStemAndDescendants({ stemRef: stem.ref, deletedAt, models, user, session });
+  }).catch(err => {
+    throw { message: err, statusCode: 500 };
+  });
 
   setScenarioHasChanges({ scenarioId: stem.scenario }, {}, context);
 

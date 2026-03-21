@@ -9,6 +9,7 @@ const CreateStems = ({
   deletingId,
   getSlideCountForStem,
   onCreateStemClicked,
+  onEditStemClicked,
   onDeleteStemClicked,
   onStemClicked
 }) => {
@@ -29,12 +30,19 @@ const CreateStems = ({
             <span className="text-xs text-lm-5 dark:text-dm-5 font-medium">
               {stem.name} ({getSlideCountForStem(stem.ref)})
             </span>
-            <FlatButton
-              icon="delete"
-              size="sm"
-              isDisabled={isDeleting}
-              onClick={(event) => { event.stopPropagation(); onDeleteStemClicked(stem._id); }}
-            />
+            <div className="flex items-center gap-2">
+              <FlatButton
+                icon="edit"
+                size="sm"
+                onClick={(event) => { event.stopPropagation(); onEditStemClicked(stem); }}
+              />
+              <FlatButton
+                icon="delete"
+                size="sm"
+                isDisabled={isDeleting}
+                onClick={(event) => { event.stopPropagation(); onDeleteStemClicked(stem._id); }}
+              />
+            </div>
           </div>
         );
       })}
