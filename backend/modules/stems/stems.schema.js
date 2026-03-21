@@ -6,7 +6,7 @@ const schema = {
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
   name: { type: String, default: '' },
   description: { type: String, default: '' },
-  stem: { type: mongoose.Schema.Types.ObjectId, ref: 'Stem' },
+  stemRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Stem' },
   isRoot: { type: Boolean, default: false },
   sortOrder: { type: Number },
   createdAt: { type: Date, default: Date.now },

@@ -18,8 +18,8 @@ export default async () => {
     });
 
     const result = await models.Slide.updateMany(
-      { scenario: scenario._id, stem: { $exists: false } },
-      { stem: stem.ref }
+      { scenario: scenario._id, stemRef: { $exists: false } },
+      { stemRef: stem.ref }
     );
 
     console.log(`Scenario "${scenario.name}" — created stem, updated ${result.modifiedCount} slides`);
@@ -35,8 +35,8 @@ export default async () => {
     });
 
     const result = await models.Published_Slide.updateMany(
-      { scenario: scenario._id, stem: { $exists: false } },
-      { stem: stem.ref }
+      { scenario: scenario._id, stemRef: { $exists: false } },
+      { stemRef: stem.ref }
     );
 
     console.log(`Published scenario "${scenario.name}" — created stem, updated ${result.modifiedCount} slides`);

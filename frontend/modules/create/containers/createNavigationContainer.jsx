@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import CreateNavigation from '../components/createNavigation';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
-import filter from 'lodash/filter';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import setEditingMode from '../helpers/setEditingMode';
@@ -19,9 +18,7 @@ class CreateNavigationContainer extends Component {
   }
 
   getCurrentStemOfSlides = () => {
-    return filter(this.props.slides.data, (slide) => {
-      if (!slide.parentRef) return slide;
-    })
+    return this.props.slides.data;
   }
 
   getSelectedSlideSortOrder = () => {
@@ -37,12 +34,10 @@ class CreateNavigationContainer extends Component {
   }
 
   onAddSlideClicked = () => {
-    let parentRef;
     this.setState({ isCreating: true });
     const scenarioId = this.props.scenario.data._id;
     axios.post(`/api/slides`, {
       scenarioId: this.props.scenario.data._id,
-      parentRef,
       sortOrder: this.getNewSlideSortOrder()
     }).then((response) => {
       const slideId = response.data.slide._id;

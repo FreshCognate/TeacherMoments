@@ -20,7 +20,7 @@ export default async (props, options, context) => {
   if (!slide) throw { message: 'This slide does not exist', statusCode: 404 };
 
   // Update all sibling slides
-  const siblingSlides = await models.Slide.find({ scenario: slide.scenario, parentRef: slide.parentRef, isDeleted: false }).sort('sortOrder');
+  const siblingSlides = await models.Slide.find({ scenario: slide.scenario, stemRef: slide.stemRef, isDeleted: false }).sort('sortOrder');
 
   let sortOrder = 0;
   for (const siblingSlide of siblingSlides) {

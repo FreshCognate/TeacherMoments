@@ -22,7 +22,7 @@ export default async (props, options, context) => {
 
   const stem = await createStem({ scenario: scenario._id, name: 'Stem 1', isRoot: true }, {}, context);
 
-  await createSlide({ scenario: scenario._id, sortOrder: 0, stem: stem.ref }, {}, context);
+  await createSlide({ scenario: scenario._id, sortOrder: 0, stemRef: stem.ref }, {}, context);
 
   return scenario;
 

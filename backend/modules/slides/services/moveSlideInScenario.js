@@ -15,7 +15,7 @@ export default async ({ scenario, slideId, sourceIndex, destinationIndex }, cont
 
   await connection.transaction(async (session) => {
 
-    const slides = await models.Slide.find({ scenario: existingSlide.scenario, parentRef: existingSlide.parentRef, isDeleted: false }).sort('sortOrder').session(session).exec();
+    const slides = await models.Slide.find({ scenario: existingSlide.scenario, stemRef: existingSlide.stemRef, isDeleted: false }).sort('sortOrder').session(session).exec();
 
     const result = Array.from(slides);
     const [removed] = result.splice(sourceIndex, 1);

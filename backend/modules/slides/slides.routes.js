@@ -20,7 +20,7 @@ export default {
     body: {
       scenarioId: Joi.string().required(),
       slideId: Joi.string(),
-      parentRef: Joi.string(),
+      stemRef: Joi.string(),
       sortOrder: Joi.number(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],

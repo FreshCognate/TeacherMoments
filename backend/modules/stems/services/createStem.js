@@ -3,7 +3,7 @@ import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToSc
 
 export default async (props, options, context) => {
 
-  const { scenario, stem, sortOrder, name, isRoot } = props;
+  const { scenario, stemRef, sortOrder, name, isRoot } = props;
 
   const { models, user } = context;
 
@@ -15,7 +15,7 @@ export default async (props, options, context) => {
 
   const newStemObject = {
     scenario,
-    stem,
+    stemRef,
     sortOrder,
     name,
     isRoot,
