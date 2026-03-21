@@ -2,6 +2,7 @@ import './tags/index.js';
 import './cohorts/index.js';
 import './scenarios/index.js';
 import './slides/index.js';
+import './stems/index.js';
 import './blocks/index.js';
 import './triggers/index.js';
 import './generate/index.js';
