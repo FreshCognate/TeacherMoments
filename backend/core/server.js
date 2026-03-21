@@ -17,6 +17,7 @@ import connectDatabase from '#core/databases/helpers/connectDatabase.js';
 import hasDatabaseConnection from '#core/databases/middleware/hasDatabaseConnection.js';
 
 // // Express middleware
+import helmet from 'helmet';
 import methodOverride from 'method-override';
 
 import bodyParser from 'body-parser';
@@ -42,6 +43,7 @@ const startServer = async function () {
   app.set('port', port);
   app.set('trust proxy', process.env.NODE_ENV === 'production' ? 2 : 1);
 
+  app.use(helmet());
   app.use(compression());
 
   app.use(morgan('dev', {
@@ -63,7 +65,6 @@ const startServer = async function () {
   }));
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
   app.use(boolParser());
-  app.disable('x-powered-by');
 
   app.use(hasDatabaseConnection);
 
@@ -85,6 +86,9 @@ const startServer = async function () {
     saveUninitialized: true,
     cookie: {
       maxAge: sessionsMaxAgeMs,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
     }
   }));
 
