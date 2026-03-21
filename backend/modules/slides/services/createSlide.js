@@ -3,7 +3,7 @@ import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToSc
 
 export default async (props, options, context) => {
 
-  const { scenario, sortOrder } = props;
+  const { scenario, sortOrder, stem } = props;
 
   const { models, user } = context;
 
@@ -24,6 +24,7 @@ export default async (props, options, context) => {
 
   const newSlideObject = {
     scenario,
+    stem,
     createdBy: user._id,
     sortOrder
   };
