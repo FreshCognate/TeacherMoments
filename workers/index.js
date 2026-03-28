@@ -11,6 +11,7 @@ if (process.env.SHOULD_RUN_WORKERS === 'true') {
   createWorker({ name: 'assets' }, `${global.root}/runners/assets.js`);
   createWorker({ name: 'exports' }, `${global.root}/runners/exports.js`);
   createWorker({ name: 'upgrades' }, `${global.root}/runners/upgrades.js`);
+  createWorker({ name: 'migrations' }, `${global.root}/runners/migrations.js`);
 } else {
   const app = express();
   app.disable('x-powered-by');

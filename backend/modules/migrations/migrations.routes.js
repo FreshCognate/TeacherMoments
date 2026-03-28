@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
-import controller from './migrations.controller.js';
+import controller, { runController } from './migrations.controller.js';
 
 export default [{
   route: '/migrations/scenarios',
@@ -13,12 +13,12 @@ export default [{
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN'])],
   }
 }, {
-  route: '/migrations',
-  controller,
-  create: {
-    body: {
+  route: '/migrations/scenarios/run',
+  controller: runController,
+  all: {
+    query: {
       postgresUrl: Joi.string().required(),
-      scenarioIds: Joi.array().items(Joi.number()).optional(),
+      scenarioIds: Joi.string().allow('').default(''),
       dryRun: Joi.boolean().default(true),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN'])],

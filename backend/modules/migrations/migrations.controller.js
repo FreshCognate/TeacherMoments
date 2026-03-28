@@ -1,7 +1,7 @@
 import pg from 'pg';
 import createJob from '#core/queues/helpers/createJob.js';
 
-export default {
+const controller = {
   all: async function ({ query }) {
 
     const pool = new pg.Pool({
@@ -41,23 +41,27 @@ export default {
       await pool.end();
     }
 
-  },
+  }
+};
 
-  create: async function ({ body }, context) {
+export const runController = {
+  all: async function ({ query }, context) {
+    const scenarioIds = query.scenarioIds ? query.scenarioIds.split(',').map(Number).filter(Boolean) : [];
 
     const job = await createJob({
       queue: 'migrations',
       name: 'migratePostgresScenarios',
       job: {
-        postgresUrl: body.postgresUrl,
-        scenarioIds: body.scenarioIds || null,
-        dryRun: body.dryRun !== undefined ? body.dryRun : true,
+        postgresUrl: query.postgresUrl,
+        scenarioIds: scenarioIds.length > 0 ? scenarioIds : null,
+        dryRun: query.dryRun !== undefined ? query.dryRun : true,
         createdBy: context.user._id,
         createdAt: new Date()
       }
     });
 
     return { jobId: job.id };
-
   }
 };
+
+export default controller;
