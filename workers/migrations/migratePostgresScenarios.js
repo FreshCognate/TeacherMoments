@@ -1,19 +1,5 @@
 import pg from 'pg';
-
-const COMPONENT_TYPE_MAP = {
-  Text: 'TEXT',
-  MultiButtonResponse: 'MULTIPLE_CHOICE_PROMPT',
-  AudioResponse: 'INPUT_PROMPT',
-  TextResponse: 'INPUT_PROMPT',
-  AudioPrompt: 'INPUT_PROMPT',
-  ResponseRecall: 'RESPONSE',
-  MultiPathResponse: 'ACTIONS_PROMPT',
-  Suggestion: 'SUGGESTION',
-  ChatPrompt: 'TEXT',
-  ConditionalContent: 'TEXT',
-  AnnotationPrompt: 'TEXT',
-  ConversationPrompt: 'TEXT',
-};
+//import mapComponent from './helpers/mapComponent.js';
 
 function log(dryRun, ...args) {
   const prefix = dryRun ? '[DRY RUN]' : '[Migration]';
@@ -38,8 +24,11 @@ export default async (data) => {
     succeeded: 0,
     failed: 0,
     totalSlides: 0,
-    totalComponents: 0,
+    totalBlocks: 0,
+    totalImages: 0,
     componentsByType: {},
+    unresolvedRecallIds: [],
+    unresolvedSlideRefs: [],
     failures: []
   };
 
@@ -83,52 +72,83 @@ export default async (data) => {
 
         const slides = slideResult.rows;
         summary.totalSlides += slides.length;
-
         log(dryRun, `  Found ${slides.length} slides`);
+
+        const responseIdMap = new Map();
+        const pendingRecalls = [];
+        const pendingSlideActions = [];
 
         for (let j = 0; j < slides.length; j++) {
           const slide = slides[j];
           const components = slide.components || [];
           const slideType = slide.is_finish ? 'SUMMARY' : 'STEP';
 
-          summary.totalComponents += components.length;
-
           log(dryRun, `  Slide ${j + 1}/${slides.length}: "${slide.title || '(untitled)'}" (PG ID: ${slide.id}, order: ${slide.order}, type: ${slideType}, chat: ${slide.has_chat_enabled})`);
 
           for (let k = 0; k < components.length; k++) {
             const component = components[k];
             const componentType = component.type || 'Unknown';
-            const blockType = COMPONENT_TYPE_MAP[componentType] || 'TEXT';
+            const mapped = mapComponent(component, k);
 
+            summary.totalBlocks++;
             summary.componentsByType[componentType] = (summary.componentsByType[componentType] || 0) + 1;
 
-            let details = `${componentType} → ${blockType}`;
+            let details = `${componentType} → ${mapped.blockType}`;
 
-            if (componentType === 'Text') {
-              const textLength = (component.html || '').length;
-              details += ` (html: ${textLength} chars)`;
-            } else if (componentType === 'MultiButtonResponse') {
-              const buttonCount = (component.buttons || []).length;
-              details += ` (${buttonCount} options, responseId: "${component.responseId}")`;
-            } else if (componentType === 'TextResponse') {
-              details += ` (responseId: "${component.responseId}", required: ${component.required})`;
-            } else if (componentType === 'AudioResponse') {
-              details += ` (responseId: "${component.responseId}")`;
-            } else if (componentType === 'AudioPrompt') {
-              details += ` (responseId: "${component.responseId}", required: ${component.required})`;
-            } else if (componentType === 'ResponseRecall') {
-              details += ` (recallId: "${component.recallId}")`;
-            } else if (componentType === 'MultiPathResponse') {
-              const pathCount = (component.paths || []).length;
-              details += ` (${pathCount} paths, responseId: "${component.responseId}")`;
-            } else if (componentType === 'Suggestion') {
-              details += ` (color: ${component.color}, persona: ${component.persona ? component.persona.id : 'none'})`;
-            } else if (componentType === 'ConditionalContent') {
-              const hasInnerHtml = component.component && component.component.html;
-              details += ` (has inner html: ${!!hasInnerHtml})`;
+            if (mapped.images.length > 0) {
+              summary.totalImages += mapped.images.length;
+              details += ` (${mapped.images.length} image${mapped.images.length > 1 ? 's' : ''})`;
+            }
+
+            if (mapped.responseId) {
+              responseIdMap.set(mapped.responseId, `block-placeholder-${summary.totalBlocks}`);
+              details += ` (responseId: "${mapped.responseId}")`;
+            }
+
+            if (mapped.recallId) {
+              details += ` (recallId: "${mapped.recallId}")`;
+            }
+
+            if (mapped.pendingRecallId) {
+              pendingRecalls.push({ recallId: mapped.pendingRecallId });
+              details += ` (pendingRecallId: "${mapped.pendingRecallId}")`;
+            }
+
+            if (mapped.pendingSlideRefs) {
+              pendingSlideActions.push({ slideIds: mapped.pendingSlideRefs });
+              details += ` (paths to slides: ${mapped.pendingSlideRefs.join(', ')})`;
             }
 
             log(dryRun, `    Block ${k + 1}/${components.length}: ${details}`);
+
+            if (mapped.images.length > 0) {
+              for (const imageUrl of mapped.images) {
+                log(dryRun, `      Image: ${imageUrl}`);
+              }
+            }
+          }
+        }
+
+        log(dryRun, `  Resolving references for scenario "${scenario.title}"...`);
+
+        for (const pending of pendingRecalls) {
+          if (responseIdMap.has(pending.recallId)) {
+            log(dryRun, `    RESPONSE block → resolved (recallId: "${pending.recallId}")`);
+          } else {
+            summary.unresolvedRecallIds.push(pending.recallId);
+            log(dryRun, `    RESPONSE block → WARNING: recallId "${pending.recallId}" not found`);
+          }
+        }
+
+        for (const pending of pendingSlideActions) {
+          for (const slideId of pending.slideIds) {
+            const slideExists = slides.some(s => s.id === slideId);
+            if (slideExists) {
+              log(dryRun, `    ACTIONS_PROMPT → slide ref resolved (PG slide ${slideId})`);
+            } else {
+              summary.unresolvedSlideRefs.push(slideId);
+              log(dryRun, `    ACTIONS_PROMPT → WARNING: PG slide ${slideId} not found in this scenario`);
+            }
           }
         }
 
@@ -149,8 +169,17 @@ export default async (data) => {
   log(dryRun, '=== COMPLETE ===');
   log(dryRun, `Total scenarios: ${summary.totalScenarios} | Succeeded: ${summary.succeeded} | Failed: ${summary.failed}`);
   log(dryRun, `Total slides: ${summary.totalSlides}`);
-  log(dryRun, `Total components: ${summary.totalComponents}`);
+  log(dryRun, `Total blocks: ${summary.totalBlocks}`);
+  log(dryRun, `Total images found: ${summary.totalImages}`);
   log(dryRun, `Components by type:`, summary.componentsByType);
+
+  if (summary.unresolvedRecallIds.length > 0) {
+    log(dryRun, `Unresolved recallIds:`, summary.unresolvedRecallIds);
+  }
+
+  if (summary.unresolvedSlideRefs.length > 0) {
+    log(dryRun, `Unresolved slide refs:`, summary.unresolvedSlideRefs);
+  }
 
   if (summary.failures.length > 0) {
     log(dryRun, `Failed scenarios:`, summary.failures);
