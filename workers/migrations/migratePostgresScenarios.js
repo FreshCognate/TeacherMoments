@@ -72,6 +72,9 @@ export default async (data) => {
     for (let i = 0; i < scenarios.length; i++) {
       const pgScenario = scenarios[i];
 
+      let scenario;
+      const createdAssetIds = [];
+
       try {
         log(dryRun, '');
         log(dryRun, `Scenario ${i + 1}/${scenarios.length}: "${pgScenario.title}" (PG ID: ${pgScenario.id})`);
@@ -101,7 +104,6 @@ export default async (data) => {
         log(dryRun, `  Found ${pgSlides.length} slides`);
 
         // Create scenario
-        let scenario;
         if (!dryRun) {
           scenario = await models.Scenario.create({
             name: pgScenario.title || 'Untitled Scenario',
@@ -237,6 +239,7 @@ export default async (data) => {
                 log(dryRun, `      Downloading image: ${imageUrl}`);
                 try {
                   const asset = await downloadAndUploadImage({ url: imageUrl, models, createdBy });
+                  createdAssetIds.push(asset._id);
                   log(dryRun, `      Uploaded image as Asset (id: ${asset._id})`);
 
                   const imagesBlock = await models.Block.create({
@@ -313,6 +316,22 @@ export default async (data) => {
         summary.failures.push({ pgId: pgScenario.id, title: pgScenario.title, error: error.message });
         log(dryRun, `  ERROR migrating scenario "${pgScenario.title}" (PG ID: ${pgScenario.id}): ${error.message}`);
         console.log(error);
+
+        if (!dryRun && scenario) {
+          log(dryRun, `  Cleaning up partial scenario...`);
+          try {
+            const blockResult = await models.Block.deleteMany({ scenario: scenario._id });
+            const slideResult = await models.Slide.deleteMany({ scenario: scenario._id });
+            const stemResult = await models.Stem.deleteMany({ scenario: scenario._id });
+            const assetResult = createdAssetIds.length > 0
+              ? await models.Asset.deleteMany({ _id: { $in: createdAssetIds } })
+              : { deletedCount: 0 };
+            await models.Scenario.deleteOne({ _id: scenario._id });
+            log(dryRun, `  Cleanup complete: deleted ${blockResult.deletedCount} blocks, ${slideResult.deletedCount} slides, ${stemResult.deletedCount} stems, ${assetResult.deletedCount} assets, 1 scenario`);
+          } catch (cleanupError) {
+            log(dryRun, `  WARNING: Cleanup failed for scenario ${scenario._id}: ${cleanupError.message}`);
+          }
+        }
       }
     }
 
