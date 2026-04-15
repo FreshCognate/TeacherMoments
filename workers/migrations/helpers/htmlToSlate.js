@@ -1,6 +1,12 @@
 import { parse } from 'node-html-parser';
+import he from 'he';
 
 const DEFAULT_SLATE = [{ type: 'paragraph', children: [{ text: '' }] }];
+
+function decodeText(text) {
+  if (!text) return text;
+  return he.decode(text).replace(/\u00a0/g, ' ');
+}
 
 const BLOCK_TAGS = {
   p: 'paragraph',
@@ -41,7 +47,7 @@ function processInlineChildren(node, marks = {}) {
 
   for (const child of node.childNodes) {
     if (child.nodeType === 3) {
-      const text = child.rawText;
+      const text = decodeText(child.rawText);
       if (text) {
         results.push({ text, ...marks });
       }
@@ -84,7 +90,7 @@ function processNode(node) {
 
   for (const child of node.childNodes) {
     if (child.nodeType === 3) {
-      const text = child.rawText.trim();
+      const text = decodeText(child.rawText).trim();
       if (text) {
         blocks.push({ type: 'paragraph', children: [{ text }] });
       }
