@@ -1,4 +1,5 @@
 import pg from 'pg';
+import '../../backend/core/users/index.js';
 import '../../backend/modules/scenarios/index.js';
 import '../../backend/modules/slides/index.js';
 import '../../backend/modules/stems/index.js';
@@ -8,6 +9,7 @@ import connectDatabase from '../../backend/core/databases/helpers/connectDatabas
 import mapComponent from './helpers/mapComponent.js';
 import buildSlateFromText from './helpers/buildSlateFromText.js';
 import downloadAndUploadImage from './helpers/downloadAndUploadImage.js';
+import resolveAuthors from './helpers/resolveAuthors.js';
 
 function log(dryRun, ...args) {
   const prefix = dryRun ? '[DRY RUN]' : '[Migration]';
@@ -50,7 +52,7 @@ export default async (data) => {
   try {
 
     let scenarioQuery = `
-      SELECT id, title, description, is_example, status, created_at, updated_at
+      SELECT id, author_id, title, description, is_example, status, created_at, updated_at
       FROM scenario
       WHERE deleted_at IS NULL
     `;
@@ -103,6 +105,25 @@ export default async (data) => {
         summary.totalSlides += pgSlides.length;
         log(dryRun, `  Found ${pgSlides.length} slides`);
 
+        // Resolve authors (original author + collaborators from PG)
+        let resolvedCreatedBy = createdBy;
+        let collaborators = [{ user: createdBy, role: 'OWNER' }];
+
+        if (!dryRun) {
+          const resolved = await resolveAuthors({
+            pgScenario,
+            pool,
+            models,
+            fallbackUserId: createdBy,
+          });
+          resolvedCreatedBy = resolved.createdBy;
+          collaborators = resolved.collaborators;
+          log(dryRun, `  Authors: ${resolved.matchedCount}/${resolved.pgEmailCount} PG users matched in MongoDB${resolved.unmatchedCount > 0 ? `, ${resolved.unmatchedCount} not found` : ''}`);
+          if (resolved.originalAuthorEmail) {
+            log(dryRun, `  Original author email: ${resolved.originalAuthorEmail} (createdBy: ${resolvedCreatedBy})`);
+          }
+        }
+
         // Create scenario
         if (!dryRun) {
           scenario = await models.Scenario.create({
@@ -114,9 +135,10 @@ export default async (data) => {
             isPublished: false,
             isMigrated: true,
             migrationId: pgScenario.id,
+            collaborators,
             createdAt: pgScenario.created_at,
             updatedAt: pgScenario.updated_at,
-            createdBy,
+            createdBy: resolvedCreatedBy,
           });
           log(dryRun, `  Created scenario (MongoDB ID: ${scenario._id})`);
         }
@@ -128,7 +150,7 @@ export default async (data) => {
             scenario: scenario._id,
             name: 'Stem 1',
             isRoot: true,
-            createdBy,
+            createdBy: resolvedCreatedBy,
           });
           log(dryRun, `  Created root stem (ref: ${stem.ref})`);
         }
@@ -151,7 +173,7 @@ export default async (data) => {
               stemRef: stem.ref,
               hasDiscussion: pgSlide.has_chat_enabled || false,
               createdAt: pgScenario.created_at,
-              createdBy,
+              createdBy: resolvedCreatedBy,
             });
             slideIdMap.set(pgSlide.id, slide.ref);
             log(dryRun, `    Created slide (ref: ${slide.ref})`);
@@ -212,7 +234,7 @@ export default async (data) => {
                 blockType: mapped.blockType,
                 sortOrder: runningSortOrder,
                 createdAt: pgScenario.created_at,
-                createdBy,
+                createdBy: resolvedCreatedBy,
                 ...mapped.fields,
               });
               log(dryRun, `      Created block (ref: ${block.ref})`);
@@ -238,7 +260,7 @@ export default async (data) => {
               if (!dryRun) {
                 log(dryRun, `      Downloading image: ${imageUrl}`);
                 try {
-                  const asset = await downloadAndUploadImage({ url: imageUrl, models, createdBy });
+                  const asset = await downloadAndUploadImage({ url: imageUrl, models, createdBy: resolvedCreatedBy });
                   createdAssetIds.push(asset._id);
                   log(dryRun, `      Uploaded image as Asset (id: ${asset._id})`);
 
@@ -249,7 +271,7 @@ export default async (data) => {
                     sortOrder: runningSortOrder,
                     items: [{ 'en-US-asset': asset._id, 'en-US-caption': '' }],
                     createdAt: pgScenario.created_at,
-                    createdBy,
+                    createdBy: resolvedCreatedBy,
                   });
                   log(dryRun, `      Created IMAGES block (ref: ${imagesBlock.ref})`);
                 } catch (imageError) {
