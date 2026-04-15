@@ -11,6 +11,7 @@ import buildSlateFromText from './helpers/buildSlateFromText.js';
 import buildSummaryFromComponents from './helpers/buildSummaryFromComponents.js';
 import downloadAndUploadImage from './helpers/downloadAndUploadImage.js';
 import resolveAuthors from './helpers/resolveAuthors.js';
+import isSlateEmpty from './helpers/isSlateEmpty.js';
 
 function log(dryRun, ...args) {
   const prefix = dryRun ? '[DRY RUN]' : '[Migration]';
@@ -239,11 +240,20 @@ export default async (data) => {
               details += ` (paths to slides: ${mapped.pendingSlideRefs.join(', ')})`;
             }
 
+            // Skip empty TEXT blocks (no title, no body) but still process images
+            const hasEmptyBody = isSlateEmpty(mapped.fields?.['en-US-body']);
+            const hasEmptyTitle = isSlateEmpty(mapped.fields?.['en-US-title']);
+            const skipBlock = mapped.blockType === 'TEXT' && hasEmptyBody && hasEmptyTitle;
+
+            if (skipBlock) {
+              details += ' (SKIPPED: empty title and body)';
+            }
+
             log(dryRun, `    Block ${k + 1}/${components.length}: ${details}`);
 
-            // Create main block
+            // Create main block (unless skipping)
             let block;
-            if (!dryRun) {
+            if (!dryRun && !skipBlock) {
               block = await models.Block.create({
                 scenario: scenario._id,
                 slideRef,
@@ -255,7 +265,7 @@ export default async (data) => {
               });
               log(dryRun, `      Created block (ref: ${block.ref})`);
             }
-            runningSortOrder++;
+            if (!skipBlock) runningSortOrder++;
 
             // Track refs for second-pass resolution
             if (mapped.responseId) {
