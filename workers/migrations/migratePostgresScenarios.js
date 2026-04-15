@@ -8,6 +8,7 @@ import '../../backend/modules/assets/index.js';
 import connectDatabase from '../../backend/core/databases/helpers/connectDatabase.js';
 import mapComponent from './helpers/mapComponent.js';
 import buildSlateFromText from './helpers/buildSlateFromText.js';
+import buildSummaryFromComponents from './helpers/buildSummaryFromComponents.js';
 import downloadAndUploadImage from './helpers/downloadAndUploadImage.js';
 import resolveAuthors from './helpers/resolveAuthors.js';
 
@@ -101,9 +102,20 @@ export default async (data) => {
           ORDER BY "order" ASC
         `, [pgScenario.id]);
 
-        const pgSlides = slideResult.rows;
+        const allPgSlides = slideResult.rows;
+        const finishSlide = allPgSlides.find(s => s.is_finish);
+        const pgSlides = allPgSlides.filter(s => !s.is_finish);
         summary.totalSlides += pgSlides.length;
-        log(dryRun, `  Found ${pgSlides.length} slides`);
+        log(dryRun, `  Found ${pgSlides.length} slides${finishSlide ? ` (+ 1 finish slide merged into summary)` : ''}`);
+
+        // Build summary from the is_finish slide (if any)
+        const summarySlate = finishSlide
+          ? buildSummaryFromComponents(finishSlide.components || [])
+          : undefined;
+
+        if (finishSlide) {
+          log(dryRun, `  Finish slide PG ID ${finishSlide.id} → scenario summary (${(finishSlide.components || []).length} components merged)`);
+        }
 
         // Resolve authors (original author + collaborators from PG)
         let resolvedCreatedBy = createdBy;
@@ -126,7 +138,7 @@ export default async (data) => {
 
         // Create scenario
         if (!dryRun) {
-          scenario = await models.Scenario.create({
+          const scenarioDoc = {
             name: pgScenario.title || 'Untitled Scenario',
             'en-US-title': pgScenario.title || '',
             'en-US-description': buildSlateFromText(pgScenario.description),
@@ -139,7 +151,11 @@ export default async (data) => {
             createdAt: pgScenario.created_at,
             updatedAt: pgScenario.updated_at,
             createdBy: resolvedCreatedBy,
-          });
+          };
+          if (summarySlate) {
+            scenarioDoc['en-US-summary'] = summarySlate;
+          }
+          scenario = await models.Scenario.create(scenarioDoc);
           log(dryRun, `  Created scenario (MongoDB ID: ${scenario._id})`);
         }
 
