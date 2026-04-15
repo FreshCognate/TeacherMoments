@@ -201,8 +201,10 @@ export default async (data) => {
 
             log(dryRun, `    Block ${k + 1}/${components.length}: ${details}`);
 
+            // Create main block
+            let block;
             if (!dryRun) {
-              const block = await models.Block.create({
+              block = await models.Block.create({
                 scenario: scenario._id,
                 slideRef,
                 blockType: mapped.blockType,
@@ -211,23 +213,27 @@ export default async (data) => {
                 createdBy,
                 ...mapped.fields,
               });
-
               log(dryRun, `      Created block (ref: ${block.ref})`);
-              runningSortOrder++;
+            }
+            runningSortOrder++;
 
-              if (mapped.responseId) {
-                responseIdMap.set(mapped.responseId, block.ref);
-              }
+            // Track refs for second-pass resolution
+            if (mapped.responseId) {
+              const ref = block ? block.ref : `placeholder-${summary.totalBlocks}`;
+              responseIdMap.set(mapped.responseId, ref);
+            }
 
-              if (mapped.pendingRecallId) {
-                pendingRecalls.push({ blockId: block._id, recallId: mapped.pendingRecallId });
-              }
+            if (mapped.pendingRecallId) {
+              pendingRecalls.push({ blockId: block?._id, recallId: mapped.pendingRecallId });
+            }
 
-              if (mapped.pendingSlideRefs) {
-                pendingSlideActions.push({ blockId: block._id, slideIds: mapped.pendingSlideRefs });
-              }
+            if (mapped.pendingSlideRefs) {
+              pendingSlideActions.push({ blockId: block?._id, slideIds: mapped.pendingSlideRefs });
+            }
 
-              for (const imageUrl of mapped.images) {
+            // Handle images: download + create IMAGES block
+            for (const imageUrl of mapped.images) {
+              if (!dryRun) {
                 log(dryRun, `      Downloading image: ${imageUrl}`);
                 try {
                   const asset = await downloadAndUploadImage({ url: imageUrl, models, createdBy });
@@ -243,26 +249,13 @@ export default async (data) => {
                     createdBy,
                   });
                   log(dryRun, `      Created IMAGES block (ref: ${imagesBlock.ref})`);
-                  runningSortOrder++;
                 } catch (imageError) {
                   log(dryRun, `      WARNING: Image download failed (${imageUrl}): ${imageError.message}`);
                 }
-              }
-            } else {
-              runningSortOrder++;
-              if (mapped.responseId) {
-                responseIdMap.set(mapped.responseId, `placeholder-${summary.totalBlocks}`);
-              }
-              if (mapped.pendingRecallId) {
-                pendingRecalls.push({ recallId: mapped.pendingRecallId });
-              }
-              if (mapped.pendingSlideRefs) {
-                pendingSlideActions.push({ slideIds: mapped.pendingSlideRefs });
-              }
-              for (const imageUrl of mapped.images) {
+              } else {
                 log(dryRun, `      Image: ${imageUrl} (would download and create IMAGES block)`);
-                runningSortOrder++;
               }
+              runningSortOrder++;
             }
           }
         }
