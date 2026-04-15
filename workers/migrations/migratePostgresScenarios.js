@@ -133,7 +133,6 @@ export default async (data) => {
 
         // Create slides and track PG ID → MongoDB ref mapping
         const slideIdMap = new Map();
-        const slideDocMap = new Map();
 
         for (let j = 0; j < pgSlides.length; j++) {
           const pgSlide = pgSlides[j];
@@ -153,7 +152,6 @@ export default async (data) => {
               createdBy,
             });
             slideIdMap.set(pgSlide.id, slide.ref);
-            slideDocMap.set(pgSlide.id, slide);
             log(dryRun, `    Created slide (ref: ${slide.ref})`);
           }
         }
