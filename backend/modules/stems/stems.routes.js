@@ -1,16 +1,13 @@
 import Joi from 'joi';
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
-import controller from './slides.controller.js';
+import controller from './stems.controller.js';
 
 export default {
-  route: '/slides',
+  route: '/stems',
   controller,
   all: {
     query: {
-      searchValue: Joi.string().allow('').default(''),
-      currentPage: Joi.number().default(1),
-      slideType: Joi.string(),
       scenarioId: Joi.string().required(),
       isDeleted: Joi.boolean()
     },
@@ -19,7 +16,6 @@ export default {
   create: {
     body: {
       scenarioId: Joi.string().required(),
-      slideId: Joi.string(),
       stemRef: Joi.string(),
       sortOrder: Joi.number(),
     },
@@ -33,13 +29,9 @@ export default {
     param: 'id',
     body: {
       name: Joi.string().allow(''),
-      slideType: Joi.string().valid('STEP', 'SUMMARY'),
-      tags: Joi.array().items(Joi.string()),
-      scenarioId: Joi.string(),
-      sourceIndex: Joi.number(),
-      destinationIndex: Joi.number(),
-      isLocked: Joi.boolean(),
-      isDeleted: Joi.boolean().invalid(true),
+      description: Joi.string().allow(''),
+      stemRef: Joi.string(),
+      sortOrder: Joi.number(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },

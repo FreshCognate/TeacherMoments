@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import CreateNavigation from '../components/createNavigation';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
-import filter from 'lodash/filter';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import setEditingMode from '../helpers/setEditingMode';
 import getScenarioDetails from '../../run/helpers/getScenarioDetails';
 import find from 'lodash/find';
+import filter from 'lodash/filter';
 
 class CreateNavigationContainer extends Component {
 
@@ -18,10 +18,38 @@ class CreateNavigationContainer extends Component {
     deletingId: null
   }
 
+  getActiveStemRef = () => {
+    const { activeStemRef } = this.props.editor.data;
+    if (activeStemRef) return activeStemRef;
+    const { activeSlideId } = getScenarioDetails();
+    const activeSlide = find(this.props.slides.data, { _id: activeSlideId });
+    if (activeSlide?.stemRef) {
+      this.props.editor.set({ activeStemRef: activeSlide.stemRef });
+      return activeSlide.stemRef;
+    }
+    const rootStem = find(this.props.stems.data, { isRoot: true });
+    if (rootStem) {
+      this.props.editor.set({ activeStemRef: rootStem.ref });
+      return rootStem.ref;
+    }
+    return null;
+  }
+
+  getActiveStem = () => {
+    const activeStemRef = this.getActiveStemRef();
+    return find(this.props.stems.data, { ref: activeStemRef });
+  }
+
+  getHasChildStems = () => {
+    const activeStemRef = this.getActiveStemRef();
+    if (!activeStemRef) return false;
+    return filter(this.props.stems.data, { stemRef: activeStemRef }).length > 0;
+  }
+
   getCurrentStemOfSlides = () => {
-    return filter(this.props.slides.data, (slide) => {
-      if (!slide.parentRef) return slide;
-    })
+    const activeStemRef = this.getActiveStemRef();
+    if (!activeStemRef) return this.props.slides.data;
+    return filter(this.props.slides.data, { stemRef: activeStemRef });
   }
 
   getSelectedSlideSortOrder = () => {
@@ -37,13 +65,12 @@ class CreateNavigationContainer extends Component {
   }
 
   onAddSlideClicked = () => {
-    let parentRef;
     this.setState({ isCreating: true });
     const scenarioId = this.props.scenario.data._id;
     axios.post(`/api/slides`, {
       scenarioId: this.props.scenario.data._id,
-      parentRef,
-      sortOrder: this.getNewSlideSortOrder()
+      sortOrder: this.getNewSlideSortOrder(),
+      stemRef: this.getActiveStemRef()
     }).then((response) => {
       const slideId = response.data.slide._id;
       this.props.slides.fetch().then(() => {
@@ -119,16 +146,32 @@ class CreateNavigationContainer extends Component {
     this.props.editor.set({ navigationMode: this.props.editor.data.navigationMode === 'SLIDES' ? 'STEM' : 'SLIDES' })
   }
 
+  onBackToParentStemClicked = () => {
+    const activeStem = this.getActiveStem();
+    if (!activeStem?.stemRef) return;
+    this.props.editor.set({ activeStemRef: activeStem.stemRef });
+    const parentSlides = filter(this.props.slides.data, { stemRef: activeStem.stemRef });
+    if (parentSlides.length > 0) {
+      const scenarioId = this.props.scenario.data._id;
+      this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${parentSlides[0]._id}`, {
+        replace: true
+      });
+    }
+  }
+
   render() {
     const { isCreating, deletingId, isDuplicating } = this.state;
     const { activeSlideId } = getScenarioDetails();
     const { navigationMode } = this.props.editor.data;
+    const activeStem = this.getActiveStem();
     return (
       <CreateNavigation
         scenarioId={this.props.scenario.data._id}
         slides={this.getCurrentStemOfSlides()}
         blocks={this.props.blocks.data}
         activeSlideId={activeSlideId}
+        activeStem={activeStem}
+        hasChildStems={this.getHasChildStems()}
         navigationMode={navigationMode}
         isCreating={isCreating}
         deletingId={deletingId}
@@ -137,9 +180,10 @@ class CreateNavigationContainer extends Component {
         onDuplicateSlideClicked={this.onDuplicateSlideClicked}
         onDeleteSlideClicked={this.onDeleteSlideClicked}
         onToggleNavigationTypeClicked={this.onToggleNavigationTypeClicked}
+        onBackToParentStemClicked={this.onBackToParentStemClicked}
       />
     );
   }
 };
 
-export default WithRouter(WithCache(CreateNavigationContainer, null, ['slides', 'blocks', 'scenario', 'editor']));
+export default WithRouter(WithCache(CreateNavigationContainer, null, ['slides', 'blocks', 'scenario', 'editor', 'stems']));

@@ -6,6 +6,7 @@ import CreateDroppableContainer from '../containers/createDroppableContainer';
 import filter from 'lodash/filter';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Button from '~/uikit/buttons/components/button';
+import CreateStemsContainer from '../containers/createStemsContainer';
 
 const CreateNavigation = ({
   scenarioId,
@@ -16,23 +17,36 @@ const CreateNavigation = ({
   isCreating,
   deletingId,
   isDuplicating,
+  activeStem,
+  hasChildStems,
   onAddSlideClicked,
   onDuplicateSlideClicked,
   onDeleteSlideClicked,
-  onToggleNavigationTypeClicked
+  onToggleNavigationTypeClicked,
+  onBackToParentStemClicked
 }) => {
+  const isRootStem = !activeStem || activeStem.isRoot;
   return (
     <div className="bg-lm-0 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col border border-lm-3 dark:border-dm-1 rounded-lg">
       <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} onAddSlideClicked={onAddSlideClicked} />
       <div className="p-2 overflow-y-scroll flex-grow">
         {(navigationMode === 'SLIDES') && (
           <>
-            <CreateNavigationStaticSlide
-              label="Consent slide"
-              slideId="CONSENT"
-              scenarioId={scenarioId}
-              isSelected={activeSlideId === 'CONSENT'}
-            />
+            {!isRootStem && (
+              <FlatButton
+                text="Back to parent"
+                icon="back"
+                onClick={onBackToParentStemClicked}
+              />
+            )}
+            {isRootStem && (
+              <CreateNavigationStaticSlide
+                label="Consent slide"
+                slideId="CONSENT"
+                scenarioId={scenarioId}
+                isSelected={activeSlideId === 'CONSENT'}
+              />
+            )}
             <CreateDroppableContainer
               id={`slides`}
               items={slides}
@@ -66,12 +80,15 @@ const CreateNavigation = ({
 
               }}
             />
-            <CreateNavigationStaticSlide
-              label="Summary slide"
-              slideId="SUMMARY"
-              scenarioId={scenarioId}
-              isSelected={activeSlideId === 'SUMMARY'}
-            />
+            <CreateStemsContainer />
+            {!hasChildStems && (
+              <CreateNavigationStaticSlide
+                label="Summary slide"
+                slideId="SUMMARY"
+                scenarioId={scenarioId}
+                isSelected={activeSlideId === 'SUMMARY'}
+              />
+            )}
           </>
         )}
         {(navigationMode === 'STEM') && (

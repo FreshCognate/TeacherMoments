@@ -16,6 +16,10 @@ export default async ({ modelId, modelType }, { user, models }) => {
       const trigger = await models.Trigger.findById(modelId, 'scenario');
       scenarioId = trigger?.scenario;
       break;
+    case 'Stem':
+      const stem = await models.Stem.findById(modelId, 'scenario');
+      scenarioId = stem?.scenario;
+      break;
   }
 
   if (!scenarioId) {
