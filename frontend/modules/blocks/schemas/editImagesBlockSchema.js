@@ -64,5 +64,17 @@ export default {
         text: 'Square'
       }]
     },
+    canClickToZoom: {
+      type: 'Toggle',
+      label: 'Allow zoom on click',
+      size: 'sm',
+      options: [{
+        value: false,
+        text: 'No'
+      }, {
+        value: true,
+        text: 'Yes'
+      }]
+    },
   }
 }
