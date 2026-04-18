@@ -11,6 +11,7 @@ import buildSlateFromText from './helpers/buildSlateFromText.js';
 import buildSummaryFromComponents from './helpers/buildSummaryFromComponents.js';
 import downloadAndUploadImage from './helpers/downloadAndUploadImage.js';
 import resolveAuthors from './helpers/resolveAuthors.js';
+import resolveConsent from './helpers/resolveConsent.js';
 import isSlateEmpty from './helpers/isSlateEmpty.js';
 
 function log(dryRun, ...args) {
@@ -137,6 +138,14 @@ export default async (data) => {
           }
         }
 
+        // Resolve consent (custom consent text per scenario, if any)
+        const resolvedConsent = await resolveConsent({ pgScenarioId: pgScenario.id, pool });
+        if (resolvedConsent) {
+          log(dryRun, `  Consent: custom (PG consent_id: ${resolvedConsent.consentId})`);
+        } else {
+          log(dryRun, `  Consent: using default (no scenario_consent row)`);
+        }
+
         // Create scenario
         if (!dryRun) {
           const scenarioDoc = {
@@ -155,6 +164,9 @@ export default async (data) => {
           };
           if (summarySlate) {
             scenarioDoc['en-US-summary'] = summarySlate;
+          }
+          if (resolvedConsent) {
+            scenarioDoc['en-US-consent'] = resolvedConsent.slate;
           }
           scenario = await models.Scenario.create(scenarioDoc);
           log(dryRun, `  Created scenario (MongoDB ID: ${scenario._id})`);
