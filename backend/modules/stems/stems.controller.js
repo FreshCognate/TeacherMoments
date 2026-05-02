@@ -15,9 +15,9 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { scenarioId, stemRef, sortOrder } = body;
+    const { scenarioId, stemRef, slideRef, sortOrder } = body;
 
-    const newStem = await createStem({ scenario: scenarioId, stemRef, sortOrder }, {}, context);
+    const newStem = await createStem({ scenario: scenarioId, stemRef, slideRef, sortOrder }, {}, context);
 
     return { stem: newStem };
 

@@ -4,6 +4,8 @@ import classnames from 'classnames';
 import CreateNavigationSlideActionsContainer from '../containers/createNavigationSlideActionsContainer';
 import map from 'lodash/map';
 import getBlockComponent from '~/modules/blocks/helpers/getBlockComponent';
+import CreateStemsContainer from '../containers/createStemsContainer';
+import Flag from '~/modules/flags/components/flag';
 
 const CreateNavigationSlide = ({
   scenarioId,
@@ -26,51 +28,57 @@ const CreateNavigationSlide = ({
   });
 
   return (
-    <Link to={`/scenarios/${scenarioId}/create?slide=${slide._id}`} replace>
-      <div className={className} style={style} ref={setNodeRef} {...listeners} {...attributes}>
-        <CreateNavigationSlideActionsContainer
-          slide={slide}
-          slideNumber={slide.sortOrder + 1}
-          canDeleteSlides={canDeleteSlides}
-          onDuplicateSlideClicked={() => onDuplicateSlideClicked(slide._id)}
-          onDeleteSlideClicked={() => onDeleteSlideClicked(slide._id)}
-        />
-        <div>
+    <div>
 
-          <div className="overflow-hidden h-28 rounded-b-lg">
+      <Link to={`/scenarios/${scenarioId}/create?slide=${slide._id}`} replace>
+        <div className={className} style={style} ref={setNodeRef} {...listeners} {...attributes}>
+          <CreateNavigationSlideActionsContainer
+            slide={slide}
+            slideNumber={slide.sortOrder + 1}
+            canDeleteSlides={canDeleteSlides}
+            onDuplicateSlideClicked={() => onDuplicateSlideClicked(slide._id)}
+            onDeleteSlideClicked={() => onDeleteSlideClicked(slide._id)}
+          />
+          <div>
 
-            <svg xmlns="http://www.w3.org/2000/svg" width="640" height="1000">
-              <foreignObject transform={'scale(0.376)'} width={'100%'} height={'100%'}>
-                <section>
-                  {map(slideBlocks, (block) => {
-                    let Block = getBlockComponent({ blockType: block.blockType });
-                    return (
-                      <div
-                        key={block._id}
-                        className="mb-8 last:mb-0 p-4"
-                      >
-                        <Block
-                          block={block}
-                          blockTracking={{}}
-                        />
-                      </div>
-                    );
-                  })}
-                </section>
-              </foreignObject>
-              <rect
-                x="0"
-                y="0"
-                fill="transparent"
-                transform={'scale(1)'}
-                width={'100%'}
-                height={'100%'}
-              />
-            </svg>
+            <div className="overflow-hidden h-28 rounded-b-lg">
+
+              <svg xmlns="http://www.w3.org/2000/svg" width="640" height="1000">
+                <foreignObject transform={'scale(0.376)'} width={'100%'} height={'100%'}>
+                  <section>
+                    {map(slideBlocks, (block) => {
+                      let Block = getBlockComponent({ blockType: block.blockType });
+                      return (
+                        <div
+                          key={block._id}
+                          className="mb-8 last:mb-0 p-4"
+                        >
+                          <Block
+                            block={block}
+                            blockTracking={{}}
+                          />
+                        </div>
+                      );
+                    })}
+                  </section>
+                </foreignObject>
+                <rect
+                  x="0"
+                  y="0"
+                  fill="transparent"
+                  transform={'scale(1)'}
+                  width={'100%'}
+                  height={'100%'}
+                />
+              </svg>
+            </div>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+      <Flag>
+        <CreateStemsContainer slideRef={slide.ref} />
+      </Flag>
+    </div>
   );
 };
 

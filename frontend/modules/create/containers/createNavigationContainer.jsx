@@ -8,6 +8,7 @@ import setEditingMode from '../helpers/setEditingMode';
 import getScenarioDetails from '../../run/helpers/getScenarioDetails';
 import find from 'lodash/find';
 import filter from 'lodash/filter';
+import getCache from '~/core/cache/helpers/getCache';
 
 class CreateNavigationContainer extends Component {
 
@@ -173,9 +174,11 @@ class CreateNavigationContainer extends Component {
     this.setState({ isCreating: true });
     const scenarioId = this.props.scenario.data._id;
     const activeStemRef = this.getActiveStemRef();
+    const { activeSlideRef } = getScenarioDetails();
     axios.post('/api/stems', {
       scenarioId,
-      stemRef: activeStemRef
+      stemRef: activeStemRef,
+      slideRef: activeSlideRef
     }).then((response) => {
       const newStem = response.data.stem;
       Promise.all([

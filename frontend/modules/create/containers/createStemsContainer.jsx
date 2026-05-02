@@ -22,7 +22,7 @@ class CreateStemsContainer extends Component {
   getChildStems = () => {
     const activeStemRef = this.getActiveStemRef();
     if (!activeStemRef) return [];
-    return filter(this.props.stems.data, { stemRef: activeStemRef });
+    return filter(this.props.stems.data, { stemRef: activeStemRef, slideRef: this.props.slideRef });
   }
 
   getSlideCountForStem = (stemRef) => {
