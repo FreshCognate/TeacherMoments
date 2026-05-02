@@ -21,14 +21,14 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { scenarioId, slideId, sortOrder } = body;
+    const { scenarioId, slideId, sortOrder, stemRef } = body;
 
     let slide;
 
     if (slideId) {
-      slide = await duplicateSlideInScenario({ scenario: scenarioId, slideId }, context);
+      slide = await duplicateSlideInScenario({ scenario: scenarioId, slideId, stemRef }, context);
     } else {
-      slide = await createSlide({ scenario: scenarioId, sortOrder }, {}, context);
+      slide = await createSlide({ scenario: scenarioId, sortOrder, stemRef }, {}, context);
     }
 
     return { slide };
