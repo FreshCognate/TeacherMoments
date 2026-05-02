@@ -13,6 +13,19 @@
     "server": "yarn workspace backend run server",
     "server:start": "yarn workspace backend run server:start",
     "workers": "yarn workspace workers run workers",
-    "workers:start": "yarn workspace workers run workers:start"
+    "workers:start": "yarn workspace workers run workers:start",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@vitest/coverage-v8": "^4.1.5",
+    "jsdom": "^29.1.1",
+    "mongodb-memory-server": "^11.1.0",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.1.5"
   }
 }

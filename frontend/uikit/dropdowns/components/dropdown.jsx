@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import useOnClickOutside from '~/core/app/hooks/useOnClickOutside';
 
 const Dropdown = ({
-  children = [],
+  children,
   options = [],
   placeholder,
   position = 'right',
@@ -13,6 +13,7 @@ const Dropdown = ({
   onOptionClicked
 }) => {
   const ref = useRef();
+  const childCount = React.Children.count(children);
 
   useOnClickOutside(ref, () => onToggle(false));
 
@@ -38,7 +39,7 @@ const Dropdown = ({
           "right-0": position === 'right',
           "left-0": position === 'left'
         })}>
-          {options.length > 0 && !children && (
+          {options.length > 0 && childCount === 0 && (
             map(options, (option, index) => {
               if (option.separator) {
                 return <div key={`sep-${index}`} className="h-px my-1 bg-lm-1 dark:bg-dm-1" />;
@@ -58,7 +59,7 @@ const Dropdown = ({
               );
             })
           )}
-          {children && options.length === 0 && (
+          {childCount > 0 && options.length === 0 && (
             children
           )}
         </div>
