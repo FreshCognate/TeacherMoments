@@ -5,10 +5,8 @@ import map from 'lodash/map';
 
 const CreateStems = ({
   childStems,
-  isCreating,
   deletingId,
   getSlideCountForStem,
-  onCreateStemClicked,
   onEditStemClicked,
   onDeleteStemClicked,
   onStemClicked
@@ -46,12 +44,6 @@ const CreateStems = ({
           </div>
         );
       })}
-      <FlatButton
-        text="Create Stem"
-        icon="create"
-        isDisabled={isCreating}
-        onClick={onCreateStemClicked}
-      />
     </div>
   );
 };

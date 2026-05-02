@@ -22,40 +22,11 @@ class CreateStemsContainer extends Component {
   getChildStems = () => {
     const activeStemRef = this.getActiveStemRef();
     if (!activeStemRef) return [];
-    return filter(this.props.stems.data, { stemRef: activeStemRef });
+    return filter(this.props.stems.data, { stemRef: activeStemRef, slideRef: this.props.slideRef });
   }
 
   getSlideCountForStem = (stemRef) => {
     return filter(this.props.slides.data, { stemRef }).length;
-  }
-
-  onCreateStemClicked = () => {
-    this.setState({ isCreating: true });
-    const scenarioId = this.props.scenario.data._id;
-    const activeStemRef = this.getActiveStemRef();
-    axios.post('/api/stems', {
-      scenarioId,
-      stemRef: activeStemRef
-    }).then((response) => {
-      const newStem = response.data.stem;
-      Promise.all([
-        this.props.stems.fetch(),
-        this.props.slides.fetch()
-      ]).then(() => {
-        this.props.editor.set({ activeStemRef: newStem.ref });
-        const slidesCache = getCache('slides');
-        const stemSlides = filter(slidesCache.data, { stemRef: newStem.ref });
-        if (stemSlides.length > 0) {
-          this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${stemSlides[0]._id}`, {
-            replace: true
-          });
-        }
-        this.setState({ isCreating: false });
-      });
-    }).catch((error) => {
-      this.setState({ isCreating: false });
-      handleRequestError(error);
-    });
   }
 
   onStemClicked = (stemRef) => {
@@ -141,7 +112,6 @@ class CreateStemsContainer extends Component {
         isCreating={isCreating}
         deletingId={deletingId}
         getSlideCountForStem={this.getSlideCountForStem}
-        onCreateStemClicked={this.onCreateStemClicked}
         onEditStemClicked={this.onEditStemClicked}
         onDeleteStemClicked={this.onDeleteStemClicked}
         onStemClicked={this.onStemClicked}

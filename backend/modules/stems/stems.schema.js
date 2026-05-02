@@ -7,6 +7,7 @@ const schema = {
   name: { type: String, default: '' },
   description: { type: String, default: '' },
   stemRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Stem' },
+  slideRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Slide' },
   isRoot: { type: Boolean, default: false },
   sortOrder: { type: Number },
   createdAt: { type: Date, default: Date.now },
