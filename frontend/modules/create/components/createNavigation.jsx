@@ -7,6 +7,7 @@ import filter from 'lodash/filter';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Button from '~/uikit/buttons/components/button';
 import CreateStemsContainer from '../containers/createStemsContainer';
+import Flag from '~/modules/flags/components/flag';
 
 const CreateNavigation = ({
   scenarioId,
@@ -32,13 +33,16 @@ const CreateNavigation = ({
       <div className="p-2 overflow-y-scroll flex-grow">
         {(navigationMode === 'SLIDES') && (
           <>
-            {!isRootStem && (
-              <FlatButton
-                text="Back to parent"
-                icon="back"
-                onClick={onBackToParentStemClicked}
-              />
-            )}
+            <Flag flag="HAS_STEMS">
+
+              {!isRootStem && (
+                <FlatButton
+                  text="Back to parent"
+                  icon="back"
+                  onClick={onBackToParentStemClicked}
+                />
+              )}
+            </Flag>
             {isRootStem && (
               <CreateNavigationStaticSlide
                 label="Consent slide"
@@ -80,15 +84,17 @@ const CreateNavigation = ({
 
               }}
             />
-            <CreateStemsContainer />
-            {!hasChildStems && (
-              <CreateNavigationStaticSlide
-                label="Summary slide"
-                slideId="SUMMARY"
-                scenarioId={scenarioId}
-                isSelected={activeSlideId === 'SUMMARY'}
-              />
-            )}
+            <Flag flag="HAS_STEMS">
+              <CreateStemsContainer />
+              {!hasChildStems && (
+                <CreateNavigationStaticSlide
+                  label="Summary slide"
+                  slideId="SUMMARY"
+                  scenarioId={scenarioId}
+                  isSelected={activeSlideId === 'SUMMARY'}
+                />
+              )}
+            </Flag>
           </>
         )}
         {(navigationMode === 'STEM') && (
