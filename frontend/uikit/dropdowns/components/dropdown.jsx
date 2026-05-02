@@ -4,7 +4,8 @@ import classNames from 'classnames';
 import useOnClickOutside from '~/core/app/hooks/useOnClickOutside';
 
 const Dropdown = ({
-  options,
+  children = [],
+  options = [],
   placeholder,
   position = 'right',
   isOpen,
@@ -34,27 +35,32 @@ const Dropdown = ({
       </button>
       {isOpen && (
         <div className={classNames("absolute top-full mt-1 min-w-40 z-10 bg-lm-0 dark:bg-dm-0 border border-lm-2 dark:border-dm-2 rounded-md shadow-lg py-1 px-1", {
-            "right-0": position === 'right',
-            "left-0": position === 'left'
-          })}>
-          {map(options, (option, index) => {
-            if (option.separator) {
-              return <div key={`sep-${index}`} className="h-px my-1 bg-lm-1 dark:bg-dm-1" />;
-            }
-            return (
-              <button
-                key={option.value || option.action || index}
-                type="button"
-                onClick={() => {
-                  onOptionClicked(option.value || option.action);
-                  onToggle(false);
-                }}
-                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left text-lm-5 dark:text-dm-5 hover:bg-lm-1 dark:hover:bg-dm-1 transition-colors rounded-md"
-              >
-                {option.text}
-              </button>
-            );
-          })}
+          "right-0": position === 'right',
+          "left-0": position === 'left'
+        })}>
+          {options.length > 0 && !children && (
+            map(options, (option, index) => {
+              if (option.separator) {
+                return <div key={`sep-${index}`} className="h-px my-1 bg-lm-1 dark:bg-dm-1" />;
+              }
+              return (
+                <button
+                  key={option.value || option.action || index}
+                  type="button"
+                  onClick={() => {
+                    onOptionClicked(option.value || option.action);
+                    onToggle(false);
+                  }}
+                  className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left text-lm-5 dark:text-dm-5 hover:bg-lm-1 dark:hover:bg-dm-1 transition-colors rounded-md"
+                >
+                  {option.text}
+                </button>
+              );
+            })
+          )}
+          {children && options.length === 0 && (
+            children
+          )}
         </div>
       )}
     </div>
