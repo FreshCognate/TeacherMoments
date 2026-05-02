@@ -18,20 +18,30 @@ class CreateNavigationContainer extends Component {
     deletingId: null
   }
 
+  componentDidMount() {
+    this.ensureActiveStemRef();
+  }
+
+  componentDidUpdate() {
+    this.ensureActiveStemRef();
+  }
+
+  ensureActiveStemRef = () => {
+    if (this.props.editor.data.activeStemRef) return;
+    const derivedStemRef = this.getActiveStemRef();
+    if (derivedStemRef) {
+      this.props.editor.set({ activeStemRef: derivedStemRef });
+    }
+  }
+
   getActiveStemRef = () => {
     const { activeStemRef } = this.props.editor.data;
     if (activeStemRef) return activeStemRef;
     const { activeSlideId } = getScenarioDetails();
     const activeSlide = find(this.props.slides.data, { _id: activeSlideId });
-    if (activeSlide?.stemRef) {
-      this.props.editor.set({ activeStemRef: activeSlide.stemRef });
-      return activeSlide.stemRef;
-    }
+    if (activeSlide?.stemRef) return activeSlide.stemRef;
     const rootStem = find(this.props.stems.data, { isRoot: true });
-    if (rootStem) {
-      this.props.editor.set({ activeStemRef: rootStem.ref });
-      return rootStem.ref;
-    }
+    if (rootStem) return rootStem.ref;
     return null;
   }
 
