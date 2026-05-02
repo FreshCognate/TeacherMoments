@@ -21,49 +21,55 @@ export default async () => {
 
   for (const scenario of scenarios) {
 
-    const existingStem = await models.Stem.findOne({ scenario: scenario._id });
+    let rootStem = await models.Stem.findOne({ scenario: scenario._id, isRoot: true });
+    let createdStem = false;
 
-    if (existingStem) {
-      console.log(`Scenario "${scenario.name}" — already has a stem, skipping`);
-      continue;
+    if (!rootStem) {
+      rootStem = await models.Stem.create({
+        scenario: scenario._id,
+        name: 'Stem 1',
+        isRoot: true
+      });
+      createdStem = true;
     }
-
-    const stem = await models.Stem.create({
-      scenario: scenario._id,
-      name: 'Stem 1',
-      isRoot: true
-    });
 
     const result = await models.Slide.updateMany(
       { scenario: scenario._id, stemRef: { $exists: false } },
-      { stemRef: stem.ref }
+      { stemRef: rootStem.ref }
     );
 
-    console.log(`Scenario "${scenario.name}" — created stem, updated ${result.modifiedCount} slides`);
+    if (createdStem) {
+      console.log(`Scenario "${scenario.name}" — created root stem, backfilled ${result.modifiedCount} slides`);
+    } else {
+      console.log(`Scenario "${scenario.name}" — backfilled ${result.modifiedCount} slides`);
+    }
 
   }
 
   for (const scenario of publishedScenarios) {
 
-    const existingStem = await models.Published_Stem.findOne({ scenario: scenario._id });
+    let rootStem = await models.Published_Stem.findOne({ scenario: scenario._id, isRoot: true });
+    let createdStem = false;
 
-    if (existingStem) {
-      console.log(`Published scenario "${scenario.name}" — already has a stem, skipping`);
-      continue;
+    if (!rootStem) {
+      rootStem = await models.Published_Stem.create({
+        scenario: scenario._id,
+        name: 'Stem 1',
+        isRoot: true
+      });
+      createdStem = true;
     }
-
-    const stem = await models.Published_Stem.create({
-      scenario: scenario._id,
-      name: 'Stem 1',
-      isRoot: true
-    });
 
     const result = await models.Published_Slide.updateMany(
       { scenario: scenario._id, stemRef: { $exists: false } },
-      { stemRef: stem.ref }
+      { stemRef: rootStem.ref }
     );
 
-    console.log(`Published scenario "${scenario.name}" — created stem, updated ${result.modifiedCount} slides`);
+    if (createdStem) {
+      console.log(`Published scenario "${scenario.name}" — created root stem, backfilled ${result.modifiedCount} slides`);
+    } else {
+      console.log(`Published scenario "${scenario.name}" — backfilled ${result.modifiedCount} slides`);
+    }
 
   }
 

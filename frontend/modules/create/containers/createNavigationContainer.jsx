@@ -78,7 +78,7 @@ class CreateNavigationContainer extends Component {
     this.setState({ isCreating: true });
     const scenarioId = this.props.scenario.data._id;
     axios.post(`/api/slides`, {
-      scenarioId: this.props.scenario.data._id,
+      scenarioId,
       sortOrder: this.getNewSlideSortOrder(),
       stemRef: this.getActiveStemRef()
     }).then((response) => {
