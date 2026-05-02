@@ -17,6 +17,7 @@ export default {
     body: {
       scenarioId: Joi.string().required(),
       stemRef: Joi.string(),
+      slideRef: Joi.string(),
       sortOrder: Joi.number(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
@@ -29,9 +30,7 @@ export default {
     param: 'id',
     body: {
       name: Joi.string().allow(''),
-      description: Joi.string().allow(''),
-      stemRef: Joi.string(),
-      sortOrder: Joi.number(),
+      description: Joi.string().allow('')
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },

@@ -169,6 +169,35 @@ class CreateNavigationContainer extends Component {
     }
   }
 
+  onCreateStemClicked = () => {
+    this.setState({ isCreating: true });
+    const scenarioId = this.props.scenario.data._id;
+    const activeStemRef = this.getActiveStemRef();
+    axios.post('/api/stems', {
+      scenarioId,
+      stemRef: activeStemRef
+    }).then((response) => {
+      const newStem = response.data.stem;
+      Promise.all([
+        this.props.stems.fetch(),
+        this.props.slides.fetch()
+      ]).then(() => {
+        this.props.editor.set({ activeStemRef: newStem.ref });
+        const slidesCache = getCache('slides');
+        const stemSlides = filter(slidesCache.data, { stemRef: newStem.ref });
+        if (stemSlides.length > 0) {
+          this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${stemSlides[0]._id}`, {
+            replace: true
+          });
+        }
+        this.setState({ isCreating: false });
+      });
+    }).catch((error) => {
+      this.setState({ isCreating: false });
+      handleRequestError(error);
+    });
+  }
+
   render() {
     const { isCreating, deletingId, isDuplicating } = this.state;
     const { activeSlideId } = getScenarioDetails();
@@ -191,6 +220,7 @@ class CreateNavigationContainer extends Component {
         onDeleteSlideClicked={this.onDeleteSlideClicked}
         onToggleNavigationTypeClicked={this.onToggleNavigationTypeClicked}
         onBackToParentStemClicked={this.onBackToParentStemClicked}
+        onCreateStemClicked={this.onCreateStemClicked}
       />
     );
   }

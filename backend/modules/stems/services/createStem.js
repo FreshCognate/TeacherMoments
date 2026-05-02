@@ -4,7 +4,7 @@ import createSlide from '../../slides/services/createSlide.js';
 
 export default async (props, options, context) => {
 
-  const { scenario, stemRef, sortOrder, name, isRoot } = props;
+  const { scenario, stemRef, slideRef, sortOrder, name, isRoot } = props;
 
   const { models, user } = context;
 
@@ -17,6 +17,7 @@ export default async (props, options, context) => {
   const newStemObject = {
     scenario,
     stemRef,
+    slideRef,
     sortOrder,
     name,
     isRoot,

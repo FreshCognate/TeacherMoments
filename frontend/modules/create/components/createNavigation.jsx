@@ -23,13 +23,13 @@ const CreateNavigation = ({
   onAddSlideClicked,
   onDuplicateSlideClicked,
   onDeleteSlideClicked,
-  onToggleNavigationTypeClicked,
-  onBackToParentStemClicked
+  onBackToParentStemClicked,
+  onCreateStemClicked
 }) => {
   const isRootStem = !activeStem || activeStem.isRoot;
   return (
     <div className="bg-lm-0 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col border border-lm-3 dark:border-dm-1 rounded-lg">
-      <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} onAddSlideClicked={onAddSlideClicked} />
+      <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} onAddSlideClicked={onAddSlideClicked} onCreateStemClicked={onCreateStemClicked} />
       <div className="p-2 overflow-y-scroll flex-grow">
         {(navigationMode === 'SLIDES') && (
           <>
