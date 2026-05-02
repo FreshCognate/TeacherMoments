@@ -8,10 +8,7 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import Dropdown from '~/uikit/dropdowns/components/dropdown';
 import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import useOnClickOutside from '~/core/app/hooks/useOnClickOutside';
-
-const userMenuOptions = [
-  { icon: 'logout', text: 'Logout', action: 'logout' }
-];
+import getUserEmail from '~/modules/users/helpers/getUserEmail';
 
 const navLinkClass = ({ isActive }) =>
   classNames("text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 transition-colors", {
@@ -98,11 +95,30 @@ const Navigation = ({
               <div className="hidden md:block">
                 <Dropdown
                   placeholder={getUserDisplayName(authentication)}
-                  options={userMenuOptions}
                   isOpen={isUserMenuOpen}
                   onToggle={onUserMenuToggle}
                   onOptionClicked={onUserMenuOptionClicked}
-                />
+                >
+                  <div>
+
+                    <div className="px-3 py-2 text-xs text-black/60 dark:text-white/60">
+                      {getUserDisplayName(authentication)}
+                      <div className="px-0 py-0 text-xs text-black/40 dark:text-white/40">
+                        {getUserEmail(authentication)}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onMobileMenuToggle();
+                        onUserMenuOptionClicked('logout');
+                      }}
+                      className="block w-full text-left px-3 py-2 text-sm text-black/60 dark:text-white/60 hover:bg-lm-1 dark:hover:bg-dm-2 rounded-md transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </Dropdown>
               </div>
             )}
             {(!authentication) && (
@@ -120,41 +136,46 @@ const Navigation = ({
           </div>
         </div>
       </div>
-      {isMobileMenuOpen && authentication && (
-        <div
-          ref={mobileMenuRef}
-          className="md:hidden border-t border-t-lm-2 dark:border-t-dm-2 bg-lm-0 dark:bg-dm-1 shadow-lg"
-        >
-          <div className="px-2 py-2 space-y-1">
-            {map(visibleLinks, (link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                end={link.end}
-                className={mobileNavLinkClass}
-                onClick={onMobileMenuToggle}
+      {
+        isMobileMenuOpen && authentication && (
+          <div
+            ref={mobileMenuRef}
+            className="md:hidden border-t border-t-lm-2 dark:border-t-dm-2 bg-lm-0 dark:bg-dm-1 shadow-lg"
+          >
+            <div className="px-2 py-2 space-y-1">
+              {map(visibleLinks, (link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  end={link.end}
+                  className={mobileNavLinkClass}
+                  onClick={onMobileMenuToggle}
+                >
+                  {link.text}
+                </NavLink>
+              ))}
+              <div className="h-px my-1 bg-lm-2 dark:bg-dm-2" />
+              <div className="px-3 py-2 text-xs text-black/60 dark:text-white/60">
+                {getUserDisplayName(authentication)}
+                <div className="px-0 py-0 text-xs text-black/40 dark:text-white/40">
+                  {getUserEmail(authentication)}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  onMobileMenuToggle();
+                  onUserMenuOptionClicked('logout');
+                }}
+                className="block w-full text-left px-3 py-2 text-sm text-black/60 dark:text-white/60 hover:bg-lm-1 dark:hover:bg-dm-2 rounded-md transition-colors"
               >
-                {link.text}
-              </NavLink>
-            ))}
-            <div className="h-px my-1 bg-lm-2 dark:bg-dm-2" />
-            <div className="px-3 py-2 text-xs text-black/40 dark:text-white/40">
-              {getUserDisplayName(authentication)}
+                Logout
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                onMobileMenuToggle();
-                onUserMenuOptionClicked('logout');
-              }}
-              className="block w-full text-left px-3 py-2 text-sm text-black/60 dark:text-white/60 hover:bg-lm-1 dark:hover:bg-dm-2 rounded-md transition-colors"
-            >
-              Logout
-            </button>
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 };
 
