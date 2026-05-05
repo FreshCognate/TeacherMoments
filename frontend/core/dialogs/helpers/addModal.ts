@@ -15,7 +15,7 @@ export default (modal: any, callback: any) => {
     modal,
   });
 
-  dialogProgressItems.set([]);
+  dialogProgressItems.set([], { setType: 'replace' });
 
 
   modal.triggerAction = (type: string) => {
@@ -35,7 +35,7 @@ export default (modal: any, callback: any) => {
       isModalOpen: false
     });
     const dialogProgressItems = getCache('dialogProgressItems');
-    dialogProgressItems.set([]);
+    dialogProgressItems.set([], { setType: 'replace' });
   }
 
   const addProgressItem = ({ text, progress, isComplete }: { text?: string, status?: string, progress?: string, isComplete?: boolean }) => {
@@ -43,7 +43,7 @@ export default (modal: any, callback: any) => {
     const itemId = uniqueId('dialog_progress_');
     const progressItems = cloneDeep(dialogProgressItems.data);
     progressItems.push({ _id: itemId, text, status, progress, isComplete });
-    dialogProgressItems.set(progressItems);
+    dialogProgressItems.set(progressItems, { setType: 'replace' });
     return itemId;
   }
 
@@ -53,7 +53,7 @@ export default (modal: any, callback: any) => {
     const currentItem = find(progressItems, { _id: id });
     if (!currentItem) return console.warn(`This dialog progress item does not exist: ${id}`);
     extend(currentItem, update);
-    dialogProgressItems.set(progressItems);
+    dialogProgressItems.set(progressItems, { setType: 'replace' });
   }
 
   if (callback) {
