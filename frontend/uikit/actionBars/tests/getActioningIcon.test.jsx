@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import getActioningIcon from './getActioningIcon.jsx';
+import getActioningIcon from '../helpers/getActioningIcon.jsx';
 
 describe('getActioningIcon', () => {
   it('returns "paste" for the duplicate action', () => {

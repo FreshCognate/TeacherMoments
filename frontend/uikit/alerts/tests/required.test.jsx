@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import Required from './required.jsx';
+import Required from '../components/required.jsx';
 
 describe('Required', () => {
   it('renders nothing when isRequired is false', () => {

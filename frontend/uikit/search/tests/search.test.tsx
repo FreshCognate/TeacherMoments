@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Search from './search';
+import Search from '../components/search';
 
 describe('Search', () => {
   it('renders the input with the placeholder', () => {

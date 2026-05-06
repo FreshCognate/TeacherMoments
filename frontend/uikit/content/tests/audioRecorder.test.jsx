@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import AudioRecorder from './audioRecorder.jsx';
+import AudioRecorder from '../components/audioRecorder.jsx';
 
 const baseProps = {
   status: 'idle',

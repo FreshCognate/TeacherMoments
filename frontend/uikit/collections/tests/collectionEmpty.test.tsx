@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import CollectionEmpty from './collectionEmpty';
+import CollectionEmpty from '../components/collectionEmpty';
 
 describe('CollectionEmpty', () => {
   it('renders the title and body', () => {

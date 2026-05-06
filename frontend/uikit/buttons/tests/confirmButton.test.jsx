@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ConfirmButton from './confirmButton.jsx';
+import ConfirmButton from '../components/confirmButton.jsx';
 
 describe('ConfirmButton', () => {
   it('renders the text and title initially, with no confirm button visible', () => {

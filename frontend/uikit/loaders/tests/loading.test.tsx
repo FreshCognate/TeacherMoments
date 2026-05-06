@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import Loading from './loading';
+import Loading from '../components/loading';
 
 describe('Loading', () => {
   it('renders the spinning icon by default', () => {

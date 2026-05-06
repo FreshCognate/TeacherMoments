@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Tooltip from './tooltip.jsx';
+import Tooltip from '../components/tooltip.jsx';
 
 describe('Tooltip', () => {
   it('returns null when no content is provided', () => {

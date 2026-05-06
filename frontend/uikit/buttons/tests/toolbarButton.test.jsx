@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ToolbarButton from './toolbarButton.jsx';
+import ToolbarButton from '../components/toolbarButton.jsx';
 
 describe('ToolbarButton', () => {
   it('renders the text and fires onClick', async () => {

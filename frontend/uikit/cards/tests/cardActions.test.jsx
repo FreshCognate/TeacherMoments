@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import CardActions from './cardActions.jsx';
+import CardActions from '../components/cardActions.jsx';
 
 describe('CardActions', () => {
   it('returns null when no children are provided', () => {

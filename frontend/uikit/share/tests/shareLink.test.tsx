@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ShareLink from './shareLink';
+import ShareLink from '../components/shareLink';
 
 describe('ShareLink', () => {
   it('renders the share link', () => {

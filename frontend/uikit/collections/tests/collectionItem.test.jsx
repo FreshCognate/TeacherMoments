@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import CollectionItem from './collectionItem.jsx';
+import CollectionItem from '../components/collectionItem.jsx';
 
 describe('CollectionItem', () => {
   it('renders the name', () => {

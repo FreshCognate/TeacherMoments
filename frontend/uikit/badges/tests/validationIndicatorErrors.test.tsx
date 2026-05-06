@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ValidationIndicatorErrors from './validationIndicatorErrors';
+import ValidationIndicatorErrors from '../components/validationIndicatorErrors';
 
 const errors = [
   { message: 'Block is missing a prompt', elementType: 'BLOCK', elementId: 'b1' },

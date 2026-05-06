@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Options from './options.jsx';
+import Options from '../components/options.jsx';
 
 const noop = () => {};
 

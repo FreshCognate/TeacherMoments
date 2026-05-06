@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import SelectOptions from './selectOptions.jsx';
+import SelectOptions from '../components/selectOptions.jsx';
 
 const options = [
   { value: 'a', text: 'Apple' },

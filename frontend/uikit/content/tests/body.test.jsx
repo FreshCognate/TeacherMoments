@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import Body from './body.jsx';
+import Body from '../components/body.jsx';
 
 describe('Body', () => {
   it('renders the body html', () => {

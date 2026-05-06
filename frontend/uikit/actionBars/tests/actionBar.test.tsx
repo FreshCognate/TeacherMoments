@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ActionBar from './actionBar';
+import ActionBar from '../components/actionBar';
 
 describe('ActionBar', () => {
   it('renders no search, pagination, filters, sort, or actions by default', () => {

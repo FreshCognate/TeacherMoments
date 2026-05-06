@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Alert from './alert';
+import Alert from '../components/alert';
 
 describe('Alert', () => {
   it('renders the body text', () => {

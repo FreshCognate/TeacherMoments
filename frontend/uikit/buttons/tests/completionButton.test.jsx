@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import CompletionButton from './completionButton.jsx';
+import CompletionButton from '../components/completionButton.jsx';
 
 describe('CompletionButton', () => {
   it('renders three buttons when status is IN_PROGRESS', () => {

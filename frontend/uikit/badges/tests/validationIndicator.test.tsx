@@ -6,7 +6,7 @@ vi.mock('../containers/validationIndicatorContainer', () => ({
   default: () => <div>stub</div>
 }));
 
-import ValidationIndicator from './validationIndicator';
+import ValidationIndicator from '../components/validationIndicator';
 
 const buildError = (overrides = {}) => ({
   message: 'Something is wrong',

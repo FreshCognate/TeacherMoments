@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import FlatButton from './flatButton';
+import FlatButton from '../components/flatButton';
 
 describe('FlatButton', () => {
   it('renders the text and fires onClick', async () => {

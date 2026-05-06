@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ActioningBar from './actioningBar.jsx';
+import ActioningBar from '../components/actioningBar.jsx';
 
 const noop = () => {};
 

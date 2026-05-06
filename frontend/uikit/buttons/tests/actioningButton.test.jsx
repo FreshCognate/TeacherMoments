@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ActioningButton from './actioningButton.jsx';
+import ActioningButton from '../components/actioningButton.jsx';
 
 describe('ActioningButton', () => {
   it('fires onActionClicked with the position when clicked', async () => {

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import NavigationToggle from './navigationToggle';
+import NavigationToggle from '../components/navigationToggle';
 
 const options = [
   { value: 'overview', text: 'Overview' },
