@@ -43,12 +43,12 @@ export default async (props, options, context) => {
     return cohort.cohort;
   });
 
-  const orConditions = [
+  const accessConditions = [
     { _id: { $in: usersCohortIds } }
   ];
 
   if (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN' || user.role === 'FACILITATOR') {
-    orConditions.push({
+    accessConditions.push({
       collaborators: {
         $elemMatch: {
           user: user._id,
@@ -58,7 +58,15 @@ export default async (props, options, context) => {
     });
   }
 
-  search.$or = orConditions;
+  if (search.$or) {
+    search.$and = [
+      { $or: accessConditions },
+      { $or: search.$or }
+    ];
+    delete search.$or;
+  } else {
+    search.$or = accessConditions;
+  }
 
   const count = await models.Cohort.countDocuments(search);
 
