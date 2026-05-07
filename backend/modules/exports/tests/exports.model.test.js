@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import mongoose from 'mongoose';
-import { setupMongo } from '../../../tests/with-mongo.js';
-import schema from './exports.schema.js';
+import { setupMongo } from '../../../../tests/with-mongo.js';
+import schema from '../exports.schema.js';
 
 setupMongo(mongoose);
 
