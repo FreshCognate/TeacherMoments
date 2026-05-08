@@ -9,9 +9,9 @@ import has from 'lodash/has.js';
 export default {
   all: async function ({ query }, context) {
 
-    const { searchValue, currentPage, isDeleted } = query;
+    const { searchValue, currentPage, isDeleted, tagType } = query;
 
-    return await getTags({}, { searchValue, currentPage, isDeleted }, context);
+    return await getTags({ tagType }, { searchValue, currentPage, isDeleted }, context);
 
   },
 
