@@ -6,11 +6,11 @@ const { getGeminiMock, sendMessageMock, createChatMock } = vi.hoisted(() => ({
   createChatMock: vi.fn()
 }));
 
-vi.mock('../getGemini.js', () => ({
+vi.mock('../helpers/getGemini.js', () => ({
   default: (...args) => getGeminiMock(...args)
 }));
 
-import createAgent from '../createAgent.js';
+import createAgent from '../helpers/createAgent.js';
 
 const mockResponse = (text) => {
   sendMessageMock.mockResolvedValue({ text });

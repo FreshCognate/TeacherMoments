@@ -5,7 +5,7 @@ vi.mock('@google/genai', () => ({
   GoogleGenAI: function (...args) { return GoogleGenAIMock(...args); }
 }));
 
-import getGemini from '../getGemini.js';
+import getGemini from '../helpers/getGemini.js';
 
 describe('getGemini', () => {
   let originalKey;

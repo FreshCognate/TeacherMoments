@@ -7,17 +7,17 @@ const { getGeminiMock, downloadAssetMock, generateContentMock, readFileSyncMock 
   readFileSyncMock: vi.fn()
 }));
 
-vi.mock('../getGemini.js', () => ({
+vi.mock('../helpers/getGemini.js', () => ({
   default: (...args) => getGeminiMock(...args)
 }));
-vi.mock('../../../helpers/downloadAsset.js', () => ({
+vi.mock('../../helpers/downloadAsset.js', () => ({
   default: (...args) => downloadAssetMock(...args)
 }));
 vi.mock('fs', () => ({
   default: { readFileSync: (...args) => readFileSyncMock(...args) }
 }));
 
-import getAudioTranscription from '../getAudioTranscription.js';
+import getAudioTranscription from '../helpers/getAudioTranscription.js';
 
 beforeEach(() => {
   vi.clearAllMocks();
