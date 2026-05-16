@@ -6,18 +6,22 @@ import map from 'lodash/map';
 import getBlockComponent from '~/modules/blocks/helpers/getBlockComponent';
 import CreateStemsContainer from '../containers/createStemsContainer';
 import Flag from '~/modules/flags/components/flag';
+import Badge from '~/uikit/badges/components/badge';
 
 const CreateNavigationSlide = ({
   scenarioId,
   slide,
   slideBlocks,
+  slideTriggers,
   draggingOptions = {},
   isSelected,
   isDeleting,
   isDuplicating,
   canDeleteSlides,
+  hasChildStems,
   onDuplicateSlideClicked,
-  onDeleteSlideClicked
+  onDeleteSlideClicked,
+  onCreateStemClicked
 }) => {
 
   const { setNodeRef, style, attributes, listeners, isDragging } = draggingOptions;
@@ -38,6 +42,7 @@ const CreateNavigationSlide = ({
             canDeleteSlides={canDeleteSlides}
             onDuplicateSlideClicked={() => onDuplicateSlideClicked(slide._id)}
             onDeleteSlideClicked={() => onDeleteSlideClicked(slide._id)}
+            onCreateStemClicked={() => onCreateStemClicked()}
           />
           <div>
 
@@ -71,6 +76,18 @@ const CreateNavigationSlide = ({
                   height={'100%'}
                 />
               </svg>
+            </div>
+            <div className="absolute bottom-1 w-full flex justify-between">
+              <span>
+                {(slideTriggers.length > 0) && (
+                  <Badge icon="trigger" size='sm' />
+                )}
+              </span>
+              <span>
+                {(hasChildStems) && (
+                  <Badge icon="branching" />
+                )}
+              </span>
             </div>
           </div>
         </div>

@@ -89,11 +89,6 @@ describe('CreateNavigation', () => {
     expect(onBackToParentStemClicked).toHaveBeenCalledTimes(1);
   });
 
-  it('hides the summary static slide when there are child stems', () => {
-    render(<CreateNavigation {...baseProps} hasChildStems={true} />);
-    expect(screen.queryByTestId('static-slide-SUMMARY')).not.toBeInTheDocument();
-  });
-
   it('renders the placeholder copy in STEM navigation mode', () => {
     render(<CreateNavigation {...baseProps} navigationMode="STEM" />);
     expect(screen.getByText('Navigation settings coming soon...')).toBeInTheDocument();

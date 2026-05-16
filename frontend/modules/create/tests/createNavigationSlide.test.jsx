@@ -35,6 +35,7 @@ const baseProps = {
   scenarioId: 'scenario-1',
   slide,
   slideBlocks: [{ _id: 'block-1', blockType: 'TEXT' }],
+  slideTriggers: [],
   isSelected: false,
   isDeleting: false,
   isDuplicating: false,
