@@ -4,7 +4,6 @@ import Icon from '~/uikit/icons/components/icon';
 import classnames from 'classnames';
 import { Stem } from '~/modules/stems/stems.types';
 import map from 'lodash/map';
-import find from 'lodash/find';
 import getCache from '~/core/cache/helpers/getCache';
 
 const CreateNavigationIconSlide = ({
@@ -30,9 +29,9 @@ const CreateNavigationIconSlide = ({
       {isSelected && (
         <div className="p-1 flex flex-col gap-y-1">
           {map(activeSlideStems, (activeSlideStem) => {
-            const firstStepSlide = find(getCache('slides').data, { stemRef: activeSlideStem.ref });
+            const firstStemSlide = getCache('slides').get('firstStemSlide', { stemRef: activeSlideStem.ref });
             return (
-              <Link key={activeSlideStem._id} to={`/scenarios/${scenarioId}/create?slide=${firstStepSlide._id}`} replace
+              <Link key={activeSlideStem._id} to={`/scenarios/${scenarioId}/create?slide=${firstStemSlide._id}`} replace
                 className={classnames("border w-6 h-6 flex items-center justify-center rounded-md transition-colors", {
                   "border-lm-2 dark:border-dm-2 hover:bg-lm-2 dark:hover:bg-dm-2": activeStemId !== activeSlideStem._id,
                   "border-blue-500 dark:border-blue-400": activeStemId === activeSlideStem._id
