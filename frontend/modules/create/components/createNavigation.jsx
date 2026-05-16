@@ -39,6 +39,7 @@ const CreateNavigation = ({
               icon='home'
               link={`/scenarios/${scenarioId}/create?slide=${activeStemSlideId}`}
               isSelected={false}
+              tooltipContent="Back to main path"
             />
           </div>
           <div className="p-2 overflow-y-scroll flex-grow gap-y-2 flex flex-col">
@@ -46,6 +47,7 @@ const CreateNavigation = ({
               icon='consent'
               link={`/scenarios/${scenarioId}/create?slide=CONSENT`}
               isSelected={false}
+              tooltipContent="Consent slide"
             />
             {map(rootSlides, (slide) => {
               return (
@@ -53,6 +55,7 @@ const CreateNavigation = ({
                   key={slide._id}
                   icon='slides'
                   link={`/scenarios/${scenarioId}/create?slide=${slide._id}`}
+                  tooltipContent="Slide"
                   activeSlideStems={activeSlideStems}
                   activeStemId={activeStem._id}
                   scenarioId={scenarioId}
@@ -64,6 +67,7 @@ const CreateNavigation = ({
               icon='summary'
               link={`/scenarios/${scenarioId}/create?slide=SUMMARY`}
               isSelected={false}
+              tooltipContent="Summary slide"
             />
           </div>
         </div>
