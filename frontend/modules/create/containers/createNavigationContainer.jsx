@@ -41,8 +41,6 @@ class CreateNavigationContainer extends Component {
   }
 
   getActiveStemRef = () => {
-    const { activeStemRef } = this.props.editor.data;
-    if (activeStemRef) return activeStemRef;
     const { activeSlideId } = getScenarioDetails();
     const activeSlide = find(this.props.slides.data, { _id: activeSlideId });
     if (activeSlide?.stemRef) return activeSlide.stemRef;
@@ -60,6 +58,12 @@ class CreateNavigationContainer extends Component {
     const activeStemRef = this.getActiveStemRef();
     if (!activeStemRef) return this.props.slides.data;
     return filter(this.props.slides.data, { stemRef: activeStemRef });
+  }
+
+  getRootSlides = () => {
+    const rootStem = this.getRootStem();
+    if (!rootStem) return [];
+    return filter(this.props.slides.data, { stemRef: rootStem.ref });
   }
 
   getSelectedSlideSortOrder = () => {
@@ -156,19 +160,6 @@ class CreateNavigationContainer extends Component {
     this.props.editor.set({ navigationMode: this.props.editor.data.navigationMode === 'SLIDES' ? 'STEM' : 'SLIDES' })
   }
 
-  onBackToParentStemClicked = () => {
-    const rootStem = this.getRootStem();
-    if (!rootStem?.ref) return;
-    this.props.editor.set({ activeStemRef: rootStem.ref });
-    const parentSlides = filter(this.props.slides.data, { stemRef: rootStem.ref });
-    if (parentSlides.length > 0) {
-      const scenarioId = this.props.scenario.data._id;
-      this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${parentSlides[0]._id}`, {
-        replace: true
-      });
-    }
-  }
-
   onCreateStemClicked = () => {
     this.setState({ isCreating: true });
     const scenarioId = this.props.scenario.data._id;
@@ -201,25 +192,23 @@ class CreateNavigationContainer extends Component {
   render() {
     const { isCreating, deletingId, isDuplicating } = this.state;
     const { activeSlideId } = getScenarioDetails();
-    const { navigationMode } = this.props.editor.data;
     const activeStem = this.getActiveStem();
     return (
       <CreateNavigation
         scenarioId={this.props.scenario.data._id}
         slides={this.getCurrentStemOfSlides()}
         blocks={this.props.blocks.data}
+        rootSlides={this.getRootSlides()}
         triggers={this.props.triggers.data}
         activeSlideId={activeSlideId}
-        activeStem={activeStem}
-        navigationMode={navigationMode}
         isCreating={isCreating}
         deletingId={deletingId}
         isDuplicating={isDuplicating}
+        isInRootStem={activeStem.isRoot}
         onAddSlideClicked={this.onAddSlideClicked}
         onDuplicateSlideClicked={this.onDuplicateSlideClicked}
         onDeleteSlideClicked={this.onDeleteSlideClicked}
         onToggleNavigationTypeClicked={this.onToggleNavigationTypeClicked}
-        onBackToParentStemClicked={this.onBackToParentStemClicked}
         onCreateStemClicked={this.onCreateStemClicked}
       />
     );
