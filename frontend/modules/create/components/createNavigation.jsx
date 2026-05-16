@@ -26,7 +26,6 @@ const CreateNavigation = ({
   onDeleteSlideClicked,
   onCreateStemClicked
 }) => {
-  console.log("isInRootStem", isInRootStem);
   return (
     <div className="flex flex-row">
 
