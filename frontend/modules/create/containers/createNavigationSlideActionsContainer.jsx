@@ -16,7 +16,7 @@ class CreateNavigationSlideActionsContainer extends Component {
       color: 'primary',
       action: 'DUPLICATE'
     }];
-    if (hasFlag()) {
+    if (hasFlag() && this.props.isInRootStem) {
       options.unshift({
         icon: 'branching',
         text: 'Create stem',

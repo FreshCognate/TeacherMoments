@@ -78,6 +78,14 @@ class CreateNavigationContainer extends Component {
     return this.getSelectedSlideSortOrder() + 1;
   }
 
+  getActiveStemSlideId = () => {
+    const activeStem = this.getActiveStem();
+    const slide = find(this.props.slides.data, { ref: activeStem.slideRef });
+    if (!slide) return null;
+    console.log(slide);
+    return slide._id;
+  }
+
   onAddSlideClicked = () => {
     this.setState({ isCreating: true });
     const scenarioId = this.props.scenario.data._id;
@@ -193,6 +201,7 @@ class CreateNavigationContainer extends Component {
     const { isCreating, deletingId, isDuplicating } = this.state;
     const { activeSlideId } = getScenarioDetails();
     const activeStem = this.getActiveStem();
+    const activeStemSlideId = this.getActiveStemSlideId();
     return (
       <CreateNavigation
         scenarioId={this.props.scenario.data._id}
@@ -201,6 +210,8 @@ class CreateNavigationContainer extends Component {
         rootSlides={this.getRootSlides()}
         triggers={this.props.triggers.data}
         activeSlideId={activeSlideId}
+        activeStemSlideId={activeStemSlideId}
+        activeStem={activeStem}
         isCreating={isCreating}
         deletingId={deletingId}
         isDuplicating={isDuplicating}

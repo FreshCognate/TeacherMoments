@@ -17,6 +17,7 @@ const CreateNavigationSlide = ({
   isSelected,
   isDeleting,
   isDuplicating,
+  isInRootStem,
   canDeleteSlides,
   hasChildStems,
   onDuplicateSlideClicked,
@@ -40,6 +41,7 @@ const CreateNavigationSlide = ({
             slide={slide}
             slideNumber={slide.sortOrder + 1}
             canDeleteSlides={canDeleteSlides}
+            isInRootStem={isInRootStem}
             onDuplicateSlideClicked={() => onDuplicateSlideClicked(slide._id)}
             onDeleteSlideClicked={() => onDeleteSlideClicked(slide._id)}
             onCreateStemClicked={() => onCreateStemClicked()}
