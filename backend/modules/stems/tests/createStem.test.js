@@ -51,7 +51,7 @@ describe('createStem', () => {
     };
 
     const result = await createStem(
-      { scenario: 's1', stemRef: 'parentRef', slideRef: 'slideRef', sortOrder: 2, name: 'Branch', isRoot: false },
+      { scenario: 's1', slideRef: 'slideRef', sortOrder: 2, name: 'Branch', isRoot: false },
       {},
       context
     );
@@ -59,7 +59,6 @@ describe('createStem', () => {
     expect(checkAccessMock).toHaveBeenCalledWith({ modelId: 's1', modelType: 'Scenario' }, context);
     expect(create).toHaveBeenCalledWith({
       scenario: 's1',
-      stemRef: 'parentRef',
       slideRef: 'slideRef',
       sortOrder: 2,
       name: 'Branch',

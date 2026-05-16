@@ -47,12 +47,12 @@ describe('stems.controller', () => {
     createStemMock.mockResolvedValue({ _id: 'st1' });
 
     const result = await controller.create(
-      { body: { scenarioId: 's1', stemRef: 'sr1', slideRef: 'slR1', sortOrder: 0 } },
+      { body: { scenarioId: 's1', slideRef: 'slR1', sortOrder: 0 } },
       { ctx: 1 }
     );
 
     expect(createStemMock).toHaveBeenCalledWith(
-      { scenario: 's1', stemRef: 'sr1', slideRef: 'slR1', sortOrder: 0 },
+      { scenario: 's1', slideRef: 'slR1', sortOrder: 0 },
       {},
       { ctx: 1 }
     );
