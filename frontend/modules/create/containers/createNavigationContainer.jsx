@@ -35,13 +35,18 @@ class CreateNavigationContainer extends Component {
     }
   }
 
+  getRootStem = () => {
+    const rootStem = find(this.props.stems.data, { isRoot: true });
+    return rootStem;
+  }
+
   getActiveStemRef = () => {
     const { activeStemRef } = this.props.editor.data;
     if (activeStemRef) return activeStemRef;
     const { activeSlideId } = getScenarioDetails();
     const activeSlide = find(this.props.slides.data, { _id: activeSlideId });
     if (activeSlide?.stemRef) return activeSlide.stemRef;
-    const rootStem = find(this.props.stems.data, { isRoot: true });
+    const rootStem = this.getRootStem();
     if (rootStem) return rootStem.ref;
     return null;
   }
@@ -152,10 +157,10 @@ class CreateNavigationContainer extends Component {
   }
 
   onBackToParentStemClicked = () => {
-    const activeStem = this.getActiveStem();
-    if (!activeStem?.stemRef) return;
-    this.props.editor.set({ activeStemRef: activeStem.stemRef });
-    const parentSlides = filter(this.props.slides.data, { stemRef: activeStem.stemRef });
+    const rootStem = this.getRootStem();
+    if (!rootStem?.ref) return;
+    this.props.editor.set({ activeStemRef: rootStem.ref });
+    const parentSlides = filter(this.props.slides.data, { stemRef: rootStem.ref });
     if (parentSlides.length > 0) {
       const scenarioId = this.props.scenario.data._id;
       this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${parentSlides[0]._id}`, {
@@ -167,11 +172,9 @@ class CreateNavigationContainer extends Component {
   onCreateStemClicked = () => {
     this.setState({ isCreating: true });
     const scenarioId = this.props.scenario.data._id;
-    const activeStemRef = this.getActiveStemRef();
     const { activeSlideRef } = getScenarioDetails();
     axios.post('/api/stems', {
       scenarioId,
-      stemRef: activeStemRef,
       slideRef: activeSlideRef
     }).then((response) => {
       const newStem = response.data.stem;
