@@ -2,21 +2,50 @@ import React from 'react';
 import { Link } from 'react-router';
 import Icon from '~/uikit/icons/components/icon';
 import classnames from 'classnames';
+import { Stem } from '~/modules/stems/stems.types';
+import map from 'lodash/map';
+import find from 'lodash/find';
+import getCache from '~/core/cache/helpers/getCache';
 
 const CreateNavigationIconSlide = ({
   icon,
   link,
+  activeSlideStems = [],
+  activeStemId,
+  scenarioId,
   isSelected = false
-}: { icon: string, link: string, isSelected: boolean }) => {
+}: { icon: string, link: string, activeSlideStems: Stem[], activeStemId: string, scenarioId: string, isSelected: boolean }) => {
   return (
-    <Link to={link} replace
-      className={classnames("border w-8 h-8 flex items-center justify-center rounded-md transition-colors", {
-        "border-lm-2 dark:border-dm-2 hover:bg-lm-2 dark:hover:bg-dm-2": !isSelected,
-        "border-blue-500 dark:border-blue-400": isSelected
-      })}
-    >
-      <Icon icon={icon} size={16} />
-    </Link>
+    <div className={classnames("border rounded-md", {
+      "border-lm-4 dark:border-dm-4": !isSelected,
+      "border-blue-500 dark:border-blue-500": isSelected
+    })}>
+      <Link to={link} replace
+        className={classnames("hover:bg-lm-2 dark:hover:bg-dm-2 w-8 h-8 flex items-center justify-center rounded-md transition-colors", {
+          " hover:bg-lm-2 dark:hover:bg-dm-2": !isSelected
+        })}
+      >
+        <Icon icon={icon} size={16} />
+      </Link>
+      {isSelected && (
+        <div className="p-1 flex flex-col gap-y-1">
+          {map(activeSlideStems, (activeSlideStem) => {
+            const firstStepSlide = find(getCache('slides').data, { stemRef: activeSlideStem.ref });
+            return (
+              <Link key={activeSlideStem._id} to={`/scenarios/${scenarioId}/create?slide=${firstStepSlide._id}`} replace
+                className={classnames("border w-6 h-6 flex items-center justify-center rounded-md transition-colors", {
+                  "border-lm-2 dark:border-dm-2 hover:bg-lm-2 dark:hover:bg-dm-2": activeStemId !== activeSlideStem._id,
+                  "border-blue-500 dark:border-blue-400": activeStemId === activeSlideStem._id
+                })}
+              >
+                <Icon icon="branching" size={16} />
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
+    </div>
   );
 };
 

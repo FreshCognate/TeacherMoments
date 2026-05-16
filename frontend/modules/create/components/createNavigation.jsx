@@ -19,6 +19,7 @@ const CreateNavigation = ({
   activeSlideId,
   activeStemSlideId,
   activeStem,
+  activeSlideStems,
   isCreating,
   deletingId,
   isDuplicating,
@@ -52,6 +53,9 @@ const CreateNavigation = ({
                   key={slide._id}
                   icon='slides'
                   link={`/scenarios/${scenarioId}/create?slide=${slide._id}`}
+                  activeSlideStems={activeSlideStems}
+                  activeStemId={activeStem._id}
+                  scenarioId={scenarioId}
                   isSelected={activeStem.slideRef === slide.ref}
                 />
               );
