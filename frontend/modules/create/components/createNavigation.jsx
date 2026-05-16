@@ -8,8 +8,8 @@ import Flag from '~/modules/flags/components/flag';
 import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlideRef';
 import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
 import map from 'lodash/map';
-import { Link } from 'react-router';
-import Icon from '~/uikit/icons/components/icon';
+import classnames from 'classnames';
+import CreateNavigationIconSlide from './createNavigationIconSlide';
 
 const CreateNavigation = ({
   scenarioId,
@@ -17,6 +17,8 @@ const CreateNavigation = ({
   blocks,
   rootSlides,
   activeSlideId,
+  activeStemSlideId,
+  activeStem,
   isCreating,
   deletingId,
   isDuplicating,
@@ -31,26 +33,34 @@ const CreateNavigation = ({
 
       {(!isInRootStem) && (
         <div className="bg-lm-0 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col border border-lm-3 dark:border-dm-1 rounded-lg mr-1">
+          <div className="px-2 pt-2">
+            <CreateNavigationIconSlide
+              icon='home'
+              link={`/scenarios/${scenarioId}/create?slide=${activeStemSlideId}`}
+              isSelected={false}
+            />
+          </div>
           <div className="p-2 overflow-y-scroll flex-grow gap-y-2 flex flex-col">
-            <div>
-              <Link to={`/scenarios/${scenarioId}/create?slide=CONSENT`} replace>
-                <Icon icon="consent" />
-              </Link>
-            </div>
+            <CreateNavigationIconSlide
+              icon='consent'
+              link={`/scenarios/${scenarioId}/create?slide=CONSENT`}
+              isSelected={false}
+            />
             {map(rootSlides, (slide) => {
               return (
-                <div key={slide._id}>
-                  <Link to={`/scenarios/${scenarioId}/create?slide=${slide._id}`} replace>
-                    <Icon icon="slides" />
-                  </Link>
-                </div>
+                <CreateNavigationIconSlide
+                  key={slide._id}
+                  icon='slides'
+                  link={`/scenarios/${scenarioId}/create?slide=${slide._id}`}
+                  isSelected={activeStem.slideRef === slide.ref}
+                />
               );
             })}
-            <div>
-              <Link to={`/scenarios/${scenarioId}/create?slide=SUMMARY`} replace>
-                <Icon icon="summary" />
-              </Link>
-            </div>
+            <CreateNavigationIconSlide
+              icon='summary'
+              link={`/scenarios/${scenarioId}/create?slide=SUMMARY`}
+              isSelected={false}
+            />
           </div>
         </div>
       )}
@@ -81,7 +91,7 @@ const CreateNavigation = ({
                 const slideBlocks = filter(blocks, { slideRef: item.ref });
 
                 const slideTriggers = getTriggersBySlideRef({ slideRef: item.ref });
-                const hasChildStems = getStemsBySlideRef({ slideRef: item.ref });
+                const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
 
                 return (
                   <CreateNavigationSlide
@@ -94,6 +104,7 @@ const CreateNavigation = ({
                     isSelected={isSelected}
                     isDeleting={isDeletingSlide}
                     isDuplicating={isDuplicating}
+                    isInRootStem={isInRootStem}
                     canDeleteSlides={canDeleteSlides}
                     hasChildStems={hasChildStems}
                     onDuplicateSlideClicked={onDuplicateSlideClicked}
@@ -135,7 +146,7 @@ const CreateNavigation = ({
                   const slideBlocks = filter(blocks, { slideRef: item.ref });
 
                   const slideTriggers = getTriggersBySlideRef({ slideRef: item.ref });
-                  const hasChildStems = getStemsBySlideRef({ slideRef: item.ref });
+                  const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
 
                   return (
                     <CreateNavigationSlide
@@ -148,6 +159,7 @@ const CreateNavigation = ({
                       isSelected={isSelected}
                       isDeleting={isDeletingSlide}
                       isDuplicating={isDuplicating}
+                      isInRootStem={isInRootStem}
                       canDeleteSlides={canDeleteSlides}
                       hasChildStems={hasChildStems}
                       onDuplicateSlideClicked={onDuplicateSlideClicked}
