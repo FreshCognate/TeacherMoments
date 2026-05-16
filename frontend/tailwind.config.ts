@@ -33,6 +33,15 @@ export default {
       spacing: {
         micro: '2px',
         "rem": "1rem"
+      },
+      keyframes: {
+        overlayFadeIn: {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' }
+        }
+      },
+      animation: {
+        'overlay-fade-in': 'overlayFadeIn 0.15s cubic-bezier(0.8, 0, 0.3, 1)'
       }
     },
   },
