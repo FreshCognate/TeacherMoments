@@ -4,7 +4,6 @@ import WithCache from '~/core/cache/containers/withCache';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import addModal from '~/core/dialogs/helpers/addModal';
-import getCache from '~/core/cache/helpers/getCache';
 import filter from 'lodash/filter';
 import WithRouter from '~/core/app/components/withRouter';
 
@@ -22,7 +21,7 @@ class CreateStemsContainer extends Component {
   getChildStems = () => {
     const activeStemRef = this.getActiveStemRef();
     if (!activeStemRef) return [];
-    return filter(this.props.stems.data, { stemRef: activeStemRef, slideRef: this.props.slideRef });
+    return filter(this.props.stems.data, { slideRef: this.props.slideRef });
   }
 
   getSlideCountForStem = (stemRef) => {

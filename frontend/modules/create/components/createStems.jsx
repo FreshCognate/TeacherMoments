@@ -2,6 +2,7 @@ import React from 'react';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import classnames from 'classnames';
 import map from 'lodash/map';
+import Icon from '~/uikit/icons/components/icon';
 
 const CreateStems = ({
   childStems,
@@ -25,8 +26,8 @@ const CreateStems = ({
             className={className}
             onClick={() => onStemClicked(stem.ref)}
           >
-            <span className="text-xs text-lm-5 dark:text-dm-5 font-medium">
-              {stem.name} ({getSlideCountForStem(stem.ref)})
+            <span className="text-xs text-lm-5 dark:text-dm-5 font-medium flex items-center gap-x-2">
+              <Icon icon="branching" size={12} />{stem.name} ({getSlideCountForStem(stem.ref)})
             </span>
             <div className="flex items-center gap-2">
               <FlatButton
