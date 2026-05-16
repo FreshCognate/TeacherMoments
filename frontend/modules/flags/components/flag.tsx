@@ -1,12 +1,12 @@
-import includes from 'lodash/includes';
 import React, { ReactNode } from 'react';
+import hasFlag from '../helpers/hasFlag';
 
 const Flag = ({
   children,
 }: {
   children: ReactNode;
 }) => {
-  if (includes(['mit-tm.com', 'staging.teachermoments.org'], window.location.hostname)) {
+  if (hasFlag()) {
     return children;
   }
   return null;

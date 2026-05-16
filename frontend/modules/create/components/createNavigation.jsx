@@ -8,6 +8,7 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import Button from '~/uikit/buttons/components/button';
 import CreateStemsContainer from '../containers/createStemsContainer';
 import Flag from '~/modules/flags/components/flag';
+import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlideRef';
 
 const CreateNavigation = ({
   scenarioId,
@@ -19,7 +20,6 @@ const CreateNavigation = ({
   deletingId,
   isDuplicating,
   activeStem,
-  hasChildStems,
   onAddSlideClicked,
   onDuplicateSlideClicked,
   onDeleteSlideClicked,
@@ -29,7 +29,7 @@ const CreateNavigation = ({
   const isRootStem = !activeStem || activeStem.isRoot;
   return (
     <div className="bg-lm-0 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col border border-lm-3 dark:border-dm-1 rounded-lg">
-      <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} onAddSlideClicked={onAddSlideClicked} onCreateStemClicked={onCreateStemClicked} />
+      <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} onAddSlideClicked={onAddSlideClicked} />
       <div className="p-2 overflow-y-scroll flex-grow">
         {(navigationMode === 'SLIDES') && (
           <>
@@ -66,19 +66,25 @@ const CreateNavigation = ({
                 if (item._id === deletingId) isDeletingSlide = true;
                 const slideBlocks = filter(blocks, { slideRef: item.ref });
 
+                const slideTriggers = getTriggersBySlideRef({ slideRef: item.ref });
+                const hasChildStems = false;
+
                 return (
                   <CreateNavigationSlide
                     key={item._id}
                     scenarioId={scenarioId}
                     slide={item}
                     slideBlocks={slideBlocks}
+                    slideTriggers={slideTriggers}
                     draggingOptions={draggingOptions}
                     isSelected={isSelected}
                     isDeleting={isDeletingSlide}
                     isDuplicating={isDuplicating}
                     canDeleteSlides={canDeleteSlides}
+                    hasChildStems={hasChildStems}
                     onDuplicateSlideClicked={onDuplicateSlideClicked}
                     onDeleteSlideClicked={onDeleteSlideClicked}
+                    onCreateStemClicked={onCreateStemClicked}
                   />
                 );
 
@@ -86,15 +92,13 @@ const CreateNavigation = ({
             />
             <Flag flag="HAS_STEMS">
               <CreateStemsContainer />
-              {!hasChildStems && (
-                <CreateNavigationStaticSlide
-                  label="Summary slide"
-                  slideId="SUMMARY"
-                  scenarioId={scenarioId}
-                  isSelected={activeSlideId === 'SUMMARY'}
-                />
-              )}
             </Flag>
+            <CreateNavigationStaticSlide
+              label="Summary slide"
+              slideId="SUMMARY"
+              scenarioId={scenarioId}
+              isSelected={activeSlideId === 'SUMMARY'}
+            />
           </>
         )}
         {(navigationMode === 'STEM') && (

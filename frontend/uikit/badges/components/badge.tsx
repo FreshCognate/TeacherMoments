@@ -17,7 +17,7 @@ const Badge = ({
   color?: 'warning' | 'primary',
   className?: string
 }) => {
-  let iconSizeValue = size === 'rg' ? 12 : 16;
+  let iconSizeValue = size === 'rg' || size === 'sm' ? 12 : 16;
 
   if (iconSize) {
     iconSizeValue = iconSize;
@@ -31,6 +31,7 @@ const Badge = ({
 
         "text-rg": size === 'lg',
         "text-sm": size === 'rg',
+        "text-xs": size === 'sm',
         "border-warning-regular dark:border-warning-light text-warning-regular dark:text-warning-light": color === 'warning',
         "border-primary-regular dark:border-primary-light text-primary-regular dark:text-primary-light": color === 'primary'
       })}>

@@ -51,12 +51,6 @@ class CreateNavigationContainer extends Component {
     return find(this.props.stems.data, { ref: activeStemRef });
   }
 
-  getHasChildStems = () => {
-    const activeStemRef = this.getActiveStemRef();
-    if (!activeStemRef) return false;
-    return filter(this.props.stems.data, { stemRef: activeStemRef }).length > 0;
-  }
-
   getCurrentStemOfSlides = () => {
     const activeStemRef = this.getActiveStemRef();
     if (!activeStemRef) return this.props.slides.data;
@@ -211,9 +205,9 @@ class CreateNavigationContainer extends Component {
         scenarioId={this.props.scenario.data._id}
         slides={this.getCurrentStemOfSlides()}
         blocks={this.props.blocks.data}
+        triggers={this.props.triggers.data}
         activeSlideId={activeSlideId}
         activeStem={activeStem}
-        hasChildStems={this.getHasChildStems()}
         navigationMode={navigationMode}
         isCreating={isCreating}
         deletingId={deletingId}
@@ -229,4 +223,4 @@ class CreateNavigationContainer extends Component {
   }
 };
 
-export default WithRouter(WithCache(CreateNavigationContainer, null, ['slides', 'blocks', 'scenario', 'editor', 'stems']));
+export default WithRouter(WithCache(CreateNavigationContainer, null, ['slides', 'blocks', 'scenario', 'editor', 'stems', 'triggers']));

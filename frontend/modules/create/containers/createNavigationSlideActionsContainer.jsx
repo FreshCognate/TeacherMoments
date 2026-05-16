@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import CreateNavigationSlideActions from '../components/createNavigationSlideActions';
 import getSlideErrors from '~/modules/slides/helpers/getSlideErrors';
+import hasFlag from '~/modules/flags/helpers/hasFlag';
 
 class CreateNavigationSlideActionsContainer extends Component {
 
@@ -15,6 +16,14 @@ class CreateNavigationSlideActionsContainer extends Component {
       color: 'primary',
       action: 'DUPLICATE'
     }];
+    if (hasFlag()) {
+      options.unshift({
+        icon: 'branching',
+        text: 'Create stem',
+        color: 'primary',
+        action: 'CREATE_STEM'
+      })
+    }
     if (this.props.canDeleteSlides) {
       options.push({
         icon: 'delete',
@@ -37,11 +46,15 @@ class CreateNavigationSlideActionsContainer extends Component {
   onSlideActionClicked = (action) => {
     this.setState({ isOptionsOpen: false });
     switch (action) {
+      case 'CREATE_STEM':
+        this.props.onCreateStemClicked();
+        break;
       case 'DELETE':
         this.props.onDeleteSlideClicked();
         break;
       case 'DUPLICATE':
         this.props.onDuplicateSlideClicked();
+        break;
     }
   }
 
