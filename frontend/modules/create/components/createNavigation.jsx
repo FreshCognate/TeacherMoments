@@ -5,10 +5,9 @@ import CreateNavigationStaticSlide from './createNavigationStaticSlide';
 import CreateDroppableContainer from '../containers/createDroppableContainer';
 import filter from 'lodash/filter';
 import FlatButton from '~/uikit/buttons/components/flatButton';
-import Button from '~/uikit/buttons/components/button';
-import CreateStemsContainer from '../containers/createStemsContainer';
 import Flag from '~/modules/flags/components/flag';
 import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlideRef';
+import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
 
 const CreateNavigation = ({
   scenarioId,
@@ -34,11 +33,11 @@ const CreateNavigation = ({
         {(navigationMode === 'SLIDES') && (
           <>
             <Flag flag="HAS_STEMS">
-
               {!isRootStem && (
                 <FlatButton
                   text="Back to parent"
                   icon="back"
+                  className="mb-2"
                   onClick={onBackToParentStemClicked}
                 />
               )}
@@ -67,7 +66,7 @@ const CreateNavigation = ({
                 const slideBlocks = filter(blocks, { slideRef: item.ref });
 
                 const slideTriggers = getTriggersBySlideRef({ slideRef: item.ref });
-                const hasChildStems = false;
+                const hasChildStems = getStemsBySlideRef({ slideRef: item.ref });
 
                 return (
                   <CreateNavigationSlide
@@ -90,9 +89,6 @@ const CreateNavigation = ({
 
               }}
             />
-            <Flag flag="HAS_STEMS">
-              <CreateStemsContainer />
-            </Flag>
             <CreateNavigationStaticSlide
               label="Summary slide"
               slideId="SUMMARY"
