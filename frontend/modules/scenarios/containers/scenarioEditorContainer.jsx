@@ -6,6 +6,7 @@ import getSockets from '~/core/sockets/helpers/getSockets';
 import getIsCurrentUser from '~/modules/authentication/helpers/getIsCurrentUser';
 import getEditingDetailsFromQuery from '~/modules/create/helpers/getEditingDetailsFromQuery';
 import addToast from '~/core/dialogs/helpers/addToast';
+import find from 'lodash/find';
 
 class ScenarioEditorContainer extends Component {
 
@@ -139,6 +140,12 @@ export default WithRouter(WithCache(ScenarioEditorContainer, {
     },
     getQuery: ({ props }) => {
       return { scenarioId: props.router.params.id };
+    },
+    getters: {
+      firstStemSlide: ({ data, attributes, props }) => {
+        const firstStemSlide = find(data, { stemRef: attributes.stemRef });
+        return firstStemSlide;
+      }
     },
     lifeTime: 0,
     staleTime: 0

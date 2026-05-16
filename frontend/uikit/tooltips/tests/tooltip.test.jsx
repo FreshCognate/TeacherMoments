@@ -1,43 +1,43 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Tooltip from '../components/tooltip.jsx';
 
 describe('Tooltip', () => {
-  it('returns null when no content is provided', () => {
-    const { container } = render(<Tooltip content="" />);
-    expect(container.firstChild).toBeNull();
+  it('renders children unwrapped when no content is provided', () => {
+    render(
+      <Tooltip content="">
+        <button type="button">Plain</button>
+      </Tooltip>
+    );
+    expect(screen.getByRole('button', { name: 'Plain' })).toBeInTheDocument();
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
   });
 
-  it('renders the trigger button with aria-expanded false initially', () => {
-    render(<Tooltip content="Helpful info" />);
-    const button = screen.getByRole('button', { name: 'More information' });
-    expect(button).toHaveAttribute('aria-expanded', 'false');
-  });
-
-  it('opens the tooltip content when the trigger is clicked', async () => {
+  it('shows the tooltip on hover', async () => {
     const user = userEvent.setup();
-    const { container } = render(<Tooltip content="<strong>Helpful</strong>" />);
-
-    expect(container.querySelector('strong')).not.toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: 'More information' }));
-    expect(container.querySelector('strong')).toHaveTextContent('Helpful');
-    expect(screen.getByRole('button')).toHaveAttribute('aria-expanded', 'true');
-  });
-
-  it('closes when clicking outside', () => {
-    const { container } = render(
-      <div>
-        <Tooltip content="Helpful info" />
-        <button type="button">Outside</button>
-      </div>
+    render(
+      <Tooltip content="Add slide" delay={0}>
+        <button type="button">Add</button>
+      </Tooltip>
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'More information' }));
-    expect(screen.getByRole('button', { name: 'More information' })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
 
-    fireEvent.mouseDown(screen.getByText('Outside'));
-    expect(screen.getByRole('button', { name: 'More information' })).toHaveAttribute('aria-expanded', 'false');
+    await user.hover(screen.getByRole('button', { name: 'Add' }));
+    expect(await screen.findByRole('tooltip')).toHaveTextContent('Add slide');
+  });
+
+  it('shows the tooltip on focus', async () => {
+    const user = userEvent.setup();
+    render(
+      <Tooltip content="Add slide" delay={0}>
+        <button type="button">Add</button>
+      </Tooltip>
+    );
+
+    await user.tab();
+    expect(screen.getByRole('button', { name: 'Add' })).toHaveFocus();
+    expect(await screen.findByRole('tooltip')).toHaveTextContent('Add slide');
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import Tooltip from '~/uikit/tooltips/components/tooltip';
+import Popover from '~/uikit/popovers/components/popover';
 
 const FormFieldLabel = ({
   fieldId = '',
@@ -12,7 +12,7 @@ const FormFieldLabel = ({
   return (
     <label htmlFor={fieldId} className={`mb-2 inline-flex items-center gap-1.5 text-xs text-black/60 dark:text-white/60 font-bold`} style={{ width: isInline ? '120px' : 'auto' }}>
       <span>{label}</span>
-      {tooltip && <Tooltip content={tooltip} iconSize={16} />}
+      {tooltip && <Popover content={tooltip} iconSize={16} />}
     </label>
   );
 };
