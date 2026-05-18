@@ -80,14 +80,15 @@ class CreateNavigationContainer extends Component {
 
   getActiveStemSlideId = () => {
     const activeStem = this.getActiveStem();
+    if (!activeStem) return null;
     const slide = find(this.props.slides.data, { ref: activeStem.slideRef });
     if (!slide) return null;
-    console.log(slide);
     return slide._id;
   }
 
   getActiveSlideStems = () => {
     const activeStem = this.getActiveStem();
+    if (!activeStem) return [];
     return filter(this.props.stems.data, { slideRef: activeStem.slideRef });
   }
 
@@ -222,7 +223,7 @@ class CreateNavigationContainer extends Component {
         isCreating={isCreating}
         deletingId={deletingId}
         isDuplicating={isDuplicating}
-        isInRootStem={activeStem.isRoot}
+        isInRootStem={activeStem?.isRoot ?? true}
         onAddSlideClicked={this.onAddSlideClicked}
         onDuplicateSlideClicked={this.onDuplicateSlideClicked}
         onDeleteSlideClicked={this.onDeleteSlideClicked}
