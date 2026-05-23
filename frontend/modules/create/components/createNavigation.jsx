@@ -31,11 +31,13 @@ const CreateNavigation = ({
   onCreateStemClicked
 }) => {
   return (
-    <div className="flex flex-row transition-all" style={{ width: isInRootStem ? '256px' : '320px' }}>
-      <div className={classnames("max-w-64 h-full flex flex-col relative z-10",
+    <div className="flex flex-row relative" style={{ minWidth: isInRootStem ? '256px' : '320px' }}>
+      <div className={classnames("max-w-64 h-full flex flex-col relative z-10 transition-all",
         "bg-lm-0 dark:bg-dm-1 ",
         "border border-lm-3 dark:border-dm-1 rounded-lg",
-        "w-full")}>
+        "w-full")}
+        style={{ width: isInRootStem ? '256px' : '50px' }}
+      >
         <CreateNavigationActions
           scenarioId={scenarioId}
           activeStemSlideId={activeStemSlideId}
@@ -112,7 +114,7 @@ const CreateNavigation = ({
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="bg-lm-0 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col border border-lm-3 dark:border-dm-1 rounded-lg"
+          className="absolute left-16 bg-lm-0 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col border border-lm-3 dark:border-dm-1 rounded-lg"
         >
           <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} isInRootStem={isInRootStem} isNestedStem={true} onAddSlideClicked={onAddSlideClicked} />
           <div className="p-2 overflow-y-scroll flex-grow">

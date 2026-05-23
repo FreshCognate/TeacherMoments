@@ -26,48 +26,20 @@ const CreateNavigationStaticSlide = ({
   );
 
   return (
-    <AnimatePresence initial={false} mode="popLayout">
-      {(!isInRootStem) && (
-        <motion.div
-          key="icon"
-          layoutId={layoutId}
-          transition={TRANSITION}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <CreateNavigationSlideIcon
-            icon={icon}
-            link={`/scenarios/${scenarioId}/create?slide=${slideId}`}
-            isSelected={false}
-            tooltipContent={label}
-          />
-        </motion.div>
-      )}
-      {(isInRootStem) && (
-        <motion.div
-          key="preview"
-          layoutId={layoutId}
-          transition={TRANSITION}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <Link to={`/scenarios/${scenarioId}/create?slide=${slideId}`} replace className={previewClassName}>
-            <div className="flex gap-x-2 items-center">
-              <Icon icon={icon} size={12} />
-              <motion.div
-                animate={{ opacity: !isInRootStem ? 0 : 1 }}
-                transition={{ duration: 0.15 }}
-                className="text-xs text-lm-5 dark:text-dm-5 font-medium"
-              >
-                {label}
-              </motion.div>
-            </div>
-          </Link>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <Link to={`/scenarios/${scenarioId}/create?slide=${slideId}`} replace className={previewClassName}>
+      <div className="flex gap-x-2 items-center">
+        <Icon icon={icon} size={12} />
+        {(isInRootStem) && (
+          <motion.div
+            animate={{ opacity: !isInRootStem ? 0 : 1 }}
+            transition={{ duration: 0.15 }}
+            className="text-xs text-lm-5 dark:text-dm-5 font-medium"
+          >
+            {label}
+          </motion.div>
+        )}
+      </div>
+    </Link>
   );
 };
 
