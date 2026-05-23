@@ -1,23 +1,25 @@
 import React from 'react';
-import { Link } from 'react-router';
-import classnames from 'classnames';
-import CreateNavigationSlideActionsContainer from '../containers/createNavigationSlideActionsContainer';
-import map from 'lodash/map';
-import getBlockComponent from '~/modules/blocks/helpers/getBlockComponent';
+import { motion, AnimatePresence } from 'framer-motion';
 import CreateStemsContainer from '../containers/createStemsContainer';
 import Flag from '~/modules/flags/components/flag';
-import Badge from '~/uikit/badges/components/badge';
+import CreateNavigationSlideIcon from './createNavigationSlideIcon';
+import CreateNavigationSlidePreview from './createNavigationSlidePreview';
+
+const TRANSITION = { duration: 0.25, ease: 'easeInOut' };
 
 const CreateNavigationSlide = ({
   scenarioId,
   slide,
   slideBlocks,
   slideTriggers,
+  activeStem,
+  activeSlideStems,
   draggingOptions = {},
   isSelected,
   isDeleting,
   isDuplicating,
   isInRootStem,
+  isNestedStem,
   canDeleteSlides,
   hasChildStems,
   onDuplicateSlideClicked,
@@ -25,78 +27,66 @@ const CreateNavigationSlide = ({
   onCreateStemClicked
 }) => {
 
-  const { setNodeRef, style, attributes, listeners, isDragging } = draggingOptions;
-
-  const className = classnames("bg-lm-0 shadow-sm dark:bg-dm-0 rounded-md h-36 mb-2 relative border border-lm-3 dark:border-dm-2", {
-    "outline outline-blue-500": isSelected,
-    "opacity-50": isDeleting || isDragging || isDuplicating
-  });
+  const shouldShowIcon = !isInRootStem && !isNestedStem;
+  const layoutId = `slide-${slide._id}`;
 
   return (
     <div>
-
-      <Link to={`/scenarios/${scenarioId}/create?slide=${slide._id}`} replace>
-        <div className={className} style={style} ref={setNodeRef} {...listeners} {...attributes}>
-          <CreateNavigationSlideActionsContainer
-            slide={slide}
-            slideNumber={slide.sortOrder + 1}
-            canDeleteSlides={canDeleteSlides}
-            isInRootStem={isInRootStem}
-            onDuplicateSlideClicked={() => onDuplicateSlideClicked(slide._id)}
-            onDeleteSlideClicked={() => onDeleteSlideClicked(slide._id)}
-            onCreateStemClicked={() => onCreateStemClicked()}
-          />
-          <div>
-
-            <div className="overflow-hidden h-28 rounded-b-lg">
-
-              <svg xmlns="http://www.w3.org/2000/svg" width="640" height="1000">
-                <foreignObject transform={'scale(0.376)'} width={'100%'} height={'100%'}>
-                  <section>
-                    {map(slideBlocks, (block) => {
-                      let Block = getBlockComponent({ blockType: block.blockType });
-                      return (
-                        <div
-                          key={block._id}
-                          className="mb-8 last:mb-0 p-4"
-                        >
-                          <Block
-                            block={block}
-                            blockTracking={{}}
-                          />
-                        </div>
-                      );
-                    })}
-                  </section>
-                </foreignObject>
-                <rect
-                  x="0"
-                  y="0"
-                  fill="transparent"
-                  transform={'scale(1)'}
-                  width={'100%'}
-                  height={'100%'}
-                />
-              </svg>
-            </div>
-            <div className="absolute bottom-1 w-full flex justify-between">
-              <span>
-                {(slideTriggers.length > 0) && (
-                  <Badge icon="trigger" size='sm' />
-                )}
-              </span>
-              <span>
-                {(hasChildStems) && (
-                  <Badge icon="branching" />
-                )}
-              </span>
-            </div>
-          </div>
-        </div>
-      </Link>
-      <Flag>
-        <CreateStemsContainer slideRef={slide.ref} />
-      </Flag>
+      <AnimatePresence initial={false} mode="popLayout">
+        {shouldShowIcon ? (
+          <motion.div
+            key="icon"
+            layoutId={layoutId}
+            transition={TRANSITION}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <CreateNavigationSlideIcon
+              key={slide._id}
+              icon='slides'
+              link={`/scenarios/${scenarioId}/create?slide=${slide._id}`}
+              tooltipContent="Slide"
+              activeSlideStems={activeSlideStems}
+              activeStemId={activeStem._id}
+              scenarioId={scenarioId}
+              isSelected={activeStem.slideRef === slide.ref}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="preview"
+            layoutId={layoutId}
+            transition={TRANSITION}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <CreateNavigationSlidePreview
+              scenarioId={scenarioId}
+              slide={slide}
+              slideBlocks={slideBlocks}
+              slideTriggers={slideTriggers}
+              canDeleteSlides={canDeleteSlides}
+              isInRootStem={isInRootStem}
+              hasChildStems={hasChildStems}
+              isSelected={isSelected}
+              isDeleting={isDeleting}
+              isDuplicating={isDuplicating}
+              isAnimating={shouldShowIcon}
+              draggingOptions={draggingOptions}
+              onDuplicateSlideClicked={onDuplicateSlideClicked}
+              onDeleteSlideClicked={onDeleteSlideClicked}
+              onCreateStemClicked={onCreateStemClicked}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {(isInRootStem || isNestedStem) && (
+        <Flag>
+          <CreateStemsContainer slideRef={slide.ref} />
+        </Flag>
+      )}
     </div>
   );
 };

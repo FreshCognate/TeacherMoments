@@ -9,7 +9,8 @@ import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlide
 import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
 import map from 'lodash/map';
 import classnames from 'classnames';
-import CreateNavigationIconSlide from './createNavigationIconSlide';
+import CreateNavigationSlideIcon from './createNavigationSlideIcon';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const CreateNavigation = ({
   scenarioId,
@@ -30,112 +31,90 @@ const CreateNavigation = ({
   onCreateStemClicked
 }) => {
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row transition-all" style={{ width: isInRootStem ? '256px' : '320px' }}>
+      <div className={classnames("max-w-64 h-full flex flex-col relative z-10",
+        "bg-lm-0 dark:bg-dm-1 ",
+        "border border-lm-3 dark:border-dm-1 rounded-lg",
+        "w-full")}>
+        <CreateNavigationActions
+          scenarioId={scenarioId}
+          activeStemSlideId={activeStemSlideId}
+          isCreating={isCreating}
+          isDuplicating={isDuplicating}
+          isInRootStem={isInRootStem}
+          isNestedStem={false}
+          onAddSlideClicked={onAddSlideClicked}
+        />
+        <div className="p-2 overflow-y-scroll flex-grow">
+          <CreateNavigationStaticSlide
+            label="Consent"
+            slideId="CONSENT"
+            icon="consent"
+            scenarioId={scenarioId}
+            isSelected={activeSlideId === 'CONSENT'}
+            isInRootStem={isInRootStem}
+          />
+          <CreateDroppableContainer
+            id={`slides`}
+            items={rootSlides}
+            data={{
+              type: 'SLIDES'
+            }}
+            renderItem={({ item, index, items, draggingOptions }) => {
 
-      {(!isInRootStem) && (
-        <div className="bg-lm-0 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col border border-lm-3 dark:border-dm-1 rounded-lg mr-1">
-          <div className="px-2 pt-2">
-            <CreateNavigationIconSlide
-              icon='home'
-              link={`/scenarios/${scenarioId}/create?slide=${activeStemSlideId}`}
-              isSelected={false}
-              tooltipContent="Back to main path"
-            />
-          </div>
-          <div className="p-2 overflow-y-scroll flex-grow gap-y-2 flex flex-col">
-            <CreateNavigationIconSlide
-              icon='consent'
-              link={`/scenarios/${scenarioId}/create?slide=CONSENT`}
-              isSelected={false}
-              tooltipContent="Consent slide"
-            />
-            {map(rootSlides, (slide) => {
+              const canDeleteSlides = items.length > 1;
+              let isSelected = false;
+              let isDeletingSlide = false;
+              if (item._id === activeSlideId) isSelected = true;
+              if (item._id === deletingId) isDeletingSlide = true;
+              const slideBlocks = filter(blocks, { slideRef: item.ref });
+
+              const slideTriggers = getTriggersBySlideRef({ slideRef: item.ref });
+              const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
+
               return (
-                <CreateNavigationIconSlide
-                  key={slide._id}
-                  icon='slides'
-                  link={`/scenarios/${scenarioId}/create?slide=${slide._id}`}
-                  tooltipContent="Slide"
-                  activeSlideStems={activeSlideStems}
-                  activeStemId={activeStem._id}
+                <CreateNavigationSlide
+                  key={item._id}
                   scenarioId={scenarioId}
-                  isSelected={activeStem.slideRef === slide.ref}
+                  slide={item}
+                  slideBlocks={slideBlocks}
+                  slideTriggers={slideTriggers}
+                  activeStem={activeStem}
+                  activeSlideStems={activeSlideStems}
+                  draggingOptions={draggingOptions}
+                  isSelected={isSelected}
+                  isDeleting={isDeletingSlide}
+                  isDuplicating={isDuplicating}
+                  isInRootStem={isInRootStem}
+                  isNestedStem={false}
+                  canDeleteSlides={canDeleteSlides}
+                  hasChildStems={hasChildStems}
+                  onDuplicateSlideClicked={onDuplicateSlideClicked}
+                  onDeleteSlideClicked={onDeleteSlideClicked}
+                  onCreateStemClicked={onCreateStemClicked}
                 />
               );
-            })}
-            <CreateNavigationIconSlide
-              icon='summary'
-              link={`/scenarios/${scenarioId}/create?slide=SUMMARY`}
-              isSelected={false}
-              tooltipContent="Summary slide"
-            />
-          </div>
+
+            }}
+          />
+          <CreateNavigationStaticSlide
+            label="Summary"
+            slideId="SUMMARY"
+            icon="summary"
+            scenarioId={scenarioId}
+            isSelected={activeSlideId === 'SUMMARY'}
+          />
         </div>
-      )}
-      {(isInRootStem) && (
-        <div className="bg-lm-0 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col border border-lm-3 dark:border-dm-1 rounded-lg">
-          <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} onAddSlideClicked={onAddSlideClicked} />
-          <div className="p-2 overflow-y-scroll flex-grow">
-            <CreateNavigationStaticSlide
-              label="Consent"
-              slideId="CONSENT"
-              icon="consent"
-              scenarioId={scenarioId}
-              isSelected={activeSlideId === 'CONSENT'}
-            />
-            <CreateDroppableContainer
-              id={`slides`}
-              items={slides}
-              data={{
-                type: 'SLIDES'
-              }}
-              renderItem={({ item, index, items, draggingOptions }) => {
-
-                const canDeleteSlides = items.length > 1;
-                let isSelected = false;
-                let isDeletingSlide = false;
-                if (item._id === activeSlideId) isSelected = true;
-                if (item._id === deletingId) isDeletingSlide = true;
-                const slideBlocks = filter(blocks, { slideRef: item.ref });
-
-                const slideTriggers = getTriggersBySlideRef({ slideRef: item.ref });
-                const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
-
-                return (
-                  <CreateNavigationSlide
-                    key={item._id}
-                    scenarioId={scenarioId}
-                    slide={item}
-                    slideBlocks={slideBlocks}
-                    slideTriggers={slideTriggers}
-                    draggingOptions={draggingOptions}
-                    isSelected={isSelected}
-                    isDeleting={isDeletingSlide}
-                    isDuplicating={isDuplicating}
-                    isInRootStem={isInRootStem}
-                    canDeleteSlides={canDeleteSlides}
-                    hasChildStems={hasChildStems}
-                    onDuplicateSlideClicked={onDuplicateSlideClicked}
-                    onDeleteSlideClicked={onDeleteSlideClicked}
-                    onCreateStemClicked={onCreateStemClicked}
-                  />
-                );
-
-              }}
-            />
-            <CreateNavigationStaticSlide
-              label="Summary"
-              slideId="SUMMARY"
-              icon="summary"
-              scenarioId={scenarioId}
-              isSelected={activeSlideId === 'SUMMARY'}
-            />
-          </div>
-        </div>
-      )}
+      </div>
       {(!isInRootStem) && (
-        <div className="bg-lm-0 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col border border-lm-3 dark:border-dm-1 rounded-lg">
-          <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} onAddSlideClicked={onAddSlideClicked} />
+        <motion.div
+          key="nested-panel"
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          className="bg-lm-0 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col border border-lm-3 dark:border-dm-1 rounded-lg"
+        >
+          <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} isInRootStem={isInRootStem} isNestedStem={true} onAddSlideClicked={onAddSlideClicked} />
           <div className="p-2 overflow-y-scroll flex-grow">
             <Flag flag="HAS_STEMS">
               <CreateDroppableContainer
@@ -168,6 +147,7 @@ const CreateNavigation = ({
                       isDeleting={isDeletingSlide}
                       isDuplicating={isDuplicating}
                       isInRootStem={isInRootStem}
+                      isNestedStem={true}
                       canDeleteSlides={canDeleteSlides}
                       hasChildStems={hasChildStems}
                       onDuplicateSlideClicked={onDuplicateSlideClicked}
@@ -180,7 +160,7 @@ const CreateNavigation = ({
               />
             </Flag>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );

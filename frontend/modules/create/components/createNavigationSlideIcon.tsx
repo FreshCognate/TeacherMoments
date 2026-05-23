@@ -7,7 +7,7 @@ import map from 'lodash/map';
 import getCache from '~/core/cache/helpers/getCache';
 import Tooltip from '~/uikit/tooltips/components/tooltip';
 
-const CreateNavigationIconSlide = ({
+const CreateNavigationSlideIcon = ({
   icon,
   link,
   tooltipContent,
@@ -25,14 +25,13 @@ const CreateNavigationIconSlide = ({
   isSelected: boolean
 }) => {
   return (
-    <div className={classnames("border rounded-md", {
-      "border-lm-4 dark:border-dm-4": !isSelected,
-      "border-blue-500 dark:border-blue-500": isSelected
+    <div className={classnames("rounded-md", {
+      "border-2 border-blue-400": isSelected
     })}>
       <Tooltip content={tooltipContent} placement='right'>
         <Link to={link} replace
           className={classnames("hover:bg-lm-2 dark:hover:bg-dm-2 w-8 h-8 flex items-center justify-center rounded-md transition-colors", {
-            " hover:bg-lm-2 dark:hover:bg-dm-2": !isSelected
+            "hover:bg-lm-2 dark:hover:bg-dm-2": !isSelected
           })}
         >
           <Icon icon={icon} size={16} />
@@ -43,7 +42,7 @@ const CreateNavigationIconSlide = ({
           {map(activeSlideStems, (activeSlideStem) => {
             const firstStemSlide = getCache('slides').get('firstStemSlide', { stemRef: activeSlideStem.ref });
             return (
-              <Tooltip content="Stem" placement='right'>
+              <Tooltip content="Stem" placement='right' key={activeSlideStem._id}>
 
                 <Link key={activeSlideStem._id} to={`/scenarios/${scenarioId}/create?slide=${firstStemSlide._id}`} replace
                   className={classnames("border w-6 h-6 flex items-center justify-center rounded-md transition-colors", {
@@ -63,4 +62,4 @@ const CreateNavigationIconSlide = ({
   );
 };
 
-export default CreateNavigationIconSlide;
+export default CreateNavigationSlideIcon;
