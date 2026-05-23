@@ -105,6 +105,7 @@ const CreateNavigation = ({
             icon="summary"
             scenarioId={scenarioId}
             isSelected={activeSlideId === 'SUMMARY'}
+            isInRootStem={isInRootStem}
           />
         </div>
       </div>
