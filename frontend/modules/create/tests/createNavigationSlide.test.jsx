@@ -39,6 +39,7 @@ const baseProps = {
   isSelected: false,
   isDeleting: false,
   isDuplicating: false,
+  isInRootStem: true,
   canDeleteSlides: true,
   onDuplicateSlideClicked: () => {},
   onDeleteSlideClicked: () => {}

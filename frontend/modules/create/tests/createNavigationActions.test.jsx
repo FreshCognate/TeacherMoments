@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import CreateNavigationActions from '../components/createNavigationActions';
 
 const baseProps = {
+  isInRootStem: true,
   isCreating: false,
   isDuplicating: false,
   onAddSlideClicked: () => {}

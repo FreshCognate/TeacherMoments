@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 vi.mock('react-router', () => ({
@@ -7,16 +7,16 @@ vi.mock('react-router', () => ({
 }));
 
 vi.mock('../components/createNavigationActions', () => ({
-  default: ({ onAddSlideClicked }) => (
-    <div data-testid="actions-stub">
+  default: ({ onAddSlideClicked, isNestedStem }) => (
+    <div data-testid={isNestedStem ? 'actions-stub-nested' : 'actions-stub-rail'}>
       <button onClick={onAddSlideClicked}>add slide</button>
     </div>
   )
 }));
 
 vi.mock('../components/createNavigationStaticSlide', () => ({
-  default: ({ label, slideId, isSelected }) => (
-    <div data-testid={`static-slide-${slideId}`}>
+  default: ({ label, slideId, isSelected, isInRootStem }) => (
+    <div data-testid={`static-slide-${slideId}`} data-in-root-stem={String(isInRootStem)}>
       {label}:{String(isSelected)}
     </div>
   )
@@ -30,7 +30,7 @@ vi.mock('../components/createNavigationSlide', () => ({
 
 vi.mock('../containers/createDroppableContainer', () => ({
   default: ({ items }) => (
-    <div data-testid="droppable-stub">items:{items.length}</div>
+    <div data-testid="droppable-stub">items:{items.map((item) => item._id).join(',')}</div>
   )
 }));
 
@@ -74,16 +74,15 @@ describe('CreateNavigation', () => {
   describe('when in the root stem', () => {
     it('renders actions, the consent and summary static slides, and the slides droppable', () => {
       render(<CreateNavigation {...baseProps} />);
-      expect(screen.getByTestId('actions-stub')).toBeInTheDocument();
+      expect(screen.getByTestId('actions-stub-rail')).toBeInTheDocument();
       expect(screen.getByTestId('static-slide-CONSENT')).toBeInTheDocument();
       expect(screen.getByTestId('static-slide-SUMMARY')).toBeInTheDocument();
-      expect(screen.getByTestId('droppable-stub')).toHaveTextContent('items:2');
+      expect(screen.getByTestId('droppable-stub')).toHaveTextContent('items:root-1,root-2');
     });
 
-    it('does not render the root-stem link rail', () => {
+    it('does not render the nested stem panel', () => {
       render(<CreateNavigation {...baseProps} />);
-      expect(screen.queryByTestId('icon-consent')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('icon-summary')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('actions-stub-nested')).not.toBeInTheDocument();
     });
 
     it('marks the consent static slide as selected when activeSlideId is CONSENT', () => {
@@ -110,36 +109,30 @@ describe('CreateNavigation', () => {
   describe('when not in the root stem', () => {
     const nestedProps = { ...baseProps, isInRootStem: false };
 
-    it('renders the root-stem link rail with consent, each root slide, and summary', () => {
+    it('renders the left rail with collapsed static slides and the root slides droppable', () => {
       render(<CreateNavigation {...nestedProps} />);
-      const consentLink = screen.getByTestId('icon-consent').closest('a');
-      const summaryLink = screen.getByTestId('icon-summary').closest('a');
-      expect(consentLink).toHaveAttribute('href', '/scenarios/scenario-1/create?slide=CONSENT');
-      expect(summaryLink).toHaveAttribute('href', '/scenarios/scenario-1/create?slide=SUMMARY');
+      expect(screen.getByTestId('static-slide-CONSENT')).toHaveAttribute('data-in-root-stem', 'false');
+      expect(screen.getByTestId('static-slide-SUMMARY')).toHaveAttribute('data-in-root-stem', 'false');
 
-      const slideIcons = screen.getAllByTestId('icon-slides');
-      expect(slideIcons).toHaveLength(2);
-      expect(slideIcons[0].closest('a')).toHaveAttribute('href', '/scenarios/scenario-1/create?slide=root-1');
-      expect(slideIcons[1].closest('a')).toHaveAttribute('href', '/scenarios/scenario-1/create?slide=root-2');
+      const droppables = screen.getAllByTestId('droppable-stub');
+      expect(droppables[0]).toHaveTextContent('items:root-1,root-2');
     });
 
-    it('renders actions and the slides droppable wrapped in the HAS_STEMS flag', () => {
+    it('renders the nested panel actions and the nested stem slides droppable', () => {
       render(<CreateNavigation {...nestedProps} />);
-      expect(screen.getByTestId('actions-stub')).toBeInTheDocument();
-      expect(screen.getByTestId('droppable-stub')).toHaveTextContent('items:2');
+      expect(screen.getByTestId('actions-stub-rail')).toBeInTheDocument();
+      expect(screen.getByTestId('actions-stub-nested')).toBeInTheDocument();
+
+      const droppables = screen.getAllByTestId('droppable-stub');
+      expect(droppables[1]).toHaveTextContent('items:slide-1,slide-2');
     });
 
-    it('does not render the consent or summary static slides', () => {
-      render(<CreateNavigation {...nestedProps} />);
-      expect(screen.queryByTestId('static-slide-CONSENT')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('static-slide-SUMMARY')).not.toBeInTheDocument();
-    });
-
-    it('calls onAddSlideClicked when the actions add button is clicked', async () => {
+    it('calls onAddSlideClicked when the nested-panel add button is clicked', async () => {
       const user = userEvent.setup();
       const onAddSlideClicked = vi.fn();
       render(<CreateNavigation {...nestedProps} onAddSlideClicked={onAddSlideClicked} />);
-      await user.click(screen.getByRole('button', { name: /add slide/ }));
+      const nestedActions = screen.getByTestId('actions-stub-nested');
+      await user.click(within(nestedActions).getByRole('button', { name: /add slide/ }));
       expect(onAddSlideClicked).toHaveBeenCalledTimes(1);
     });
   });
