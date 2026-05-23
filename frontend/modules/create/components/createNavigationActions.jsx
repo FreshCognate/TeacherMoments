@@ -2,6 +2,8 @@ import React from 'react';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
 import CreateNavigationSlideIcon from './createNavigationSlideIcon';
+import Tooltip from '~/uikit/tooltips/components/tooltip';
+import { Link } from 'react-router';
 
 const CreateNavigationActions = ({
   scenarioId,
@@ -13,14 +15,20 @@ const CreateNavigationActions = ({
   onAddSlideClicked
 }) => {
   return (
-    <div className="flex items-center justify-between p-2 sticky top-0 z-10 bg-lm-0 dark:bg-dm-1 overflow-hidden rounded-t-lg">
+    <div className="flex items-center justify-between p-2 sticky top-0 z-10 bg-lm-0 dark:bg-dm-1 overflow-hidden rounded-t-lg h-10">
       {(!isInRootStem && !isNestedStem) && (
-        <CreateNavigationSlideIcon
-          icon="home"
-          link={`/scenarios/${scenarioId}/create?slide=${activeStemSlideId}`}
-          isSelected={false}
-          tooltipContent="Back to parent"
-        />
+        <Tooltip
+          content="Back to parent"
+          placement="right"
+        >
+          <Link
+            to={`/scenarios/${scenarioId}/create?slide=${activeStemSlideId}`}>
+            <CreateNavigationSlideIcon
+              icon="home"
+              isSelected={false}
+            />
+          </Link>
+        </Tooltip>
       )}
       {(isInRootStem || isNestedStem) && (
         <>
