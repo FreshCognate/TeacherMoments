@@ -9,6 +9,7 @@ const childStems = [
 ];
 
 const baseProps = {
+  isInRootStem: true,
   childStems,
   deletingId: null,
   getSlideCountForStem: (ref) => (ref === 'ref-1' ? 3 : 1),

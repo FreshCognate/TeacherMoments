@@ -28,7 +28,7 @@ const CreateNavigationSlide = ({
   const shouldShowIcon = !isInRootStem && !isNestedStem;
 
   return (
-    <div>
+    <div className="mb-2">
       <CreateNavigationSlidePreview
         scenarioId={scenarioId}
         slide={slide}

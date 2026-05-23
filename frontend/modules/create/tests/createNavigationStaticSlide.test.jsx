@@ -5,26 +5,27 @@ import CreateNavigationStaticSlide from '../components/createNavigationStaticSli
 
 const renderInRouter = (ui) => render(<MemoryRouter>{ui}</MemoryRouter>);
 
+const baseProps = {
+  label: 'Consent slide',
+  slideId: 'CONSENT',
+  scenarioId: 'scenario-1',
+  icon: 'consent',
+  isSelected: false,
+  isInRootStem: true
+};
+
 describe('CreateNavigationStaticSlide', () => {
   it('renders the label text', () => {
-    renderInRouter(
-      <CreateNavigationStaticSlide
-        label="Consent slide"
-        slideId="CONSENT"
-        scenarioId="scenario-1"
-        isSelected={false}
-      />
-    );
+    renderInRouter(<CreateNavigationStaticSlide {...baseProps} />);
     expect(screen.getByText('Consent slide')).toBeInTheDocument();
   });
 
   it('links to the create route with slide as a query parameter', () => {
     renderInRouter(
       <CreateNavigationStaticSlide
+        {...baseProps}
         label="Summary slide"
         slideId="SUMMARY"
-        scenarioId="scenario-1"
-        isSelected={false}
       />
     );
     const link = screen.getByRole('link', { name: 'Summary slide' });
@@ -33,25 +34,13 @@ describe('CreateNavigationStaticSlide', () => {
 
   it('applies the selected outline class when isSelected is true', () => {
     const { container } = renderInRouter(
-      <CreateNavigationStaticSlide
-        label="Consent slide"
-        slideId="CONSENT"
-        scenarioId="scenario-1"
-        isSelected={true}
-      />
+      <CreateNavigationStaticSlide {...baseProps} isSelected={true} />
     );
     expect(container.querySelector('.outline.outline-blue-500')).toBeInTheDocument();
   });
 
   it('does not apply the selected outline class when isSelected is false', () => {
-    const { container } = renderInRouter(
-      <CreateNavigationStaticSlide
-        label="Consent slide"
-        slideId="CONSENT"
-        scenarioId="scenario-1"
-        isSelected={false}
-      />
-    );
+    const { container } = renderInRouter(<CreateNavigationStaticSlide {...baseProps} />);
     expect(container.querySelector('.outline.outline-blue-500')).not.toBeInTheDocument();
   });
 });

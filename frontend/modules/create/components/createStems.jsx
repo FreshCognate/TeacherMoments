@@ -3,7 +3,6 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import classnames from 'classnames';
 import map from 'lodash/map';
 import Icon from '~/uikit/icons/components/icon';
-import CreateNavigationSlidePreview from './createNavigationSlidePreview';
 import CreateNavigationSlideIcon from './createNavigationSlideIcon';
 
 const CreateStems = ({
@@ -16,7 +15,7 @@ const CreateStems = ({
   onStemClicked
 }) => {
   return (
-    <div className={classnames("pb-1 bg-lm-2 dark:bg-dm-2 rounded-b-lg mb-2 -mt-1", {
+    <div className={classnames("pb-1 bg-lm-2 dark:bg-dm-2 rounded-b-lg -mt-1", {
       "pt-2 px-1": childStems && childStems.length > 0 && isInRootStem,
       "pt-0": !childStems || childStems.length === 0,
       "pt-2 px-0": childStems && childStems.length > 0 && !isInRootStem
