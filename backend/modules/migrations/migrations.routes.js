@@ -19,6 +19,7 @@ export default [{
     query: {
       postgresUrl: Joi.string().required(),
       scenarioIds: Joi.string().allow('').default(''),
+      collaborators: Joi.string().required(),
       dryRun: Joi.boolean().default(true),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN'])],

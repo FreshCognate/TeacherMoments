@@ -48,6 +48,32 @@ export const runController = {
   all: async function ({ query }, context) {
     const scenarioIds = query.scenarioIds ? query.scenarioIds.split(',').map(Number).filter(Boolean) : [];
 
+    const collaboratorEmails = query.collaborators
+      .split(',')
+      .map((email) => email.trim().toLowerCase())
+      .filter(Boolean);
+
+    if (collaboratorEmails.length === 0) {
+      throw { message: 'At least one collaborator email is required', statusCode: 400 };
+    }
+
+    const existingUsers = await context.models.User.find({ email: { $in: collaboratorEmails } }).select('_id email');
+    const existingEmails = new Set(existingUsers.map((user) => user.email));
+    const missingEmails = collaboratorEmails.filter((email) => !existingEmails.has(email));
+
+    if (missingEmails.length > 0) {
+      throw {
+        message: `The following collaborators do not exist: ${missingEmails.join(', ')}`,
+        statusCode: 400
+      };
+    }
+
+    const emailToUserId = new Map(existingUsers.map((user) => [user.email, user._id]));
+    const collaborators = collaboratorEmails.map((email, index) => ({
+      user: emailToUserId.get(email),
+      role: index === 0 ? 'OWNER' : 'AUTHOR'
+    }));
+
     const job = await createJob({
       queue: 'migrations',
       name: 'migratePostgresScenarios',
@@ -55,6 +81,7 @@ export const runController = {
         postgresUrl: query.postgresUrl,
         scenarioIds: scenarioIds.length > 0 ? scenarioIds : null,
         dryRun: query.dryRun !== undefined ? query.dryRun : true,
+        collaborators,
         createdBy: context.user._id,
         createdAt: new Date()
       }
