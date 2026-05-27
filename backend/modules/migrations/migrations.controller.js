@@ -82,7 +82,6 @@ export const runController = {
         scenarioIds: scenarioIds.length > 0 ? scenarioIds : null,
         dryRun: query.dryRun !== undefined ? query.dryRun : true,
         collaborators,
-        createdBy: context.user._id,
         createdAt: new Date()
       }
     });
