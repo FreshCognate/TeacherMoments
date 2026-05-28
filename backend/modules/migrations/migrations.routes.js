@@ -9,6 +9,7 @@ export default [{
   all: {
     query: {
       postgresUrl: Joi.string().required(),
+      email: Joi.string().email().allow('').default(''),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN'])],
   }
