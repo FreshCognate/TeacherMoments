@@ -4,6 +4,15 @@ import { S3Client } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import setAssetToUploaded from '../../../backend/modules/assets/services/setAssetToUploaded.js';
 
+const s3Client = new S3Client({
+  endpoint: `https://${process.env.STORAGE_ENDPOINT}`,
+  region: process.env.STORAGE_ENDPOINT.split('.')[0],
+  credentials: {
+    accessKeyId: process.env.STORAGE_KEY,
+    secretAccessKey: process.env.STORAGE_SECRET,
+  },
+});
+
 const MIME_FROM_EXTENSION = {
   jpg: 'image/jpeg',
   jpeg: 'image/jpeg',
@@ -77,16 +86,6 @@ export default async function downloadAndUploadImage({ url, models, createdBy })
     isProcessing: false,
     hasBeenProcessed: false,
     createdBy,
-  });
-
-  const region = process.env.STORAGE_ENDPOINT.split('.')[0];
-  const s3Client = new S3Client({
-    endpoint: `https://${process.env.STORAGE_ENDPOINT}`,
-    region,
-    credentials: {
-      accessKeyId: process.env.STORAGE_KEY,
-      secretAccessKey: process.env.STORAGE_SECRET,
-    },
   });
 
   const upload = new Upload({

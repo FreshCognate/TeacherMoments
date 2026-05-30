@@ -10,7 +10,6 @@ import mapComponent from './helpers/mapComponent.js';
 import buildSlateFromText from './helpers/buildSlateFromText.js';
 import buildSummaryFromComponents from './helpers/buildSummaryFromComponents.js';
 import downloadAndUploadImage from './helpers/downloadAndUploadImage.js';
-import resolveAuthors from './helpers/resolveAuthors.js';
 import resolveConsent from './helpers/resolveConsent.js';
 import isSlateEmpty from './helpers/isSlateEmpty.js';
 
@@ -21,7 +20,8 @@ function log(dryRun, ...args) {
 
 export default async (data) => {
 
-  const { postgresUrl, scenarioIds, dryRun, createdBy } = data;
+  const { postgresUrl, scenarioIds, dryRun, collaborators } = data;
+  const resolvedCreatedBy = collaborators[0].user;
 
   log(dryRun, '=== STARTING MIGRATION ===');
   log(dryRun, `Mode: ${dryRun ? 'DRY RUN (no writes)' : 'LIVE'}`);
@@ -119,24 +119,7 @@ export default async (data) => {
           log(dryRun, `  Finish slide PG ID ${finishSlide.id} → scenario summary (${(finishSlide.components || []).length} components merged)`);
         }
 
-        // Resolve authors (original author + collaborators from PG)
-        let resolvedCreatedBy = createdBy;
-        let collaborators = [{ user: createdBy, role: 'OWNER' }];
-
-        if (!dryRun) {
-          const resolved = await resolveAuthors({
-            pgScenario,
-            pool,
-            models,
-            fallbackUserId: createdBy,
-          });
-          resolvedCreatedBy = resolved.createdBy;
-          collaborators = resolved.collaborators;
-          log(dryRun, `  Authors: ${resolved.matchedCount}/${resolved.pgEmailCount} PG users matched in MongoDB${resolved.unmatchedCount > 0 ? `, ${resolved.unmatchedCount} not found` : ''}`);
-          if (resolved.originalAuthorEmail) {
-            log(dryRun, `  Original author email: ${resolved.originalAuthorEmail} (createdBy: ${resolvedCreatedBy})`);
-          }
-        }
+        log(dryRun, `  Collaborators: ${collaborators.length} (OWNER: ${resolvedCreatedBy}, AUTHORS: ${collaborators.length - 1})`);
 
         // Resolve consent (custom consent text per scenario, if any)
         const resolvedConsent = await resolveConsent({ pgScenarioId: pgScenario.id, pool });
