@@ -87,7 +87,7 @@ const Cohorts = ({
           <CollectionEmpty
             attributes={{
               title: "You haven't created any Cohorts yet.",
-              body: "Click + Create Cohort to organize your students into a class and start assigning work."
+              body: "Click 'Create Cohort' to organize your students into a class and start assigning work."
             }}
           />
         </div>
