@@ -1,5 +1,6 @@
 import omit from 'lodash/omit.js';
 import duplicateSlides from '../../slides/services/duplicateSlides.js';
+import duplicateStems from '../../stems/services/duplicateStems.js';
 import duplicateTriggers from '../../triggers/services/duplicateTriggers.js';
 import checkHasAccessToScenario from '../helpers/checkHasAccessToScenario.js';
 
@@ -44,6 +45,38 @@ export default async (props, options, context) => {
     const slideRefMap = new Map();
     for (const duplicatedSlide of duplicatedSlides) {
       slideRefMap.set(duplicatedSlide.originalRef.toString(), duplicatedSlide.ref);
+    }
+
+    // Duplicate stems and remap their hierarchy + slide associations onto the new refs
+    const duplicatedStems = await duplicateStems({ scenarioId: existingScenario._id, newScenarioId: newScenario._id }, { ...context, session });
+
+    const stemRefMap = new Map();
+    for (const duplicatedStem of duplicatedStems) {
+      stemRefMap.set(duplicatedStem.originalRef.toString(), duplicatedStem.ref);
+    }
+
+    for (const duplicatedStem of duplicatedStems) {
+      const stemUpdate = {};
+      if (duplicatedStem.stemRef) {
+        const newStemRef = stemRefMap.get(duplicatedStem.stemRef.toString());
+        if (newStemRef) stemUpdate.stemRef = newStemRef;
+      }
+      if (duplicatedStem.slideRef) {
+        const newSlideRef = slideRefMap.get(duplicatedStem.slideRef.toString());
+        if (newSlideRef) stemUpdate.slideRef = newSlideRef;
+      }
+      if (Object.keys(stemUpdate).length) {
+        await models.Stem.updateOne({ _id: duplicatedStem._id }, { $set: stemUpdate }, { session });
+      }
+    }
+
+    // Remap stemRef on duplicated slides to point to the new stems
+    for (const duplicatedSlide of duplicatedSlides) {
+      if (!duplicatedSlide.stemRef) continue;
+      const newStemRef = stemRefMap.get(duplicatedSlide.stemRef.toString());
+      if (newStemRef) {
+        await models.Slide.updateOne({ _id: duplicatedSlide._id }, { $set: { stemRef: newStemRef } }, { session });
+      }
     }
 
     const newBlocks = await models.Block.find({ scenario: newScenario._id }, null, { session });

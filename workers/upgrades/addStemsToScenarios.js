@@ -33,15 +33,20 @@ export default async () => {
       createdStem = true;
     }
 
+    const stems = await models.Stem.find({ scenario: scenario._id, isDeleted: false });
+    const validStemRefs = stems.map((stem) => stem.ref);
+
+    // Fix slides whose stemRef is missing or points to a stem outside this scenario
+    // (left over from a bad duplication) by pointing them at the root stem
     const result = await models.Slide.updateMany(
-      { scenario: scenario._id, stemRef: { $exists: false } },
+      { scenario: scenario._id, $or: [{ stemRef: { $exists: false } }, { stemRef: { $nin: validStemRefs } }] },
       { stemRef: rootStem.ref }
     );
 
     if (createdStem) {
-      console.log(`Scenario "${scenario.name}" — created root stem, backfilled ${result.modifiedCount} slides`);
+      console.log(`Scenario "${scenario.name}" — created root stem, fixed ${result.modifiedCount} slides`);
     } else {
-      console.log(`Scenario "${scenario.name}" — backfilled ${result.modifiedCount} slides`);
+      console.log(`Scenario "${scenario.name}" — fixed ${result.modifiedCount} slides`);
     }
 
   }

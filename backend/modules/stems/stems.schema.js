@@ -4,6 +4,8 @@ const schema = {
   type: { type: String, default: 'stem' },
   ref: mongoose.Schema.Types.ObjectId,
   scenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario', required: true },
+  originalRef: mongoose.Schema.Types.ObjectId,
+  originalScenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario' },
   name: { type: String, default: '' },
   description: { type: String, default: '' },
   stemRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Stem' },
