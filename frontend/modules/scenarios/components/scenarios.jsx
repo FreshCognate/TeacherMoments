@@ -79,8 +79,8 @@ const Scenarios = ({
                 <Card key={scenario._id}>
                   <Link to={`/scenarios/${scenario._id}/create`}>
                     <CardContent>
-                      <Title title={truncate(scenario.name, { length: 60 })} />
-                      <Body body={getString({ model: scenario, field: 'description' })} />
+                      <Title title={truncate(scenario.name, { length: 60 })} className="text-lg mb-1" />
+                      <Body body={truncate(getString({ model: scenario, field: 'description' }), { length: 120 })} className="text-sm text-gray-800 dark:text-gray-400" />
                       <div className="flex flex-col gap-1 mt-2 text-xs text-gray-500">
                         {scenario.createdAt && (
                           <span>Created {getDateString(scenario.createdAt)}</span>
