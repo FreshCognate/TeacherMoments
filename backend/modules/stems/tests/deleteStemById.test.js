@@ -28,34 +28,32 @@ describe('deleteStemById (in-memory mongo)', () => {
     ).rejects.toMatchObject({ statusCode: 404 });
   });
 
-  it('soft-deletes the stem and recursively cascades to descendant slides, blocks and child stems', async () => {
+  it('soft-deletes the stem and cascades to its slides and blocks', async () => {
     const scenario = new mongoose.Types.ObjectId();
 
-    const rootStem = await db.models.Stem.create({ scenario, isRoot: true });
-    const childStem = await db.models.Stem.create({ scenario, stemRef: rootStem.ref });
+    const stem = await db.models.Stem.create({ scenario, isRoot: true });
 
-    const rootSlide = await db.models.Slide.create({ scenario, stemRef: rootStem.ref, sortOrder: 0 });
-    const childSlide = await db.models.Slide.create({ scenario, stemRef: childStem.ref, sortOrder: 0 });
+    const slide = await db.models.Slide.create({ scenario, stemRef: stem.ref, sortOrder: 0 });
+    const otherSlide = await db.models.Slide.create({ scenario, stemRef: stem.ref, sortOrder: 1 });
 
-    const rootBlock = await db.models.Block.create({ scenario, slideRef: rootSlide.ref });
-    const childBlock = await db.models.Block.create({ scenario, slideRef: childSlide.ref });
+    const block = await db.models.Block.create({ scenario, slideRef: slide.ref });
+    const otherBlock = await db.models.Block.create({ scenario, slideRef: otherSlide.ref });
 
     const ctx = { models: db.models, user: { _id: new mongoose.Types.ObjectId() }, connection: db.connection };
-    const result = await deleteStemById({ stemId: rootStem._id }, {}, ctx);
+    const result = await deleteStemById({ stemId: stem._id }, {}, ctx);
 
     const isDeleted = async (Model, id) => (await Model.findById(id).lean()).isDeleted;
 
-    // The stem and its descendant stems + slides cascade-delete (they carry stemRef).
-    expect(await isDeleted(db.models.Stem, rootStem._id)).toBe(true);
-    expect(await isDeleted(db.models.Stem, childStem._id)).toBe(true);
-    expect(await isDeleted(db.models.Slide, rootSlide._id)).toBe(true);
-    expect(await isDeleted(db.models.Slide, childSlide._id)).toBe(true);
+    // The stem and its slides (which carry stemRef) cascade-delete.
+    expect(await isDeleted(db.models.Stem, stem._id)).toBe(true);
+    expect(await isDeleted(db.models.Slide, slide._id)).toBe(true);
+    expect(await isDeleted(db.models.Slide, otherSlide._id)).toBe(true);
 
     // Blocks are reached through their slide (block.slideRef === slide.ref).
-    expect(await isDeleted(db.models.Block, rootBlock._id)).toBe(true);
-    expect(await isDeleted(db.models.Block, childBlock._id)).toBe(true);
+    expect(await isDeleted(db.models.Block, block._id)).toBe(true);
+    expect(await isDeleted(db.models.Block, otherBlock._id)).toBe(true);
 
     expect(setHasChangesMock).toHaveBeenCalledWith({ scenarioId: scenario }, {}, ctx);
-    expect(String(result._id)).toBe(String(rootStem._id));
+    expect(String(result._id)).toBe(String(stem._id));
   });
 });

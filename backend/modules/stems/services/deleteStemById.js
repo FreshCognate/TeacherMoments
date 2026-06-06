@@ -1,7 +1,7 @@
 import setScenarioHasChanges from '../../scenarios/services/setScenarioHasChanges.js';
 import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
 
-const deleteStemAndDescendants = async ({ stemRef, deletedAt, models, user, session }) => {
+const deleteStemSlidesAndBlocks = async ({ stemRef, deletedAt, models, user, session }) => {
   const slides = await models.Slide.find({ stemRef, isDeleted: false }).session(session);
   const slideRefs = slides.map(slide => slide.ref);
 
@@ -14,16 +14,6 @@ const deleteStemAndDescendants = async ({ stemRef, deletedAt, models, user, sess
     { stemRef, isDeleted: false },
     { isDeleted: true, deletedAt, deletedBy: user._id }
   ).session(session);
-
-  const childStems = await models.Stem.find({ stemRef, isDeleted: false }).session(session);
-
-  for (const childStem of childStems) {
-    childStem.isDeleted = true;
-    childStem.deletedAt = deletedAt;
-    childStem.deletedBy = user._id;
-    await childStem.save({ session });
-    await deleteStemAndDescendants({ stemRef: childStem.ref, deletedAt, models, user, session });
-  }
 };
 
 export default async (props, options, context) => {
@@ -46,7 +36,7 @@ export default async (props, options, context) => {
     stem.deletedBy = user._id;
     await stem.save({ session });
 
-    await deleteStemAndDescendants({ stemRef: stem.ref, deletedAt, models, user, session });
+    await deleteStemSlidesAndBlocks({ stemRef: stem.ref, deletedAt, models, user, session });
   }).catch(err => {
     throw { message: err, statusCode: 500 };
   });
