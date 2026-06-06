@@ -1,4 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import sortBy from 'lodash/sortBy.js';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock, setHasChangesMock } = vi.hoisted(() => ({
   checkAccessMock: vi.fn(),
@@ -14,62 +17,75 @@ vi.mock('../../scenarios/services/setScenarioHasChanges.js', () => ({
 
 import createSlide from '../services/createSlide.js';
 
-describe('createSlide', () => {
+const db = setupMongo();
+
+const buildContext = () => ({
+  models: db.models,
+  user: { _id: new mongoose.Types.ObjectId() }
+});
+
+const sortOrdersFor = async (scenarioId, stemRef) => {
+  const slides = await db.models.Slide.find({ scenario: scenarioId, stemRef, isDeleted: false }).lean();
+  return sortBy(slides, 'sortOrder').map((slide) => slide.sortOrder);
+};
+
+describe('createSlide (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     checkAccessMock.mockResolvedValue();
   });
 
   it('throws when the scenario does not exist', async () => {
-    const findById = vi.fn().mockResolvedValue(null);
-    const find = vi.fn().mockResolvedValue([]);
-    const create = vi.fn();
-
     await expect(
       createSlide(
-        { scenario: 's1', sortOrder: 0, stemRef: 'st1' },
+        { scenario: new mongoose.Types.ObjectId(), sortOrder: 0, stemRef: new mongoose.Types.ObjectId() },
         {},
-        { models: { Scenario: { findById }, Slide: { find, create } }, user: { _id: 'u1' } }
+        buildContext()
       )
     ).rejects.toMatchObject({ statusCode: 400 });
-
-    expect(create).not.toHaveBeenCalled();
   });
 
-  it('shifts the sortOrder of slides at or above the insertion index, then creates the new slide', async () => {
-    const findById = vi.fn().mockResolvedValue({ _id: 's1' });
+  it('shifts the sortOrder of same-stem slides at or above the insertion index, then creates the new slide', async () => {
+    const scenario = await db.models.Scenario.create({ name: 'Test' });
+    const stemRef = new mongoose.Types.ObjectId();
 
-    const slideAbove = { sortOrder: 2, save: vi.fn().mockResolvedValue() };
-    const slideAtIndex = { sortOrder: 1, save: vi.fn().mockResolvedValue() };
-    const slideBelow = { sortOrder: 0, save: vi.fn().mockResolvedValue() };
+    await db.models.Slide.create([
+      { scenario: scenario._id, stemRef, sortOrder: 0 },
+      { scenario: scenario._id, stemRef, sortOrder: 1 },
+      { scenario: scenario._id, stemRef, sortOrder: 2 }
+    ]);
 
-    const find = vi.fn().mockResolvedValue([slideAbove, slideAtIndex, slideBelow]);
-    const create = vi.fn().mockResolvedValue({ _id: 'newSlide' });
-
-    const result = await createSlide(
-      { scenario: 's1', sortOrder: 1, stemRef: 'st1' },
+    const slide = await createSlide(
+      { scenario: scenario._id, sortOrder: 1, stemRef },
       {},
-      { models: { Scenario: { findById }, Slide: { find, create } }, user: { _id: 'u1' } }
+      buildContext()
     );
 
-    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: 's1', modelType: 'Scenario' }, expect.any(Object));
-    expect(find).toHaveBeenCalledWith({ scenario: 's1', isDeleted: false });
+    expect(slide.sortOrder).toBe(1);
+    expect(await sortOrdersFor(scenario._id, stemRef)).toEqual([0, 1, 2, 3]);
+    expect(setHasChangesMock).toHaveBeenCalledWith({ scenarioId: scenario._id }, {}, expect.any(Object));
+  });
 
-    expect(slideAbove.sortOrder).toBe(3);
-    expect(slideAbove.save).toHaveBeenCalled();
-    expect(slideAtIndex.sortOrder).toBe(2);
-    expect(slideAtIndex.save).toHaveBeenCalled();
-    expect(slideBelow.sortOrder).toBe(0);
-    expect(slideBelow.save).not.toHaveBeenCalled();
+  it('only shifts siblings within the same stem, leaving other stems untouched', async () => {
+    const scenario = await db.models.Scenario.create({ name: 'Test' });
+    const stemA = new mongoose.Types.ObjectId();
+    const stemB = new mongoose.Types.ObjectId();
 
-    expect(create).toHaveBeenCalledWith({
-      scenario: 's1',
-      stemRef: 'st1',
-      createdBy: 'u1',
-      sortOrder: 1
-    });
+    await db.models.Slide.create([
+      { scenario: scenario._id, stemRef: stemA, sortOrder: 0 },
+      { scenario: scenario._id, stemRef: stemA, sortOrder: 1 },
+      { scenario: scenario._id, stemRef: stemB, sortOrder: 0 },
+      { scenario: scenario._id, stemRef: stemB, sortOrder: 1 }
+    ]);
 
-    expect(setHasChangesMock).toHaveBeenCalledWith({ scenarioId: 's1' }, {}, expect.any(Object));
-    expect(result).toEqual({ _id: 'newSlide' });
+    await createSlide(
+      { scenario: scenario._id, sortOrder: 1, stemRef: stemA },
+      {},
+      buildContext()
+    );
+
+    expect(await sortOrdersFor(scenario._id, stemA)).toEqual([0, 1, 2]);
+    // Stem B is untouched — no phantom shift from creating a slide in stem A.
+    expect(await sortOrdersFor(scenario._id, stemB)).toEqual([0, 1]);
   });
 });

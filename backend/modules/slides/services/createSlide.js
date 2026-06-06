@@ -13,7 +13,7 @@ export default async (props, options, context) => {
 
   if (!scenarioModel) throw { message: "This scenario does not exist", statusCode: 400 };
 
-  const scenarioSlides = await models.Slide.find({ scenario: scenario, isDeleted: false });
+  const scenarioSlides = await models.Slide.find({ scenario: scenario, stemRef: stemRef, isDeleted: false });
 
   for (const scenarioSlide of scenarioSlides) {
     if (scenarioSlide.sortOrder >= sortOrder) {

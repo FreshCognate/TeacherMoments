@@ -31,7 +31,7 @@ export default async ({ scenario, parentId, slideId }, context) => {
     duplicatedSlide = bulkSlides[0];
 
     // Need to sort the sort order of existing slides
-    const scenarioSlides = await models.Slide.find({ scenario: scenario, isDeleted: false });
+    const scenarioSlides = await models.Slide.find({ scenario: scenario, stemRef: existingSlide.stemRef, isDeleted: false });
 
     for (const scenarioSlide of scenarioSlides) {
       if (scenarioSlide.sortOrder >= newSortOrder) {
