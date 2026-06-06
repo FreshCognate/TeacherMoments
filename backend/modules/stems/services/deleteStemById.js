@@ -2,12 +2,15 @@ import setScenarioHasChanges from '../../scenarios/services/setScenarioHasChange
 import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
 
 const deleteStemAndDescendants = async ({ stemRef, deletedAt, models, user, session }) => {
-  await models.Slide.updateMany(
-    { stemRef, isDeleted: false },
+  const slides = await models.Slide.find({ stemRef, isDeleted: false }).session(session);
+  const slideRefs = slides.map(slide => slide.ref);
+
+  await models.Block.updateMany(
+    { slideRef: { $in: slideRefs }, isDeleted: false },
     { isDeleted: true, deletedAt, deletedBy: user._id }
   ).session(session);
 
-  await models.Block.updateMany(
+  await models.Slide.updateMany(
     { stemRef, isDeleted: false },
     { isDeleted: true, deletedAt, deletedBy: user._id }
   ).session(session);
