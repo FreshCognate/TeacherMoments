@@ -1,6 +1,7 @@
 import getTotalPages from '#core/app/helpers/getTotalPages.js';
 import getSearchFromSearchValue from '#core/app/helpers/getSearchFromSearchValue.js';
 import getModelPaginationByCurrentPage from '#core/app/helpers/getModelPaginationByCurrentPage.js';
+import hasUserGotPermissions from '#core/authentication/helpers/hasUserGotPermissions.js';
 import map from 'lodash/map.js';
 
 export default async (props, options, context) => {
@@ -39,33 +40,35 @@ export default async (props, options, context) => {
     sort = 'createdAt';
   }
 
-  const usersCohortIds = map(user.cohorts, (cohort) => {
-    return cohort.cohort;
-  });
-
-  const accessConditions = [
-    { _id: { $in: usersCohortIds } }
-  ];
-
-  if (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN' || user.role === 'FACILITATOR') {
-    accessConditions.push({
-      collaborators: {
-        $elemMatch: {
-          user: user._id,
-          role: { $in: ['OWNER', 'AUTHOR'] }
-        }
-      }
+  if (!hasUserGotPermissions(user, ['SUPER_ADMIN'])) {
+    const usersCohortIds = map(user.cohorts, (cohort) => {
+      return cohort.cohort;
     });
-  }
 
-  if (search.$or) {
-    search.$and = [
-      { $or: accessConditions },
-      { $or: search.$or }
+    const accessConditions = [
+      { _id: { $in: usersCohortIds } }
     ];
-    delete search.$or;
-  } else {
-    search.$or = accessConditions;
+
+    if (user.role === 'ADMIN' || user.role === 'FACILITATOR') {
+      accessConditions.push({
+        collaborators: {
+          $elemMatch: {
+            user: user._id,
+            role: { $in: ['OWNER', 'AUTHOR'] }
+          }
+        }
+      });
+    }
+
+    if (search.$or) {
+      search.$and = [
+        { $or: accessConditions },
+        { $or: search.$or }
+      ];
+      delete search.$or;
+    } else {
+      search.$or = accessConditions;
+    }
   }
 
   const count = await models.Cohort.countDocuments(search);

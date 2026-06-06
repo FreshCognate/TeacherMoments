@@ -7,6 +7,21 @@ describe('checkHasAccessToEditCohort', () => {
       .rejects.toMatchObject({ statusCode: 401, message: 'You do not have access to this cohort' });
   });
 
+  it('returns the cohort via findById for SUPER_ADMIN without checking collaborators', async () => {
+    const cohort = { _id: 'cohort-1', name: 'Cohort' };
+    const findById = vi.fn().mockResolvedValue(cohort);
+    const findOne = vi.fn();
+
+    const result = await checkHasAccessToEditCohort(
+      { cohortId: 'cohort-1' },
+      { user: { _id: 'u1', role: 'SUPER_ADMIN' }, models: { Cohort: { findById, findOne } } }
+    );
+
+    expect(findById).toHaveBeenCalledWith('cohort-1');
+    expect(findOne).not.toHaveBeenCalled();
+    expect(result).toBe(cohort);
+  });
+
   it('queries for a cohort where the user is OWNER or AUTHOR', async () => {
     const findOne = vi.fn().mockResolvedValue({ _id: 'cohort-1' });
 

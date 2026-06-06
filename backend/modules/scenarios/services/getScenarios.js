@@ -1,6 +1,7 @@
 import getTotalPages from '#core/app/helpers/getTotalPages.js';
 import getSearchFromSearchValue from '#core/app/helpers/getSearchFromSearchValue.js';
 import getModelPaginationByCurrentPage from '#core/app/helpers/getModelPaginationByCurrentPage.js';
+import hasUserGotPermissions from '#core/authentication/helpers/hasUserGotPermissions.js';
 
 export default async (props, options, context) => {
 
@@ -41,10 +42,12 @@ export default async (props, options, context) => {
     sort = 'createdAt';
   }
 
-  search.collaborators = {
-    $elemMatch: {
-      user: user._id,
-      role: { $in: ['OWNER', 'AUTHOR'] }
+  if (!hasUserGotPermissions(user, ['SUPER_ADMIN'])) {
+    search.collaborators = {
+      $elemMatch: {
+        user: user._id,
+        role: { $in: ['OWNER', 'AUTHOR'] }
+      }
     }
   }
 

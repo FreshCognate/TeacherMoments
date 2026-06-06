@@ -191,7 +191,7 @@ Load via standard imports, not dynamic requires.
 
 ## Testing & Debugging
 
-- No test suite currently configured
+- Automated test coverage via Vitest — run `yarn test` (or `yarn test:watch`); tests are co-located in each module's `tests/` folder as `*.test.js`
 - Use `nodemon` for auto-reload during development
 - Check `backend/core/io/index.js` for Socket.io connection issues
 - Workers log job lifecycle: 'Job started', 'Job completed', 'Job failed'

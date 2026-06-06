@@ -1,4 +1,9 @@
+import hasUserGotPermissions from '#core/authentication/helpers/hasUserGotPermissions.js';
+
 export default async ({ modelId, modelType }, { user, models }) => {
+  if (hasUserGotPermissions(user, ['SUPER_ADMIN'])) {
+    return;
+  }
   let scenarioId;
   switch (modelType) {
     case 'Scenario':
