@@ -4,12 +4,13 @@ import classnames from 'classnames';
 import map from 'lodash/map';
 import Icon from '~/uikit/icons/components/icon';
 import CreateNavigationSlideIcon from './createNavigationSlideIcon';
+import getSlideCountForStem from '../helpers/getSlideCountForStem';
 
 const CreateStems = ({
+  activeStemRef,
   isInRootStem,
   childStems,
   deletingId,
-  getSlideCountForStem,
   onEditStemClicked,
   onDeleteStemClicked,
   onStemClicked
@@ -22,12 +23,14 @@ const CreateStems = ({
     })}>
       {map(childStems, (stem) => {
         const isDeleting = stem._id === deletingId;
+        const isSelected = stem.ref === activeStemRef && !isInRootStem;
         const className = classnames(
           "bg-lm-1 dark:bg-dm-2 rounded-md h-8 border border-lm-3 dark:border-dm-2 flex items-center justify-between cursor-pointer hover:border-lm-5 dark:hover:border-dm-4 transition-colors",
+          { "outline outline-blue-500 outline-1 -outline-offset-2": isSelected },
           { "opacity-50": isDeleting },
           {
             "px-2": isInRootStem,
-            "px-0 border-0": !isInRootStem
+            "px-0 border-0 hover:bg-lm-3 dark:hover:bg-dm-3": !isInRootStem
           }
         );
         return (
