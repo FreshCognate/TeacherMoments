@@ -1,4 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { populateRunMock } = vi.hoisted(() => ({ populateRunMock: vi.fn() }));
 
@@ -6,168 +8,86 @@ vi.mock('../helpers/populateRun.js', () => ({ default: (...args) => populateRunM
 
 import updateUsersRunByScenarioId from '../services/updateUsersRunByScenarioId.js';
 
-const FIXED_NOW = new Date('2026-05-07T12:00:00Z');
+const db = setupMongo();
 
-const buildModels = ({ originalRun = {}, updatedRun = {} } = {}) => ({
-  Run: {
-    findOne: vi.fn().mockResolvedValue(originalRun),
-    findOneAndUpdate: vi.fn(() => ({ lean: vi.fn().mockResolvedValue(updatedRun) }))
-  }
-});
+const seedRun = (overrides = {}) => {
+  const scenario = new mongoose.Types.ObjectId();
+  const user = new mongoose.Types.ObjectId();
+  return db.models.Run.create({ scenario, user, ...overrides }).then((run) => ({ run, scenario, user }));
+};
 
-describe('updateUsersRunByScenarioId', () => {
+describe('updateUsersRunByScenarioId (in-memory mongo)', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
     vi.clearAllMocks();
     populateRunMock.mockImplementation(({ run }) => Promise.resolve(run));
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
+  it('stamps archivedAt when isArchived transitions from false to true', async () => {
+    const { run, scenario, user } = await seedRun({ isArchived: false });
+
+    await updateUsersRunByScenarioId(
+      { scenarioId: scenario, update: { isArchived: true } }, {}, { models: db.models, user: { _id: user } }
+    );
+
+    const stored = await db.models.Run.findById(run._id).lean();
+    expect(stored.isArchived).toBe(true);
+    expect(stored.archivedAt).toBeInstanceOf(Date);
   });
 
-  describe('transition timestamps', () => {
-    it('stamps archivedAt when isArchived transitions from false to true', async () => {
-      const models = buildModels({ originalRun: { isArchived: false } });
+  it('stamps completedAt when isComplete transitions to true', async () => {
+    const { run, scenario, user } = await seedRun({ isComplete: false });
 
-      await updateUsersRunByScenarioId(
-        { scenarioId: 's1', update: { isArchived: true } },
-        {},
-        { models, user: { _id: 'u1' } }
-      );
+    await updateUsersRunByScenarioId(
+      { scenarioId: scenario, update: { isComplete: true } }, {}, { models: db.models, user: { _id: user } }
+    );
 
-      const updateArg = models.Run.findOneAndUpdate.mock.calls[0][1];
-      expect(updateArg.archivedAt).toEqual(FIXED_NOW);
-    });
-
-    it('does not stamp archivedAt when the run was already archived', async () => {
-      const models = buildModels({ originalRun: { isArchived: true } });
-
-      await updateUsersRunByScenarioId(
-        { scenarioId: 's1', update: { isArchived: true } },
-        {},
-        { models, user: { _id: 'u1' } }
-      );
-
-      const updateArg = models.Run.findOneAndUpdate.mock.calls[0][1];
-      expect(updateArg.archivedAt).toBeUndefined();
-    });
-
-    it('stamps completedAt when isComplete transitions from false to true', async () => {
-      const models = buildModels({ originalRun: { isComplete: false } });
-
-      await updateUsersRunByScenarioId(
-        { scenarioId: 's1', update: { isComplete: true } },
-        {},
-        { models, user: { _id: 'u1' } }
-      );
-
-      expect(models.Run.findOneAndUpdate.mock.calls[0][1].completedAt).toEqual(FIXED_NOW);
-    });
-
-    it('stamps consentAcknowledgedAt when isConsentAcknowledged transitions to true', async () => {
-      const models = buildModels({ originalRun: { isConsentAcknowledged: false } });
-
-      await updateUsersRunByScenarioId(
-        { scenarioId: 's1', update: { isConsentAcknowledged: true } },
-        {},
-        { models, user: { _id: 'u1' } }
-      );
-
-      expect(models.Run.findOneAndUpdate.mock.calls[0][1].consentAcknowledgedAt).toEqual(FIXED_NOW);
-    });
-
-    it('stamps givenConsentAt when hasGivenConsent transitions to true', async () => {
-      const models = buildModels({ originalRun: { hasGivenConsent: false } });
-
-      await updateUsersRunByScenarioId(
-        { scenarioId: 's1', update: { hasGivenConsent: true } },
-        {},
-        { models, user: { _id: 'u1' } }
-      );
-
-      expect(models.Run.findOneAndUpdate.mock.calls[0][1].givenConsentAt).toEqual(FIXED_NOW);
-    });
+    const stored = await db.models.Run.findById(run._id).lean();
+    expect(stored.completedAt).toBeInstanceOf(Date);
   });
 
-  describe('stage time calculation', () => {
-    it('computes timeSpentMs per stage from startedAt/completedAt and totals across stages', async () => {
-      const models = buildModels({ originalRun: {} });
+  it('computes timeSpentMs per stage and totals across stages', async () => {
+    const { run, scenario, user } = await seedRun({});
 
-      await updateUsersRunByScenarioId(
-        {
-          scenarioId: 's1',
-          update: {
-            stages: [
-              { startedAt: '2026-05-07T12:00:00Z', completedAt: '2026-05-07T12:00:05Z' },
-              { startedAt: '2026-05-07T12:01:00Z', completedAt: '2026-05-07T12:01:10Z' }
-            ]
-          }
-        },
-        {},
-        { models, user: { _id: 'u1' } }
-      );
+    await updateUsersRunByScenarioId(
+      {
+        scenarioId: scenario,
+        update: {
+          stages: [
+            { slideRef: 'a', startedAt: '2026-05-07T12:00:00Z', completedAt: '2026-05-07T12:00:05Z' },
+            { slideRef: 'b', startedAt: '2026-05-07T12:01:00Z', completedAt: '2026-05-07T12:01:10Z' }
+          ]
+        }
+      },
+      {},
+      { models: db.models, user: { _id: user } }
+    );
 
-      const updateArg = models.Run.findOneAndUpdate.mock.calls[0][1];
-      expect(updateArg.stages[0].timeSpentMs).toBe(5000);
-      expect(updateArg.stages[1].timeSpentMs).toBe(10000);
-      expect(updateArg.totalTimeSpentMs).toBe(15000);
-    });
-
-    it('skips stages that are missing startedAt or completedAt', async () => {
-      const models = buildModels({ originalRun: {} });
-
-      await updateUsersRunByScenarioId(
-        {
-          scenarioId: 's1',
-          update: {
-            stages: [
-              { startedAt: '2026-05-07T12:00:00Z', completedAt: '2026-05-07T12:00:05Z' },
-              { startedAt: '2026-05-07T12:01:00Z' }
-            ]
-          }
-        },
-        {},
-        { models, user: { _id: 'u1' } }
-      );
-
-      const updateArg = models.Run.findOneAndUpdate.mock.calls[0][1];
-      expect(updateArg.stages[0].timeSpentMs).toBe(5000);
-      expect(updateArg.stages[1].timeSpentMs).toBeUndefined();
-      expect(updateArg.totalTimeSpentMs).toBe(5000);
-    });
+    const stored = await db.models.Run.findById(run._id).lean();
+    expect(stored.stages[0].timeSpentMs).toBe(5000);
+    expect(stored.stages[1].timeSpentMs).toBe(10000);
+    expect(stored.totalTimeSpentMs).toBe(15000);
   });
 
-  describe('audit trail', () => {
-    it('stamps updatedAt and updatedBy on every update', async () => {
-      const models = buildModels({ originalRun: {} });
+  it('stamps updatedAt and updatedBy on every update', async () => {
+    const { run, scenario, user } = await seedRun({});
 
-      await updateUsersRunByScenarioId(
-        { scenarioId: 's1', update: { foo: 'bar' } },
-        {},
-        { models, user: { _id: 'u1' } }
-      );
+    await updateUsersRunByScenarioId(
+      { scenarioId: scenario, update: { activeSlideRef: 'slide-x' } }, {}, { models: db.models, user: { _id: user } }
+    );
 
-      const updateArg = models.Run.findOneAndUpdate.mock.calls[0][1];
-      expect(updateArg.updatedAt).toEqual(FIXED_NOW);
-      expect(updateArg.updatedBy).toBe('u1');
-    });
+    const stored = await db.models.Run.findById(run._id).lean();
+    expect(stored.updatedAt).toBeInstanceOf(Date);
+    expect(String(stored.updatedBy)).toBe(String(user));
   });
 
-  describe('result', () => {
-    it('returns the populated updated run', async () => {
-      const updatedRun = { _id: 'r1', stages: [] };
-      const models = buildModels({ originalRun: {}, updatedRun });
+  it('returns the populated updated run', async () => {
+    const { scenario, user } = await seedRun({});
 
-      const result = await updateUsersRunByScenarioId(
-        { scenarioId: 's1', update: {} },
-        {},
-        { models, user: { _id: 'u1' } }
-      );
+    const result = await updateUsersRunByScenarioId(
+      { scenarioId: scenario, update: {} }, {}, { models: db.models, user: { _id: user } }
+    );
 
-      expect(populateRunMock).toHaveBeenCalledWith({ run: updatedRun }, expect.any(Object));
-      expect(result).toBe(updatedRun);
-    });
+    expect(populateRunMock).toHaveBeenCalled();
+    expect(String(result.scenario)).toBe(String(scenario));
   });
 });

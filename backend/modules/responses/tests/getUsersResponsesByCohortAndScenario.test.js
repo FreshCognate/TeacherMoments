@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkCohortViewMock, getScenarioSlidesAndBlocksByRefMock, buildUserScenarioResponseMock } = vi.hoisted(() => ({
   checkCohortViewMock: vi.fn(),
@@ -12,57 +14,56 @@ vi.mock('../helpers/buildUserScenarioResponse.js', () => ({ default: (...args) =
 
 import getUsersResponsesByCohortAndScenario from '../services/getUsersResponsesByCohortAndScenario.js';
 
-const buildModels = ({ scenario = { _id: 's1' }, users = [], count = users.length } = {}) => ({
-  Scenario: { findById: vi.fn(() => ({ lean: vi.fn().mockResolvedValue(scenario) })) },
-  User: {
-    countDocuments: vi.fn().mockResolvedValue(count),
-    find: vi.fn(() => ({ lean: vi.fn().mockResolvedValue(users) }))
-  }
-});
+const db = setupMongo();
 
-describe('getUsersResponsesByCohortAndScenario', () => {
+describe('getUsersResponsesByCohortAndScenario (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    checkCohortViewMock.mockResolvedValue();
     getScenarioSlidesAndBlocksByRefMock.mockResolvedValue({ slidesByRef: {}, blocksByRef: {} });
     buildUserScenarioResponseMock.mockResolvedValue({ blockResponses: [] });
   });
 
   it('checks cohort view access', async () => {
-    const models = buildModels();
-    const ctx = { models };
+    const cohortId = new mongoose.Types.ObjectId();
+    const scenario = await db.models.Scenario.create({ name: 'S' });
+    const ctx = { models: db.models };
 
-    await getUsersResponsesByCohortAndScenario({ cohortId: 'c1', scenarioId: 's1' }, {}, ctx);
-
-    expect(checkCohortViewMock).toHaveBeenCalledWith({ cohortId: 'c1' }, ctx);
+    await getUsersResponsesByCohortAndScenario({ cohortId, scenarioId: scenario._id }, {}, ctx);
+    expect(checkCohortViewMock).toHaveBeenCalledWith({ cohortId }, ctx);
   });
 
-  it('searches users by cohort and username regex', async () => {
-    const models = buildModels({ users: [{ _id: 'u1' }] });
+  it('returns only users in the cohort, filtered by username search', async () => {
+    const cohortId = new mongoose.Types.ObjectId();
+    const scenario = await db.models.Scenario.create({ name: 'S' });
 
-    await getUsersResponsesByCohortAndScenario(
-      { cohortId: 'c1', scenarioId: 's1' },
-      { searchValue: 'sam' },
-      { models }
-    );
-
-    const search = models.User.countDocuments.mock.calls[0][0];
-    expect(search['cohorts.cohort']).toBe('c1');
-    expect(search.$or).toEqual([{ username: { $regex: 'sam', $options: 'i' } }]);
-  });
-
-  it('builds one response per user with the same scenario', async () => {
-    const scenario = { _id: 's1', name: 'Test' };
-    const users = [{ _id: 'u1' }, { _id: 'u2' }];
-    const models = buildModels({ scenario, users });
+    const sam = await db.models.User.create({ email: 'sam@x.com', username: 'sam', cohorts: [{ cohort: cohortId }] });
+    await db.models.User.create({ email: 'jo@x.com', username: 'jo', cohorts: [{ cohort: cohortId }] });
+    // Different cohort — must be excluded.
+    await db.models.User.create({ email: 'other@x.com', username: 'sammy', cohorts: [{ cohort: new mongoose.Types.ObjectId() }] });
 
     const result = await getUsersResponsesByCohortAndScenario(
-      { cohortId: 'c1', scenarioId: 's1' },
-      {},
-      { models }
+      { cohortId, scenarioId: scenario._id },
+      { searchValue: 'sam' },
+      { models: db.models }
+    );
+
+    expect(result.responses.map((r) => String(r.user._id))).toEqual([String(sam._id)]);
+  });
+
+  it('builds one response per user with the same scenario attached', async () => {
+    const cohortId = new mongoose.Types.ObjectId();
+    const scenario = await db.models.Scenario.create({ name: 'Test' });
+
+    await db.models.User.create({ email: 'u1@x.com', cohorts: [{ cohort: cohortId }] });
+    await db.models.User.create({ email: 'u2@x.com', cohorts: [{ cohort: cohortId }] });
+
+    const result = await getUsersResponsesByCohortAndScenario(
+      { cohortId, scenarioId: scenario._id }, {}, { models: db.models }
     );
 
     expect(buildUserScenarioResponseMock).toHaveBeenCalledTimes(2);
-    expect(result.scenario).toEqual(scenario);
     expect(result.responses).toHaveLength(2);
+    expect(String(result.scenario._id)).toBe(String(scenario._id));
   });
 });

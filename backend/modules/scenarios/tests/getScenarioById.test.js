@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock } = vi.hoisted(() => ({ checkAccessMock: vi.fn() }));
 
@@ -8,33 +10,31 @@ vi.mock('../helpers/checkHasAccessToScenario.js', () => ({
 
 import getScenarioById from '../services/getScenarioById.js';
 
-const buildModel = (scenario) => {
-  const populate = vi.fn().mockResolvedValue(scenario);
-  return { findById: vi.fn(() => ({ populate })) };
-};
+const db = setupMongo();
 
-describe('getScenarioById', () => {
+describe('getScenarioById (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    checkAccessMock.mockResolvedValue();
   });
 
   it('checks access', async () => {
-    const Scenario = buildModel({ _id: 's1' });
-    const ctx = { models: { Scenario } };
-    await getScenarioById({ scenarioId: 's1' }, {}, ctx);
-    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: 's1', modelType: 'Scenario' }, ctx);
+    const scenario = await db.models.Scenario.create({ name: 'S' });
+    const ctx = { models: db.models };
+    await getScenarioById({ scenarioId: scenario._id }, {}, ctx);
+    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: scenario._id, modelType: 'Scenario' }, ctx);
   });
 
   it('returns the scenario when found', async () => {
-    const scenario = { _id: 's1' };
-    const Scenario = buildModel(scenario);
-    const result = await getScenarioById({ scenarioId: 's1' }, {}, { models: { Scenario } });
-    expect(result).toBe(scenario);
+    const scenario = await db.models.Scenario.create({ name: 'My Scenario' });
+    const result = await getScenarioById({ scenarioId: scenario._id }, {}, { models: db.models });
+    expect(String(result._id)).toBe(String(scenario._id));
+    expect(result.name).toBe('My Scenario');
   });
 
   it('throws 404 when not found', async () => {
-    const Scenario = buildModel(null);
-    await expect(getScenarioById({ scenarioId: 'missing' }, {}, { models: { Scenario } }))
-      .rejects.toMatchObject({ statusCode: 404 });
+    await expect(
+      getScenarioById({ scenarioId: new mongoose.Types.ObjectId() }, {}, { models: db.models })
+    ).rejects.toMatchObject({ statusCode: 404 });
   });
 });

@@ -1,4 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import find from 'lodash/find.js';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock } = vi.hoisted(() => ({ checkAccessMock: vi.fn() }));
 
@@ -8,65 +11,64 @@ vi.mock('../helpers/checkHasAccessToEditCohort.js', () => ({
 
 import removeScenarioFromCohort from '../services/removeScenarioFromCohort.js';
 
-const FIXED_NOW = new Date('2026-05-06T12:00:00Z');
+const db = setupMongo();
 
-const buildModels = (scenario, cohort) => ({
-  Scenario: { findByIdAndUpdate: vi.fn().mockResolvedValue(scenario) },
-  Cohort: {
-    findByIdAndUpdate: vi.fn(() => ({
-      populate: vi.fn().mockResolvedValue(cohort)
-    }))
-  }
-});
-
-describe('removeScenarioFromCohort', () => {
+describe('removeScenarioFromCohort (in-memory mongo)', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
     vi.clearAllMocks();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
+    checkAccessMock.mockResolvedValue();
   });
 
   it('pulls the cohort from the scenario.cohorts list', async () => {
-    const models = buildModels({ _id: 's1' }, { _id: 'c1' });
+    const cohort = await db.models.Cohort.create({ name: 'C' });
+    const otherCohort = new mongoose.Types.ObjectId();
+    const scenario = await db.models.Scenario.create({
+      name: 'S',
+      cohorts: [
+        { cohort: cohort._id, sortOrder: 0 },
+        { cohort: otherCohort, sortOrder: 1 }
+      ]
+    });
+
     await removeScenarioFromCohort(
-      { cohortId: 'c1', update: { scenarioId: 's1' } },
+      { cohortId: cohort._id, update: { scenarioId: scenario._id } },
       {},
-      { models, user: { _id: 'u1' } }
+      { models: db.models, user: { _id: new mongoose.Types.ObjectId() } }
     );
 
-    expect(models.Scenario.findByIdAndUpdate).toHaveBeenCalledWith(
-      's1',
-      { $pull: { cohorts: { cohort: 'c1' } } },
-      { new: true }
-    );
+    const stored = await db.models.Scenario.findById(scenario._id).lean();
+    expect(find(stored.cohorts, (c) => String(c.cohort) === String(cohort._id))).toBeUndefined();
+    expect(find(stored.cohorts, (c) => String(c.cohort) === String(otherCohort))).toBeDefined();
   });
 
   it('throws 404 when the scenario does not exist', async () => {
-    const models = buildModels(null, { _id: 'c1' });
-    await expect(removeScenarioFromCohort(
-      { cohortId: 'c1', update: { scenarioId: 'missing' } },
-      {},
-      { models, user: { _id: 'u1' } }
-    )).rejects.toMatchObject({ statusCode: 404 });
+    const cohort = await db.models.Cohort.create({ name: 'C' });
+    await expect(
+      removeScenarioFromCohort(
+        { cohortId: cohort._id, update: { scenarioId: new mongoose.Types.ObjectId() } },
+        {},
+        { models: db.models, user: { _id: new mongoose.Types.ObjectId() } }
+      )
+    ).rejects.toMatchObject({ statusCode: 404 });
   });
 
   it('updates the cohort with updatedBy/updatedAt and returns it', async () => {
-    const cohort = { _id: 'c1' };
-    const models = buildModels({ _id: 's1' }, cohort);
+    const userId = new mongoose.Types.ObjectId();
+    const cohort = await db.models.Cohort.create({ name: 'C' });
+    const scenario = await db.models.Scenario.create({
+      name: 'S',
+      cohorts: [{ cohort: cohort._id, sortOrder: 0 }]
+    });
+
     const result = await removeScenarioFromCohort(
-      { cohortId: 'c1', update: { scenarioId: 's1' } },
+      { cohortId: cohort._id, update: { scenarioId: scenario._id } },
       {},
-      { models, user: { _id: 'u1' } }
+      { models: db.models, user: { _id: userId } }
     );
 
-    expect(models.Cohort.findByIdAndUpdate).toHaveBeenCalledWith('c1', {
-      updatedBy: 'u1',
-      updatedAt: FIXED_NOW
-    }, { new: true });
-    expect(result).toBe(cohort);
+    const stored = await db.models.Cohort.findById(cohort._id).lean();
+    expect(String(stored.updatedBy)).toBe(String(userId));
+    expect(stored.updatedAt).toBeInstanceOf(Date);
+    expect(String(result._id)).toBe(String(cohort._id));
   });
 });

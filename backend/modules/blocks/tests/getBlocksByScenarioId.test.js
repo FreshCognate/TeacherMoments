@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock } = vi.hoisted(() => ({ checkAccessMock: vi.fn() }));
 
@@ -8,46 +10,43 @@ vi.mock('../../scenarios/helpers/checkHasAccessToScenario.js', () => ({
 
 import getBlocksByScenarioId from '../services/getBlocksByScenarioId.js';
 
-const buildModelChain = (blocks) => {
-  const populate2 = vi.fn().mockResolvedValue(blocks);
-  const populate1 = vi.fn(() => ({ populate: populate2 }));
-  const sort = vi.fn(() => ({ populate: populate1 }));
-  return {
-    find: vi.fn(() => ({ sort }))
-  };
-};
+const db = setupMongo();
 
-describe('getBlocksByScenarioId', () => {
+describe('getBlocksByScenarioId (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    checkAccessMock.mockResolvedValue();
   });
 
   it('checks scenario access', async () => {
-    const Block = buildModelChain([]);
-    const ctx = { models: { Block } };
-    await getBlocksByScenarioId({ scenarioId: 's1' }, {}, ctx);
-
-    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: 's1', modelType: 'Scenario' }, ctx);
+    const scenarioId = new mongoose.Types.ObjectId();
+    const ctx = { models: db.models };
+    await getBlocksByScenarioId({ scenarioId }, {}, ctx);
+    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: scenarioId, modelType: 'Scenario' }, ctx);
   });
 
-  it('searches with isDeleted=false by default', async () => {
-    const Block = buildModelChain([]);
-    await getBlocksByScenarioId({ scenarioId: 's1' }, {}, { models: { Block } });
+  it('returns the scenario\'s non-deleted blocks sorted by sortOrder by default', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+    const slideRef = new mongoose.Types.ObjectId();
+    await db.models.Block.create([
+      { scenario, slideRef, sortOrder: 1, name: 'B' },
+      { scenario, slideRef, sortOrder: 0, name: 'A' },
+      { scenario, slideRef, sortOrder: 2, name: 'Deleted', isDeleted: true }
+    ]);
 
-    expect(Block.find).toHaveBeenCalledWith({ scenario: 's1', isDeleted: false });
+    const { blocks } = await getBlocksByScenarioId({ scenarioId: scenario }, {}, { models: db.models });
+    expect(blocks.map((b) => b.name)).toEqual(['A', 'B']);
   });
 
   it('honours an explicit isDeleted', async () => {
-    const Block = buildModelChain([]);
-    await getBlocksByScenarioId({ scenarioId: 's1' }, { isDeleted: true }, { models: { Block } });
+    const scenario = new mongoose.Types.ObjectId();
+    const slideRef = new mongoose.Types.ObjectId();
+    await db.models.Block.create([
+      { scenario, slideRef, sortOrder: 0, name: 'Active' },
+      { scenario, slideRef, sortOrder: 1, name: 'Deleted', isDeleted: true }
+    ]);
 
-    expect(Block.find).toHaveBeenCalledWith({ scenario: 's1', isDeleted: true });
-  });
-
-  it('returns blocks wrapped in an object', async () => {
-    const Block = buildModelChain([{ _id: 'b1' }, { _id: 'b2' }]);
-    const result = await getBlocksByScenarioId({ scenarioId: 's1' }, {}, { models: { Block } });
-
-    expect(result).toEqual({ blocks: [{ _id: 'b1' }, { _id: 'b2' }] });
+    const { blocks } = await getBlocksByScenarioId({ scenarioId: scenario }, { isDeleted: true }, { models: db.models });
+    expect(blocks.map((b) => b.name)).toEqual(['Deleted']);
   });
 });

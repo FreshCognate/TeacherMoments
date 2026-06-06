@@ -1,4 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock, getSocketsMock, emitMock } = vi.hoisted(() => ({
   checkAccessMock: vi.fn(),
@@ -6,69 +8,49 @@ const { checkAccessMock, getSocketsMock, emitMock } = vi.hoisted(() => ({
   emitMock: vi.fn()
 }));
 
-vi.mock('../../scenarios/helpers/checkHasAccessToScenario.js', () => ({
-  default: (...args) => checkAccessMock(...args)
-}));
-vi.mock('#core/io/index.js', () => ({
-  getSockets: (...args) => getSocketsMock(...args)
-}));
+vi.mock('../../scenarios/helpers/checkHasAccessToScenario.js', () => ({ default: (...args) => checkAccessMock(...args) }));
+vi.mock('#core/io/index.js', () => ({ getSockets: (...args) => getSocketsMock(...args) }));
 
 import lockSlide from '../services/lockSlide.js';
 
-const FIXED_NOW = new Date('2026-05-07T12:00:00Z');
+const db = setupMongo();
 
-describe('lockSlide', () => {
+describe('lockSlide (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     checkAccessMock.mockResolvedValue();
     getSocketsMock.mockReturnValue({ emit: emitMock });
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
   });
 
   it('throws 404 when the slide does not exist', async () => {
-    const findById = vi.fn().mockResolvedValue(null);
-
     await expect(
-      lockSlide(
-        { slideId: 'sl1' },
-        {},
-        { models: { Slide: { findById, updateMany: vi.fn() } }, user: { _id: 'u1' } }
-      )
+      lockSlide({ slideId: new mongoose.Types.ObjectId() }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId() } })
     ).rejects.toMatchObject({ statusCode: 404 });
   });
 
-  it('clears any existing locks held by this user, locks the requested slide, and emits a socket event', async () => {
-    const slide = { _id: 'sl1', scenario: 's1', save: vi.fn().mockResolvedValue() };
-    const findById = vi.fn().mockResolvedValue(slide);
-    const updateMany = vi.fn().mockResolvedValue({});
+  it('clears existing locks held by the user, locks the slide, and emits a socket event', async () => {
+    const userId = new mongoose.Types.ObjectId();
+    const scenario = new mongoose.Types.ObjectId();
+    const stemRef = new mongoose.Types.ObjectId();
 
-    const result = await lockSlide(
-      { slideId: 'sl1' },
-      {},
-      { models: { Slide: { findById, updateMany } }, user: { _id: 'u1' } }
-    );
+    const previouslyLocked = await db.models.Slide.create({ scenario, stemRef, sortOrder: 0, isLocked: true, lockedBy: userId, lockedAt: new Date() });
+    const target = await db.models.Slide.create({ scenario, stemRef, sortOrder: 1 });
 
-    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: 'sl1', modelType: 'Slide' }, expect.any(Object));
-    expect(updateMany).toHaveBeenCalledWith(
-      { isLocked: true, lockedBy: 'u1' },
-      { isLocked: false, lockedBy: null, lockedAt: null }
-    );
+    const result = await lockSlide({ slideId: target._id }, {}, { models: db.models, user: { _id: userId } });
 
-    expect(slide.isLocked).toBe(true);
-    expect(slide.lockedAt).toEqual(FIXED_NOW);
-    expect(slide.lockedBy).toBe('u1');
-    expect(slide.save).toHaveBeenCalled();
+    const storedTarget = await db.models.Slide.findById(target._id).lean();
+    expect(storedTarget.isLocked).toBe(true);
+    expect(String(storedTarget.lockedBy)).toBe(String(userId));
+    expect(storedTarget.lockedAt).toBeInstanceOf(Date);
+
+    const storedPrevious = await db.models.Slide.findById(previouslyLocked._id).lean();
+    expect(storedPrevious.isLocked).toBe(false);
+    expect(storedPrevious.lockedBy).toBeNull();
 
     expect(emitMock).toHaveBeenCalledWith(
-      'SCENARIO:s1_EVENT:SLIDE_LOCK_STATUS',
-      { slide, userId: 'u1' }
+      `SCENARIO:${scenario}_EVENT:SLIDE_LOCK_STATUS`,
+      expect.objectContaining({ userId })
     );
-
-    expect(result).toBe(slide);
+    expect(String(result._id)).toBe(String(target._id));
   });
 });

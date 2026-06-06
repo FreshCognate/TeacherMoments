@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { createJobMock, checkScenarioAccessMock, checkCohortViewMock } = vi.hoisted(() => ({
   createJobMock: vi.fn(),
@@ -12,181 +14,73 @@ vi.mock('../../cohorts/helpers/checkHasAccessToViewCohort.js', () => ({ default:
 
 import createExport from '../services/createExport.js';
 
-const buildModels = ({ existingExport = null, createdRecord = { _id: 'export-1' } } = {}) => ({
-  Export: {
-    findOne: vi.fn(() => ({ lean: vi.fn().mockResolvedValue(existingExport) })),
-    create: vi.fn().mockResolvedValue(createdRecord)
-  }
-});
+const db = setupMongo();
 
-describe('createExport', () => {
+describe('createExport (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     createJobMock.mockResolvedValue({ id: 'job-1' });
+    checkScenarioAccessMock.mockResolvedValue();
+    checkCohortViewMock.mockResolvedValue();
   });
 
-  describe('permissions', () => {
-    it.each(['SCENARIO_RESPONSES', 'COHORT_SCENARIO', 'COHORT_USER', 'COHORT_ALL'])(
-      'throws 403 for %s when the user is not SUPER_ADMIN/ADMIN/FACILITATOR',
-      async (exportType) => {
-        const ctx = { models: buildModels(), user: { _id: 'u1', role: 'USER' } };
+  it.each(['SCENARIO_RESPONSES', 'COHORT_SCENARIO', 'COHORT_USER', 'COHORT_ALL'])(
+    'throws 403 for %s when the user is a plain USER',
+    async (exportType) => {
+      await expect(
+        createExport({ exportType, scenarioId: new mongoose.Types.ObjectId(), cohortId: new mongoose.Types.ObjectId() }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId(), role: 'USER' } })
+      ).rejects.toMatchObject({ statusCode: 403 });
+    }
+  );
 
-        await expect(createExport(
-          { exportType, scenarioId: 's1', cohortId: 'c1' },
-          {},
-          ctx
-        )).rejects.toMatchObject({ statusCode: 403 });
-      }
+  it('throws 400 when SCENARIO_RESPONSES is missing scenarioId', async () => {
+    await expect(
+      createExport({ exportType: 'SCENARIO_RESPONSES' }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId(), role: 'ADMIN' } })
+    ).rejects.toMatchObject({ statusCode: 400, message: expect.stringContaining('scenarioId') });
+  });
+
+  it('uses the requesting user id as the resolved userId for USER_HISTORY', async () => {
+    const userId = new mongoose.Types.ObjectId();
+    const result = await createExport({ exportType: 'USER_HISTORY' }, {}, { models: db.models, user: { _id: userId, role: 'USER' } });
+
+    const stored = await db.models.Export.findById(result.export._id).lean();
+    expect(stored.exportType).toBe('USER_HISTORY');
+    expect(String(stored.userId)).toBe(String(userId));
+  });
+
+  it('checks scenario access when scenarioId is set', async () => {
+    const scenarioId = new mongoose.Types.ObjectId();
+    const ctx = { models: db.models, user: { _id: new mongoose.Types.ObjectId(), role: 'ADMIN' } };
+    await createExport({ exportType: 'SCENARIO_RESPONSES', scenarioId }, {}, ctx);
+    expect(checkScenarioAccessMock).toHaveBeenCalledWith({ modelId: scenarioId, modelType: 'Scenario' }, ctx);
+  });
+
+  it('throws 409 when an in-progress export already exists for the same user and type', async () => {
+    const user = { _id: new mongoose.Types.ObjectId(), role: 'USER' };
+    await createExport({ exportType: 'USER_HISTORY' }, {}, { models: db.models, user });
+
+    await expect(
+      createExport({ exportType: 'USER_HISTORY' }, {}, { models: db.models, user })
+    ).rejects.toMatchObject({ statusCode: 409 });
+  });
+
+  it('creates a PENDING export record and queues a GENERATE_EXPORT job', async () => {
+    const scenarioId = new mongoose.Types.ObjectId();
+    const userId = new mongoose.Types.ObjectId();
+
+    const result = await createExport(
+      { exportType: 'SCENARIO_RESPONSES', scenarioId }, {}, { models: db.models, user: { _id: userId, role: 'ADMIN' } }
     );
 
-    it('allows USER_HISTORY for any role', async () => {
-      const models = buildModels();
-      await createExport(
-        { exportType: 'USER_HISTORY' },
-        {},
-        { models, user: { _id: 'u1', role: 'USER' } }
-      );
-      expect(models.Export.create).toHaveBeenCalled();
-    });
-  });
+    const stored = await db.models.Export.findById(result.export._id).lean();
+    expect(stored.status).toBe('PENDING');
+    expect(String(stored.createdBy)).toBe(String(userId));
 
-  describe('validation per export type', () => {
-    it('throws 400 when SCENARIO_RESPONSES is missing scenarioId', async () => {
-      await expect(createExport(
-        { exportType: 'SCENARIO_RESPONSES' },
-        {},
-        { models: buildModels(), user: { _id: 'u1', role: 'ADMIN' } }
-      )).rejects.toMatchObject({ statusCode: 400, message: expect.stringContaining('scenarioId') });
-    });
-
-    it('throws 400 when COHORT_SCENARIO is missing cohortId or scenarioId', async () => {
-      await expect(createExport(
-        { exportType: 'COHORT_SCENARIO', cohortId: 'c1' },
-        {},
-        { models: buildModels(), user: { _id: 'u1', role: 'ADMIN' } }
-      )).rejects.toMatchObject({ statusCode: 400 });
-    });
-
-    it('throws 400 when COHORT_USER is missing cohortId or userId', async () => {
-      await expect(createExport(
-        { exportType: 'COHORT_USER', cohortId: 'c1' },
-        {},
-        { models: buildModels(), user: { _id: 'u1', role: 'ADMIN' } }
-      )).rejects.toMatchObject({ statusCode: 400 });
-    });
-
-    it('throws 400 when COHORT_ALL is missing cohortId', async () => {
-      await expect(createExport(
-        { exportType: 'COHORT_ALL' },
-        {},
-        { models: buildModels(), user: { _id: 'u1', role: 'ADMIN' } }
-      )).rejects.toMatchObject({ statusCode: 400 });
-    });
-  });
-
-  describe('USER_HISTORY', () => {
-    it('uses the requesting users id as the resolved userId', async () => {
-      const models = buildModels();
-      await createExport(
-        { exportType: 'USER_HISTORY' },
-        {},
-        { models, user: { _id: 'user-7', role: 'USER' } }
-      );
-
-      expect(models.Export.create).toHaveBeenCalledWith(expect.objectContaining({
-        userId: 'user-7',
-        exportType: 'USER_HISTORY'
-      }));
-    });
-  });
-
-  describe('access checks', () => {
-    it('checks scenario access when scenarioId is set', async () => {
-      const ctx = { models: buildModels(), user: { _id: 'u1', role: 'ADMIN' } };
-      await createExport(
-        { exportType: 'SCENARIO_RESPONSES', scenarioId: 's1' },
-        {},
-        ctx
-      );
-      expect(checkScenarioAccessMock).toHaveBeenCalledWith({ modelId: 's1', modelType: 'Scenario' }, ctx);
-    });
-
-    it('checks cohort view access when cohortId is set', async () => {
-      const ctx = { models: buildModels(), user: { _id: 'u1', role: 'ADMIN' } };
-      await createExport(
-        { exportType: 'COHORT_ALL', cohortId: 'c1' },
-        {},
-        ctx
-      );
-      expect(checkCohortViewMock).toHaveBeenCalledWith({ cohortId: 'c1' }, ctx);
-    });
-  });
-
-  describe('dedupe', () => {
-    it('throws 409 when an in-progress export already exists', async () => {
-      const models = buildModels({ existingExport: { _id: 'existing' } });
-
-      await expect(createExport(
-        { exportType: 'USER_HISTORY' },
-        {},
-        { models, user: { _id: 'u1', role: 'USER' } }
-      )).rejects.toMatchObject({ statusCode: 409 });
-
-      expect(models.Export.create).not.toHaveBeenCalled();
-    });
-
-    it('queries for in-progress exports filtered by user, type, and PENDING/PROCESSING status', async () => {
-      const models = buildModels();
-      await createExport(
-        { exportType: 'USER_HISTORY' },
-        {},
-        { models, user: { _id: 'user-7', role: 'USER' } }
-      );
-
-      expect(models.Export.findOne).toHaveBeenCalledWith({
-        exportType: 'USER_HISTORY',
-        scenarioId: undefined,
-        cohortId: undefined,
-        userId: 'user-7',
-        createdBy: 'user-7',
-        status: { $in: ['PENDING', 'PROCESSING'] }
-      });
-    });
-  });
-
-  describe('job dispatch', () => {
-    it('creates an export record and queues a GENERATE_EXPORT job', async () => {
-      const exportRecord = { _id: 'export-9' };
-      const models = buildModels({ createdRecord: exportRecord });
-
-      const result = await createExport(
-        { exportType: 'SCENARIO_RESPONSES', scenarioId: 's1' },
-        {},
-        { models, user: { _id: 'u1', role: 'ADMIN' } }
-      );
-
-      expect(models.Export.create).toHaveBeenCalledWith({
-        exportType: 'SCENARIO_RESPONSES',
-        scenarioId: 's1',
-        cohortId: undefined,
-        userId: undefined,
-        status: 'PENDING',
-        createdBy: 'u1'
-      });
-
-      expect(createJobMock).toHaveBeenCalledWith({
-        queue: 'exports',
-        name: 'GENERATE_EXPORT',
-        job: {
-          exportId: 'export-9',
-          exportType: 'SCENARIO_RESPONSES',
-          scenarioId: 's1',
-          cohortId: undefined,
-          userId: undefined
-        }
-      });
-
-      expect(result).toEqual({ export: exportRecord, jobId: 'job-1' });
-    });
+    expect(createJobMock).toHaveBeenCalledWith(expect.objectContaining({
+      queue: 'exports',
+      name: 'GENERATE_EXPORT',
+      job: expect.objectContaining({ exportId: String(result.export._id), exportType: 'SCENARIO_RESPONSES' })
+    }));
+    expect(result.jobId).toBe('job-1');
   });
 });

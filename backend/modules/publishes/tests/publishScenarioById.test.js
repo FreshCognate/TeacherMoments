@@ -1,4 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { getPublishLinkMock, publishModelByScenarioIdMock } = vi.hoisted(() => ({
   getPublishLinkMock: vi.fn(),
@@ -10,126 +12,65 @@ vi.mock('../services/publishModelByScenarioId.js', () => ({ default: (...args) =
 
 import publishScenarioById from '../services/publishScenarioById.js';
 
-const FIXED_NOW = new Date('2026-05-07T12:00:00Z');
+const db = setupMongo();
 
-const buildScenario = (overrides = {}) => {
-  const scenario = {
-    _id: 's1',
-    name: 'Spring Scenario',
-    publishLink: null,
-    save: vi.fn().mockResolvedValue(),
-    toJSON: vi.fn(function () { return { _id: this._id, name: this.name, publishLink: this.publishLink }; }),
-    ...overrides
-  };
-  return scenario;
-};
-
-describe('publishScenarioById', () => {
+describe('publishScenarioById (in-memory mongo)', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
     vi.clearAllMocks();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
+    publishModelByScenarioIdMock.mockResolvedValue();
+    getPublishLinkMock.mockResolvedValue('generated-link');
   });
 
   it('throws 404 when the scenario does not exist', async () => {
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(null) },
-      Published_Scenario: { deleteOne: vi.fn(), create: vi.fn() }
-    };
-
-    await expect(publishScenarioById(
-      { scenarioId: 'missing' },
-      {},
-      { models, user: { _id: 'u1' } }
-    )).rejects.toMatchObject({ statusCode: 404 });
+    await expect(
+      publishScenarioById({ scenarioId: new mongoose.Types.ObjectId() }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId() } })
+    ).rejects.toMatchObject({ statusCode: 404 });
   });
 
-  it('publishes Slide, Block, and Trigger models for the scenario', async () => {
-    const scenario = buildScenario();
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(scenario) },
-      Published_Scenario: { deleteOne: vi.fn().mockResolvedValue({}), create: vi.fn().mockResolvedValue({}) }
-    };
-    const ctx = { models, user: { _id: 'u1' } };
-    getPublishLinkMock.mockResolvedValue('spring-scenario');
+  it('publishes Slide, Block and Trigger models for the scenario', async () => {
+    const scenario = await db.models.Scenario.create({ name: 'Spring' });
+    const ctx = { models: db.models, user: { _id: new mongoose.Types.ObjectId() } };
 
-    await publishScenarioById({ scenarioId: 's1' }, {}, ctx);
+    await publishScenarioById({ scenarioId: scenario._id }, {}, ctx);
 
-    expect(publishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Slide', scenarioId: 's1' }, {}, ctx);
-    expect(publishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Block', scenarioId: 's1' }, {}, ctx);
-    expect(publishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Trigger', scenarioId: 's1' }, {}, ctx);
+    expect(publishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Slide', scenarioId: scenario._id }, {}, ctx);
+    expect(publishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Block', scenarioId: scenario._id }, {}, ctx);
+    expect(publishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Trigger', scenarioId: scenario._id }, {}, ctx);
   });
 
-  it('marks the scenario as published with timestamp and actor and clears hasChanges', async () => {
-    const scenario = buildScenario();
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(scenario) },
-      Published_Scenario: { deleteOne: vi.fn().mockResolvedValue({}), create: vi.fn().mockResolvedValue({}) }
-    };
-    getPublishLinkMock.mockResolvedValue('spring-scenario');
+  it('marks the scenario published with timestamp/actor and clears hasChanges', async () => {
+    const userId = new mongoose.Types.ObjectId();
+    const scenario = await db.models.Scenario.create({ name: 'Spring', hasChanges: true });
 
-    await publishScenarioById({ scenarioId: 's1' }, {}, { models, user: { _id: 'u1' } });
+    await publishScenarioById({ scenarioId: scenario._id }, {}, { models: db.models, user: { _id: userId } });
 
-    expect(scenario.hasChanges).toBe(false);
-    expect(scenario.isPublished).toBe(true);
-    expect(scenario.publishedAt).toEqual(FIXED_NOW);
-    expect(scenario.publishedBy).toBe('u1');
-    expect(scenario.save).toHaveBeenCalled();
+    const stored = await db.models.Scenario.findById(scenario._id).lean();
+    expect(stored.isPublished).toBe(true);
+    expect(stored.hasChanges).toBe(false);
+    expect(stored.publishedAt).toBeInstanceOf(Date);
+    expect(String(stored.publishedBy)).toBe(String(userId));
   });
 
-  it('generates a publishLink only when the scenario does not already have one', async () => {
-    const scenarioWithoutLink = buildScenario({ publishLink: null });
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(scenarioWithoutLink) },
-      Published_Scenario: { deleteOne: vi.fn().mockResolvedValue({}), create: vi.fn().mockResolvedValue({}) }
-    };
-    getPublishLinkMock.mockResolvedValue('generated-link');
+  it('generates a publishLink only when the scenario has none, and replaces the Published_Scenario doc', async () => {
+    const scenario = await db.models.Scenario.create({ name: 'Spring' });
 
-    await publishScenarioById({ scenarioId: 's1' }, {}, { models, user: { _id: 'u1' } });
+    await publishScenarioById({ scenarioId: scenario._id }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId() } });
 
-    expect(getPublishLinkMock).toHaveBeenCalledWith({ name: 'Spring Scenario', Model: models.Scenario });
-    expect(scenarioWithoutLink.publishLink).toBe('generated-link');
+    const stored = await db.models.Scenario.findById(scenario._id).lean();
+    expect(stored.publishLink).toBe('generated-link');
+
+    const published = await db.models.Published_Scenario.findById(scenario._id).lean();
+    expect(published).toBeTruthy();
+    expect(published.publishLink).toBe('generated-link');
   });
 
   it('preserves an existing publishLink', async () => {
-    const scenario = buildScenario({ publishLink: 'existing-link' });
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(scenario) },
-      Published_Scenario: { deleteOne: vi.fn().mockResolvedValue({}), create: vi.fn().mockResolvedValue({}) }
-    };
+    const scenario = await db.models.Scenario.create({ name: 'Spring', publishLink: 'existing-link' });
 
-    await publishScenarioById({ scenarioId: 's1' }, {}, { models, user: { _id: 'u1' } });
+    await publishScenarioById({ scenarioId: scenario._id }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId() } });
 
     expect(getPublishLinkMock).not.toHaveBeenCalled();
-    expect(scenario.publishLink).toBe('existing-link');
-  });
-
-  it('replaces the Published_Scenario doc with the latest scenario state', async () => {
-    const scenario = buildScenario({ publishLink: 'existing-link' });
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(scenario) },
-      Published_Scenario: { deleteOne: vi.fn().mockResolvedValue({}), create: vi.fn().mockResolvedValue({}) }
-    };
-
-    await publishScenarioById({ scenarioId: 's1' }, {}, { models, user: { _id: 'u1' } });
-
-    expect(models.Published_Scenario.deleteOne).toHaveBeenCalledWith({ _id: 's1' });
-    expect(models.Published_Scenario.create).toHaveBeenCalled();
-  });
-
-  it('returns the updated scenario', async () => {
-    const scenario = buildScenario({ publishLink: 'existing-link' });
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(scenario) },
-      Published_Scenario: { deleteOne: vi.fn().mockResolvedValue({}), create: vi.fn().mockResolvedValue({}) }
-    };
-
-    const result = await publishScenarioById({ scenarioId: 's1' }, {}, { models, user: { _id: 'u1' } });
-
-    expect(result).toBe(scenario);
+    const stored = await db.models.Scenario.findById(scenario._id).lean();
+    expect(stored.publishLink).toBe('existing-link');
   });
 });

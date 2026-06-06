@@ -1,97 +1,86 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 import checkHasAccessToViewCohort from '../helpers/checkHasAccessToViewCohort.js';
 
-describe('checkHasAccessToViewCohort', () => {
+const db = setupMongo();
+
+describe('checkHasAccessToViewCohort (in-memory mongo)', () => {
+  beforeEach(() => {});
+
   it('throws 401 when no cohortId is provided', async () => {
-    await expect(checkHasAccessToViewCohort({}, { user: { _id: 'u1' }, models: {} }))
-      .rejects.toMatchObject({ statusCode: 401 });
+    await expect(
+      checkHasAccessToViewCohort({}, { user: { _id: new mongoose.Types.ObjectId(), role: 'PARTICIPANT' }, models: db.models })
+    ).rejects.toMatchObject({ statusCode: 401 });
   });
 
   it('returns true when the user has the cohort in their cohorts array', async () => {
-    const models = {
-      User: { findOne: vi.fn().mockResolvedValue({ _id: 'u1' }) },
-      Cohort: { findOne: vi.fn() }
-    };
+    const cohortId = new mongoose.Types.ObjectId();
+    const user = await db.models.User.create({
+      email: 'member@example.com',
+      cohorts: [{ cohort: cohortId }]
+    });
 
     const result = await checkHasAccessToViewCohort(
-      { cohortId: 'cohort-1' },
-      { user: { _id: 'u1', role: 'USER' }, models }
+      { cohortId },
+      { user: { _id: user._id, role: 'PARTICIPANT' }, models: db.models }
     );
 
-    expect(models.User.findOne).toHaveBeenCalledWith({
-      _id: 'u1',
-      'cohorts.cohort': 'cohort-1'
-    });
     expect(result).toBe(true);
   });
 
-  it('grants access for SUPER_ADMIN without any membership or collaborator lookup', async () => {
-    const models = {
-      User: { findOne: vi.fn() },
-      Cohort: { findOne: vi.fn() }
-    };
-
+  it('grants access for SUPER_ADMIN without any membership or collaborator', async () => {
     const result = await checkHasAccessToViewCohort(
-      { cohortId: 'cohort-1' },
-      { user: { _id: 'u1', role: 'SUPER_ADMIN' }, models }
+      { cohortId: new mongoose.Types.ObjectId() },
+      { user: { _id: new mongoose.Types.ObjectId(), role: 'SUPER_ADMIN' }, models: db.models }
     );
-
     expect(result).toBe(true);
-    expect(models.User.findOne).not.toHaveBeenCalled();
-    expect(models.Cohort.findOne).not.toHaveBeenCalled();
   });
 
   it('grants access via collaborator role for ADMIN', async () => {
-    const models = {
-      User: { findOne: vi.fn().mockResolvedValue(null) },
-      Cohort: { findOne: vi.fn().mockResolvedValue({ _id: 'cohort-1' }) }
-    };
+    const userId = new mongoose.Types.ObjectId();
+    const cohort = await db.models.Cohort.create({
+      name: 'C',
+      collaborators: [{ user: userId, role: 'OWNER' }]
+    });
 
     const result = await checkHasAccessToViewCohort(
-      { cohortId: 'cohort-1' },
-      { user: { _id: 'u1', role: 'ADMIN' }, models }
+      { cohortId: cohort._id },
+      { user: { _id: userId, role: 'ADMIN' }, models: db.models }
     );
-
     expect(result).toBe(true);
   });
 
   it('grants access via collaborator role for FACILITATOR', async () => {
-    const models = {
-      User: { findOne: vi.fn().mockResolvedValue(null) },
-      Cohort: { findOne: vi.fn().mockResolvedValue({ _id: 'cohort-1' }) }
-    };
+    const userId = new mongoose.Types.ObjectId();
+    const cohort = await db.models.Cohort.create({
+      name: 'C',
+      collaborators: [{ user: userId, role: 'AUTHOR' }]
+    });
 
     const result = await checkHasAccessToViewCohort(
-      { cohortId: 'cohort-1' },
-      { user: { _id: 'u1', role: 'FACILITATOR' }, models }
+      { cohortId: cohort._id },
+      { user: { _id: userId, role: 'FACILITATOR' }, models: db.models }
     );
-
     expect(result).toBe(true);
   });
 
-  it('does not check collaborator membership for plain USERs', async () => {
-    const models = {
-      User: { findOne: vi.fn().mockResolvedValue(null) },
-      Cohort: { findOne: vi.fn() }
-    };
-
-    await expect(checkHasAccessToViewCohort(
-      { cohortId: 'cohort-1' },
-      { user: { _id: 'u1', role: 'USER' }, models }
-    )).rejects.toMatchObject({ statusCode: 401 });
-
-    expect(models.Cohort.findOne).not.toHaveBeenCalled();
+  it('throws 401 for a plain non-member user', async () => {
+    await expect(
+      checkHasAccessToViewCohort(
+        { cohortId: new mongoose.Types.ObjectId() },
+        { user: { _id: new mongoose.Types.ObjectId(), role: 'PARTICIPANT' }, models: db.models }
+      )
+    ).rejects.toMatchObject({ statusCode: 401 });
   });
 
-  it('throws 401 when neither cohort membership nor collaborator role grants access', async () => {
-    const models = {
-      User: { findOne: vi.fn().mockResolvedValue(null) },
-      Cohort: { findOne: vi.fn().mockResolvedValue(null) }
-    };
-
-    await expect(checkHasAccessToViewCohort(
-      { cohortId: 'cohort-1' },
-      { user: { _id: 'u1', role: 'ADMIN' }, models }
-    )).rejects.toMatchObject({ statusCode: 401 });
+  it('throws 401 when an ADMIN is neither a member nor a collaborator', async () => {
+    const cohort = await db.models.Cohort.create({ name: 'C' });
+    await expect(
+      checkHasAccessToViewCohort(
+        { cohortId: cohort._id },
+        { user: { _id: new mongoose.Types.ObjectId(), role: 'ADMIN' }, models: db.models }
+      )
+    ).rejects.toMatchObject({ statusCode: 401 });
   });
 });

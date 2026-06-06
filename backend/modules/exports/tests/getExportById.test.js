@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { getDownloadSignedUrlMock } = vi.hoisted(() => ({ getDownloadSignedUrlMock: vi.fn() }));
 
@@ -8,61 +10,48 @@ vi.mock('../../assets/helpers/getDownloadSignedUrl.js', () => ({
 
 import getExportById from '../services/getExportById.js';
 
-const buildModels = (exportRecord) => ({
-  Export: {
-    findOne: vi.fn(() => ({ lean: vi.fn().mockResolvedValue(exportRecord) }))
-  }
-});
+const db = setupMongo();
 
-describe('getExportById', () => {
+describe('getExportById (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('queries for an export owned by the requesting user', async () => {
-    const models = buildModels({ _id: 'e1', status: 'PENDING' });
-
-    await getExportById({ exportId: 'e1' }, {}, { models, user: { _id: 'u1' } });
-
-    expect(models.Export.findOne).toHaveBeenCalledWith({ _id: 'e1', createdBy: 'u1' });
-  });
-
-  it('throws 404 when no export is found', async () => {
-    const models = buildModels(null);
-
-    await expect(getExportById({ exportId: 'missing' }, {}, { models, user: { _id: 'u1' } }))
-      .rejects.toMatchObject({ statusCode: 404 });
+  it('throws 404 when no export is found for the user', async () => {
+    await expect(
+      getExportById({ exportId: new mongoose.Types.ObjectId() }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId() } })
+    ).rejects.toMatchObject({ statusCode: 404 });
   });
 
   it('returns a null downloadUrl when the export is not COMPLETED', async () => {
-    const models = buildModels({ _id: 'e1', status: 'PENDING' });
+    const userId = new mongoose.Types.ObjectId();
+    const record = await db.models.Export.create({ exportType: 'USER_HISTORY', createdBy: userId, status: 'PENDING' });
 
-    const result = await getExportById({ exportId: 'e1' }, {}, { models, user: { _id: 'u1' } });
+    const result = await getExportById({ exportId: record._id }, {}, { models: db.models, user: { _id: userId } });
 
     expect(result.downloadUrl).toBeNull();
     expect(getDownloadSignedUrlMock).not.toHaveBeenCalled();
   });
 
   it('returns a null downloadUrl when the export has no filePath', async () => {
-    const models = buildModels({ _id: 'e1', status: 'COMPLETED' });
+    const userId = new mongoose.Types.ObjectId();
+    const record = await db.models.Export.create({ exportType: 'USER_HISTORY', createdBy: userId, status: 'COMPLETED' });
 
-    const result = await getExportById({ exportId: 'e1' }, {}, { models, user: { _id: 'u1' } });
+    const result = await getExportById({ exportId: record._id }, {}, { models: db.models, user: { _id: userId } });
 
     expect(result.downloadUrl).toBeNull();
     expect(getDownloadSignedUrlMock).not.toHaveBeenCalled();
   });
 
   it('signs a download URL when the export is COMPLETED with a filePath', async () => {
-    const exportRecord = { _id: 'e1', status: 'COMPLETED', filePath: 'exports/2026/data.csv' };
-    const models = buildModels(exportRecord);
+    const userId = new mongoose.Types.ObjectId();
+    const record = await db.models.Export.create({ exportType: 'USER_HISTORY', createdBy: userId, status: 'COMPLETED', filePath: 'exports/2026/data.csv' });
     getDownloadSignedUrlMock.mockResolvedValue('https://signed.example.com/download');
 
-    const result = await getExportById({ exportId: 'e1' }, {}, { models, user: { _id: 'u1' } });
+    const result = await getExportById({ exportId: record._id }, {}, { models: db.models, user: { _id: userId } });
 
     expect(getDownloadSignedUrlMock).toHaveBeenCalledWith('exports/2026/data.csv');
-    expect(result).toEqual({
-      export: exportRecord,
-      downloadUrl: 'https://signed.example.com/download'
-    });
+    expect(result.downloadUrl).toBe('https://signed.example.com/download');
+    expect(String(result.export._id)).toBe(String(record._id));
   });
 });

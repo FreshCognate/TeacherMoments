@@ -1,28 +1,24 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 import getPublishedBlocksByScenarioId from '../services/getPublishedBlocksByScenarioId.js';
 
-const buildModelChain = (blocks) => {
-  const populate2 = vi.fn().mockResolvedValue(blocks);
-  const populate1 = vi.fn(() => ({ populate: populate2 }));
-  const sort = vi.fn(() => ({ populate: populate1 }));
-  return { find: vi.fn(() => ({ sort })) };
-};
+const db = setupMongo();
 
-describe('getPublishedBlocksByScenarioId', () => {
-  it('queries the Published_Block model with the scenario filter and isDeleted=false', async () => {
-    const Published_Block = buildModelChain([]);
-    await getPublishedBlocksByScenarioId({ scenarioId: 's1' }, {}, { models: { Published_Block } });
+describe('getPublishedBlocksByScenarioId (in-memory mongo)', () => {
+  beforeEach(() => {});
 
-    expect(Published_Block.find).toHaveBeenCalledWith({ scenario: 's1', isDeleted: false });
-  });
+  it('returns the scenario\'s non-deleted published blocks sorted by sortOrder', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+    const slideRef = new mongoose.Types.ObjectId();
 
-  it('returns blocks wrapped in an object', async () => {
-    const Published_Block = buildModelChain([{ _id: 'pb1' }]);
-    const result = await getPublishedBlocksByScenarioId(
-      { scenarioId: 's1' },
-      {},
-      { models: { Published_Block } }
-    );
-    expect(result).toEqual({ blocks: [{ _id: 'pb1' }] });
+    await db.models.Published_Block.create([
+      { scenario, slideRef, sortOrder: 1, name: 'B' },
+      { scenario, slideRef, sortOrder: 0, name: 'A' },
+      { scenario, slideRef, sortOrder: 2, name: 'Deleted', isDeleted: true }
+    ]);
+
+    const { blocks } = await getPublishedBlocksByScenarioId({ scenarioId: scenario }, {}, { models: db.models });
+    expect(blocks.map((b) => b.name)).toEqual(['A', 'B']);
   });
 });

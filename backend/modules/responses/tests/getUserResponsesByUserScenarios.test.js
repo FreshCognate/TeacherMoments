@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { getScenarioSlidesAndBlocksByRefMock, buildUserScenarioResponseMock } = vi.hoisted(() => ({
   getScenarioSlidesAndBlocksByRefMock: vi.fn(),
@@ -10,49 +12,39 @@ vi.mock('../helpers/buildUserScenarioResponse.js', () => ({ default: (...args) =
 
 import getUserResponsesByUserScenarios from '../services/getUserResponsesByUserScenarios.js';
 
-const buildModels = ({ scenarioIds = [], scenarios = [], count = scenarios.length } = {}) => ({
-  Run: { distinct: vi.fn().mockResolvedValue(scenarioIds) },
-  Scenario: {
-    countDocuments: vi.fn().mockResolvedValue(count),
-    find: vi.fn(() => ({
-      sort: vi.fn(() => ({ lean: vi.fn().mockResolvedValue(scenarios) }))
-    }))
-  }
-});
+const db = setupMongo();
 
-describe('getUserResponsesByUserScenarios', () => {
+describe('getUserResponsesByUserScenarios (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     getScenarioSlidesAndBlocksByRefMock.mockResolvedValue({ slidesByRef: {}, blocksByRef: {} });
     buildUserScenarioResponseMock.mockResolvedValue({ blockResponses: [] });
   });
 
-  it('queries distinct scenario ids from the users non-deleted runs', async () => {
-    const models = buildModels({ scenarioIds: ['s1', 's2'], scenarios: [] });
+  it('returns one response per scenario the user has a non-deleted run in', async () => {
+    const userId = new mongoose.Types.ObjectId();
+    const s1 = await db.models.Scenario.create({ name: 'S1' });
+    const s2 = await db.models.Scenario.create({ name: 'S2' });
+    const s3 = await db.models.Scenario.create({ name: 'S3' });
 
-    await getUserResponsesByUserScenarios({}, {}, { models, user: { _id: 'u1' } });
+    await db.models.Run.create([
+      { scenario: s1._id, user: userId },
+      { scenario: s2._id, user: userId },
+      // Deleted run — its scenario must not appear.
+      { scenario: s3._id, user: userId, isDeleted: true }
+    ]);
 
-    expect(models.Run.distinct).toHaveBeenCalledWith('scenario', { user: 'u1', isDeleted: false });
-  });
-
-  it('searches scenarios by id list and isDeleted=false', async () => {
-    const models = buildModels({ scenarioIds: ['s1'], scenarios: [{ _id: 's1' }] });
-
-    await getUserResponsesByUserScenarios({}, {}, { models, user: { _id: 'u1' } });
-
-    expect(models.Scenario.countDocuments).toHaveBeenCalledWith(expect.objectContaining({
-      _id: { $in: ['s1'] },
-      isDeleted: false
-    }));
-  });
-
-  it('returns one response per scenario', async () => {
-    const scenarios = [{ _id: 's1' }, { _id: 's2' }];
-    const models = buildModels({ scenarioIds: ['s1', 's2'], scenarios });
-
-    const result = await getUserResponsesByUserScenarios({}, {}, { models, user: { _id: 'u1' } });
+    const result = await getUserResponsesByUserScenarios({}, {}, { models: db.models, user: { _id: userId } });
 
     expect(buildUserScenarioResponseMock).toHaveBeenCalledTimes(2);
-    expect(result.responses).toHaveLength(2);
+    const scenarioIds = result.responses.map((r) => String(r.scenario._id)).sort();
+    expect(scenarioIds).toEqual([String(s1._id), String(s2._id)].sort());
+    expect(result.count).toBe(2);
+  });
+
+  it('returns no responses when the user has no runs', async () => {
+    const result = await getUserResponsesByUserScenarios({}, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId() } });
+    expect(result.responses).toHaveLength(0);
+    expect(result.count).toBe(0);
   });
 });

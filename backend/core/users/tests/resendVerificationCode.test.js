@@ -1,4 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { sendEmailMock, validateOtpRateLimitMock, randomIntMock } = vi.hoisted(() => ({
   sendEmailMock: vi.fn(),
@@ -12,120 +13,79 @@ vi.mock('crypto', () => ({ default: { randomInt: (...args) => randomIntMock(...a
 
 import resendVerificationCode from '../services/resendVerificationCode.js';
 
-const FIXED_NOW = new Date('2026-05-06T12:00:00Z');
+const db = setupMongo();
 
-const buildContext = (user) => ({
-  models: {
-    User: {
-      findOne: vi.fn(() => ({ select: vi.fn().mockResolvedValue(user) })),
-      findByIdAndUpdate: vi.fn().mockResolvedValue({})
-    }
-  }
-});
+const NOW = Date.now();
 
-describe('resendVerificationCode (users)', () => {
+describe('resendVerificationCode (in-memory mongo)', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
     vi.clearAllMocks();
     randomIntMock.mockReturnValue(987654);
     validateOtpRateLimitMock.mockResolvedValue(true);
     sendEmailMock.mockResolvedValue({});
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   it('throws 400 when no unverified user exists', async () => {
-    const context = {
-      models: { User: { findOne: vi.fn(() => ({ select: vi.fn().mockResolvedValue(null) })) } }
-    };
-
-    await expect(resendVerificationCode({ email: 'sam@example.com' }, {}, context))
-      .rejects.toMatchObject({ statusCode: 400, message: 'User not found or already verified' });
+    await expect(
+      resendVerificationCode({ email: 'sam@example.com' }, {}, { models: db.models })
+    ).rejects.toMatchObject({ statusCode: 400, message: 'User not found or already verified' });
   });
 
-  it('searches for unverified users by lowercased email', async () => {
-    const context = buildContext({ _id: 'u1', email: 'sam@example.com', username: 'sam' });
+  it('finds the unverified user by lowercased email and sends a resend-otp email', async () => {
+    await db.models.User.create({ email: 'sam@example.com', username: 'sam', isVerified: false });
 
-    await resendVerificationCode({ email: 'Sam@EXAMPLE.com' }, {}, context);
-
-    expect(context.models.User.findOne).toHaveBeenCalledWith({
-      email: 'sam@example.com',
-      isVerified: false
-    });
-  });
-
-  it('starts a new request count when the previous OTP was generated more than 15 minutes ago', async () => {
-    const context = buildContext({
-      _id: 'u1',
-      email: 'sam@example.com',
-      username: 'sam',
-      otpRequestCount: 4,
-      otpGeneratedAt: new Date(FIXED_NOW.getTime() - 20 * 60 * 1000)
-    });
-
-    await resendVerificationCode({ email: 'sam@example.com' }, {}, context);
-
-    expect(context.models.User.findByIdAndUpdate).toHaveBeenCalledWith('u1', expect.objectContaining({
-      otpRequestCount: 1
-    }));
-  });
-
-  it('increments the request count when within the window', async () => {
-    const context = buildContext({
-      _id: 'u1',
-      email: 'sam@example.com',
-      username: 'sam',
-      otpRequestCount: 2,
-      otpGeneratedAt: new Date(FIXED_NOW.getTime() - 5 * 60 * 1000)
-    });
-
-    await resendVerificationCode({ email: 'sam@example.com' }, {}, context);
-
-    expect(context.models.User.findByIdAndUpdate).toHaveBeenCalledWith('u1', expect.objectContaining({
-      otpRequestCount: 3
-    }));
-  });
-
-  it('refuses to send when rate limit fails', async () => {
-    const context = buildContext({ _id: 'u1', email: 'sam@example.com', username: 'sam' });
-    validateOtpRateLimitMock.mockRejectedValue({ statusCode: 429, message: 'limited' });
-
-    await expect(resendVerificationCode({ email: 'sam@example.com' }, {}, context))
-      .rejects.toMatchObject({ statusCode: 429 });
-
-    expect(sendEmailMock).not.toHaveBeenCalled();
-  });
-
-  it('sends a resend-otp email with the username (or fallback "User")', async () => {
-    const context = buildContext({ _id: 'u1', email: 'sam@example.com', username: 'sam' });
-
-    await resendVerificationCode({ email: 'sam@example.com' }, {}, context);
+    const result = await resendVerificationCode({ email: 'Sam@EXAMPLE.com' }, {}, { models: db.models });
 
     expect(sendEmailMock).toHaveBeenCalledWith({
       to: 'sam@example.com',
       templateAlias: 'resend-otp',
       templateModel: { name: 'sam', otpCode: '987654', expiryMinutes: 10 }
     });
+    expect(result).toEqual({ message: 'OTP sent successfully', email: 'sam@example.com' });
+  });
+
+  it('starts a new request count when the previous OTP was generated more than 15 minutes ago', async () => {
+    const user = await db.models.User.create({
+      email: 'sam@example.com', username: 'sam', isVerified: false,
+      otpRequestCount: 4, otpGeneratedAt: new Date(NOW - 20 * 60 * 1000)
+    });
+
+    await resendVerificationCode({ email: 'sam@example.com' }, {}, { models: db.models });
+
+    const stored = await db.models.User.findById(user._id).lean();
+    expect(stored.otpRequestCount).toBe(1);
+  });
+
+  it('increments the request count when within the window', async () => {
+    const user = await db.models.User.create({
+      email: 'sam@example.com', username: 'sam', isVerified: false,
+      otpRequestCount: 2, otpGeneratedAt: new Date(NOW - 5 * 60 * 1000)
+    });
+
+    await resendVerificationCode({ email: 'sam@example.com' }, {}, { models: db.models });
+
+    const stored = await db.models.User.findById(user._id).lean();
+    expect(stored.otpRequestCount).toBe(3);
+  });
+
+  it('refuses to send when the rate limit fails', async () => {
+    await db.models.User.create({ email: 'sam@example.com', username: 'sam', isVerified: false });
+    validateOtpRateLimitMock.mockRejectedValue({ statusCode: 429, message: 'limited' });
+
+    await expect(
+      resendVerificationCode({ email: 'sam@example.com' }, {}, { models: db.models })
+    ).rejects.toMatchObject({ statusCode: 429 });
+
+    expect(sendEmailMock).not.toHaveBeenCalled();
   });
 
   it('falls back to "User" as the template name when username is null', async () => {
-    const context = buildContext({ _id: 'u1', email: 'sam@example.com', username: null });
+    await db.models.User.create({ email: 'sam@example.com', isVerified: false });
 
-    await resendVerificationCode({ email: 'sam@example.com' }, {}, context);
+    await resendVerificationCode({ email: 'sam@example.com' }, {}, { models: db.models });
 
     expect(sendEmailMock).toHaveBeenCalledWith(expect.objectContaining({
       templateModel: expect.objectContaining({ name: 'User' })
     }));
-  });
-
-  it('returns success with the user email', async () => {
-    const context = buildContext({ _id: 'u1', email: 'sam@example.com', username: 'sam' });
-
-    const result = await resendVerificationCode({ email: 'sam@example.com' }, {}, context);
-
-    expect(result).toEqual({ message: 'OTP sent successfully', email: 'sam@example.com' });
   });
 });

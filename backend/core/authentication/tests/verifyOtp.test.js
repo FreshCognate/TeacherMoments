@@ -1,187 +1,111 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 import verifyOtp from '../services/verifyOtp.js';
 
-const FIXED_NOW = new Date('2026-05-06T12:00:00Z');
+const db = setupMongo();
 
-const buildUserDocument = (overrides = {}) => {
-  const user = {
-    _id: 'user-1',
-    email: 'sam@example.com',
-    isLocked: false,
-    lockedUntil: null,
-    isVerified: true,
-    firstLoggedInAt: FIXED_NOW,
-    otpCode: '123456',
-    otpAttempts: 0,
-    otpGeneratedAt: new Date(FIXED_NOW.getTime() - 1 * 60 * 1000),
-    toObject() {
-      return { ...this };
-    },
-    ...overrides
-  };
-  return user;
-};
+const NOW = Date.now();
 
-const buildModels = (user) => ({
-  User: {
-    findOne: vi.fn(() => ({
-      select: vi.fn().mockResolvedValue(user)
-    })),
-    findByIdAndUpdate: vi.fn().mockImplementation((id, update) => ({ _id: id, ...update, toObject() { return { ...this }; } }))
-  }
+const createUser = (overrides = {}) => db.models.User.create({
+  email: 'sam@example.com',
+  isVerified: true,
+  firstLoggedInAt: new Date(NOW),
+  otpCode: '123456',
+  otpAttempts: 0,
+  otpGeneratedAt: new Date(NOW - 60 * 1000),
+  ...overrides
 });
 
-const buildContext = (user, reqOverrides = {}) => ({
-  models: buildModels(user),
-  req: {
-    logIn: vi.fn((u, cb) => cb()),
-    ...reqOverrides
-  }
-});
+const req = (overrides = {}) => ({ logIn: vi.fn((u, cb) => cb()), ...overrides });
 
-describe('verifyOtp', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
+describe('verifyOtp (in-memory mongo)', () => {
+  beforeEach(() => {});
 
   it('throws 404 when no user is found', async () => {
-    const context = {
-      models: { User: { findOne: vi.fn(() => ({ select: vi.fn().mockResolvedValue(null) })) } },
-      req: {}
-    };
-
-    await expect(verifyOtp({ email: 'nope@example.com', otpCode: '123456' }, context))
-      .rejects.toMatchObject({ statusCode: 404, message: 'User not found' });
+    await expect(
+      verifyOtp({ email: 'nope@example.com', otpCode: '123456' }, { models: db.models, req: req() })
+    ).rejects.toMatchObject({ statusCode: 404, message: 'User not found' });
   });
 
   it('throws 429 when the user is locked and lock has not expired', async () => {
-    const user = buildUserDocument({
-      isLocked: true,
-      lockedUntil: new Date(FIXED_NOW.getTime() + 5 * 60 * 1000)
-    });
-    const context = buildContext(user);
-
-    await expect(verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, context))
-      .rejects.toMatchObject({ statusCode: 429 });
+    await createUser({ isLocked: true, lockedUntil: new Date(NOW + 5 * 60 * 1000) });
+    await expect(
+      verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, { models: db.models, req: req() })
+    ).rejects.toMatchObject({ statusCode: 429 });
   });
 
   it('clears the lock when it has expired and proceeds', async () => {
-    const user = buildUserDocument({
-      isLocked: true,
-      lockedUntil: new Date(FIXED_NOW.getTime() - 1000),
-      otpCode: '123456'
-    });
-    const context = buildContext(user);
-
-    await verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, context);
-
-    expect(context.models.User.findByIdAndUpdate).toHaveBeenCalledWith('user-1', {
-      isLocked: false,
-      lockedUntil: null,
-      lockReason: null,
-      otpAttempts: 0
-    });
+    const user = await createUser({ isLocked: true, lockedUntil: new Date(NOW - 1000) });
+    await verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, { models: db.models, req: req() });
+    const stored = await db.models.User.findById(user._id).lean();
+    expect(stored.isLocked).toBe(false);
   });
 
   it('throws 400 when the user has no OTP code', async () => {
-    const user = buildUserDocument({ otpCode: null });
-    const context = buildContext(user);
-
-    await expect(verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, context))
-      .rejects.toMatchObject({ statusCode: 400, message: 'No OTP found. Please request a new one.' });
+    await createUser({ otpCode: null });
+    await expect(
+      verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, { models: db.models, req: req() })
+    ).rejects.toMatchObject({ statusCode: 400, message: 'No OTP found. Please request a new one.' });
   });
 
   it('throws 400 when the OTP has expired', async () => {
-    const user = buildUserDocument({
-      otpGeneratedAt: new Date(FIXED_NOW.getTime() - 11 * 60 * 1000)
-    });
-    const context = buildContext(user);
-
-    await expect(verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, context))
-      .rejects.toMatchObject({ statusCode: 400, message: 'OTP has expired. Please request a new one.' });
+    await createUser({ otpGeneratedAt: new Date(NOW - 11 * 60 * 1000) });
+    await expect(
+      verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, { models: db.models, req: req() })
+    ).rejects.toMatchObject({ statusCode: 400, message: 'OTP has expired. Please request a new one.' });
   });
 
   it('locks the user and clears the OTP after 5 attempts', async () => {
-    const user = buildUserDocument({ otpAttempts: 5 });
-    const context = buildContext(user);
+    const user = await createUser({ otpAttempts: 5 });
+    await expect(
+      verifyOtp({ email: 'sam@example.com', otpCode: '999999' }, { models: db.models, req: req() })
+    ).rejects.toMatchObject({ statusCode: 429, message: expect.stringContaining('Too many failed attempts') });
 
-    await expect(verifyOtp({ email: 'sam@example.com', otpCode: '999999' }, context))
-      .rejects.toMatchObject({ statusCode: 429, message: expect.stringContaining('Too many failed attempts') });
-
-    expect(context.models.User.findByIdAndUpdate).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      isLocked: true,
-      lockReason: 'TOO_MANY_ATTEMPTS',
-      otpCode: null
-    }));
+    const stored = await db.models.User.findById(user._id).select('+otpCode').lean();
+    expect(stored.isLocked).toBe(true);
+    expect(stored.lockReason).toBe('TOO_MANY_ATTEMPTS');
+    expect(stored.otpCode).toBeNull();
   });
 
   it('increments otpAttempts and reports remaining attempts on a wrong code', async () => {
-    const user = buildUserDocument({ otpAttempts: 1 });
-    const context = buildContext(user);
+    const user = await createUser({ otpAttempts: 1 });
+    await expect(
+      verifyOtp({ email: 'sam@example.com', otpCode: '999999' }, { models: db.models, req: req() })
+    ).rejects.toMatchObject({ statusCode: 400, message: expect.stringContaining('3 attempt') });
 
-    await expect(verifyOtp({ email: 'sam@example.com', otpCode: '999999' }, context))
-      .rejects.toMatchObject({ statusCode: 400, message: expect.stringContaining('3 attempt') });
-
-    expect(context.models.User.findByIdAndUpdate).toHaveBeenCalledWith('user-1', { $inc: { otpAttempts: 1 } });
+    const stored = await db.models.User.findById(user._id).lean();
+    expect(stored.otpAttempts).toBe(2);
   });
 
-  it('lowercases the email when finding the user', async () => {
-    const user = buildUserDocument();
-    const context = buildContext(user);
-
-    await verifyOtp({ email: 'Sam@EXAMPLE.com', otpCode: '123456' }, context);
-
-    expect(context.models.User.findOne).toHaveBeenCalledWith({
-      email: 'sam@example.com',
-      isDeleted: false
-    });
-  });
-
-  it('logs the user in and returns the user without the otpCode field on success', async () => {
-    const user = buildUserDocument();
-    const context = buildContext(user);
-
-    const result = await verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, context);
-
-    expect(context.req.logIn).toHaveBeenCalled();
+  it('lowercases the email when finding the user and logs in on success', async () => {
+    await createUser();
+    const request = req();
+    const result = await verifyOtp({ email: 'Sam@EXAMPLE.com', otpCode: '123456' }, { models: db.models, req: request });
+    expect(request.logIn).toHaveBeenCalled();
     expect(result.otpCode).toBeUndefined();
   });
 
   it('marks the user as verified when they were not previously', async () => {
-    const user = buildUserDocument({ isVerified: false });
-    const context = buildContext(user);
-
-    await verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, context);
-
-    expect(context.models.User.findByIdAndUpdate).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      isVerified: true,
-      verifiedAt: expect.any(Date)
-    }), expect.any(Object));
+    const user = await createUser({ isVerified: false });
+    await verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, { models: db.models, req: req() });
+    const stored = await db.models.User.findById(user._id).lean();
+    expect(stored.isVerified).toBe(true);
+    expect(stored.verifiedAt).toBeInstanceOf(Date);
   });
 
   it('sets firstLoggedInAt when the user has never logged in before', async () => {
-    const user = buildUserDocument({ firstLoggedInAt: null });
-    const context = buildContext(user);
-
-    await verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, context);
-
-    expect(context.models.User.findByIdAndUpdate).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      firstLoggedInAt: expect.any(Date)
-    }), expect.any(Object));
+    const user = await createUser({ firstLoggedInAt: null });
+    await verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, { models: db.models, req: req() });
+    const stored = await db.models.User.findById(user._id).lean();
+    expect(stored.firstLoggedInAt).toBeInstanceOf(Date);
   });
 
   it('rejects with 500 when req.logIn fails', async () => {
-    const user = buildUserDocument();
-    const context = buildContext(user, {
-      logIn: vi.fn((u, cb) => cb(new Error('login failed')))
-    });
-
-    await expect(verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, context))
-      .rejects.toMatchObject({ statusCode: 500, message: 'Authentication successful but login failed' });
+    await createUser();
+    const request = req({ logIn: vi.fn((u, cb) => cb(new Error('login failed'))) });
+    await expect(
+      verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, { models: db.models, req: request })
+    ).rejects.toMatchObject({ statusCode: 500, message: 'Authentication successful but login failed' });
   });
 });

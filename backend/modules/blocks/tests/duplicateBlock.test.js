@@ -1,4 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock } = vi.hoisted(() => ({ checkAccessMock: vi.fn() }));
 
@@ -8,66 +10,52 @@ vi.mock('../../scenarios/helpers/checkHasAccessToScenario.js', () => ({
 
 import duplicateBlock from '../services/duplicateBlock.js';
 
-const FIXED_NOW = new Date('2026-05-06T12:00:00Z');
+const db = setupMongo();
 
-describe('duplicateBlock', () => {
+describe('duplicateBlock (in-memory mongo)', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
     vi.clearAllMocks();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
+    checkAccessMock.mockResolvedValue();
   });
 
   it('checks scenario access via the source block id', async () => {
-    const sourceBlock = { ref: 'block-ref-1', scenario: 's1', slideRef: 'slide-1', blockType: 'TEXT' };
-    const models = {
-      Block: {
-        findById: vi.fn().mockResolvedValue(sourceBlock),
-        create: vi.fn().mockResolvedValue([{}])
-      }
-    };
-    const ctx = { models, session: 'tx-1' };
+    const source = await db.models.Block.create({
+      scenario: new mongoose.Types.ObjectId(),
+      slideRef: new mongoose.Types.ObjectId(),
+      blockType: 'TEXT'
+    });
+    const ctx = { models: db.models };
 
-    await duplicateBlock({ blockId: 'b1', newScenarioId: 's2', newSlideRef: 'slide-2' }, ctx);
+    await duplicateBlock({ blockId: source._id, newScenarioId: new mongoose.Types.ObjectId(), newSlideRef: new mongoose.Types.ObjectId() }, ctx);
 
-    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: 'b1', modelType: 'Block' }, ctx);
+    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: source._id, modelType: 'Block' }, ctx);
   });
 
   it('creates a new block with original-* pointers and the new scenario/slideRef', async () => {
-    const sourceBlock = {
-      _id: 'b1',
-      ref: 'block-ref-1',
-      scenario: 's1',
-      slideRef: 'slide-1',
-      blockType: 'TEXT'
-    };
-    const models = {
-      Block: {
-        findById: vi.fn().mockResolvedValue(sourceBlock),
-        create: vi.fn().mockResolvedValue([{}])
-      }
-    };
+    const sourceScenario = new mongoose.Types.ObjectId();
+    const sourceSlide = new mongoose.Types.ObjectId();
+    const newScenarioId = new mongoose.Types.ObjectId();
+    const newSlideRef = new mongoose.Types.ObjectId();
+
+    const source = await db.models.Block.create({
+      scenario: sourceScenario,
+      slideRef: sourceSlide,
+      blockType: 'TEXT',
+      name: 'Source'
+    });
 
     await duplicateBlock(
-      { blockId: 'b1', newScenarioId: 's2', newSlideRef: 'slide-2' },
-      { models, session: 'tx-1' }
+      { blockId: source._id, newScenarioId, newSlideRef },
+      { models: db.models }
     );
 
-    const [docs, options] = models.Block.create.mock.calls[0];
-    expect(docs[0]).toMatchObject({
-      scenario: 's2',
-      slideRef: 'slide-2',
-      originalRef: 'block-ref-1',
-      originalSlideRef: 'slide-1',
-      originalScenario: 's1',
-      blockType: 'TEXT',
-      createdAt: FIXED_NOW
-    });
-    expect(docs[0]._id).toBeUndefined();
-    expect(docs[0].ref).toBeUndefined();
-    expect(options).toEqual({ session: 'tx-1' });
+    const duplicated = await db.models.Block.findOne({ scenario: newScenarioId, originalRef: source.ref }).lean();
+    expect(duplicated).toBeDefined();
+    expect(String(duplicated.slideRef)).toBe(String(newSlideRef));
+    expect(String(duplicated.originalSlideRef)).toBe(String(sourceSlide));
+    expect(String(duplicated.originalScenario)).toBe(String(sourceScenario));
+    expect(duplicated.blockType).toBe('TEXT');
+    expect(duplicated.name).toBe('Source');
+    expect(String(duplicated._id)).not.toBe(String(source._id));
   });
 });

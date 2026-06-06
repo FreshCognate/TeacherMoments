@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkScenarioAccessMock, getScenarioSlidesAndBlocksByRefMock, buildUserScenarioResponseMock } = vi.hoisted(() => ({
   checkScenarioAccessMock: vi.fn(),
@@ -12,62 +14,51 @@ vi.mock('../helpers/buildUserScenarioResponse.js', () => ({ default: (...args) =
 
 import getUsersResponsesByScenario from '../services/getUsersResponsesByScenario.js';
 
-const buildModels = ({ scenario = { _id: 's1' }, runs = [], users = [], count = users.length } = {}) => ({
-  Scenario: { findById: vi.fn(() => ({ lean: vi.fn().mockResolvedValue(scenario) })) },
-  Run: { find: vi.fn(() => ({ lean: vi.fn().mockResolvedValue(runs) })) },
-  User: {
-    countDocuments: vi.fn().mockResolvedValue(count),
-    find: vi.fn(() => ({ lean: vi.fn().mockResolvedValue(users) }))
-  }
-});
+const db = setupMongo();
 
-describe('getUsersResponsesByScenario', () => {
+describe('getUsersResponsesByScenario (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    checkScenarioAccessMock.mockResolvedValue();
     getScenarioSlidesAndBlocksByRefMock.mockResolvedValue({ slidesByRef: {}, blocksByRef: {} });
     buildUserScenarioResponseMock.mockResolvedValue({ blockResponses: [] });
   });
 
   it('checks scenario access', async () => {
-    const models = buildModels();
-    const ctx = { models };
-
-    await getUsersResponsesByScenario({ scenarioId: 's1' }, {}, ctx);
-
-    expect(checkScenarioAccessMock).toHaveBeenCalledWith({ modelId: 's1', modelType: 'Scenario' }, ctx);
+    const scenario = await db.models.Scenario.create({ name: 'S' });
+    const ctx = { models: db.models };
+    await getUsersResponsesByScenario({ scenarioId: scenario._id }, {}, ctx);
+    expect(checkScenarioAccessMock).toHaveBeenCalledWith({ modelId: scenario._id, modelType: 'Scenario' }, ctx);
   });
 
-  it('queries non-deleted runs for the scenario', async () => {
-    const models = buildModels();
+  it('builds one response per unique user from non-deleted runs', async () => {
+    const scenario = await db.models.Scenario.create({ name: 'S' });
+    const u1 = await db.models.User.create({ email: 'u1@x.com' });
+    const u2 = await db.models.User.create({ email: 'u2@x.com' });
+    const u3 = await db.models.User.create({ email: 'u3@x.com' });
 
-    await getUsersResponsesByScenario({ scenarioId: 's1' }, {}, { models });
+    await db.models.Run.create([
+      { scenario: scenario._id, user: u1._id },
+      { scenario: scenario._id, user: u2._id },
+      { scenario: scenario._id, user: u1._id },
+      { scenario: scenario._id, user: u3._id, isDeleted: true }
+    ]);
 
-    expect(models.Run.find).toHaveBeenCalledWith({ scenario: 's1', isDeleted: false });
-  });
+    const result = await getUsersResponsesByScenario({ scenarioId: scenario._id }, {}, { models: db.models });
 
-  it('builds the user list from unique run user ids', async () => {
-    const runs = [
-      { user: 'u1' },
-      { user: 'u2' },
-      { user: 'u1' }
-    ];
-    const models = buildModels({ runs, users: [{ _id: 'u1' }, { _id: 'u2' }] });
-
-    await getUsersResponsesByScenario({ scenarioId: 's1' }, {}, { models });
-
-    const search = models.User.countDocuments.mock.calls[0][0];
-    expect(search._id.$in).toEqual(['u1', 'u2']);
-  });
-
-  it('builds one response per user', async () => {
-    const models = buildModels({
-      runs: [{ user: 'u1' }, { user: 'u2' }],
-      users: [{ _id: 'u1' }, { _id: 'u2' }]
-    });
-
-    const result = await getUsersResponsesByScenario({ scenarioId: 's1' }, {}, { models });
-
-    expect(buildUserScenarioResponseMock).toHaveBeenCalledTimes(2);
+    // u1 + u2 only (u3's run is deleted).
     expect(result.responses).toHaveLength(2);
+    expect(buildUserScenarioResponseMock).toHaveBeenCalledTimes(2);
+    const responseUserIds = result.responses.map((r) => String(r.user._id)).sort();
+    expect(responseUserIds).toEqual([String(u1._id), String(u2._id)].sort());
+  });
+
+  it('returns pagination info', async () => {
+    const scenario = await db.models.Scenario.create({ name: 'S' });
+    const u1 = await db.models.User.create({ email: 'u1@x.com' });
+    await db.models.Run.create([{ scenario: scenario._id, user: u1._id }]);
+
+    const result = await getUsersResponsesByScenario({ scenarioId: scenario._id }, {}, { models: db.models });
+    expect(result).toMatchObject({ count: 1, currentPage: 1, totalPages: 1 });
   });
 });

@@ -1,4 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock } = vi.hoisted(() => ({ checkAccessMock: vi.fn() }));
 
@@ -8,45 +10,37 @@ vi.mock('../helpers/checkHasAccessToEditCohort.js', () => ({
 
 import updateCohortById from '../services/updateCohortById.js';
 
-const FIXED_NOW = new Date('2026-05-06T12:00:00Z');
+const db = setupMongo();
 
-const buildModel = (cohort) => {
-  const populate = vi.fn().mockResolvedValue(cohort);
-  return { findByIdAndUpdate: vi.fn(() => ({ populate })) };
-};
-
-describe('updateCohortById', () => {
+describe('updateCohortById (in-memory mongo)', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
     vi.clearAllMocks();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
+    checkAccessMock.mockResolvedValue();
   });
 
   it('applies the update with updatedBy and updatedAt', async () => {
-    const Cohort = buildModel({ _id: 'c1', name: 'New' });
+    const userId = new mongoose.Types.ObjectId();
+    const cohort = await db.models.Cohort.create({ name: 'Old' });
+
     await updateCohortById(
-      { cohortId: 'c1', update: { name: 'New' } },
+      { cohortId: cohort._id, update: { name: 'New' } },
       {},
-      { models: { Cohort }, user: { _id: 'u1' } }
+      { models: db.models, user: { _id: userId } }
     );
 
-    expect(Cohort.findByIdAndUpdate).toHaveBeenCalledWith('c1', expect.objectContaining({
-      name: 'New',
-      updatedBy: 'u1',
-      updatedAt: FIXED_NOW
-    }), { new: true });
+    const stored = await db.models.Cohort.findById(cohort._id).lean();
+    expect(stored.name).toBe('New');
+    expect(String(stored.updatedBy)).toBe(String(userId));
+    expect(stored.updatedAt).toBeInstanceOf(Date);
   });
 
   it('throws 404 when not found', async () => {
-    const Cohort = buildModel(null);
-    await expect(updateCohortById(
-      { cohortId: 'missing', update: {} },
-      {},
-      { models: { Cohort }, user: { _id: 'u1' } }
-    )).rejects.toMatchObject({ statusCode: 404 });
+    await expect(
+      updateCohortById(
+        { cohortId: new mongoose.Types.ObjectId(), update: {} },
+        {},
+        { models: db.models, user: { _id: new mongoose.Types.ObjectId() } }
+      )
+    ).rejects.toMatchObject({ statusCode: 404 });
   });
 });
