@@ -17,6 +17,19 @@ describe('checkHasAccessToScenario', () => {
     expect(findById).toHaveBeenCalledWith('m1', 'scenario');
   });
 
+  it('grants access for SUPER_ADMIN without resolving the scenario or querying collaborators', async () => {
+    const findById = vi.fn();
+    const findOne = vi.fn();
+
+    await checkHasAccessToScenario(
+      { modelId: 'm1', modelType: 'Slide' },
+      { user: { _id: 'u1', role: 'SUPER_ADMIN' }, models: { Slide: { findById }, Scenario: { findOne } } }
+    );
+
+    expect(findById).not.toHaveBeenCalled();
+    expect(findOne).not.toHaveBeenCalled();
+  });
+
   it('uses the modelId directly when modelType is Scenario', async () => {
     const findOne = vi.fn().mockResolvedValue({ _id: 's1' });
 

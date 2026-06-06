@@ -25,10 +25,10 @@ describe('checkHasAccessToViewCohort', () => {
     expect(result).toBe(true);
   });
 
-  it('grants access via collaborator role for SUPER_ADMIN even without cohort membership', async () => {
+  it('grants access for SUPER_ADMIN without any membership or collaborator lookup', async () => {
     const models = {
-      User: { findOne: vi.fn().mockResolvedValue(null) },
-      Cohort: { findOne: vi.fn().mockResolvedValue({ _id: 'cohort-1' }) }
+      User: { findOne: vi.fn() },
+      Cohort: { findOne: vi.fn() }
     };
 
     const result = await checkHasAccessToViewCohort(
@@ -36,16 +36,9 @@ describe('checkHasAccessToViewCohort', () => {
       { user: { _id: 'u1', role: 'SUPER_ADMIN' }, models }
     );
 
-    expect(models.Cohort.findOne).toHaveBeenCalledWith({
-      _id: 'cohort-1',
-      collaborators: {
-        $elemMatch: {
-          user: 'u1',
-          role: { $in: ['OWNER', 'AUTHOR'] }
-        }
-      }
-    });
     expect(result).toBe(true);
+    expect(models.User.findOne).not.toHaveBeenCalled();
+    expect(models.Cohort.findOne).not.toHaveBeenCalled();
   });
 
   it('grants access via collaborator role for ADMIN', async () => {

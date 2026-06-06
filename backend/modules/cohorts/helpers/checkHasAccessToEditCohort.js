@@ -1,7 +1,13 @@
+import hasUserGotPermissions from '#core/authentication/helpers/hasUserGotPermissions.js';
+
 export default async ({ cohortId }, { user, models }) => {
 
   if (!cohortId) {
     throw { message: 'You do not have access to this cohort', statusCode: 401 };
+  }
+
+  if (hasUserGotPermissions(user, ['SUPER_ADMIN'])) {
+    return await models.Cohort.findById(cohortId);
   }
 
   const cohort = await models.Cohort.findOne({

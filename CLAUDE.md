@@ -257,7 +257,20 @@ Common patterns:
 
 ## Testing
 
-No automated test suite is currently configured. Manual testing is required.
+The project has automated test coverage using [Vitest](https://vitest.dev/). Tests live alongside each module in `tests/` folders (e.g. `backend/modules/cohorts/tests/`) and are named `*.test.js`.
+
+```bash
+yarn test         # Run the full suite once
+yarn test:watch   # Run in watch mode
+```
+
+Conventions:
+- Use Vitest (`import { describe, it, expect, vi } from 'vitest'`)
+- Co-locate tests in the module's `tests/` directory, named `<unit>.test.js`
+- Unit-test services and helpers by passing mocked `models` (via `vi.fn()`) in the `context` argument rather than hitting a real database
+- When changing a service or helper, update or add the matching test in its `tests/` folder
+
+Add tests for new services, helpers, and controllers, and keep existing tests green.
 
 ## Common Tasks
 

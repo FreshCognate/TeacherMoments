@@ -24,13 +24,20 @@ describe('getScenarios', () => {
     expect(search.$or).toEqual([{ name: { $regex: 'spring', $options: 'i' } }]);
   });
 
-  it('always filters by user collaborator role', async () => {
+  it('filters by user collaborator role for non-super-admins', async () => {
     const models = buildModels();
     await getScenarios({}, {}, { models, user: baseUser });
     const search = models.Scenario.countDocuments.mock.calls[0][0];
     expect(search.collaborators).toEqual({
       $elemMatch: { user: 'u1', role: { $in: ['OWNER', 'AUTHOR'] } }
     });
+  });
+
+  it('does not filter by collaborator role for SUPER_ADMIN', async () => {
+    const models = buildModels();
+    await getScenarios({}, {}, { models, user: { ...baseUser, role: 'SUPER_ADMIN' } });
+    const search = models.Scenario.countDocuments.mock.calls[0][0];
+    expect(search.collaborators).toBeUndefined();
   });
 
   it('filters by accessType when provided', async () => {

@@ -44,13 +44,29 @@ describe('getCohorts', () => {
     expect(userCohorts).toEqual({ _id: { $in: ['c1', 'c2'] } });
   });
 
-  it('adds a collaborator branch to the access filter for SUPER_ADMIN/ADMIN/FACILITATOR', async () => {
+  it('adds a collaborator branch to the access filter for ADMIN/FACILITATOR', async () => {
     const models = buildModels();
     await getCohorts({}, {}, { models, user: { ...baseUser, role: 'ADMIN' } });
     const search = models.Cohort.countDocuments.mock.calls[0][0];
     const collabBranch = search.$or.find((c) => c.collaborators);
     expect(collabBranch).toBeDefined();
     expect(collabBranch.collaborators.$elemMatch.user).toBe('u1');
+  });
+
+  it('applies no access filter for SUPER_ADMIN', async () => {
+    const models = buildModels();
+    await getCohorts({}, {}, { models, user: { ...baseUser, role: 'SUPER_ADMIN' } });
+    const search = models.Cohort.countDocuments.mock.calls[0][0];
+    expect(search.$or).toBeUndefined();
+    expect(search.$and).toBeUndefined();
+  });
+
+  it('still applies the search term for SUPER_ADMIN without an access filter', async () => {
+    const models = buildModels();
+    await getCohorts({}, { searchValue: 'spring' }, { models, user: { ...baseUser, role: 'SUPER_ADMIN' } });
+    const search = models.Cohort.countDocuments.mock.calls[0][0];
+    expect(search.$and).toBeUndefined();
+    expect(search.$or).toEqual([{ name: { $regex: 'spring', $options: 'i' } }]);
   });
 
   it('does not add a collaborator branch for plain USERs', async () => {
