@@ -1,19 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { setupMongo } from '../../../../tests/with-mongo.js';
-
-const { uuidV4Mock } = vi.hoisted(() => ({ uuidV4Mock: vi.fn() }));
-
-vi.mock('node-uuid', () => ({ default: { v4: () => uuidV4Mock() } }));
 
 import registerAuthoringUser from '../services/registerAuthoringUser.js';
 
 const db = setupMongo();
 
 describe('registerAuthoringUser (in-memory mongo)', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    uuidV4Mock.mockReturnValue('uuid-1234');
-  });
+  beforeEach(() => {});
 
   it('throws 400 when the email already exists', async () => {
     await db.models.User.create({ email: 'sam@example.com', role: 'ADMIN' });
@@ -32,6 +25,8 @@ describe('registerAuthoringUser (in-memory mongo)', () => {
     expect(stored.email).toBe('sam@example.com');
     expect(stored.role).toBe('ADMIN');
     expect(stored.createdAt).toBeInstanceOf(Date);
+    expect(stored.registeredAt).toBeInstanceOf(Date);
+    expect(stored.registrationId).toBeUndefined();
   });
 
   it('returns the created user', async () => {

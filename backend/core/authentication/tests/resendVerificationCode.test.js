@@ -68,4 +68,34 @@ describe('resendVerificationCode (auth, in-memory mongo)', () => {
 
     expect(sendEmailMock).not.toHaveBeenCalled();
   });
+
+  it('increments the request count within the 15-minute window and records lastOtpSentAt', async () => {
+    const user = await db.models.User.create({
+      email: 'sam@example.com',
+      isVerified: false,
+      otpRequestCount: 2,
+      otpRequestWindowStart: new Date(Date.now() - 5 * 60 * 1000)
+    });
+
+    await resendVerificationCode({ email: 'sam@example.com' }, {}, { models: db.models });
+
+    const stored = await db.models.User.findById(user._id).lean();
+    expect(stored.otpRequestCount).toBe(3);
+    expect(stored.otpRequestWindowStart).toBeInstanceOf(Date);
+    expect(stored.lastOtpSentAt).toBeInstanceOf(Date);
+  });
+
+  it('starts a fresh window when the previous one has expired', async () => {
+    const user = await db.models.User.create({
+      email: 'sam@example.com',
+      isVerified: false,
+      otpRequestCount: 4,
+      otpRequestWindowStart: new Date(Date.now() - 20 * 60 * 1000)
+    });
+
+    await resendVerificationCode({ email: 'sam@example.com' }, {}, { models: db.models });
+
+    const stored = await db.models.User.findById(user._id).lean();
+    expect(stored.otpRequestCount).toBe(1);
+  });
 });
