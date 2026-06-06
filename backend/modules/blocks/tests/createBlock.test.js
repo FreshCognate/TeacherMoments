@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock, setScenarioHasChangesMock } = vi.hoisted(() => ({
   checkAccessMock: vi.fn(),
@@ -8,74 +10,54 @@ const { checkAccessMock, setScenarioHasChangesMock } = vi.hoisted(() => ({
 vi.mock('../../scenarios/helpers/checkHasAccessToScenario.js', () => ({
   default: (...args) => checkAccessMock(...args)
 }));
-
 vi.mock('../../scenarios/services/setScenarioHasChanges.js', () => ({
   default: (...args) => setScenarioHasChangesMock(...args)
 }));
 
 import createBlock from '../services/createBlock.js';
 
-const buildModels = (existingBlocks = [], created = { _id: 'new-block' }) => ({
-  Block: {
-    find: vi.fn().mockResolvedValue(existingBlocks),
-    create: vi.fn().mockResolvedValue(created)
-  }
-});
+const db = setupMongo();
 
-const buildContext = (modelsOverride = {}) => ({
-  user: { _id: 'user-1' },
-  models: { ...buildModels(), ...modelsOverride }
-});
-
-describe('createBlock', () => {
+describe('createBlock (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    checkAccessMock.mockResolvedValue();
   });
 
   it('checks scenario access before creating', async () => {
-    const ctx = buildContext();
-    await createBlock({ scenario: 's1', slideRef: 'slide-1', blockType: 'TEXT' }, {}, ctx);
-
-    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: 's1', modelType: 'Scenario' }, ctx);
+    const scenario = new mongoose.Types.ObjectId();
+    const ctx = { user: { _id: new mongoose.Types.ObjectId() }, models: db.models };
+    await createBlock({ scenario, slideRef: new mongoose.Types.ObjectId(), blockType: 'TEXT' }, {}, ctx);
+    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: scenario, modelType: 'Scenario' }, ctx);
   });
 
-  it('finds existing non-deleted blocks for the slide', async () => {
-    const models = buildModels([{ _id: 'b1' }]);
-    const ctx = { user: { _id: 'user-1' }, models };
+  it('uses the existing block count for the slide as the new sortOrder', async () => {
+    const userId = new mongoose.Types.ObjectId();
+    const scenario = new mongoose.Types.ObjectId();
+    const slideRef = new mongoose.Types.ObjectId();
 
-    await createBlock({ scenario: 's1', slideRef: 'slide-1', blockType: 'TEXT' }, {}, ctx);
+    await db.models.Block.create([
+      { scenario, slideRef, sortOrder: 0, name: 'A' },
+      { scenario, slideRef, sortOrder: 1, name: 'B' }
+    ]);
 
-    expect(models.Block.find).toHaveBeenCalledWith({ scenario: 's1', slideRef: 'slide-1', isDeleted: false });
-  });
+    const block = await createBlock(
+      { scenario, slideRef, blockType: 'TEXT' },
+      {},
+      { user: { _id: userId }, models: db.models }
+    );
 
-  it('uses the existing block count as the new sortOrder', async () => {
-    const models = buildModels([{ _id: 'b1' }, { _id: 'b2' }]);
-    const ctx = { user: { _id: 'user-1' }, models };
-
-    await createBlock({ scenario: 's1', slideRef: 'slide-1', blockType: 'TEXT' }, {}, ctx);
-
-    expect(models.Block.create).toHaveBeenCalledWith(expect.objectContaining({
-      sortOrder: 2,
-      scenario: 's1',
-      slideRef: 'slide-1',
-      blockType: 'TEXT',
-      createdBy: 'user-1'
-    }));
+    expect(block.sortOrder).toBe(2);
+    expect(block.blockType).toBe('TEXT');
+    expect(String(block.scenario)).toBe(String(scenario));
+    expect(String(block.slideRef)).toBe(String(slideRef));
+    expect(String(block.createdBy)).toBe(String(userId));
   });
 
   it('marks the scenario as having changes', async () => {
-    const ctx = buildContext();
-    await createBlock({ scenario: 's1', slideRef: 'slide-1', blockType: 'TEXT' }, {}, ctx);
-
-    expect(setScenarioHasChangesMock).toHaveBeenCalledWith({ scenarioId: 's1' }, {}, ctx);
-  });
-
-  it('returns the created block', async () => {
-    const created = { _id: 'new-block', scenario: 's1' };
-    const models = buildModels([], created);
-    const ctx = { user: { _id: 'user-1' }, models };
-
-    const result = await createBlock({ scenario: 's1', slideRef: 'slide-1', blockType: 'TEXT' }, {}, ctx);
-    expect(result).toBe(created);
+    const scenario = new mongoose.Types.ObjectId();
+    const ctx = { user: { _id: new mongoose.Types.ObjectId() }, models: db.models };
+    await createBlock({ scenario, slideRef: new mongoose.Types.ObjectId(), blockType: 'TEXT' }, {}, ctx);
+    expect(setScenarioHasChangesMock).toHaveBeenCalledWith({ scenarioId: scenario }, {}, ctx);
   });
 });

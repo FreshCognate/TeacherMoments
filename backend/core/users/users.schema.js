@@ -13,11 +13,14 @@ const userSchema = {
   otpAttempts: { type: Number, default: 0 },
   otpRequestCount: { type: Number, default: 0 },
   otpGeneratedAt: { type: Date },
+  otpRequestWindowStart: { type: Date },
+  lastOtpSentAt: { type: Date },
   isLocked: { type: Boolean, default: false },
   lockedUntil: { type: Date },
   lockReason: { type: String, enum: ['TOO_MANY_ATTEMPTS', 'TOO_MANY_REQUESTS'] },
   isVerified: { type: Boolean, default: false },
   verifiedAt: { type: Date },
+  registeredAt: { type: Date },
   cohorts: [{
     _id: false,
     cohort: {

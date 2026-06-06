@@ -24,10 +24,6 @@ class CreateStemsContainer extends Component {
     return filter(this.props.stems.data, { slideRef: this.props.slideRef });
   }
 
-  getSlideCountForStem = (stemRef) => {
-    return filter(this.props.slides.data, { stemRef }).length;
-  }
-
   onStemClicked = (stemRef) => {
     this.props.editor.set({ activeStemRef: stemRef });
     const stemSlides = filter(this.props.slides.data, { stemRef });
@@ -105,13 +101,14 @@ class CreateStemsContainer extends Component {
   render() {
     const { isCreating, deletingId } = this.state;
     const childStems = this.getChildStems();
+    const activeStemRef = this.getActiveStemRef();
     return (
       <CreateStems
+        activeStemRef={activeStemRef}
         childStems={childStems}
         isCreating={isCreating}
         isInRootStem={this.props.isInRootStem}
         deletingId={deletingId}
-        getSlideCountForStem={this.getSlideCountForStem}
         onEditStemClicked={this.onEditStemClicked}
         onDeleteStemClicked={this.onDeleteStemClicked}
         onStemClicked={this.onStemClicked}

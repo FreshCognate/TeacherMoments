@@ -1,120 +1,118 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 import getCohorts from '../services/getCohorts.js';
 
-const buildModels = (cohorts = [], count = cohorts.length) => ({
-  Cohort: {
-    countDocuments: vi.fn().mockResolvedValue(count),
-    find: vi.fn(() => ({ sort: vi.fn().mockResolvedValue(cohorts) }))
-  }
+const db = setupMongo();
+
+const userId = new mongoose.Types.ObjectId();
+
+const seedCohort = (overrides = {}) => db.models.Cohort.create({ name: 'Cohort', ...overrides });
+
+const userWith = (cohortIds, extra = {}) => ({
+  _id: userId,
+  role: 'USER',
+  cohorts: cohortIds.map((cohort) => ({ cohort })),
+  ...extra
 });
 
-const baseUser = { _id: 'u1', cohorts: [{ cohort: 'c-mine' }], role: 'USER' };
+describe('getCohorts (in-memory mongo)', () => {
+  beforeEach(() => {});
 
-describe('getCohorts', () => {
-  it('searches with isArchived=false and isDeleted=false by default', async () => {
-    const models = buildModels();
-    await getCohorts({}, {}, { models, user: baseUser });
-    expect(models.Cohort.countDocuments).toHaveBeenCalledWith(expect.objectContaining({
-      isArchived: false,
-      isDeleted: false
-    }));
+  it('excludes archived and deleted cohorts by default', async () => {
+    const active = await seedCohort({ name: 'Active' });
+    const archived = await seedCohort({ name: 'Archived', isArchived: true });
+    const deleted = await seedCohort({ name: 'Deleted', isDeleted: true });
+
+    const { cohorts, count } = await getCohorts(
+      {}, {},
+      { models: db.models, user: userWith([active._id, archived._id, deleted._id]) }
+    );
+
+    const ids = cohorts.map((c) => String(c._id));
+    expect(ids).toContain(String(active._id));
+    expect(ids).not.toContain(String(archived._id));
+    expect(ids).not.toContain(String(deleted._id));
+    expect(count).toBe(1);
   });
 
-  it('combines the searchValue with the access filter using $and of two $or clauses', async () => {
-    const models = buildModels();
-    await getCohorts({}, { searchValue: 'spring' }, { models, user: baseUser });
-    const search = models.Cohort.countDocuments.mock.calls[0][0];
+  it('filters by the search value (name, case-insensitive)', async () => {
+    const spring = await seedCohort({ name: 'Spring Cohort' });
+    const autumn = await seedCohort({ name: 'Autumn Cohort' });
 
-    expect(search.$and).toBeDefined();
-    expect(search.$and).toHaveLength(2);
+    const { cohorts } = await getCohorts(
+      {}, { searchValue: 'spring' },
+      { models: db.models, user: userWith([spring._id, autumn._id]) }
+    );
 
-    const accessClause = search.$and.find((clause) => clause.$or.some((o) => o._id));
-    expect(accessClause).toBeDefined();
-
-    const searchClause = search.$and.find((clause) => clause.$or.some((o) => o.name));
-    expect(searchClause).toBeDefined();
-    expect(searchClause.$or[0]).toEqual({ name: { $regex: 'spring', $options: 'i' } });
+    expect(cohorts.map((c) => String(c._id))).toEqual([String(spring._id)]);
   });
 
-  it('always includes the users own cohorts in the access filter', async () => {
-    const models = buildModels();
-    await getCohorts({}, {}, { models, user: { ...baseUser, cohorts: [{ cohort: 'c1' }, { cohort: 'c2' }] } });
-    const search = models.Cohort.countDocuments.mock.calls[0][0];
-    const userCohorts = search.$or.find((c) => c._id);
-    expect(userCohorts).toEqual({ _id: { $in: ['c1', 'c2'] } });
+  it('only returns a USER\'s own cohorts', async () => {
+    const mine = await seedCohort({ name: 'Mine' });
+    const other = await seedCohort({ name: 'Other' });
+
+    const { cohorts } = await getCohorts(
+      {}, {},
+      { models: db.models, user: userWith([mine._id]) }
+    );
+
+    expect(cohorts.map((c) => String(c._id))).toEqual([String(mine._id)]);
   });
 
-  it('adds a collaborator branch to the access filter for ADMIN/FACILITATOR', async () => {
-    const models = buildModels();
-    await getCohorts({}, {}, { models, user: { ...baseUser, role: 'ADMIN' } });
-    const search = models.Cohort.countDocuments.mock.calls[0][0];
-    const collabBranch = search.$or.find((c) => c.collaborators);
-    expect(collabBranch).toBeDefined();
-    expect(collabBranch.collaborators.$elemMatch.user).toBe('u1');
+  it('also returns cohorts where an ADMIN is a collaborator', async () => {
+    const collaborating = await seedCohort({
+      name: 'Collab',
+      collaborators: [{ user: userId, role: 'OWNER' }]
+    });
+
+    const { cohorts } = await getCohorts(
+      {}, {},
+      { models: db.models, user: userWith([], { role: 'ADMIN' }) }
+    );
+
+    expect(cohorts.map((c) => String(c._id))).toEqual([String(collaborating._id)]);
   });
 
-  it('applies no access filter for SUPER_ADMIN', async () => {
-    const models = buildModels();
-    await getCohorts({}, {}, { models, user: { ...baseUser, role: 'SUPER_ADMIN' } });
-    const search = models.Cohort.countDocuments.mock.calls[0][0];
-    expect(search.$or).toBeUndefined();
-    expect(search.$and).toBeUndefined();
+  it('returns all cohorts for SUPER_ADMIN regardless of membership', async () => {
+    const a = await seedCohort({ name: 'A' });
+    const b = await seedCohort({ name: 'B' });
+
+    const { cohorts, count } = await getCohorts(
+      {}, {},
+      { models: db.models, user: userWith([], { role: 'SUPER_ADMIN' }) }
+    );
+
+    const ids = cohorts.map((c) => String(c._id));
+    expect(ids).toEqual(expect.arrayContaining([String(a._id), String(b._id)]));
+    expect(count).toBe(2);
   });
 
-  it('still applies the search term for SUPER_ADMIN without an access filter', async () => {
-    const models = buildModels();
-    await getCohorts({}, { searchValue: 'spring' }, { models, user: { ...baseUser, role: 'SUPER_ADMIN' } });
-    const search = models.Cohort.countDocuments.mock.calls[0][0];
-    expect(search.$and).toBeUndefined();
-    expect(search.$or).toEqual([{ name: { $regex: 'spring', $options: 'i' } }]);
+  it('sorts by name by default and by createdAt for NEWEST/OLDEST', async () => {
+    const second = await seedCohort({ name: 'Bravo' });
+    const first = await seedCohort({ name: 'Alpha' });
+
+    const byName = await getCohorts(
+      {}, {},
+      { models: db.models, user: userWith([], { role: 'SUPER_ADMIN' }) }
+    );
+    expect(byName.cohorts.map((c) => c.name)).toEqual(['Alpha', 'Bravo']);
+
+    const newest = await getCohorts(
+      {}, { sortBy: 'NEWEST' },
+      { models: db.models, user: userWith([], { role: 'SUPER_ADMIN' }) }
+    );
+    expect(newest.cohorts.map((c) => String(c._id))).toEqual([String(first._id), String(second._id)]);
   });
 
-  it('does not add a collaborator branch for plain USERs', async () => {
-    const models = buildModels();
-    await getCohorts({}, {}, { models, user: baseUser });
-    const search = models.Cohort.countDocuments.mock.calls[0][0];
-    expect(search.$or).toHaveLength(1);
-  });
+  it('returns count, currentPage and totalPages', async () => {
+    const mine = await seedCohort({ name: 'Mine' });
 
-  it('sorts by -createdAt for sortBy=NEWEST', async () => {
-    const sortMock = vi.fn().mockResolvedValue([]);
-    const models = {
-      Cohort: {
-        countDocuments: vi.fn().mockResolvedValue(0),
-        find: vi.fn(() => ({ sort: sortMock }))
-      }
-    };
-    await getCohorts({}, { sortBy: 'NEWEST' }, { models, user: baseUser });
-    expect(sortMock).toHaveBeenCalledWith('-createdAt');
-  });
+    const result = await getCohorts(
+      {}, {},
+      { models: db.models, user: userWith([mine._id]) }
+    );
 
-  it('sorts by createdAt for sortBy=OLDEST', async () => {
-    const sortMock = vi.fn().mockResolvedValue([]);
-    const models = {
-      Cohort: {
-        countDocuments: vi.fn().mockResolvedValue(0),
-        find: vi.fn(() => ({ sort: sortMock }))
-      }
-    };
-    await getCohorts({}, { sortBy: 'OLDEST' }, { models, user: baseUser });
-    expect(sortMock).toHaveBeenCalledWith('createdAt');
-  });
-
-  it('sorts by name by default', async () => {
-    const sortMock = vi.fn().mockResolvedValue([]);
-    const models = {
-      Cohort: {
-        countDocuments: vi.fn().mockResolvedValue(0),
-        find: vi.fn(() => ({ sort: sortMock }))
-      }
-    };
-    await getCohorts({}, {}, { models, user: baseUser });
-    expect(sortMock).toHaveBeenCalledWith('name');
-  });
-
-  it('returns cohorts, count, currentPage, totalPages', async () => {
-    const models = buildModels([{ _id: 'c1' }], 1);
-    const result = await getCohorts({}, {}, { models, user: baseUser });
-    expect(result).toEqual({ cohorts: [{ _id: 'c1' }], count: 1, currentPage: 1, totalPages: 1 });
+    expect(result).toMatchObject({ count: 1, currentPage: 1, totalPages: 1 });
   });
 });

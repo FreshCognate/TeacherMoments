@@ -1,4 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock } = vi.hoisted(() => ({ checkAccessMock: vi.fn() }));
 
@@ -8,40 +10,36 @@ vi.mock('../helpers/checkHasAccessToEditCohort.js', () => ({
 
 import restoreCohortById from '../services/restoreCohortById.js';
 
-const FIXED_NOW = new Date('2026-05-06T12:00:00Z');
+const db = setupMongo();
 
-const buildModel = (cohort) => {
-  const populate = vi.fn().mockResolvedValue(cohort);
-  return { findByIdAndUpdate: vi.fn(() => ({ populate })) };
-};
-
-describe('restoreCohortById', () => {
+describe('restoreCohortById (in-memory mongo)', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
     vi.clearAllMocks();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
+    checkAccessMock.mockResolvedValue();
   });
 
   it('clears the deletion fields', async () => {
-    const Cohort = buildModel({ _id: 'c1' });
-    await restoreCohortById({ cohortId: 'c1' }, {}, { models: { Cohort }, user: { _id: 'u1' } });
+    const userId = new mongoose.Types.ObjectId();
+    const cohort = await db.models.Cohort.create({
+      name: 'C',
+      isDeleted: true,
+      deletedAt: new Date(),
+      deletedBy: new mongoose.Types.ObjectId()
+    });
 
-    expect(Cohort.findByIdAndUpdate).toHaveBeenCalledWith('c1', {
-      isDeleted: false,
-      deletedAt: null,
-      deletedBy: null,
-      updatedAt: FIXED_NOW,
-      updatedBy: 'u1'
-    }, { new: true });
+    await restoreCohortById({ cohortId: cohort._id }, {}, { models: db.models, user: { _id: userId } });
+
+    const stored = await db.models.Cohort.findById(cohort._id).lean();
+    expect(stored.isDeleted).toBe(false);
+    expect(stored.deletedAt).toBeNull();
+    expect(stored.deletedBy).toBeNull();
+    expect(String(stored.updatedBy)).toBe(String(userId));
+    expect(stored.updatedAt).toBeInstanceOf(Date);
   });
 
   it('throws 404 when not found', async () => {
-    const Cohort = buildModel(null);
-    await expect(restoreCohortById({ cohortId: 'missing' }, {}, { models: { Cohort }, user: { _id: 'u1' } }))
-      .rejects.toMatchObject({ statusCode: 404 });
+    await expect(
+      restoreCohortById({ cohortId: new mongoose.Types.ObjectId() }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId() } })
+    ).rejects.toMatchObject({ statusCode: 404 });
   });
 });

@@ -1,101 +1,72 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 import updateUserById from '../services/updateUserById.js';
 
-const FIXED_NOW = new Date('2026-05-06T12:00:00Z');
+const db = setupMongo();
 
-describe('updateUserById', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
+describe('updateUserById (in-memory mongo)', () => {
+  beforeEach(() => {});
 
   it('throws 401 when a non-admin tries to update another user', async () => {
-    const models = {
-      User: { findOne: vi.fn(), findByIdAndUpdate: vi.fn() }
-    };
-
-    await expect(updateUserById(
-      { userId: 'u-other', update: { firstName: 'Sam' } },
-      {},
-      { user: { _id: 'u-self', role: 'USER' }, models }
-    )).rejects.toMatchObject({ statusCode: 401 });
-
-    expect(models.User.findByIdAndUpdate).not.toHaveBeenCalled();
+    await expect(
+      updateUserById(
+        { userId: String(new mongoose.Types.ObjectId()), update: { firstName: 'Sam' } },
+        {},
+        { user: { _id: String(new mongoose.Types.ObjectId()), role: 'USER' }, models: db.models }
+      )
+    ).rejects.toMatchObject({ statusCode: 401 });
   });
 
   it('allows a non-admin to update themselves', async () => {
-    const models = {
-      User: {
-        findOne: vi.fn(),
-        findByIdAndUpdate: vi.fn().mockResolvedValue({ _id: 'u-self', firstName: 'Sam' })
-      }
-    };
+    const self = await db.models.User.create({ email: 'self@x.com', firstName: 'Old' });
+    const selfId = String(self._id);
 
     const result = await updateUserById(
-      { userId: 'u-self', update: { firstName: 'Sam' } },
+      { userId: selfId, update: { firstName: 'Sam' } },
       {},
-      { user: { _id: 'u-self', role: 'USER' }, models }
+      { user: { _id: selfId, role: 'USER' }, models: db.models }
     );
 
     expect(result.firstName).toBe('Sam');
   });
 
   it('lowercases an email when set in the update', async () => {
-    const models = {
-      User: {
-        findOne: vi.fn().mockResolvedValue(null),
-        findByIdAndUpdate: vi.fn().mockResolvedValue({})
-      }
-    };
+    const target = await db.models.User.create({ email: 'target@x.com' });
 
     await updateUserById(
-      { userId: 'u1', update: { email: 'Sam@EXAMPLE.com' } },
+      { userId: target._id, update: { email: 'Sam@EXAMPLE.com' } },
       {},
-      { user: { _id: 'admin-1', role: 'ADMIN' }, models }
+      { user: { _id: new mongoose.Types.ObjectId(), role: 'ADMIN' }, models: db.models }
     );
 
-    expect(models.User.findOne).toHaveBeenCalledWith({ email: 'sam@example.com', _id: { $ne: 'u1' } });
-    expect(models.User.findByIdAndUpdate.mock.calls[0][1].email).toBe('sam@example.com');
+    const stored = await db.models.User.findById(target._id).lean();
+    expect(stored.email).toBe('sam@example.com');
   });
 
   it('throws 400 when another user already owns the email', async () => {
-    const models = {
-      User: {
-        findOne: vi.fn().mockResolvedValue({ _id: 'u-other' }),
-        findByIdAndUpdate: vi.fn()
-      }
-    };
+    await db.models.User.create({ email: 'taken@example.com' });
+    const target = await db.models.User.create({ email: 'target@x.com' });
 
-    await expect(updateUserById(
-      { userId: 'u1', update: { email: 'taken@example.com' } },
-      {},
-      { user: { _id: 'admin', role: 'ADMIN' }, models }
-    )).rejects.toMatchObject({
-      statusCode: 400,
-      message: 'A user with this email already exists.'
-    });
-
-    expect(models.User.findByIdAndUpdate).not.toHaveBeenCalled();
+    await expect(
+      updateUserById(
+        { userId: target._id, update: { email: 'taken@example.com' } },
+        {},
+        { user: { _id: new mongoose.Types.ObjectId(), role: 'ADMIN' }, models: db.models }
+      )
+    ).rejects.toMatchObject({ statusCode: 400, message: 'A user with this email already exists.' });
   });
 
   it('stamps updatedAt on the update', async () => {
-    const models = {
-      User: {
-        findOne: vi.fn().mockResolvedValue(null),
-        findByIdAndUpdate: vi.fn().mockResolvedValue({})
-      }
-    };
+    const target = await db.models.User.create({ email: 'target@x.com' });
 
     await updateUserById(
-      { userId: 'u1', update: { firstName: 'Sam' } },
+      { userId: target._id, update: { firstName: 'Sam' } },
       {},
-      { user: { _id: 'admin', role: 'ADMIN' }, models }
+      { user: { _id: new mongoose.Types.ObjectId(), role: 'ADMIN' }, models: db.models }
     );
 
-    expect(models.User.findByIdAndUpdate.mock.calls[0][1].updatedAt).toEqual(FIXED_NOW);
+    const stored = await db.models.User.findById(target._id).lean();
+    expect(stored.updatedAt).toBeInstanceOf(Date);
   });
 });

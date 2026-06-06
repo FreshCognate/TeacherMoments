@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
-const { getUploadSignedUrlMock } = vi.hoisted(() => ({
-  getUploadSignedUrlMock: vi.fn()
-}));
+const { getUploadSignedUrlMock } = vi.hoisted(() => ({ getUploadSignedUrlMock: vi.fn() }));
 
 vi.mock('../helpers/getUploadSignedUrl.js', () => ({
   default: (...args) => getUploadSignedUrlMock(...args)
@@ -10,81 +10,52 @@ vi.mock('../helpers/getUploadSignedUrl.js', () => ({
 
 import createAsset from '../services/createAsset.js';
 
-const buildModels = (created = {}) => ({
-  Asset: { create: vi.fn().mockResolvedValue({ _id: 'asset-1', ...created }) }
-});
+const db = setupMongo();
 
-describe('createAsset', () => {
+describe('createAsset (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     getUploadSignedUrlMock.mockResolvedValue('https://signed.example.com/upload');
   });
 
-  it('creates the asset with sanitized name, fileType, extension, and isUploading=true', async () => {
-    const models = buildModels();
-
-    await createAsset(
+  it('creates the asset with sanitized name, fileType, extension and isUploading=true', async () => {
+    const result = await createAsset(
       { name: 'my photo.png', width: 100, height: 200, orientation: 'landscape', mimetype: 'image/png', isTemporary: false },
       {},
-      { models, user: { _id: 'user-1' } }
+      { models: db.models, user: { _id: new mongoose.Types.ObjectId() } }
     );
 
-    expect(models.Asset.create).toHaveBeenCalledWith({
-      name: 'my_photo',
-      fileType: 'image',
-      extension: 'png',
-      createdBy: 'user-1',
-      isUploading: true,
-      width: 100,
-      height: 200,
-      orientation: 'landscape',
-      mimetype: 'image/png',
-      isTemporary: false
-    });
+    const stored = await db.models.Asset.findById(result.asset._id).lean();
+    expect(stored.name).toBe('my_photo');
+    expect(stored.fileType).toBe('image');
+    expect(stored.extension).toBe('png');
+    expect(stored.isUploading).toBe(true);
+    expect(stored.width).toBe(100);
   });
 
-  it('signs an upload URL using the constructed asset path', async () => {
-    const models = buildModels();
-
-    await createAsset(
-      { name: 'photo.png', mimetype: 'image/png' },
-      {},
-      { models, user: { _id: 'user-1' } }
-    );
-
-    expect(getUploadSignedUrlMock).toHaveBeenCalledWith({
-      assetPath: 'assets/images/asset-1/original/photo.png',
-      ACL: 'public-read',
-      ContentType: 'image/png'
-    });
-  });
-
-  it('returns the created asset and signed URL', async () => {
-    const models = buildModels();
-
+  it('signs an upload URL using the constructed asset path and returns asset + signedUrl', async () => {
     const result = await createAsset(
       { name: 'photo.png', mimetype: 'image/png' },
       {},
-      { models, user: { _id: 'user-1' } }
+      { models: db.models, user: { _id: new mongoose.Types.ObjectId() } }
     );
 
-    expect(result).toEqual({
-      asset: { _id: 'asset-1' },
-      signedUrl: 'https://signed.example.com/upload'
+    expect(getUploadSignedUrlMock).toHaveBeenCalledWith({
+      assetPath: `assets/images/${result.asset._id}/original/photo.png`,
+      ACL: 'public-read',
+      ContentType: 'image/png'
     });
+    expect(result.signedUrl).toBe('https://signed.example.com/upload');
   });
 
-  it('handles filenames containing dots correctly when stripping the extension', async () => {
-    const models = buildModels();
-
-    await createAsset(
+  it('handles filenames containing dots when stripping the extension', async () => {
+    const result = await createAsset(
       { name: 'my.photo.with.dots.png', mimetype: 'image/png' },
       {},
-      { models, user: { _id: 'user-1' } }
+      { models: db.models, user: { _id: new mongoose.Types.ObjectId() } }
     );
 
-    expect(models.Asset.create).toHaveBeenCalledWith(expect.objectContaining({
-      name: 'my.photo.with.dots'
-    }));
+    const stored = await db.models.Asset.findById(result.asset._id).lean();
+    expect(stored.name).toBe('my.photo.with.dots');
   });
 });

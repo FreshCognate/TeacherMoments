@@ -1,53 +1,41 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 import getScenarioByPublishLink from '../services/getScenarioByPublishLink.js';
 
-describe('getScenarioByPublishLink', () => {
-  it('queries Published_Scenario by publishLink and isDeleted=false', async () => {
-    const Published_Scenario = {
-      findOne: vi.fn().mockResolvedValue({ _id: 's1', isPublished: true })
-    };
+const db = setupMongo();
 
-    await getScenarioByPublishLink(
-      { publishLink: 'happy-fox' },
-      {},
-      { models: { Published_Scenario } }
+describe('getScenarioByPublishLink (in-memory mongo)', () => {
+  beforeEach(() => {});
+
+  it('returns the published scenario matching the publishLink', async () => {
+    const scenario = await db.models.Published_Scenario.create({
+      name: 'S',
+      publishLink: 'happy-fox',
+      isPublished: true
+    });
+
+    const result = await getScenarioByPublishLink(
+      { publishLink: 'happy-fox' }, {}, { models: db.models }
     );
 
-    expect(Published_Scenario.findOne).toHaveBeenCalledWith({ publishLink: 'happy-fox', isDeleted: false });
+    expect(String(result._id)).toBe(String(scenario._id));
   });
 
   it('throws 404 with shouldRedirectToScenarios when no scenario matches', async () => {
-    const Published_Scenario = { findOne: vi.fn().mockResolvedValue(null) };
-
-    await expect(getScenarioByPublishLink(
-      { publishLink: 'missing' },
-      {},
-      { models: { Published_Scenario } }
-    )).rejects.toMatchObject({ statusCode: 404, shouldRedirectToScenarios: true });
+    await expect(
+      getScenarioByPublishLink({ publishLink: 'missing' }, {}, { models: db.models })
+    ).rejects.toMatchObject({ statusCode: 404, shouldRedirectToScenarios: true });
   });
 
   it('throws 404 when the scenario exists but is not published', async () => {
-    const Published_Scenario = {
-      findOne: vi.fn().mockResolvedValue({ _id: 's1', isPublished: false })
-    };
+    await db.models.Published_Scenario.create({
+      name: 'S',
+      publishLink: 'happy-fox',
+      isPublished: false
+    });
 
-    await expect(getScenarioByPublishLink(
-      { publishLink: 'happy-fox' },
-      {},
-      { models: { Published_Scenario } }
-    )).rejects.toMatchObject({ statusCode: 404, shouldRedirectToScenarios: true });
-  });
-
-  it('returns the scenario when found and published', async () => {
-    const scenario = { _id: 's1', isPublished: true };
-    const Published_Scenario = { findOne: vi.fn().mockResolvedValue(scenario) };
-
-    const result = await getScenarioByPublishLink(
-      { publishLink: 'happy-fox' },
-      {},
-      { models: { Published_Scenario } }
-    );
-
-    expect(result).toBe(scenario);
+    await expect(
+      getScenarioByPublishLink({ publishLink: 'happy-fox' }, {}, { models: db.models })
+    ).rejects.toMatchObject({ statusCode: 404, shouldRedirectToScenarios: true });
   });
 });

@@ -1,4 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import sortBy from 'lodash/sortBy.js';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock, setScenarioHasChangesMock } = vi.hoisted(() => ({
   checkAccessMock: vi.fn(),
@@ -8,116 +11,71 @@ const { checkAccessMock, setScenarioHasChangesMock } = vi.hoisted(() => ({
 vi.mock('../../scenarios/helpers/checkHasAccessToScenario.js', () => ({
   default: (...args) => checkAccessMock(...args)
 }));
-
 vi.mock('../../scenarios/services/setScenarioHasChanges.js', () => ({
   default: (...args) => setScenarioHasChangesMock(...args)
 }));
 
 import deleteBlockById from '../services/deleteBlockById.js';
 
-const FIXED_NOW = new Date('2026-05-06T12:00:00Z');
+const db = setupMongo();
 
-describe('deleteBlockById', () => {
+const sortOrdersFor = async (scenario, slideRef) => {
+  const blocks = await db.models.Block.find({ scenario, slideRef, isDeleted: false }).lean();
+  return sortBy(blocks, 'sortOrder').map((b) => b.sortOrder);
+};
+
+describe('deleteBlockById (in-memory mongo)', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
     vi.clearAllMocks();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
+    checkAccessMock.mockResolvedValue();
   });
 
   it('checks scenario access via the block id', async () => {
-    const models = {
-      Block: {
-        findByIdAndUpdate: vi.fn().mockResolvedValue({ _id: 'b1', scenario: 's1', slideRef: 'slide-1' }),
-        find: vi.fn(() => ({ sort: vi.fn().mockResolvedValue([]) }))
-      }
-    };
-    const ctx = { user: { _id: 'u1' }, models };
+    const scenario = new mongoose.Types.ObjectId();
+    const slideRef = new mongoose.Types.ObjectId();
+    const [block] = await db.models.Block.create([{ scenario, slideRef, sortOrder: 0 }]);
+    const ctx = { user: { _id: new mongoose.Types.ObjectId() }, models: db.models };
 
-    await deleteBlockById({ blockId: 'b1' }, {}, ctx);
-
-    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: 'b1', modelType: 'Block' }, ctx);
+    await deleteBlockById({ blockId: block._id }, {}, ctx);
+    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: block._id, modelType: 'Block' }, ctx);
   });
 
   it('throws 404 when the block does not exist', async () => {
-    const models = {
-      Block: {
-        findByIdAndUpdate: vi.fn().mockResolvedValue(null),
-        find: vi.fn()
-      }
-    };
-
-    await expect(deleteBlockById(
-      { blockId: 'missing' },
-      {},
-      { user: { _id: 'u1' }, models }
-    )).rejects.toMatchObject({ statusCode: 404, message: 'This block does not exist' });
+    await expect(
+      deleteBlockById({ blockId: new mongoose.Types.ObjectId() }, {}, { user: { _id: new mongoose.Types.ObjectId() }, models: db.models })
+    ).rejects.toMatchObject({ statusCode: 404, message: 'This block does not exist' });
   });
 
-  it('soft-deletes with timestamps and actor', async () => {
-    const models = {
-      Block: {
-        findByIdAndUpdate: vi.fn().mockResolvedValue({ _id: 'b1', scenario: 's1', slideRef: 'slide-1' }),
-        find: vi.fn(() => ({ sort: vi.fn().mockResolvedValue([]) }))
-      }
-    };
+  it('soft-deletes the block and renumbers the remaining slide blocks from 0', async () => {
+    const userId = new mongoose.Types.ObjectId();
+    const scenario = new mongoose.Types.ObjectId();
+    const slideRef = new mongoose.Types.ObjectId();
 
-    await deleteBlockById({ blockId: 'b1' }, {}, { user: { _id: 'u1' }, models });
+    const [first, second, third] = await db.models.Block.create([
+      { scenario, slideRef, sortOrder: 0 },
+      { scenario, slideRef, sortOrder: 1 },
+      { scenario, slideRef, sortOrder: 2 }
+    ]);
 
-    expect(models.Block.findByIdAndUpdate).toHaveBeenCalledWith('b1', {
-      isDeleted: true,
-      deletedAt: FIXED_NOW,
-      deletedBy: 'u1'
-    }, { new: true });
-  });
+    await deleteBlockById({ blockId: second._id }, {}, { user: { _id: userId }, models: db.models });
 
-  it('renumbers the remaining slide blocks contiguously from 0', async () => {
-    const remainingBlocks = [
-      { _id: 'a', sortOrder: 99, save: vi.fn() },
-      { _id: 'b', sortOrder: 99, save: vi.fn() },
-      { _id: 'c', sortOrder: 99, save: vi.fn() }
-    ];
+    const deleted = await db.models.Block.findById(second._id).lean();
+    expect(deleted.isDeleted).toBe(true);
+    expect(String(deleted.deletedBy)).toBe(String(userId));
 
-    const models = {
-      Block: {
-        findByIdAndUpdate: vi.fn().mockResolvedValue({ _id: 'b1', scenario: 's1', slideRef: 'slide-1' }),
-        find: vi.fn(() => ({ sort: vi.fn().mockResolvedValue(remainingBlocks) }))
-      }
-    };
-
-    await deleteBlockById({ blockId: 'b1' }, {}, { user: { _id: 'u1' }, models });
-
-    expect(remainingBlocks.map((b) => b.sortOrder)).toEqual([0, 1, 2]);
-    remainingBlocks.forEach((b) => expect(b.save).toHaveBeenCalled());
+    expect(await sortOrdersFor(scenario, slideRef)).toEqual([0, 1]);
+    const survivors = sortBy(await db.models.Block.find({ scenario, slideRef, isDeleted: false }).lean(), 'sortOrder')
+      .map((b) => String(b._id));
+    expect(survivors).toEqual([String(first._id), String(third._id)]);
   });
 
   it('marks the scenario as having changes', async () => {
-    const models = {
-      Block: {
-        findByIdAndUpdate: vi.fn().mockResolvedValue({ _id: 'b1', scenario: 's1', slideRef: 'slide-1' }),
-        find: vi.fn(() => ({ sort: vi.fn().mockResolvedValue([]) }))
-      }
-    };
-    const ctx = { user: { _id: 'u1' }, models };
+    const scenario = new mongoose.Types.ObjectId();
+    const slideRef = new mongoose.Types.ObjectId();
+    const [block] = await db.models.Block.create([{ scenario, slideRef, sortOrder: 0 }]);
+    const ctx = { user: { _id: new mongoose.Types.ObjectId() }, models: db.models };
 
-    await deleteBlockById({ blockId: 'b1' }, {}, ctx);
-
-    expect(setScenarioHasChangesMock).toHaveBeenCalledWith({ scenarioId: 's1' }, {}, ctx);
-  });
-
-  it('returns the deleted block', async () => {
-    const deletedBlock = { _id: 'b1', scenario: 's1', slideRef: 'slide-1', isDeleted: true };
-    const models = {
-      Block: {
-        findByIdAndUpdate: vi.fn().mockResolvedValue(deletedBlock),
-        find: vi.fn(() => ({ sort: vi.fn().mockResolvedValue([]) }))
-      }
-    };
-
-    const result = await deleteBlockById({ blockId: 'b1' }, {}, { user: { _id: 'u1' }, models });
-    expect(result).toBe(deletedBlock);
+    await deleteBlockById({ blockId: block._id }, {}, ctx);
+    expect(setScenarioHasChangesMock).toHaveBeenCalledWith({ scenarioId: scenario }, {}, ctx);
   });
 });

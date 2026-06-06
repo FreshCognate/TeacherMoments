@@ -1,4 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock, generateInviteTokenMock } = vi.hoisted(() => ({
   checkAccessMock: vi.fn(),
@@ -15,91 +17,43 @@ vi.mock('../helpers/generateInviteToken.js', () => ({
 
 import duplicateCohort from '../services/duplicateCohort.js';
 
-const FIXED_NOW = new Date('2026-05-06T12:00:00Z');
+const db = setupMongo();
 
-const buildContext = ({ existingCohort, transactionFn = (cb) => cb('session-1'), createResult }) => {
-  const create = vi.fn().mockResolvedValue(createResult || []);
-  const connection = { transaction: vi.fn(transactionFn).mockReturnValue({ catch: vi.fn().mockResolvedValue() }) };
-  return {
-    models: {
-      Cohort: {
-        findById: vi.fn().mockResolvedValue(existingCohort),
-        create
-      }
-    },
-    user: { _id: 'u1' },
-    connection
-  };
-};
-
-describe('duplicateCohort', () => {
+describe('duplicateCohort (in-memory mongo)', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
     vi.clearAllMocks();
+    checkAccessMock.mockResolvedValue();
     generateInviteTokenMock.mockReturnValue('new-token');
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   it('throws 404 when the source cohort is not found', async () => {
-    const ctx = buildContext({ existingCohort: null });
-    await expect(duplicateCohort({ cohortId: 'missing' }, {}, ctx))
-      .rejects.toMatchObject({ statusCode: 404 });
+    await expect(
+      duplicateCohort({ cohortId: new mongoose.Types.ObjectId() }, {}, {
+        models: db.models,
+        user: { _id: new mongoose.Types.ObjectId() },
+        connection: db.connection
+      })
+    ).rejects.toMatchObject({ statusCode: 404 });
   });
 
   it('creates a duplicate with " - Duplicate" appended to the name and a fresh invite', async () => {
-    const newCohort = { _id: 'new-cohort' };
+    const userId = new mongoose.Types.ObjectId();
+    const source = await db.models.Cohort.create({ name: 'Original' });
 
-    const transactionFn = async (cb) => {
-      await cb('session-1');
-      return { catch: vi.fn() };
-    };
-
-    const create = vi.fn().mockResolvedValue([newCohort]);
-    const connection = {
-      transaction: vi.fn((cb) => {
-        const result = cb('session-1');
-        return Promise.resolve(result).then(() => ({ catch: () => {} }));
-      })
-    };
-    connection.transaction = vi.fn(async (cb) => {
-      await cb('session-1');
-    });
-    connection.transaction.mockImplementation((cb) => {
-      const promise = cb('session-1');
-      return Object.assign(promise, { catch: () => promise });
+    const result = await duplicateCohort({ cohortId: source._id }, {}, {
+      models: db.models,
+      user: { _id: userId },
+      connection: db.connection
     });
 
-    const ctx = {
-      models: {
-        Cohort: {
-          findById: vi.fn().mockResolvedValue({ _id: 'src', name: 'Original' }),
-          create
-        }
-      },
-      user: { _id: 'u1' },
-      connection
-    };
+    expect(String(result._id)).not.toBe(String(source._id));
 
-    const result = await duplicateCohort({ cohortId: 'src' }, {}, ctx);
-
-    const [docs, options] = create.mock.calls[0];
-    expect(docs[0]).toMatchObject({
-      name: 'Original - Duplicate',
-      originalCohort: 'src',
-      createdBy: 'u1',
-      createdAt: FIXED_NOW
-    });
-    expect(docs[0].invites[0]).toMatchObject({
-      token: 'new-token',
-      isActive: true,
-      createdBy: 'u1'
-    });
-    expect(docs[0]._id).toBeUndefined();
-    expect(options).toEqual({ session: 'session-1' });
-    expect(result).toBe(newCohort);
+    const stored = await db.models.Cohort.findById(result._id).lean();
+    expect(stored.name).toBe('Original - Duplicate');
+    expect(String(stored.originalCohort)).toBe(String(source._id));
+    expect(String(stored.createdBy)).toBe(String(userId));
+    expect(stored.invites).toHaveLength(1);
+    expect(stored.invites[0]).toMatchObject({ token: 'new-token', isActive: true });
+    expect(String(stored.invites[0].createdBy)).toBe(String(userId));
   });
 });

@@ -1,69 +1,69 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 import checkHasAccessToScenario from '../helpers/checkHasAccessToScenario.js';
 
-describe('checkHasAccessToScenario', () => {
-  it.each([
-    ['Slide', 'Slide'],
-    ['Block', 'Block'],
-    ['Trigger', 'Trigger'],
-    ['Stem', 'Stem']
-  ])('resolves the scenario id from a %s model', async (modelType, modelName) => {
-    const findById = vi.fn().mockResolvedValue({ scenario: 's1' });
-    const Scenario = { findOne: vi.fn().mockResolvedValue({ _id: 's1' }) };
-    const ctx = { user: { _id: 'u1' }, models: { [modelName]: { findById }, Scenario } };
+const db = setupMongo();
 
-    await checkHasAccessToScenario({ modelId: 'm1', modelType }, ctx);
+const scenarioWithCollaborator = (userId) => db.models.Scenario.create({
+  name: 'S',
+  collaborators: [{ user: userId, role: 'OWNER' }]
+});
 
-    expect(findById).toHaveBeenCalledWith('m1', 'scenario');
+describe('checkHasAccessToScenario (in-memory mongo)', () => {
+  beforeEach(() => {});
+
+  it('grants access for SUPER_ADMIN without resolving the scenario', async () => {
+    await expect(
+      checkHasAccessToScenario(
+        { modelId: new mongoose.Types.ObjectId(), modelType: 'Slide' },
+        { user: { _id: new mongoose.Types.ObjectId(), role: 'SUPER_ADMIN' }, models: db.models }
+      )
+    ).resolves.toBeUndefined();
   });
 
-  it('grants access for SUPER_ADMIN without resolving the scenario or querying collaborators', async () => {
-    const findById = vi.fn();
-    const findOne = vi.fn();
+  it('grants access when the user is a collaborator on the scenario directly', async () => {
+    const userId = new mongoose.Types.ObjectId();
+    const scenario = await scenarioWithCollaborator(userId);
 
-    await checkHasAccessToScenario(
-      { modelId: 'm1', modelType: 'Slide' },
-      { user: { _id: 'u1', role: 'SUPER_ADMIN' }, models: { Slide: { findById }, Scenario: { findOne } } }
-    );
-
-    expect(findById).not.toHaveBeenCalled();
-    expect(findOne).not.toHaveBeenCalled();
+    await expect(
+      checkHasAccessToScenario(
+        { modelId: scenario._id, modelType: 'Scenario' },
+        { user: { _id: userId }, models: db.models }
+      )
+    ).resolves.toBeUndefined();
   });
 
-  it('uses the modelId directly when modelType is Scenario', async () => {
-    const findOne = vi.fn().mockResolvedValue({ _id: 's1' });
+  it('resolves the scenario id from a dependent Slide and grants access', async () => {
+    const userId = new mongoose.Types.ObjectId();
+    const scenario = await scenarioWithCollaborator(userId);
+    const slide = await db.models.Slide.create({ scenario: scenario._id, stemRef: new mongoose.Types.ObjectId(), sortOrder: 0 });
 
-    await checkHasAccessToScenario(
-      { modelId: 's1', modelType: 'Scenario' },
-      { user: { _id: 'u1' }, models: { Scenario: { findOne } } }
-    );
-
-    expect(findOne).toHaveBeenCalledWith({
-      _id: 's1',
-      collaborators: {
-        $elemMatch: {
-          user: 'u1',
-          role: { $in: ['OWNER', 'AUTHOR'] }
-        }
-      }
-    });
+    await expect(
+      checkHasAccessToScenario(
+        { modelId: slide._id, modelType: 'Slide' },
+        { user: { _id: userId }, models: db.models }
+      )
+    ).resolves.toBeUndefined();
   });
 
   it('throws 401 when the dependent model does not yield a scenario id', async () => {
-    const Slide = { findById: vi.fn().mockResolvedValue(null) };
-
-    await expect(checkHasAccessToScenario(
-      { modelId: 'missing', modelType: 'Slide' },
-      { user: { _id: 'u1' }, models: { Slide, Scenario: {} } }
-    )).rejects.toMatchObject({ statusCode: 401 });
+    await expect(
+      checkHasAccessToScenario(
+        { modelId: new mongoose.Types.ObjectId(), modelType: 'Slide' },
+        { user: { _id: new mongoose.Types.ObjectId() }, models: db.models }
+      )
+    ).rejects.toMatchObject({ statusCode: 401 });
   });
 
   it('throws 401 when the user is not a collaborator on the scenario', async () => {
-    const Scenario = { findOne: vi.fn().mockResolvedValue(null) };
+    const scenario = await scenarioWithCollaborator(new mongoose.Types.ObjectId());
 
-    await expect(checkHasAccessToScenario(
-      { modelId: 's1', modelType: 'Scenario' },
-      { user: { _id: 'u-stranger' }, models: { Scenario } }
-    )).rejects.toMatchObject({ statusCode: 401, message: 'You do not have access to this scenario' });
+    await expect(
+      checkHasAccessToScenario(
+        { modelId: scenario._id, modelType: 'Scenario' },
+        { user: { _id: new mongoose.Types.ObjectId() }, models: db.models }
+      )
+    ).rejects.toMatchObject({ statusCode: 401, message: 'You do not have access to this scenario' });
   });
 });

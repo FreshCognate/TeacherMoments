@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { generateInviteTokenMock } = vi.hoisted(() => ({
   generateInviteTokenMock: vi.fn()
@@ -12,46 +14,51 @@ vi.mock('../../slides/services/createSlide.js', () => ({ default: vi.fn() }));
 
 import createCohort from '../services/createCohort.js';
 
-describe('createCohort', () => {
+const db = setupMongo();
+
+describe('createCohort (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     generateInviteTokenMock.mockReturnValue('invite-token-123');
   });
 
   it('throws 400 when no name is given', async () => {
-    await expect(createCohort({}, {}, { user: { _id: 'u1' }, models: {} }))
-      .rejects.toMatchObject({ statusCode: 400, message: 'A cohort must have a name' });
+    await expect(
+      createCohort({}, {}, { user: { _id: new mongoose.Types.ObjectId() }, models: db.models })
+    ).rejects.toMatchObject({ statusCode: 400, message: 'A cohort must have a name' });
   });
 
-  it('creates a cohort with the user as OWNER and an active invite', async () => {
-    const create = vi.fn().mockResolvedValue({ _id: 'cohort-1' });
-    await createCohort(
+  it('persists a cohort with the user as OWNER and an active invite', async () => {
+    const userId = new mongoose.Types.ObjectId();
+
+    const created = await createCohort(
       { name: 'Spring Cohort' },
       {},
-      { user: { _id: 'u1' }, models: { Cohort: { create } } }
+      { user: { _id: userId }, models: db.models }
     );
 
-    expect(create).toHaveBeenCalledWith(expect.objectContaining({
-      name: 'Spring Cohort',
-      createdBy: 'u1',
-      collaborators: [{ user: 'u1', role: 'OWNER' }]
-    }));
+    const stored = await db.models.Cohort.findById(created._id).lean();
 
-    const invites = create.mock.calls[0][0].invites;
-    expect(invites).toHaveLength(1);
-    expect(invites[0]).toMatchObject({ token: 'invite-token-123', isActive: true, createdBy: 'u1' });
+    expect(stored.name).toBe('Spring Cohort');
+    expect(String(stored.createdBy)).toBe(String(userId));
+
+    expect(stored.collaborators).toHaveLength(1);
+    expect(stored.collaborators[0]).toMatchObject({ role: 'OWNER' });
+    expect(String(stored.collaborators[0].user)).toBe(String(userId));
+
+    expect(stored.invites).toHaveLength(1);
+    expect(stored.invites[0]).toMatchObject({ token: 'invite-token-123', isActive: true });
+    expect(String(stored.invites[0].createdBy)).toBe(String(userId));
   });
 
   it('returns the created cohort', async () => {
-    const cohort = { _id: 'cohort-1' };
-    const create = vi.fn().mockResolvedValue(cohort);
-
     const result = await createCohort(
       { name: 'Cohort' },
       {},
-      { user: { _id: 'u1' }, models: { Cohort: { create } } }
+      { user: { _id: new mongoose.Types.ObjectId() }, models: db.models }
     );
 
-    expect(result).toBe(cohort);
+    expect(result._id).toBeDefined();
+    expect(result.name).toBe('Cohort');
   });
 });

@@ -1,4 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import sortBy from 'lodash/sortBy.js';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock, duplicateBlocksMock, setHasChangesMock } = vi.hoisted(() => ({
   checkAccessMock: vi.fn(),
@@ -18,97 +21,90 @@ vi.mock('../../scenarios/services/setScenarioHasChanges.js', () => ({
 
 import duplicateSlideInScenario from '../services/duplicateSlideInScenario.js';
 
-const FIXED_NOW = new Date('2026-05-07T12:00:00Z');
+const db = setupMongo();
 
-const buildConnection = () => ({
-  transaction: vi.fn().mockImplementation((cb) => {
-    const promise = (async () => { await cb('SESSION_TOKEN'); })();
-    promise.catch = (handler) => promise.then(undefined, handler);
-    return promise;
-  })
+let Slide;
+
+beforeAll(() => {
+  Slide = db.models.Slide;
 });
 
-describe('duplicateSlideInScenario', () => {
+const buildContext = () => ({
+  models: db.models,
+  connection: db.connection
+});
+
+const sortOrdersFor = async (scenarioId, stemRef) => {
+  const slides = await Slide.find({ scenario: scenarioId, stemRef, isDeleted: false }).lean();
+  return sortBy(slides, 'sortOrder').map((slide) => slide.sortOrder);
+};
+
+describe('duplicateSlideInScenario (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     checkAccessMock.mockResolvedValue();
     duplicateBlocksMock.mockResolvedValue();
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
   });
 
   it('throws 404 when the source slide does not exist', async () => {
-    const findById = vi.fn().mockResolvedValue(null);
-    const create = vi.fn();
-    const find = vi.fn();
-
     await expect(
       duplicateSlideInScenario(
-        { scenario: 's1', slideId: 'sl1' },
-        { models: { Slide: { findById, create, find } }, connection: buildConnection() }
+        { scenario: new mongoose.Types.ObjectId(), slideId: new mongoose.Types.ObjectId() },
+        buildContext()
       )
     ).rejects.toMatchObject({ statusCode: 404 });
   });
 
-  it('clones the slide one position after the source, bumps later siblings, and duplicates blocks under the new ref', async () => {
-    const sourceSlide = {
-      _id: 'sl1',
-      ref: 'srcRef',
-      scenario: 's1',
-      stemRef: 'st1',
-      sortOrder: 2,
-      name: 'Source'
-    };
+  it('clones the slide one position after the source, carrying over its fields', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+    const stemRef = new mongoose.Types.ObjectId();
 
-    const sibling0 = { sortOrder: 0, save: vi.fn().mockResolvedValue() };
-    const sibling2 = { sortOrder: 2, save: vi.fn().mockResolvedValue() };
-    const sibling3 = { sortOrder: 3, save: vi.fn().mockResolvedValue() };
+    const [, source] = await Slide.create([
+      { scenario, stemRef, sortOrder: 0, name: 'First', slideType: 'STEP' },
+      { scenario, stemRef, sortOrder: 1, name: 'Source', slideType: 'STEP' },
+      { scenario, stemRef, sortOrder: 2, name: 'Third', slideType: 'STEP' }
+    ]);
 
-    const findById = vi.fn().mockResolvedValue(sourceSlide);
-    const find = vi.fn().mockResolvedValue([sibling0, sibling2, sibling3]);
-    const create = vi.fn().mockResolvedValue([{ _id: 'newId', ref: 'newRef' }]);
-
-    const connection = buildConnection();
-
-    const result = await duplicateSlideInScenario(
-      { scenario: 's1', slideId: 'sl1' },
-      { models: { Slide: { findById, create, find } }, connection }
+    const duplicated = await duplicateSlideInScenario(
+      { scenario, slideId: source._id },
+      buildContext()
     );
 
-    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: 'sl1', modelType: 'Slide' }, expect.any(Object));
+    expect(duplicated.name).toBe('Source');
+    expect(duplicated.slideType).toBe('STEP');
+    expect(String(duplicated.stemRef)).toBe(String(stemRef));
+    expect(duplicated.sortOrder).toBe(2);
+    expect(String(duplicated.originalRef)).toBe(String(source.ref));
 
-    const [createArgs, createOptions] = create.mock.calls[0];
-    expect(createArgs[0]).toMatchObject({
-      scenario: 's1',
-      stemRef: 'st1',
-      sortOrder: 3,
-      name: 'Source',
-      originalRef: 'srcRef',
-      originalScenario: 's1',
-      createdAt: FIXED_NOW
-    });
-    expect(createArgs[0]._id).toBeUndefined();
-    expect(createArgs[0].ref).toBeUndefined();
-    expect(createOptions).toEqual({ session: 'SESSION_TOKEN' });
+    // Source stem now holds 4 slides with contiguous order.
+    expect(await sortOrdersFor(scenario, stemRef)).toEqual([0, 1, 2, 3]);
 
-    // Slides at or above the new sortOrder (3) get bumped: sibling3 → 4. sibling2 stays. sibling0 stays.
-    expect(sibling0.sortOrder).toBe(0);
-    expect(sibling0.save).not.toHaveBeenCalled();
-    expect(sibling2.sortOrder).toBe(2);
-    expect(sibling2.save).not.toHaveBeenCalled();
-    expect(sibling3.sortOrder).toBe(4);
-    expect(sibling3.save).toHaveBeenCalledWith({ session: 'SESSION_TOKEN' });
+    expect(duplicateBlocksMock).toHaveBeenCalled();
+    expect(setHasChangesMock).toHaveBeenCalledWith({ scenarioId: scenario }, {}, expect.any(Object));
+  });
 
-    expect(duplicateBlocksMock).toHaveBeenCalledWith(
-      { scenarioId: 's1', slideRef: 'srcRef', newScenarioId: 's1', newSlideRef: 'newRef' },
-      expect.objectContaining({ session: 'SESSION_TOKEN' })
+  it('only shifts siblings within the source slide\'s stem, leaving other stems untouched', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+    const stemA = new mongoose.Types.ObjectId();
+    const stemB = new mongoose.Types.ObjectId();
+
+    const [stemASource] = await Slide.create([
+      { scenario, stemRef: stemA, sortOrder: 0, name: 'A0' },
+      { scenario, stemRef: stemA, sortOrder: 1, name: 'A1' }
+    ]);
+
+    await Slide.create([
+      { scenario, stemRef: stemB, sortOrder: 0, name: 'B0' },
+      { scenario, stemRef: stemB, sortOrder: 1, name: 'B1' }
+    ]);
+
+    await duplicateSlideInScenario(
+      { scenario, slideId: stemASource._id },
+      buildContext()
     );
 
-    expect(setHasChangesMock).toHaveBeenCalledWith({ scenarioId: 's1' }, {}, expect.any(Object));
-    expect(result).toEqual({ _id: 'newId', ref: 'newRef' });
+    // Stem A gained one slide and stays contiguous; stem B is untouched.
+    expect(await sortOrdersFor(scenario, stemA)).toEqual([0, 1, 2]);
+    expect(await sortOrdersFor(scenario, stemB)).toEqual([0, 1]);
   });
 });

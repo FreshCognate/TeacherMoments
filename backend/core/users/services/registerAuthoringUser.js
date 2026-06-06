@@ -1,5 +1,3 @@
-import uuid from 'node-uuid';
-
 export default async (props, options, context) => {
 
   const {
@@ -22,7 +20,6 @@ export default async (props, options, context) => {
     email: lowerCaseEmail,
     role,
     createdAt,
-    registrationId: uuid.v4(),
     registeredAt: createdAt,
   };
 

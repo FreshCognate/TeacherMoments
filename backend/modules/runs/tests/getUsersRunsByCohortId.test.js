@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkCohortViewMock } = vi.hoisted(() => ({ checkCohortViewMock: vi.fn() }));
 
@@ -8,58 +10,44 @@ vi.mock('../../cohorts/helpers/checkHasAccessToViewCohort.js', () => ({
 
 import getUsersRunsByCohortId from '../services/getUsersRunsByCohortId.js';
 
-describe('getUsersRunsByCohortId', () => {
+const db = setupMongo();
+
+describe('getUsersRunsByCohortId (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    checkCohortViewMock.mockResolvedValue();
   });
 
   it('checks cohort view access', async () => {
-    const ctx = {
-      models: {
-        Scenario: { find: vi.fn().mockResolvedValue([]) },
-        Run: { find: vi.fn().mockResolvedValue([]) }
-      },
-      user: { _id: 'u1' }
-    };
-
-    await getUsersRunsByCohortId({ cohortId: 'c1' }, {}, ctx);
-
-    expect(checkCohortViewMock).toHaveBeenCalledWith({ cohortId: 'c1' }, ctx);
+    const cohortId = new mongoose.Types.ObjectId();
+    const ctx = { models: db.models, user: { _id: new mongoose.Types.ObjectId() } };
+    await getUsersRunsByCohortId({ cohortId }, {}, ctx);
+    expect(checkCohortViewMock).toHaveBeenCalledWith({ cohortId }, ctx);
   });
 
-  it('finds non-deleted scenarios in the cohort and runs for those scenarios scoped to the user', async () => {
-    const Scenario = {
-      find: vi.fn().mockResolvedValue([{ _id: 's1' }, { _id: 's2' }])
-    };
-    const Run = {
-      find: vi.fn().mockResolvedValue([{ _id: 'r1' }])
-    };
+  it('returns the user\'s non-deleted runs for the non-deleted scenarios in the cohort', async () => {
+    const cohortId = new mongoose.Types.ObjectId();
+    const userId = new mongoose.Types.ObjectId();
 
-    const result = await getUsersRunsByCohortId(
-      { cohortId: 'c1' },
-      {},
-      { models: { Scenario, Run }, user: { _id: 'u1' } }
-    );
+    const s1 = await db.models.Scenario.create({ name: 'S1', cohorts: [{ cohort: cohortId }] });
+    const s2 = await db.models.Scenario.create({ name: 'S2', cohorts: [{ cohort: cohortId }] });
+    // Not in the cohort.
+    const other = await db.models.Scenario.create({ name: 'Other' });
 
-    expect(Scenario.find).toHaveBeenCalledWith({ 'cohorts.cohort': 'c1', isDeleted: false });
-    expect(Run.find).toHaveBeenCalledWith({
-      scenario: { $in: ['s1', 's2'] },
-      user: 'u1',
-      isDeleted: false
-    });
-    expect(result).toEqual({ runs: [{ _id: 'r1' }] });
+    const r1 = await db.models.Run.create({ scenario: s1._id, user: userId });
+    await db.models.Run.create({ scenario: s2._id, user: new mongoose.Types.ObjectId() }); // another user
+    await db.models.Run.create({ scenario: other._id, user: userId }); // scenario not in cohort
+    await db.models.Run.create({ scenario: s1._id, user: userId, isDeleted: true }); // deleted
+
+    const result = await getUsersRunsByCohortId({ cohortId }, {}, { models: db.models, user: { _id: userId } });
+
+    expect(result.runs.map((r) => String(r._id))).toEqual([String(r1._id)]);
   });
 
   it('returns an empty runs list when the cohort has no scenarios', async () => {
-    const Scenario = { find: vi.fn().mockResolvedValue([]) };
-    const Run = { find: vi.fn().mockResolvedValue([]) };
-
     const result = await getUsersRunsByCohortId(
-      { cohortId: 'c1' },
-      {},
-      { models: { Scenario, Run }, user: { _id: 'u1' } }
+      { cohortId: new mongoose.Types.ObjectId() }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId() } }
     );
-
     expect(result).toEqual({ runs: [] });
   });
 });

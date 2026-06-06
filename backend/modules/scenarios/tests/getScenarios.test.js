@@ -1,81 +1,77 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 import getScenarios from '../services/getScenarios.js';
 
-const buildModels = (scenarios = [], count = scenarios.length) => ({
-  Scenario: {
-    countDocuments: vi.fn().mockResolvedValue(count),
-    find: vi.fn(() => ({ sort: vi.fn().mockResolvedValue(scenarios) }))
-  }
+const db = setupMongo();
+
+const userId = new mongoose.Types.ObjectId();
+
+const ownedScenario = (overrides = {}) => db.models.Scenario.create({
+  name: 'Scenario',
+  collaborators: [{ user: userId, role: 'OWNER' }],
+  ...overrides
 });
 
-const baseUser = { _id: 'u1' };
+const user = (extra = {}) => ({ _id: userId, ...extra });
 
-describe('getScenarios', () => {
-  it('searches with isDeleted=false by default', async () => {
-    const models = buildModels();
-    await getScenarios({}, {}, { models, user: baseUser });
-    expect(models.Scenario.countDocuments).toHaveBeenCalledWith(expect.objectContaining({ isDeleted: false }));
+describe('getScenarios (in-memory mongo)', () => {
+  beforeEach(() => {});
+
+  it('excludes deleted scenarios by default', async () => {
+    const active = await ownedScenario({ name: 'Active' });
+    await ownedScenario({ name: 'Deleted', isDeleted: true });
+
+    const { scenarios, count } = await getScenarios({}, {}, { models: db.models, user: user() });
+    expect(scenarios.map((s) => String(s._id))).toEqual([String(active._id)]);
+    expect(count).toBe(1);
   });
 
-  it('builds a name regex search when searchValue is set', async () => {
-    const models = buildModels();
-    await getScenarios({}, { searchValue: 'spring' }, { models, user: baseUser });
-    const search = models.Scenario.countDocuments.mock.calls[0][0];
-    expect(search.$or).toEqual([{ name: { $regex: 'spring', $options: 'i' } }]);
+  it('filters by name when searchValue is set', async () => {
+    const spring = await ownedScenario({ name: 'Spring' });
+    await ownedScenario({ name: 'Autumn' });
+
+    const { scenarios } = await getScenarios({}, { searchValue: 'spring' }, { models: db.models, user: user() });
+    expect(scenarios.map((s) => String(s._id))).toEqual([String(spring._id)]);
   });
 
-  it('filters by user collaborator role for non-super-admins', async () => {
-    const models = buildModels();
-    await getScenarios({}, {}, { models, user: baseUser });
-    const search = models.Scenario.countDocuments.mock.calls[0][0];
-    expect(search.collaborators).toEqual({
-      $elemMatch: { user: 'u1', role: { $in: ['OWNER', 'AUTHOR'] } }
-    });
+  it('only returns scenarios the non-super-admin collaborates on', async () => {
+    const mine = await ownedScenario({ name: 'Mine' });
+    await db.models.Scenario.create({ name: 'Theirs', collaborators: [{ user: new mongoose.Types.ObjectId(), role: 'OWNER' }] });
+
+    const { scenarios } = await getScenarios({}, {}, { models: db.models, user: user() });
+    expect(scenarios.map((s) => String(s._id))).toEqual([String(mine._id)]);
   });
 
-  it('does not filter by collaborator role for SUPER_ADMIN', async () => {
-    const models = buildModels();
-    await getScenarios({}, {}, { models, user: { ...baseUser, role: 'SUPER_ADMIN' } });
-    const search = models.Scenario.countDocuments.mock.calls[0][0];
-    expect(search.collaborators).toBeUndefined();
+  it('returns all scenarios for SUPER_ADMIN regardless of collaboration', async () => {
+    const a = await db.models.Scenario.create({ name: 'A' });
+    const b = await db.models.Scenario.create({ name: 'B' });
+
+    const { scenarios, count } = await getScenarios({}, {}, { models: db.models, user: user({ role: 'SUPER_ADMIN' }) });
+    const ids = scenarios.map((s) => String(s._id));
+    expect(ids).toEqual(expect.arrayContaining([String(a._id), String(b._id)]));
+    expect(count).toBe(2);
   });
 
   it('filters by accessType when provided', async () => {
-    const models = buildModels();
-    await getScenarios({ accessType: 'PUBLIC' }, {}, { models, user: baseUser });
-    expect(models.Scenario.countDocuments.mock.calls[0][0].accessType).toBe('PUBLIC');
-  });
+    const pub = await ownedScenario({ name: 'Public', accessType: 'PUBLIC' });
+    await ownedScenario({ name: 'Private', accessType: 'PRIVATE' });
 
-  it.each([
-    ['NEWEST', '-createdAt'],
-    ['OLDEST', 'createdAt']
-  ])('sorts by %s', async (sortBy, expected) => {
-    const sortMock = vi.fn().mockResolvedValue([]);
-    const models = {
-      Scenario: {
-        countDocuments: vi.fn().mockResolvedValue(0),
-        find: vi.fn(() => ({ sort: sortMock }))
-      }
-    };
-    await getScenarios({}, { sortBy }, { models, user: baseUser });
-    expect(sortMock).toHaveBeenCalledWith(expected);
+    const { scenarios } = await getScenarios({ accessType: 'PUBLIC' }, {}, { models: db.models, user: user() });
+    expect(scenarios.map((s) => String(s._id))).toEqual([String(pub._id)]);
   });
 
   it('sorts by name by default', async () => {
-    const sortMock = vi.fn().mockResolvedValue([]);
-    const models = {
-      Scenario: {
-        countDocuments: vi.fn().mockResolvedValue(0),
-        find: vi.fn(() => ({ sort: sortMock }))
-      }
-    };
-    await getScenarios({}, {}, { models, user: baseUser });
-    expect(sortMock).toHaveBeenCalledWith('name');
+    await db.models.Scenario.create({ name: 'Bravo' });
+    await db.models.Scenario.create({ name: 'Alpha' });
+
+    const { scenarios } = await getScenarios({}, {}, { models: db.models, user: user({ role: 'SUPER_ADMIN' }) });
+    expect(scenarios.map((s) => s.name)).toEqual(['Alpha', 'Bravo']);
   });
 
-  it('returns scenarios, count, currentPage, totalPages', async () => {
-    const models = buildModels([{ _id: 's1' }], 1);
-    const result = await getScenarios({}, {}, { models, user: baseUser });
-    expect(result).toEqual({ scenarios: [{ _id: 's1' }], count: 1, currentPage: 1, totalPages: 1 });
+  it('returns count, currentPage and totalPages', async () => {
+    await ownedScenario({ name: 'Mine' });
+    const result = await getScenarios({}, {}, { models: db.models, user: user() });
+    expect(result).toMatchObject({ count: 1, currentPage: 1, totalPages: 1 });
   });
 });

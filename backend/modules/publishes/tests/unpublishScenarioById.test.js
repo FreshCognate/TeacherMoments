@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { unpublishModelByScenarioIdMock } = vi.hoisted(() => ({ unpublishModelByScenarioIdMock: vi.fn() }));
 
@@ -8,100 +10,52 @@ vi.mock('../services/unpublishModelByScenarioId.js', () => ({
 
 import unpublishScenarioById from '../services/unpublishScenarioById.js';
 
-const buildScenario = (overrides = {}) => ({
-  _id: 's1',
-  isPublished: true,
-  publishedAt: new Date(),
-  publishedBy: 'u-author',
-  hasChanges: false,
-  save: vi.fn().mockResolvedValue(),
-  ...overrides
-});
+const db = setupMongo();
 
-describe('unpublishScenarioById', () => {
+describe('unpublishScenarioById (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    unpublishModelByScenarioIdMock.mockResolvedValue();
   });
 
   it('throws 404 when the scenario does not exist', async () => {
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(null) },
-      Published_Scenario: { deleteOne: vi.fn() }
-    };
-
-    await expect(unpublishScenarioById(
-      { scenarioId: 'missing' },
-      {},
-      { models, user: { _id: 'u1' } }
-    )).rejects.toMatchObject({ statusCode: 404 });
+    await expect(
+      unpublishScenarioById({ scenarioId: new mongoose.Types.ObjectId() }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId() } })
+    ).rejects.toMatchObject({ statusCode: 404 });
   });
 
   it('throws 400 when the scenario is not currently published', async () => {
-    const scenario = buildScenario({ isPublished: false });
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(scenario) },
-      Published_Scenario: { deleteOne: vi.fn() }
-    };
-
-    await expect(unpublishScenarioById(
-      { scenarioId: 's1' },
-      {},
-      { models, user: { _id: 'u1' } }
-    )).rejects.toMatchObject({ statusCode: 400 });
+    const scenario = await db.models.Scenario.create({ name: 'S', isPublished: false });
+    await expect(
+      unpublishScenarioById({ scenarioId: scenario._id }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId() } })
+    ).rejects.toMatchObject({ statusCode: 400 });
   });
 
-  it('unpublishes Slide, Block, and Trigger models for the scenario', async () => {
-    const scenario = buildScenario();
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(scenario) },
-      Published_Scenario: { deleteOne: vi.fn().mockResolvedValue({}) }
-    };
-    const ctx = { models, user: { _id: 'u1' } };
+  it('unpublishes Slide, Block and Trigger models for the scenario', async () => {
+    const scenario = await db.models.Scenario.create({ name: 'S', isPublished: true });
+    const ctx = { models: db.models, user: { _id: new mongoose.Types.ObjectId() } };
 
-    await unpublishScenarioById({ scenarioId: 's1' }, {}, ctx);
+    await unpublishScenarioById({ scenarioId: scenario._id }, {}, ctx);
 
-    expect(unpublishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Slide', scenarioId: 's1' }, {}, ctx);
-    expect(unpublishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Block', scenarioId: 's1' }, {}, ctx);
-    expect(unpublishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Trigger', scenarioId: 's1' }, {}, ctx);
+    expect(unpublishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Slide', scenarioId: scenario._id }, {}, ctx);
+    expect(unpublishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Block', scenarioId: scenario._id }, {}, ctx);
+    expect(unpublishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Trigger', scenarioId: scenario._id }, {}, ctx);
   });
 
-  it('deletes the Published_Scenario doc', async () => {
-    const scenario = buildScenario();
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(scenario) },
-      Published_Scenario: { deleteOne: vi.fn().mockResolvedValue({}) }
-    };
+  it('deletes the Published_Scenario doc and clears publish flags', async () => {
+    const scenario = await db.models.Scenario.create({
+      name: 'S', isPublished: true, publishedAt: new Date(), publishedBy: new mongoose.Types.ObjectId()
+    });
+    await db.models.Published_Scenario.create({ _id: scenario._id, name: 'S', isPublished: true });
 
-    await unpublishScenarioById({ scenarioId: 's1' }, {}, { models, user: { _id: 'u1' } });
+    await unpublishScenarioById({ scenarioId: scenario._id }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId() } });
 
-    expect(models.Published_Scenario.deleteOne).toHaveBeenCalledWith({ _id: 's1' });
-  });
+    expect(await db.models.Published_Scenario.findById(scenario._id).lean()).toBeNull();
 
-  it('clears publish flags and marks hasChanges', async () => {
-    const scenario = buildScenario();
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(scenario) },
-      Published_Scenario: { deleteOne: vi.fn().mockResolvedValue({}) }
-    };
-
-    await unpublishScenarioById({ scenarioId: 's1' }, {}, { models, user: { _id: 'u1' } });
-
-    expect(scenario.hasChanges).toBe(true);
-    expect(scenario.isPublished).toBe(false);
-    expect(scenario.publishedAt).toBeNull();
-    expect(scenario.publishedBy).toBeNull();
-    expect(scenario.save).toHaveBeenCalled();
-  });
-
-  it('returns the updated scenario', async () => {
-    const scenario = buildScenario();
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(scenario) },
-      Published_Scenario: { deleteOne: vi.fn().mockResolvedValue({}) }
-    };
-
-    const result = await unpublishScenarioById({ scenarioId: 's1' }, {}, { models, user: { _id: 'u1' } });
-
-    expect(result).toBe(scenario);
+    const stored = await db.models.Scenario.findById(scenario._id).lean();
+    expect(stored.isPublished).toBe(false);
+    expect(stored.hasChanges).toBe(true);
+    expect(stored.publishedAt).toBeNull();
+    expect(stored.publishedBy).toBeNull();
   });
 });

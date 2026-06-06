@@ -1,4 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import find from 'lodash/find.js';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock, getScenariosCountByCohortIdMock } = vi.hoisted(() => ({
   checkAccessMock: vi.fn(),
@@ -15,82 +18,74 @@ vi.mock('../../scenarios/services/getScenariosCountByCohortId.js', () => ({
 
 import addScenarioToCohort from '../services/addScenarioToCohort.js';
 
-const FIXED_NOW = new Date('2026-05-06T12:00:00Z');
+const db = setupMongo();
 
-const buildModels = (scenario, cohort) => ({
-  Scenario: { findOneAndUpdate: vi.fn().mockResolvedValue(scenario) },
-  Cohort: {
-    findByIdAndUpdate: vi.fn(() => ({
-      populate: vi.fn().mockResolvedValue(cohort)
-    }))
-  }
-});
-
-describe('addScenarioToCohort', () => {
+describe('addScenarioToCohort (in-memory mongo)', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
     vi.clearAllMocks();
+    checkAccessMock.mockResolvedValue();
     getScenariosCountByCohortIdMock.mockResolvedValue({ count: 3 });
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   it('checks edit access', async () => {
-    const models = buildModels({ _id: 's1' }, { _id: 'c1' });
-    const ctx = { models, user: { _id: 'u1' } };
-    await addScenarioToCohort({ cohortId: 'c1', update: { scenarioId: 's1' } }, {}, ctx);
-    expect(checkAccessMock).toHaveBeenCalledWith({ cohortId: 'c1' }, ctx);
+    const cohort = await db.models.Cohort.create({ name: 'C' });
+    const scenario = await db.models.Scenario.create({ name: 'S' });
+    const ctx = { models: db.models, user: { _id: new mongoose.Types.ObjectId() } };
+    await addScenarioToCohort({ cohortId: cohort._id, update: { scenarioId: scenario._id } }, {}, ctx);
+    expect(checkAccessMock).toHaveBeenCalledWith({ cohortId: cohort._id }, ctx);
   });
 
   it('pushes the cohort onto the scenario with the next sortOrder', async () => {
-    const models = buildModels({ _id: 's1' }, { _id: 'c1' });
+    const userId = new mongoose.Types.ObjectId();
+    const cohort = await db.models.Cohort.create({ name: 'C' });
+    const scenario = await db.models.Scenario.create({ name: 'S' });
+
     await addScenarioToCohort(
-      { cohortId: 'c1', update: { scenarioId: 's1' } },
+      { cohortId: cohort._id, update: { scenarioId: scenario._id } },
       {},
-      { models, user: { _id: 'u1' } }
+      { models: db.models, user: { _id: userId } }
     );
 
-    expect(models.Scenario.findOneAndUpdate).toHaveBeenCalledWith(
-      { _id: 's1', 'cohorts.cohort': { $ne: 'c1' } },
-      {
-        $push: {
-          cohorts: {
-            cohort: 'c1',
-            sortOrder: 3,
-            addedBy: 'u1',
-            addedAt: FIXED_NOW
-          }
-        }
-      },
-      { new: true }
-    );
+    const stored = await db.models.Scenario.findById(scenario._id).lean();
+    const link = find(stored.cohorts, (c) => String(c.cohort) === String(cohort._id));
+    expect(link).toBeDefined();
+    expect(link.sortOrder).toBe(3);
+    expect(String(link.addedBy)).toBe(String(userId));
   });
 
-  it('throws 404 when the scenario is not found or already linked', async () => {
-    const models = buildModels(null, { _id: 'c1' });
-    await expect(addScenarioToCohort(
-      { cohortId: 'c1', update: { scenarioId: 'missing' } },
-      {},
-      { models, user: { _id: 'u1' } }
-    )).rejects.toMatchObject({ statusCode: 404 });
-  });
+  it('does not add the cohort twice and updates the cohort timestamps', async () => {
+    const userId = new mongoose.Types.ObjectId();
+    const cohort = await db.models.Cohort.create({ name: 'C' });
+    const scenario = await db.models.Scenario.create({ name: 'S' });
 
-  it('updates the cohort with updatedBy/updatedAt and returns it', async () => {
-    const cohort = { _id: 'c1' };
-    const models = buildModels({ _id: 's1' }, cohort);
-    const result = await addScenarioToCohort(
-      { cohortId: 'c1', update: { scenarioId: 's1' } },
+    await addScenarioToCohort(
+      { cohortId: cohort._id, update: { scenarioId: scenario._id } },
       {},
-      { models, user: { _id: 'u1' } }
+      { models: db.models, user: { _id: userId } }
     );
 
-    expect(models.Cohort.findByIdAndUpdate).toHaveBeenCalledWith('c1', {
-      updatedBy: 'u1',
-      updatedAt: FIXED_NOW
-    }, { new: true });
-    expect(result).toBe(cohort);
+    const storedCohort = await db.models.Cohort.findById(cohort._id).lean();
+    expect(String(storedCohort.updatedBy)).toBe(String(userId));
+    expect(storedCohort.updatedAt).toBeInstanceOf(Date);
+
+    // A second add for an already-linked scenario is a 404 (findOneAndUpdate matches nothing).
+    await expect(
+      addScenarioToCohort(
+        { cohortId: cohort._id, update: { scenarioId: scenario._id } },
+        {},
+        { models: db.models, user: { _id: userId } }
+      )
+    ).rejects.toMatchObject({ statusCode: 404 });
+  });
+
+  it('throws 404 when the scenario is not found', async () => {
+    const cohort = await db.models.Cohort.create({ name: 'C' });
+    await expect(
+      addScenarioToCohort(
+        { cohortId: cohort._id, update: { scenarioId: new mongoose.Types.ObjectId() } },
+        {},
+        { models: db.models, user: { _id: new mongoose.Types.ObjectId() } }
+      )
+    ).rejects.toMatchObject({ statusCode: 404 });
   });
 });

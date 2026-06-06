@@ -1,13 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../tests/with-mongo.js';
 
-const {
-  connectDatabaseMock,
-  findByIdMock,
-  getAudioTranscriptionMock,
-  createTranscriptMock
-} = vi.hoisted(() => ({
+const { connectDatabaseMock, getAudioTranscriptionMock, createTranscriptMock } = vi.hoisted(() => ({
   connectDatabaseMock: vi.fn(),
-  findByIdMock: vi.fn(),
   getAudioTranscriptionMock: vi.fn(),
   createTranscriptMock: vi.fn()
 }));
@@ -24,43 +20,35 @@ vi.mock('../../../backend/modules/transcripts/services/createTranscript.js', () 
 
 import createAudioTranscript from '../createAudioTranscript.js';
 
-describe('createAudioTranscript', () => {
+const db = setupMongo();
+
+describe('createAudioTranscript (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    connectDatabaseMock.mockResolvedValue({
-      models: { Asset: { findById: findByIdMock } }
-    });
+    connectDatabaseMock.mockResolvedValue({ models: db.models });
   });
 
-  it('transcribes the asset, persists a Transcript record, and stamps the asset with both', async () => {
-    const asset = {
-      _id: 'a1',
-      createdBy: 'u1',
-      set: vi.fn(),
-      save: vi.fn().mockResolvedValue()
-    };
-    findByIdMock.mockResolvedValue(asset);
+  it('transcribes the asset, persists a Transcript, and stamps the asset with both', async () => {
+    const transcriptId = new mongoose.Types.ObjectId();
+    const asset = await db.models.Asset.create({
+      name: 'audio', fileType: 'audio', extension: 'wav', createdBy: new mongoose.Types.ObjectId()
+    });
 
-    const transcript = {
-      text: 'hello world',
-      language: 'en',
-      duration: 2.5,
-      segments: [{ start: 0, end: 1, text: 'hello' }]
-    };
+    const transcript = { text: 'hello world', language: 'en', duration: 2.5, segments: [{ start: 0, end: 1, text: 'hello' }] };
     getAudioTranscriptionMock.mockResolvedValue(transcript);
-    createTranscriptMock.mockResolvedValue({ _id: 'tr1' });
+    createTranscriptMock.mockResolvedValue({ _id: transcriptId });
 
-    await createAudioTranscript({ assetId: 'a1' });
+    await createAudioTranscript({ assetId: asset._id });
 
-    expect(getAudioTranscriptionMock).toHaveBeenCalledWith({ asset });
+    expect(getAudioTranscriptionMock).toHaveBeenCalledWith({ asset: expect.objectContaining({ _id: asset._id }) });
     expect(createTranscriptMock).toHaveBeenCalledWith(
-      { ...transcript, assetId: 'a1', createdBy: 'u1' },
+      expect.objectContaining({ text: 'hello world', assetId: asset._id }),
       {},
       { models: expect.any(Object) }
     );
 
-    expect(asset.set).toHaveBeenCalledWith('transcript', 'hello world');
-    expect(asset.set).toHaveBeenCalledWith('transcriptVerbose', 'tr1');
-    expect(asset.save).toHaveBeenCalled();
+    const stored = await db.models.Asset.findById(asset._id).lean();
+    expect(stored.transcript).toBe('hello world');
+    expect(String(stored.transcriptVerbose)).toBe(String(transcriptId));
   });
 });

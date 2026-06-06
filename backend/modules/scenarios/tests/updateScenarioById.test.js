@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock, setScenarioHasChangesMock } = vi.hoisted(() => ({
   checkAccessMock: vi.fn(),
@@ -10,43 +12,40 @@ vi.mock('../services/setScenarioHasChanges.js', () => ({ default: (...args) => s
 
 import updateScenarioById from '../services/updateScenarioById.js';
 
-const buildModel = (scenario) => {
-  const populate = vi.fn().mockResolvedValue(scenario);
-  return { findByIdAndUpdate: vi.fn(() => ({ populate })) };
-};
+const db = setupMongo();
 
-describe('updateScenarioById', () => {
+describe('updateScenarioById (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    checkAccessMock.mockResolvedValue();
+    setScenarioHasChangesMock.mockResolvedValue();
   });
 
   it('applies the update', async () => {
-    const Scenario = buildModel({ _id: 's1', name: 'New' });
+    const scenario = await db.models.Scenario.create({ name: 'Old' });
 
     await updateScenarioById(
-      { scenarioId: 's1', update: { name: 'New' } },
+      { scenarioId: scenario._id, update: { name: 'New' } },
       {},
-      { models: { Scenario } }
+      { models: db.models }
     );
 
-    expect(Scenario.findByIdAndUpdate).toHaveBeenCalledWith('s1', { name: 'New' }, { new: true });
+    const stored = await db.models.Scenario.findById(scenario._id).lean();
+    expect(stored.name).toBe('New');
   });
 
   it('throws 404 when not found', async () => {
-    const Scenario = buildModel(null);
-    await expect(updateScenarioById(
-      { scenarioId: 'missing', update: {} },
-      {},
-      { models: { Scenario } }
-    )).rejects.toMatchObject({ statusCode: 404 });
+    await expect(
+      updateScenarioById({ scenarioId: new mongoose.Types.ObjectId(), update: {} }, {}, { models: db.models })
+    ).rejects.toMatchObject({ statusCode: 404 });
   });
 
   it('marks the scenario as having changes after a successful update', async () => {
-    const Scenario = buildModel({ _id: 's1' });
-    const ctx = { models: { Scenario } };
+    const scenario = await db.models.Scenario.create({ name: 'S' });
+    const ctx = { models: db.models };
 
-    await updateScenarioById({ scenarioId: 's1', update: {} }, {}, ctx);
+    await updateScenarioById({ scenarioId: scenario._id, update: {} }, {}, ctx);
 
-    expect(setScenarioHasChangesMock).toHaveBeenCalledWith({ scenarioId: 's1' }, {}, ctx);
+    expect(setScenarioHasChangesMock).toHaveBeenCalledWith({ scenarioId: scenario._id }, {}, ctx);
   });
 });

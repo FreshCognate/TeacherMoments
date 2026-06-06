@@ -70,6 +70,31 @@ describe('sortSlides', () => {
     expect(reordered.map((s) => s._id)).toEqual(['slide-3', 'slide-1', 'slide-2']);
   });
 
+  it('only reorders slides within the dragged slide\'s stem, leaving other stems untouched', () => {
+    seedSlides([
+      { _id: 'a-1', stemRef: 'stem-a', sortOrder: 0 },
+      { _id: 'a-2', stemRef: 'stem-a', sortOrder: 1 },
+      { _id: 'b-1', stemRef: 'stem-b', sortOrder: 0 },
+      { _id: 'b-2', stemRef: 'stem-b', sortOrder: 1 },
+      { _id: 'b-3', stemRef: 'stem-b', sortOrder: 2 }
+    ]);
+
+    sortSlides({
+      active: { id: 'b-1', data: { current: { sortOrder: 0 } } },
+      over: { data: { current: { sortOrder: 2 } } }
+    });
+
+    const reordered = getCache('slides').data;
+
+    const stemA = reordered.filter((s) => s.stemRef === 'stem-a');
+    expect(stemA.map((s) => s._id)).toEqual(['a-1', 'a-2']);
+    expect(stemA.map((s) => s.sortOrder)).toEqual([0, 1]);
+
+    const stemB = reordered.filter((s) => s.stemRef === 'stem-b');
+    expect(stemB.map((s) => s._id)).toEqual(['b-2', 'b-1', 'b-3']);
+    expect(stemB.map((s) => s.sortOrder)).toEqual([0, 1, 2]);
+  });
+
   it('PUTs the source and destination indices to the slide endpoint using the active id', () => {
     sortSlides({
       active: { id: 'slide-1', data: { current: { sortOrder: 0 } } },

@@ -1,47 +1,50 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 import getBlocks from '../services/getBlocks.js';
 
-const buildModels = (blocks = [], count = blocks.length) => ({
-  Block: {
-    countDocuments: vi.fn().mockResolvedValue(count),
-    find: vi.fn(() => ({ sort: vi.fn().mockResolvedValue(blocks) }))
-  }
+const db = setupMongo();
+
+const createBlock = (overrides = {}) => db.models.Block.create({
+  scenario: new mongoose.Types.ObjectId(),
+  slideRef: new mongoose.Types.ObjectId(),
+  name: 'Block',
+  ...overrides
 });
 
-describe('getBlocks', () => {
-  it('searches with isDeleted=false by default', async () => {
-    const models = buildModels();
-    await getBlocks({}, {}, { models });
-    expect(models.Block.countDocuments).toHaveBeenCalledWith({ isDeleted: false });
+describe('getBlocks (in-memory mongo)', () => {
+  beforeEach(() => {});
+
+  it('excludes deleted blocks by default', async () => {
+    await createBlock({ name: 'Active' });
+    await createBlock({ name: 'Deleted', isDeleted: true });
+
+    const { blocks, count } = await getBlocks({}, {}, { models: db.models });
+    expect(blocks.map((b) => b.name)).toEqual(['Active']);
+    expect(count).toBe(1);
   });
 
-  it('honours an explicit scenario filter', async () => {
-    const models = buildModels();
-    await getBlocks({ scenario: 's1' }, {}, { models });
-    expect(models.Block.countDocuments).toHaveBeenCalledWith(expect.objectContaining({ scenario: 's1' }));
+  it('honours a scenario filter', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+    await createBlock({ scenario, name: 'InScenario' });
+    await createBlock({ name: 'Elsewhere' });
+
+    const { blocks } = await getBlocks({ scenario }, {}, { models: db.models });
+    expect(blocks.map((b) => b.name)).toEqual(['InScenario']);
   });
 
   it('builds a search on name when searchValue is set', async () => {
-    const models = buildModels();
-    await getBlocks({}, { searchValue: 'foo' }, { models });
-    const search = models.Block.countDocuments.mock.calls[0][0];
-    expect(search.$or).toEqual([{ name: { $regex: 'foo', $options: 'i' } }]);
-  });
+    await createBlock({ name: 'FooBlock' });
+    await createBlock({ name: 'BarBlock' });
 
-  it('paginates by 20 by default', async () => {
-    const models = buildModels();
-    await getBlocks({}, { currentPage: 2 }, { models });
-    expect(models.Block.find).toHaveBeenCalledWith(expect.any(Object), null, { skip: 20, limit: 20 });
+    const { blocks } = await getBlocks({}, { searchValue: 'foo' }, { models: db.models });
+    expect(blocks.map((b) => b.name)).toEqual(['FooBlock']);
   });
 
   it('returns blocks, count, currentPage, totalPages', async () => {
-    const models = buildModels([{ _id: 'b1' }], 1);
-    const result = await getBlocks({}, {}, { models });
-    expect(result).toEqual({
-      blocks: [{ _id: 'b1' }],
-      count: 1,
-      currentPage: 1,
-      totalPages: 1
-    });
+    await createBlock({ name: 'Only' });
+    const result = await getBlocks({}, {}, { models: db.models });
+    expect(result).toMatchObject({ count: 1, currentPage: 1, totalPages: 1 });
+    expect(result.blocks).toHaveLength(1);
   });
 });

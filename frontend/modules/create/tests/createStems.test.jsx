@@ -1,24 +1,43 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CreateStems from '../components/createStems';
+import { createCache, resetCache } from '~/core/cache/helpers/cacheManager';
 
 const childStems = [
   { _id: 'stem-1', ref: 'ref-1', name: 'Branch A' },
   { _id: 'stem-2', ref: 'ref-2', name: 'Branch B' }
 ];
 
+// 3 slides under ref-1, 1 under ref-2 — the real getSlideCountForStem reads these from the cache.
+const seedSlides = () => {
+  resetCache('slides');
+  createCache({
+    key: 'slides',
+    cache: {
+      getInitialData: () => [
+        { _id: 's1', stemRef: 'ref-1' },
+        { _id: 's2', stemRef: 'ref-1' },
+        { _id: 's3', stemRef: 'ref-1' },
+        { _id: 's4', stemRef: 'ref-2' }
+      ]
+    },
+    container: { props: {} }
+  });
+};
+
 const baseProps = {
   isInRootStem: true,
   childStems,
   deletingId: null,
-  getSlideCountForStem: (ref) => (ref === 'ref-1' ? 3 : 1),
   onEditStemClicked: () => {},
   onDeleteStemClicked: () => {},
   onStemClicked: () => {}
 };
 
 describe('CreateStems', () => {
+  beforeEach(() => seedSlides());
+
   it('renders one row per stem with the slide count', () => {
     render(<CreateStems {...baseProps} />);
     expect(screen.getByText('Branch A (3)')).toBeInTheDocument();

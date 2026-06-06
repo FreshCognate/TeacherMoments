@@ -1,4 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import map from 'lodash/map.js';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock, setScenarioHasChangesMock } = vi.hoisted(() => ({
   checkAccessMock: vi.fn(),
@@ -10,62 +13,63 @@ vi.mock('../services/setScenarioHasChanges.js', () => ({ default: (...args) => s
 
 import addCollaboratorsToScenario from '../services/addCollaboratorsToScenario.js';
 
-describe('addCollaboratorsToScenario', () => {
+const db = setupMongo();
+
+describe('addCollaboratorsToScenario (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    checkAccessMock.mockResolvedValue();
+    setScenarioHasChangesMock.mockResolvedValue();
   });
 
   it('throws 404 when the scenario does not exist', async () => {
-    const models = {
-      Scenario: { findById: vi.fn().mockResolvedValue(null), findByIdAndUpdate: vi.fn() }
-    };
-
-    await expect(addCollaboratorsToScenario(
-      { scenarioId: 'missing', collaborators: ['u1'] },
-      {},
-      { models, user: { _id: 'u-actor' } }
-    )).rejects.toMatchObject({ statusCode: 404 });
+    await expect(
+      addCollaboratorsToScenario(
+        { scenarioId: new mongoose.Types.ObjectId(), collaborators: [String(new mongoose.Types.ObjectId())] },
+        {},
+        { models: db.models, user: { _id: new mongoose.Types.ObjectId() } }
+      )
+    ).rejects.toMatchObject({ statusCode: 404 });
   });
 
   it('adds only collaborators not already on the scenario, with role AUTHOR', async () => {
-    const models = {
-      Scenario: {
-        findById: vi.fn().mockResolvedValue({ collaborators: [{ user: 'u-existing' }] }),
-        findByIdAndUpdate: vi.fn().mockResolvedValue({})
-      }
-    };
+    const existing = new mongoose.Types.ObjectId();
+    const newOne = new mongoose.Types.ObjectId();
+    const newTwo = new mongoose.Types.ObjectId();
+
+    const scenario = await db.models.Scenario.create({
+      name: 'S',
+      collaborators: [{ user: existing, role: 'OWNER' }]
+    });
 
     await addCollaboratorsToScenario(
-      { scenarioId: 's1', collaborators: ['u-existing', 'u-new-1', 'u-new-2'] },
+      { scenarioId: scenario._id, collaborators: [String(existing), String(newOne), String(newTwo)] },
       {},
-      { models, user: { _id: 'u-actor' } }
+      { models: db.models, user: { _id: new mongoose.Types.ObjectId() } }
     );
 
-    expect(models.Scenario.findByIdAndUpdate).toHaveBeenCalledWith('s1', {
-      $push: {
-        collaborators: [
-          { role: 'AUTHOR', user: 'u-new-1' },
-          { role: 'AUTHOR', user: 'u-new-2' }
-        ]
-      }
-    });
+    const stored = await db.models.Scenario.findById(scenario._id).lean();
+    const userIds = map(stored.collaborators, (c) => String(c.user));
+
+    expect(userIds).toContain(String(newOne));
+    expect(userIds).toContain(String(newTwo));
+    // Existing collaborator is not duplicated.
+    expect(userIds.filter((id) => id === String(existing))).toHaveLength(1);
+
+    const added = stored.collaborators.find((c) => String(c.user) === String(newOne));
+    expect(added.role).toBe('AUTHOR');
   });
 
   it('marks the scenario as having changes', async () => {
-    const models = {
-      Scenario: {
-        findById: vi.fn().mockResolvedValue({ collaborators: [] }),
-        findByIdAndUpdate: vi.fn().mockResolvedValue({})
-      }
-    };
-    const ctx = { models, user: { _id: 'u-actor' } };
+    const scenario = await db.models.Scenario.create({ name: 'S' });
+    const ctx = { models: db.models, user: { _id: new mongoose.Types.ObjectId() } };
 
     await addCollaboratorsToScenario(
-      { scenarioId: 's1', collaborators: ['u-new'] },
+      { scenarioId: scenario._id, collaborators: [String(new mongoose.Types.ObjectId())] },
       {},
       ctx
     );
 
-    expect(setScenarioHasChangesMock).toHaveBeenCalledWith({ scenarioId: 's1' }, {}, ctx);
+    expect(setScenarioHasChangesMock).toHaveBeenCalledWith({ scenarioId: scenario._id }, {}, ctx);
   });
 });

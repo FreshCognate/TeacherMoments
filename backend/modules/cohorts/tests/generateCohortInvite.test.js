@@ -1,4 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import find from 'lodash/find.js';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock, generateInviteTokenMock } = vi.hoisted(() => ({
   checkAccessMock: vi.fn(),
@@ -15,65 +18,38 @@ vi.mock('../helpers/generateInviteToken.js', () => ({
 
 import generateCohortInvite from '../services/generateCohortInvite.js';
 
-const FIXED_NOW = new Date('2026-05-06T12:00:00Z');
+const db = setupMongo();
 
-const buildModel = (cohort) => {
-  let callIndex = 0;
-  return {
-    findByIdAndUpdate: vi.fn((..._args) => {
-      callIndex += 1;
-      if (callIndex === 1) {
-        // First call: deactivate existing invites — returns a Promise for catch chain
-        return Promise.resolve();
-      }
-      // Second call: push new invite + populate
-      return { populate: vi.fn().mockResolvedValue(cohort) };
-    })
-  };
-};
-
-describe('generateCohortInvite', () => {
+describe('generateCohortInvite (in-memory mongo)', () => {
   beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
     vi.clearAllMocks();
+    checkAccessMock.mockResolvedValue();
     generateInviteTokenMock.mockReturnValue('new-token-abc');
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  it('deactivates existing active invites', async () => {
-    const Cohort = buildModel({ _id: 'c1' });
-    await generateCohortInvite({ cohortId: 'c1' }, {}, { models: { Cohort }, user: { _id: 'u1' } });
-
-    expect(Cohort.findByIdAndUpdate).toHaveBeenNthCalledWith(1, 'c1', {
-      $set: { 'invites.$[invite].isActive': false }
-    }, {
-      arrayFilters: [{ 'invite.isActive': true }]
+  it('deactivates existing active invites and pushes a new active invite', async () => {
+    const userId = new mongoose.Types.ObjectId();
+    const cohort = await db.models.Cohort.create({
+      name: 'C',
+      invites: [{ token: 'old-token', isActive: true, createdBy: userId, createdAt: new Date() }]
     });
-  });
 
-  it('pushes a new active invite onto the cohort', async () => {
-    const Cohort = buildModel({ _id: 'c1' });
-    await generateCohortInvite({ cohortId: 'c1' }, {}, { models: { Cohort }, user: { _id: 'u1' } });
+    await generateCohortInvite({ cohortId: cohort._id }, {}, { models: db.models, user: { _id: userId } });
 
-    const [, update] = Cohort.findByIdAndUpdate.mock.calls[1];
-    expect(update.$push.invites).toMatchObject({
-      token: 'new-token-abc',
-      isActive: true,
-      createdBy: 'u1',
-      createdAt: FIXED_NOW
-    });
+    const stored = await db.models.Cohort.findById(cohort._id).lean();
+
+    const oldInvite = find(stored.invites, { token: 'old-token' });
+    expect(oldInvite.isActive).toBe(false);
+
+    const newInvite = find(stored.invites, { token: 'new-token-abc' });
+    expect(newInvite).toBeDefined();
+    expect(newInvite.isActive).toBe(true);
+    expect(String(newInvite.createdBy)).toBe(String(userId));
   });
 
   it('throws 404 when the cohort does not exist', async () => {
-    const Cohort = buildModel(null);
-    await expect(generateCohortInvite(
-      { cohortId: 'missing' },
-      {},
-      { models: { Cohort }, user: { _id: 'u1' } }
-    )).rejects.toMatchObject({ statusCode: 404 });
+    await expect(
+      generateCohortInvite({ cohortId: new mongoose.Types.ObjectId() }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId() } })
+    ).rejects.toMatchObject({ statusCode: 404 });
   });
 });

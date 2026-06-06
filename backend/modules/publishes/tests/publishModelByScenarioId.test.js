@@ -1,63 +1,40 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 import publishModelByScenarioId from '../services/publishModelByScenarioId.js';
 
-describe('publishModelByScenarioId', () => {
-  it('clears the Published_<model> collection for the scenario', async () => {
-    const Published_Slide = { deleteMany: vi.fn().mockResolvedValue({}), create: vi.fn() };
-    const Slide = { find: vi.fn().mockResolvedValue([]) };
+const db = setupMongo();
 
-    await publishModelByScenarioId(
-      { model: 'Slide', scenarioId: 's1' },
-      {},
-      { models: { Published_Slide, Slide } }
-    );
+describe('publishModelByScenarioId (in-memory mongo)', () => {
+  beforeEach(() => {});
 
-    expect(Published_Slide.deleteMany).toHaveBeenCalledWith({ scenario: 's1' });
+  it('replaces the Published_Slide docs with the scenario\'s non-deleted drafts', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+    const stemRef = new mongoose.Types.ObjectId();
+
+    // A stale published doc from a prior publish — should be cleared first.
+    await db.models.Published_Slide.create({ scenario, stemRef, sortOrder: 99, name: 'Stale' });
+
+    await db.models.Slide.create([
+      { scenario, stemRef, sortOrder: 0, name: 'A' },
+      { scenario, stemRef, sortOrder: 1, name: 'B' },
+      { scenario, stemRef, sortOrder: 2, name: 'Deleted', isDeleted: true }
+    ]);
+
+    await publishModelByScenarioId({ model: 'Slide', scenarioId: scenario }, {}, { models: db.models });
+
+    const published = await db.models.Published_Slide.find({ scenario }).lean();
+    expect(published.map((p) => p.name).sort()).toEqual(['A', 'B']);
   });
 
-  it('finds non-deleted draft documents for the scenario', async () => {
-    const Published_Slide = { deleteMany: vi.fn().mockResolvedValue({}), create: vi.fn() };
-    const Slide = { find: vi.fn().mockResolvedValue([]) };
+  it('works for any model name via Published_<model>', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+    const slideRef = new mongoose.Types.ObjectId();
+    await db.models.Block.create([{ scenario, slideRef, sortOrder: 0, name: 'BlockA' }]);
 
-    await publishModelByScenarioId(
-      { model: 'Slide', scenarioId: 's1' },
-      {},
-      { models: { Published_Slide, Slide } }
-    );
+    await publishModelByScenarioId({ model: 'Block', scenarioId: scenario }, {}, { models: db.models });
 
-    expect(Slide.find).toHaveBeenCalledWith({ scenario: 's1', isDeleted: false });
-  });
-
-  it('creates a Published_<model> doc for each draft', async () => {
-    const drafts = [
-      { _id: 'd1', toJSON: () => ({ _id: 'd1', name: 'A' }) },
-      { _id: 'd2', toJSON: () => ({ _id: 'd2', name: 'B' }) }
-    ];
-    const Published_Block = { deleteMany: vi.fn().mockResolvedValue({}), create: vi.fn().mockResolvedValue({}) };
-    const Block = { find: vi.fn().mockResolvedValue(drafts) };
-
-    await publishModelByScenarioId(
-      { model: 'Block', scenarioId: 's1' },
-      {},
-      { models: { Published_Block, Block } }
-    );
-
-    expect(Published_Block.create).toHaveBeenCalledTimes(2);
-    expect(Published_Block.create).toHaveBeenCalledWith({ _id: 'd1', name: 'A' });
-    expect(Published_Block.create).toHaveBeenCalledWith({ _id: 'd2', name: 'B' });
-  });
-
-  it('uses the model name to look up Published_<model> dynamically', async () => {
-    const Published_Trigger = { deleteMany: vi.fn().mockResolvedValue({}), create: vi.fn() };
-    const Trigger = { find: vi.fn().mockResolvedValue([]) };
-
-    await publishModelByScenarioId(
-      { model: 'Trigger', scenarioId: 's1' },
-      {},
-      { models: { Published_Trigger, Trigger } }
-    );
-
-    expect(Published_Trigger.deleteMany).toHaveBeenCalled();
-    expect(Trigger.find).toHaveBeenCalled();
+    const published = await db.models.Published_Block.find({ scenario }).lean();
+    expect(published.map((p) => p.name)).toEqual(['BlockA']);
   });
 });

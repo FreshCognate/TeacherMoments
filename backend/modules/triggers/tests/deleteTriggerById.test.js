@@ -1,84 +1,56 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import sortBy from 'lodash/sortBy.js';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock, setHasChangesMock } = vi.hoisted(() => ({
   checkAccessMock: vi.fn(),
   setHasChangesMock: vi.fn()
 }));
 
-vi.mock('../../scenarios/helpers/checkHasAccessToScenario.js', () => ({
-  default: (...args) => checkAccessMock(...args)
-}));
-vi.mock('../../scenarios/services/setScenarioHasChanges.js', () => ({
-  default: (...args) => setHasChangesMock(...args)
-}));
+vi.mock('../../scenarios/helpers/checkHasAccessToScenario.js', () => ({ default: (...args) => checkAccessMock(...args) }));
+vi.mock('../../scenarios/services/setScenarioHasChanges.js', () => ({ default: (...args) => setHasChangesMock(...args) }));
 
 import deleteTriggerById from '../services/deleteTriggerById.js';
 
-const FIXED_NOW = new Date('2026-05-08T12:00:00Z');
+const db = setupMongo();
 
-describe('deleteTriggerById', () => {
+const makeTrigger = (scenario, elementRef, sortOrder) => db.models.Trigger.create({
+  scenario, elementRef, triggerType: 'SLIDE', action: 'SHOW_FEEDBACK_FROM_PROMPTS', sortOrder
+});
+
+describe('deleteTriggerById (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     checkAccessMock.mockResolvedValue();
-    vi.useFakeTimers();
-    vi.setSystemTime(FIXED_NOW);
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
   });
 
   it('throws 404 when the trigger does not exist', async () => {
-    const findByIdAndUpdate = vi.fn().mockResolvedValue(null);
-
     await expect(
-      deleteTriggerById(
-        { triggerId: 't1' },
-        {},
-        {
-          models: { Trigger: { findByIdAndUpdate, find: vi.fn() } },
-          user: { _id: 'u1' }
-        }
-      )
+      deleteTriggerById({ triggerId: new mongoose.Types.ObjectId() }, {}, { models: db.models, user: { _id: new mongoose.Types.ObjectId() } })
     ).rejects.toMatchObject({ statusCode: 404 });
   });
 
-  it('soft-deletes the trigger, renumbers siblings within scenario+triggerType+elementRef, and marks the scenario changed', async () => {
-    const deletedTrigger = { _id: 't1', scenario: 's1', triggerType: 'BLOCK', elementRef: 'b1' };
-    const findByIdAndUpdate = vi.fn().mockResolvedValue(deletedTrigger);
+  it('soft-deletes the trigger and renumbers its element siblings, marking the scenario changed', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+    const elementRef = new mongoose.Types.ObjectId();
+    const [first, second, third] = await Promise.all([
+      makeTrigger(scenario, elementRef, 0),
+      makeTrigger(scenario, elementRef, 1),
+      makeTrigger(scenario, elementRef, 2)
+    ]);
 
-    const sib0 = { sortOrder: 5, save: vi.fn().mockResolvedValue() };
-    const sib1 = { sortOrder: 8, save: vi.fn().mockResolvedValue() };
+    const ctx = { models: db.models, user: { _id: new mongoose.Types.ObjectId() } };
+    const result = await deleteTriggerById({ triggerId: second._id }, {}, ctx);
 
-    const sort = vi.fn().mockResolvedValue([sib0, sib1]);
-    const find = vi.fn(() => ({ sort }));
+    const deleted = await db.models.Trigger.findById(second._id).lean();
+    expect(deleted.isDeleted).toBe(true);
 
-    const context = {
-      models: { Trigger: { findByIdAndUpdate, find } },
-      user: { _id: 'u1' }
-    };
+    const remaining = sortBy(await db.models.Trigger.find({ scenario, elementRef, isDeleted: false }).lean(), 'sortOrder');
+    expect(remaining.map((t) => t.sortOrder)).toEqual([0, 1]);
+    expect(remaining.map((t) => String(t._id))).toEqual([String(first._id), String(third._id)]);
 
-    const result = await deleteTriggerById({ triggerId: 't1' }, {}, context);
-
-    expect(findByIdAndUpdate).toHaveBeenCalledWith(
-      't1',
-      { isDeleted: true, deletedAt: FIXED_NOW, deletedBy: 'u1' },
-      { new: true }
-    );
-    expect(find).toHaveBeenCalledWith({
-      scenario: 's1',
-      triggerType: 'BLOCK',
-      elementRef: 'b1',
-      isDeleted: false
-    });
-    expect(sort).toHaveBeenCalledWith('sortOrder');
-
-    expect(sib0.sortOrder).toBe(0);
-    expect(sib1.sortOrder).toBe(1);
-    expect(sib0.save).toHaveBeenCalled();
-    expect(sib1.save).toHaveBeenCalled();
-
-    expect(setHasChangesMock).toHaveBeenCalledWith({ scenarioId: 's1' }, {}, context);
-    expect(result).toBe(deletedTrigger);
+    expect(setHasChangesMock).toHaveBeenCalledWith({ scenarioId: scenario }, {}, ctx);
+    expect(String(result._id)).toBe(String(second._id));
   });
 });

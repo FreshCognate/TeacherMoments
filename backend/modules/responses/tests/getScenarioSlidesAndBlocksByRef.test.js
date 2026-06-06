@@ -1,55 +1,48 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 import getScenarioSlidesAndBlocksByRef from '../helpers/getScenarioSlidesAndBlocksByRef.js';
 
-const buildBlockChain = (blocks) => {
-  const populate2 = vi.fn().mockResolvedValue(blocks);
-  const populate1 = vi.fn(() => ({ populate: populate2 }));
-  return { find: vi.fn(() => ({ populate: populate1 })) };
-};
+const db = setupMongo();
 
-describe('getScenarioSlidesAndBlocksByRef', () => {
-  it('queries non-deleted slides for the scenario', async () => {
-    const Slide = { find: vi.fn().mockResolvedValue([]) };
-    const Block = buildBlockChain([]);
+describe('getScenarioSlidesAndBlocksByRef (in-memory mongo)', () => {
+  beforeEach(() => {});
 
-    await getScenarioSlidesAndBlocksByRef({ scenarioId: 's1' }, { models: { Slide, Block } });
+  it('returns slides and blocks keyed by ref for the scenario', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+    const stemRef = new mongoose.Types.ObjectId();
 
-    expect(Slide.find).toHaveBeenCalledWith({ scenario: 's1', isDeleted: false });
-    expect(Block.find).toHaveBeenCalledWith({ scenario: 's1', isDeleted: false });
-  });
+    const [slideA, slideB] = await db.models.Slide.create([
+      { scenario, stemRef, sortOrder: 0, name: 'A' },
+      { scenario, stemRef, sortOrder: 1, name: 'B' }
+    ]);
 
-  it('returns slides keyed by ref', async () => {
-    const slides = [{ ref: 'slide-a', name: 'A' }, { ref: 'slide-b', name: 'B' }];
-    const Slide = { find: vi.fn().mockResolvedValue(slides) };
-    const Block = buildBlockChain([]);
+    const [blockA] = await db.models.Block.create([
+      { scenario, slideRef: slideA.ref, sortOrder: 0, name: 'BlockA' }
+    ]);
 
-    const result = await getScenarioSlidesAndBlocksByRef({ scenarioId: 's1' }, { models: { Slide, Block } });
+    const result = await getScenarioSlidesAndBlocksByRef({ scenarioId: scenario }, { models: db.models });
 
-    expect(result.slidesByRef).toEqual({
-      'slide-a': slides[0],
-      'slide-b': slides[1]
-    });
-  });
-
-  it('returns blocks keyed by ref', async () => {
-    const blocks = [{ ref: 'block-a' }, { ref: 'block-b' }];
-    const Slide = { find: vi.fn().mockResolvedValue([]) };
-    const Block = buildBlockChain(blocks);
-
-    const result = await getScenarioSlidesAndBlocksByRef({ scenarioId: 's1' }, { models: { Slide, Block } });
-
-    expect(result.blocksByRef).toEqual({
-      'block-a': blocks[0],
-      'block-b': blocks[1]
-    });
+    expect(Object.keys(result.slidesByRef).sort()).toEqual([String(slideA.ref), String(slideB.ref)].sort());
+    expect(String(result.slidesByRef[String(slideA.ref)].name)).toBe('A');
+    expect(Object.keys(result.blocksByRef)).toEqual([String(blockA.ref)]);
   });
 
   it('returns empty maps when nothing matches', async () => {
-    const Slide = { find: vi.fn().mockResolvedValue([]) };
-    const Block = buildBlockChain([]);
-
-    const result = await getScenarioSlidesAndBlocksByRef({ scenarioId: 's1' }, { models: { Slide, Block } });
-
+    const result = await getScenarioSlidesAndBlocksByRef({ scenarioId: new mongoose.Types.ObjectId() }, { models: db.models });
     expect(result).toEqual({ slidesByRef: {}, blocksByRef: {} });
+  });
+
+  it('excludes deleted slides and blocks', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+    const stemRef = new mongoose.Types.ObjectId();
+
+    const [active] = await db.models.Slide.create([
+      { scenario, stemRef, sortOrder: 0, name: 'Active' },
+      { scenario, stemRef, sortOrder: 1, name: 'Deleted', isDeleted: true }
+    ]);
+
+    const result = await getScenarioSlidesAndBlocksByRef({ scenarioId: scenario }, { models: db.models });
+    expect(Object.keys(result.slidesByRef)).toEqual([String(active.ref)]);
   });
 });

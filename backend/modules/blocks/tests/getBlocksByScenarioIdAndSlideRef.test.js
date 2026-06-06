@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
+import { setupMongo } from '../../../../tests/with-mongo.js';
 
 const { checkAccessMock } = vi.hoisted(() => ({ checkAccessMock: vi.fn() }));
 
@@ -8,49 +10,37 @@ vi.mock('../../scenarios/helpers/checkHasAccessToScenario.js', () => ({
 
 import getBlocksByScenarioIdAndSlideRef from '../services/getBlocksByScenarioIdAndSlideRef.js';
 
-const buildModelChain = (blocks) => {
-  const populate2 = vi.fn().mockResolvedValue(blocks);
-  const populate1 = vi.fn(() => ({ populate: populate2 }));
-  const sort = vi.fn(() => ({ populate: populate1 }));
-  return {
-    find: vi.fn(() => ({ sort }))
-  };
-};
+const db = setupMongo();
 
-describe('getBlocksByScenarioIdAndSlideRef', () => {
+describe('getBlocksByScenarioIdAndSlideRef (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    checkAccessMock.mockResolvedValue();
   });
 
   it('checks scenario access', async () => {
-    const Block = buildModelChain([]);
-    const ctx = { models: { Block } };
-
-    await getBlocksByScenarioIdAndSlideRef({ scenarioId: 's1', slideRef: 'slide-1' }, {}, ctx);
-    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: 's1', modelType: 'Scenario' }, ctx);
+    const scenarioId = new mongoose.Types.ObjectId();
+    const ctx = { models: db.models };
+    await getBlocksByScenarioIdAndSlideRef({ scenarioId, slideRef: new mongoose.Types.ObjectId() }, {}, ctx);
+    expect(checkAccessMock).toHaveBeenCalledWith({ modelId: scenarioId, modelType: 'Scenario' }, ctx);
   });
 
-  it('searches by scenario + slideRef + isDeleted', async () => {
-    const Block = buildModelChain([]);
+  it('returns only the blocks for the given scenario and slideRef', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+    const slideRef = new mongoose.Types.ObjectId();
+    const otherSlide = new mongoose.Types.ObjectId();
 
-    await getBlocksByScenarioIdAndSlideRef(
-      { scenarioId: 's1', slideRef: 'slide-1' },
+    await db.models.Block.create([
+      { scenario, slideRef, sortOrder: 0, name: 'OnSlide' },
+      { scenario, slideRef: otherSlide, sortOrder: 0, name: 'OtherSlide' }
+    ]);
+
+    const { blocks } = await getBlocksByScenarioIdAndSlideRef(
+      { scenarioId: scenario, slideRef },
       { isDeleted: false },
-      { models: { Block } }
+      { models: db.models }
     );
 
-    expect(Block.find).toHaveBeenCalledWith({ scenario: 's1', slideRef: 'slide-1', isDeleted: false });
-  });
-
-  it('returns blocks wrapped in an object', async () => {
-    const Block = buildModelChain([{ _id: 'b1' }]);
-
-    const result = await getBlocksByScenarioIdAndSlideRef(
-      { scenarioId: 's1', slideRef: 'slide-1' },
-      {},
-      { models: { Block } }
-    );
-
-    expect(result).toEqual({ blocks: [{ _id: 'b1' }] });
+    expect(blocks.map((b) => b.name)).toEqual(['OnSlide']);
   });
 });
