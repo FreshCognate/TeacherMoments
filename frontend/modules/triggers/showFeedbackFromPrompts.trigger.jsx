@@ -204,6 +204,9 @@ const ShowFeedbackFromPrompts = {
 
     })
   },
+  isAvailable: () => {
+    return true;
+  },
   getShouldStopNavigation: () => {
     return true;
   },
