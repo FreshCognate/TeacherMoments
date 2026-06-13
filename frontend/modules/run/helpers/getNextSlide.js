@@ -14,7 +14,8 @@ export default () => {
   const currentSlide = find(getCache('slides').data, { ref: activeSlideRef });
 
   if (currentSlide) {
-    const nextSlide = find(getCache('slides').data, { sortOrder: currentSlide.sortOrder + 1 });
+    const currentStem = find(getCache('stems').data, {ref: currentSlide.stemRef});
+    const nextSlide = find(getCache('slides').data, { stemRef: currentStem.ref, sortOrder: currentSlide.sortOrder + 1 });
     if (nextSlide) {
       return nextSlide;
     }
