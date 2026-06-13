@@ -22,6 +22,7 @@ import setSlideToSubmitted from '~/modules/run/helpers/setSlideToSubmitted';
 import setScenarioToArchived from '~/modules/run/helpers/setScenarioToArchived';
 import isScenarioInPlay from '~/modules/scenarios/helpers/isScenarioInPlay';
 import getCohortFromSearchParams from '~/modules/cohorts/helpers/getCohortFromSearchParams';
+import getActiveSlideStems from '../helpers/getActiveSlideStems';
 
 class SlidePlayerContainer extends Component {
 
@@ -131,6 +132,7 @@ class SlidePlayerContainer extends Component {
     }
 
     return {
+      hasPrompts,
       primaryAction,
       secondaryAction
     }
@@ -290,18 +292,23 @@ class SlidePlayerContainer extends Component {
     const slideStage = getCurrentStage();
 
     const {
+      hasPrompts,
       primaryAction,
       secondaryAction,
     } = this.getNavigationDetails();
+
+    const activeSlideStems = getActiveSlideStems({ activeSlideRef: activeSlide.ref });
 
     return (
       <SlidePlayer
         scenario={scenario}
         activeSlide={activeSlide}
         activeBlocks={activeBlocks}
+        activeSlideStems={activeSlideStems}
         run={this.props.run.data}
         isLoading={this.state.isLoading}
         isMenuOpen={isMenuOpen}
+        hasPrompts={hasPrompts}
         navigateTo={this.navigateTo}
         slideStage={slideStage}
         primaryAction={primaryAction}
