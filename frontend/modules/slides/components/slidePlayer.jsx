@@ -16,10 +16,12 @@ const SlidePlayer = ({
   scenario,
   activeSlide,
   activeBlocks,
+  activeSlideStems,
   navigateTo,
   run = {},
   isLoading,
   isMenuOpen,
+  hasPrompts,
   primaryAction,
   secondaryAction,
   onActionClicked,
@@ -96,7 +98,9 @@ const SlidePlayer = ({
         activeSlide={activeSlide}
         navigateTo={navigateTo}
         primaryAction={primaryAction}
+        activeSlideStems={activeSlideStems}
         secondaryAction={secondaryAction}
+        hasPrompts={hasPrompts}
         onActionClicked={onActionClicked}
       />
     </div >

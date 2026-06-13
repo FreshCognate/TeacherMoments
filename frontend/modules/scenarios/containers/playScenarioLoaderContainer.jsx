@@ -40,6 +40,12 @@ export default WithRouter(WithCache(PlayScenarioLoaderContainer, {
         publishLink: props.router.params.publishLink
       };
     },
+    getters: {
+      firstStemSlide: ({ data, attributes, props }) => {
+        const firstStemSlide = find(data, { stemRef: attributes.stemRef });
+        return firstStemSlide;
+      }
+    },
     transform: ({ data }) => data.slides,
     getDependencies: ({ props }) => {
       const scenario = getCache('scenario');
