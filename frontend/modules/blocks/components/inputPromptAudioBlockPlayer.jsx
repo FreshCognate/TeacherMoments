@@ -71,7 +71,7 @@ const InputPromptAudioBlockPlayer = ({
       )}
       {(isTranscribingAudio) && (
         <div className="mt-4">
-          <Alert type="warning" text="Transcribing audio..." />
+          <Alert text="Transcribing audio..." />
         </div>
       )}
       {(transcript) && (
