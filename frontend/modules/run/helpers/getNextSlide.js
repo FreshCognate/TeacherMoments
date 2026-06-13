@@ -7,7 +7,7 @@ export default () => {
   const { activeSlideRef } = getScenarioDetails();
 
   if (activeSlideRef === 'CONSENT') {
-    const nextSlide = find(getCache('slides').data, {sortOrder: 0});
+    const nextSlide = find(getCache('slides').data, { sortOrder: 0 });
     return nextSlide;
   }
 
@@ -19,7 +19,16 @@ export default () => {
     if (nextSlide) {
       return nextSlide;
     }
-    return {_id: 'SUMMARY', slideType: 'SUMMARY', ref: 'SUMMARY'}
+    if (currentStem.isRoot) {
+      return {_id: 'SUMMARY', slideType: 'SUMMARY', ref: 'SUMMARY'}
+    } else {
+      // if in nested stem, we should navigate back to the parent stem and the next slide
+      const parentSlide = find(getCache('slides').data, { ref: currentStem.slideRef });
+      const nextSlide = find(getCache('slides').data, { stemRef: parentSlide.stemRef, sortOrder: parentSlide.sortOrder + 1 });
+      if (nextSlide) {
+        return nextSlide;
+      }
+    }
   }
 
 }
