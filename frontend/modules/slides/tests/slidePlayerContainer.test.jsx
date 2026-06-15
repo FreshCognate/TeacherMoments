@@ -22,6 +22,8 @@ const setScenarioToArchivedMock = vi.fn();
 const setSlideToSubmittedMock = vi.fn();
 const setShouldStopNavigationMock = vi.fn();
 const getCurrentStageMock = vi.fn();
+const ensureCurrentStageMock = vi.fn();
+const getActiveSlideStemsMock = vi.fn();
 const getTriggerMock = vi.fn();
 const getTriggerErrorsMock = vi.fn();
 const getTriggersBySlideRefMock = vi.fn();
@@ -43,6 +45,7 @@ vi.mock('~/modules/run/helpers/setScenarioToArchived', () => ({ default: () => s
 vi.mock('~/modules/run/helpers/setSlideToSubmitted', () => ({ default: () => setSlideToSubmittedMock() }));
 vi.mock('~/modules/run/helpers/setShouldStopNavigation', () => ({ default: (val) => setShouldStopNavigationMock(val) }));
 vi.mock('~/modules/run/helpers/getCurrentStage', () => ({ default: () => getCurrentStageMock() }));
+vi.mock('~/modules/run/helpers/ensureCurrentStage', () => ({ default: () => ensureCurrentStageMock() }));
 vi.mock('~/modules/triggers/helpers/getTrigger', () => ({ default: (action) => getTriggerMock(action) }));
 vi.mock('~/modules/triggers/helpers/getTriggerErrors', () => ({ default: (trigger) => getTriggerErrorsMock(trigger) }));
 vi.mock('~/modules/triggers/helpers/getTriggersBySlideRef', () => ({ default: (args) => getTriggersBySlideRefMock(args) }));
@@ -50,6 +53,7 @@ vi.mock('~/modules/scenarios/helpers/isScenarioInPlay', () => ({ default: () => 
 vi.mock('~/modules/cohorts/helpers/getCohortFromSearchParams', () => ({ default: (router) => getCohortFromSearchParamsMock(router) }));
 vi.mock('~/core/dialogs/helpers/addModal', () => ({ default: (config, callback) => addModalMock(config, callback) }));
 vi.mock('~/core/cache/helpers/getCache', () => ({ default: (key) => getCacheMock(key) }));
+vi.mock('~/modules/slides/helpers/getActiveSlideStems', () => ({ default: (args) => getActiveSlideStemsMock(args) }));
 
 let capturedProps = null;
 vi.mock('../components/slidePlayer', () => ({
@@ -86,6 +90,8 @@ describe('SlidePlayerContainer', () => {
     capturedProps = null;
     vi.clearAllMocks();
     getCurrentStageMock.mockReturnValue({ shouldStopNavigation: false });
+    ensureCurrentStageMock.mockReturnValue({ shouldStopNavigation: false });
+    getActiveSlideStemsMock.mockReturnValue([]);
     setNavigationDetails();
     getNextSlideMock.mockReturnValue({ ref: 'next-slide' });
     getCohortFromSearchParamsMock.mockReturnValue(null);
@@ -140,6 +146,28 @@ describe('SlidePlayerContainer', () => {
       setNavigationDetails({ hasPrompts: true, isSubmitted: false });
       render(<SlidePlayerContainer {...buildProps()} />);
       expect(capturedProps.primaryAction.action).toBe('SUBMIT');
+    });
+  });
+
+  describe('render against every activeSlide shape getActiveSlide can return', () => {
+    // These mirror playScenarioContainer.getActiveSlide(): it can return null
+    // (no activeSlideRef), undefined (find misses), the ref-less CONSENT/SUMMARY
+    // synthetic slides, or a real slide. The container must tolerate all of them.
+    const cases = [
+      { name: 'null (no active slide ref)', activeSlide: null, expectedRef: undefined },
+      { name: 'undefined (active slide ref matched no slide)', activeSlide: undefined, expectedRef: undefined },
+      { name: 'ref-less CONSENT synthetic slide', activeSlide: { _id: 'CONSENT_SLIDE', slideType: 'CONSENT' }, expectedRef: undefined },
+      { name: 'ref-less SUMMARY synthetic slide', activeSlide: { _id: 'SUMMARY_SLIDE', slideType: 'SUMMARY' }, expectedRef: undefined },
+      { name: 'a real slide', activeSlide: { ref: 'slide-1', slideType: 'CONTENT' }, expectedRef: 'slide-1' }
+    ];
+
+    cases.forEach(({ name, activeSlide, expectedRef }) => {
+      it(`does not crash and resolves stems for ${name}`, () => {
+        expect(() => {
+          render(<SlidePlayerContainer {...buildProps({ activeSlide })} />);
+        }).not.toThrow();
+        expect(getActiveSlideStemsMock).toHaveBeenCalledWith({ activeSlideRef: expectedRef });
+      });
     });
   });
 

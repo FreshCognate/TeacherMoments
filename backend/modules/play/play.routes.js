@@ -5,6 +5,7 @@ import controller from './play.controller.js';
 import playSlidesController from './playSlides.controller.js';
 import playBlocksController from './playBlocks.controller.js'
 import playTriggersController from './playTriggers.controller.js'
+import playStemsController from './playStems.controller.js'
 import playRunsController from './playRuns.controller.js'
 
 export default [{
@@ -28,6 +29,15 @@ export default [{
 }, {
   route: '/play/triggers',
   controller: playTriggersController,
+  all: {
+    query: {
+      scenario: Joi.string().required()
+    },
+    middleware: [isAuthenticated]
+  },
+}, {
+  route: '/play/stems',
+  controller: playStemsController,
   all: {
     query: {
       scenario: Joi.string().required()

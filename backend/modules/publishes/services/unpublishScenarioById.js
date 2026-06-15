@@ -14,6 +14,7 @@ export default async (props, options, context) => {
   await unpublishModelByScenarioId({ model: 'Slide', scenarioId }, {}, context);
   await unpublishModelByScenarioId({ model: 'Block', scenarioId }, {}, context);
   await unpublishModelByScenarioId({ model: 'Trigger', scenarioId }, {}, context);
+  await unpublishModelByScenarioId({ model: 'Stem', scenarioId }, {}, context);
 
   await models.Published_Scenario.deleteOne({ _id: scenarioId });
 

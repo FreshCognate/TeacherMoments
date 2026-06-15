@@ -27,7 +27,7 @@ describe('publishScenarioById (in-memory mongo)', () => {
     ).rejects.toMatchObject({ statusCode: 404 });
   });
 
-  it('publishes Slide, Block and Trigger models for the scenario', async () => {
+  it('publishes Slide, Block, Trigger and Stem models for the scenario', async () => {
     const scenario = await db.models.Scenario.create({ name: 'Spring' });
     const ctx = { models: db.models, user: { _id: new mongoose.Types.ObjectId() } };
 
@@ -36,6 +36,7 @@ describe('publishScenarioById (in-memory mongo)', () => {
     expect(publishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Slide', scenarioId: scenario._id }, {}, ctx);
     expect(publishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Block', scenarioId: scenario._id }, {}, ctx);
     expect(publishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Trigger', scenarioId: scenario._id }, {}, ctx);
+    expect(publishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Stem', scenarioId: scenario._id }, {}, ctx);
   });
 
   it('marks the scenario published with timestamp/actor and clears hasChanges', async () => {

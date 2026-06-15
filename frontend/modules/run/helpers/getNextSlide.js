@@ -14,19 +14,25 @@ export default () => {
   const currentSlide = find(getCache('slides').data, { ref: activeSlideRef });
 
   if (currentSlide) {
-    const currentStem = find(getCache('stems').data, {ref: currentSlide.stemRef});
-    const nextSlide = find(getCache('slides').data, { stemRef: currentStem.ref, sortOrder: currentSlide.sortOrder + 1 });
-    if (nextSlide) {
-      return nextSlide;
-    }
-    if (currentStem.isRoot) {
-      return {_id: 'SUMMARY', slideType: 'SUMMARY', ref: 'SUMMARY'}
-    } else {
-      // if in nested stem, we should navigate back to the parent stem and the next slide
-      const parentSlide = find(getCache('slides').data, { ref: currentStem.slideRef });
-      const nextSlide = find(getCache('slides').data, { stemRef: parentSlide.stemRef, sortOrder: parentSlide.sortOrder + 1 });
+    console.log(currentSlide);
+    const currentStem = find(getCache('stems').data, { ref: currentSlide.stemRef });
+    if (currentStem) {
+
+      console.log(currentStem);
+      const nextSlide = find(getCache('slides').data, { stemRef: currentStem.ref, sortOrder: currentSlide.sortOrder + 1 });
+      console.log(nextSlide);
       if (nextSlide) {
         return nextSlide;
+      }
+      if (currentStem.isRoot) {
+        return { _id: 'SUMMARY', slideType: 'SUMMARY', ref: 'SUMMARY' }
+      } else {
+        // if in nested stem, we should navigate back to the parent stem and the next slide
+        const parentSlide = find(getCache('slides').data, { ref: currentStem.slideRef });
+        const nextSlide = find(getCache('slides').data, { stemRef: parentSlide.stemRef, sortOrder: parentSlide.sortOrder + 1 });
+        if (nextSlide) {
+          return nextSlide;
+        }
       }
     }
   }

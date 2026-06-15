@@ -2,7 +2,7 @@ import getCache from "~/core/cache/helpers/getCache";
 import cloneDeep from 'lodash/cloneDeep';
 import find from 'lodash/find';
 import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
-import { createStageForSlide } from "./getCurrentStage";
+import createStageForSlide from "./createStageForSlide";
 import { createSearchParams } from "react-router";
 import getCohortFromSearchParams from "~/modules/cohorts/helpers/getCohortFromSearchParams";
 

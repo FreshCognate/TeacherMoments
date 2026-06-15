@@ -8,8 +8,8 @@ import Loading from '~/uikit/loaders/components/loading';
 
 class PlayScenarioLoaderContainer extends Component {
   render() {
-    const { scenario, slides, blocks, triggers, run } = this.props;
-    if (scenario.data && slides.data && blocks.data && triggers.data && run.data) {
+    const { scenario, slides, blocks, triggers, stems, run } = this.props;
+    if (scenario.data && slides.data && blocks.data && triggers.data && stems.data && run.data) {
       return (
         <PlayScenarioContainer />
       );
@@ -70,6 +70,21 @@ export default WithRouter(WithCache(PlayScenarioLoaderContainer, {
       return [scenario?.data?._id]
     }
   },
+  stems: {
+    url: '/api/play/stems',
+    getInitialData: () => ([]),
+    transform: ({ data }) => data.stems,
+    getParams: ({ props }) => {
+      return {
+        publishLink: props.router.params.publishLink
+      };
+    },
+    getQuery: ({ props }) => {
+      return { scenarioId: props.router.params.id };
+    },
+    lifeTime: 0,
+    staleTime: 0
+  },
   triggers: {
     url: '/api/play/triggers',
     getQuery: () => {
@@ -83,6 +98,24 @@ export default WithRouter(WithCache(PlayScenarioLoaderContainer, {
       };
     },
     transform: ({ data }) => data.triggers,
+    getDependencies: ({ props }) => {
+      const scenario = getCache('scenario');
+      return [scenario?.data?._id]
+    }
+  },
+  stems: {
+    url: '/api/play/stems',
+    getQuery: () => {
+      return {
+        scenario: getCache('scenario').data._id
+      }
+    },
+    getParams: ({ props }) => {
+      return {
+        publishLink: props.router.params.publishLink
+      };
+    },
+    transform: ({ data }) => data.stems,
     getDependencies: ({ props }) => {
       const scenario = getCache('scenario');
       return [scenario?.data?._id]

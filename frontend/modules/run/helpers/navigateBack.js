@@ -21,9 +21,9 @@ export default async ({ router }) => {
   }
 
   const currentSlide = find(getCache('slides').data, { ref: activeSlideRef });
-  const currentStem = find(getCache('stems').data, { ref: currentSlide.stemRef });
 
   if (currentSlide) {
+    const currentStem = find(getCache('stems').data, { ref: currentSlide.stemRef });
     if (currentSlide.sortOrder === 0) {
       if (currentStem.isRoot) {
         navigateTo({ slideRef: 'CONSENT', router });

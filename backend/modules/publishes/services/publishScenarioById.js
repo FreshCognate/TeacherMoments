@@ -13,6 +13,7 @@ export default async (props, options, context) => {
   await publishModelByScenarioId({ model: 'Slide', scenarioId }, {}, context);
   await publishModelByScenarioId({ model: 'Block', scenarioId }, {}, context);
   await publishModelByScenarioId({ model: 'Trigger', scenarioId }, {}, context);
+  await publishModelByScenarioId({ model: 'Stem', scenarioId }, {}, context);
 
   scenario.hasChanges = false;
   scenario.isPublished = true;

@@ -3,6 +3,7 @@ import SlidePlayer from '../components/slidePlayer';
 import updateRun from '~/modules/run/helpers/updateRun';
 import navigateTo from '~/modules/run/helpers/navigateTo';
 import getCurrentStage from '~/modules/run/helpers/getCurrentStage';
+import ensureCurrentStage from '~/modules/run/helpers/ensureCurrentStage';
 import WithCache from '~/core/cache/containers/withCache';
 import navigateBack from '~/modules/run/helpers/navigateBack';
 import navigateToNextSlide from '~/modules/run/helpers/navigateToNextSlide';
@@ -34,11 +35,13 @@ class SlidePlayerContainer extends Component {
   }
 
   componentDidMount = () => {
+    ensureCurrentStage();
     this.setState({ isLoading: false });
   }
 
   componentDidUpdate = (prevProps) => {
     if (this.props.activeSlide !== prevProps.activeSlide) {
+      ensureCurrentStage();
       this.setState({ isLoading: false });
     }
   }
@@ -173,7 +176,7 @@ class SlidePlayerContainer extends Component {
     }
 
     setSlideToSubmitted();
-    const stage = getCurrentStage();
+    const stage = ensureCurrentStage();
     this.setState({ isSubmitting: false });
 
     if (!stage.shouldStopNavigation) {
@@ -297,7 +300,7 @@ class SlidePlayerContainer extends Component {
       secondaryAction,
     } = this.getNavigationDetails();
 
-    const activeSlideStems = getActiveSlideStems({ activeSlideRef: activeSlide.ref });
+    const activeSlideStems = getActiveSlideStems({ activeSlideRef: activeSlide?.ref });
 
     return (
       <SlidePlayer

@@ -31,7 +31,7 @@ describe('unpublishScenarioById (in-memory mongo)', () => {
     ).rejects.toMatchObject({ statusCode: 400 });
   });
 
-  it('unpublishes Slide, Block and Trigger models for the scenario', async () => {
+  it('unpublishes Slide, Block, Trigger and Stem models for the scenario', async () => {
     const scenario = await db.models.Scenario.create({ name: 'S', isPublished: true });
     const ctx = { models: db.models, user: { _id: new mongoose.Types.ObjectId() } };
 
@@ -40,6 +40,7 @@ describe('unpublishScenarioById (in-memory mongo)', () => {
     expect(unpublishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Slide', scenarioId: scenario._id }, {}, ctx);
     expect(unpublishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Block', scenarioId: scenario._id }, {}, ctx);
     expect(unpublishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Trigger', scenarioId: scenario._id }, {}, ctx);
+    expect(unpublishModelByScenarioIdMock).toHaveBeenCalledWith({ model: 'Stem', scenarioId: scenario._id }, {}, ctx);
   });
 
   it('deletes the Published_Scenario doc and clears publish flags', async () => {
