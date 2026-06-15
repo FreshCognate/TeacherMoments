@@ -53,16 +53,24 @@ export default async () => {
 
   for (const scenario of publishedScenarios) {
 
-    let rootStem = await models.Published_Stem.findOne({ scenario: scenario._id, isRoot: true });
-    let createdStem = false;
+    // Publish the scenario's draft stems into Published_Stem so the play
+    // flow can resolve them (mirrors publishModelByScenarioId)
+    await models.Published_Stem.deleteMany({ scenario: scenario._id });
 
+    const draftStems = await models.Stem.find({ scenario: scenario._id, isDeleted: false });
+    for (const draftStem of draftStems) {
+      await models.Published_Stem.create(draftStem.toJSON());
+    }
+
+    let rootStem = draftStems.find((stem) => stem.isRoot);
+
+    // Edge case: a published scenario with no draft stems still needs a root
     if (!rootStem) {
       rootStem = await models.Published_Stem.create({
         scenario: scenario._id,
         name: 'Stem 1',
         isRoot: true
       });
-      createdStem = true;
     }
 
     const result = await models.Published_Slide.updateMany(
@@ -70,11 +78,7 @@ export default async () => {
       { stemRef: rootStem.ref }
     );
 
-    if (createdStem) {
-      console.log(`Published scenario "${scenario.name}" — created root stem, backfilled ${result.modifiedCount} slides`);
-    } else {
-      console.log(`Published scenario "${scenario.name}" — backfilled ${result.modifiedCount} slides`);
-    }
+    console.log(`Published scenario "${scenario.name}" — published ${draftStems.length} stems, backfilled ${result.modifiedCount} slides`);
 
   }
 

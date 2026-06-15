@@ -61,4 +61,19 @@ describe('addStemsToScenarios (in-memory mongo)', () => {
     const stored = await db.models.Published_Slide.findById(publishedSlide._id).lean();
     expect(String(stored.stemRef)).toBe(String(rootStem.ref));
   });
+
+  it('publishes the draft stems of a published scenario into Published_Stem', async () => {
+    const scenarioId = new mongoose.Types.ObjectId();
+    await db.models.Scenario.create({ _id: scenarioId, name: 'S' });
+    await db.models.Published_Scenario.create({ _id: scenarioId, name: 'S' });
+    await db.models.Stem.create({ scenario: scenarioId, name: 'Stem 1', isRoot: true });
+    await db.models.Stem.create({ scenario: scenarioId, name: 'Branch', isRoot: false });
+
+    await addStemsToScenarios();
+
+    const publishedStems = await db.models.Published_Stem.find({ scenario: scenarioId }).lean();
+    expect(publishedStems).toHaveLength(2);
+    expect(publishedStems.some((stem) => stem.isRoot)).toBe(true);
+    expect(publishedStems.some((stem) => stem.name === 'Branch')).toBe(true);
+  });
 });
