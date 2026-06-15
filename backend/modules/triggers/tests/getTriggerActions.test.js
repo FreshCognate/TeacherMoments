@@ -3,6 +3,9 @@ import getTriggerActions from '../helpers/getTriggerActions.js';
 
 describe('getTriggerActions', () => {
   it('returns the list of supported trigger action types', () => {
-    expect(getTriggerActions()).toEqual(['SHOW_FEEDBACK_FROM_PROMPTS']);
+    expect(getTriggerActions()).toEqual([
+      'SHOW_FEEDBACK_FROM_PROMPTS',
+      'BRANCH_TO_STEM_FROM_PROMPTS'
+    ]);
   });
 });
