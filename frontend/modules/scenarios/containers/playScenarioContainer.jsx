@@ -7,6 +7,8 @@ import find from 'lodash/find';
 import filter from 'lodash/filter';
 import navigateTo from '~/modules/run/helpers/navigateTo';
 import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
+import isSlideRefMissing from '~/modules/run/helpers/isSlideRefMissing';
+import setScenarioToArchived from '~/modules/run/helpers/setScenarioToArchived';
 
 class PlayScenarioContainer extends Component {
 
@@ -19,13 +21,18 @@ class PlayScenarioContainer extends Component {
   startScenario = () => {
 
     const { activeSlideRef } = getScenarioDetails();
+    const { isConsentAcknowledged, activeSlideRef: runSlideRef } = this.props.run.data;
+
+    const targetSlideRef = activeSlideRef || runSlideRef;
+
+    if (isSlideRefMissing({ slideRef: targetSlideRef, slides: this.props.slides.data })) {
+      return this.restartScenario();
+    }
 
     if (!activeSlideRef) {
-
-      const { isConsentAcknowledged, activeSlideRef } = this.props.run.data;
       if (isConsentAcknowledged) {
         const firstSlideRef = get(this.props, 'slides.data.0.ref', null);
-        const slideRef = activeSlideRef || firstSlideRef;
+        const slideRef = runSlideRef || firstSlideRef;
 
         navigateTo({ slideRef, router: this.props.router });
       } else {
@@ -33,6 +40,18 @@ class PlayScenarioContainer extends Component {
       }
     }
 
+  }
+
+  restartScenario = () => {
+    setScenarioToArchived().then(() => {
+      const searchParams = new URLSearchParams(window.location.search);
+      searchParams.delete('slide');
+      const search = searchParams.toString();
+
+      window.location.href = search
+        ? `${window.location.pathname}?${search}`
+        : window.location.pathname;
+    });
   }
 
   getActiveSlide = () => {
