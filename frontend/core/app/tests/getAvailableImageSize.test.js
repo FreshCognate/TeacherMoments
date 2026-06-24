@@ -19,8 +19,28 @@ describe('getAvailableImageSize', () => {
     expect(getAvailableImageSize({ asset, size: 200 })).toBe(1280);
   });
 
-  it('falls back to the largest available size when the request exceeds all sizes', () => {
+  it('falls back to the largest available size when the request exceeds all sizes and width is unknown', () => {
     const asset = { fileType: 'image', extension: 'png', sizes: [640, 320, 160] };
     expect(getAvailableImageSize({ asset, size: 2000 })).toBe(640);
+  });
+
+  it('uses the original when no rendition is large enough and the original is sharper than the largest rendition', () => {
+    const asset = { fileType: 'image', extension: 'png', width: 500, sizes: [320, 160] };
+    expect(getAvailableImageSize({ asset, size: 640 })).toBe('original');
+  });
+
+  it('uses the original for an original between the smallest sizes', () => {
+    const asset = { fileType: 'image', extension: 'png', width: 200, sizes: [160] };
+    expect(getAvailableImageSize({ asset, size: 640 })).toBe('original');
+  });
+
+  it('keeps the matching rendition when one is >= the requested size (multi-image case)', () => {
+    const asset = { fileType: 'image', extension: 'png', width: 500, sizes: [320, 160] };
+    expect(getAvailableImageSize({ asset, size: 320 })).toBe(320);
+  });
+
+  it('keeps the largest rendition when the original is no sharper than it', () => {
+    const asset = { fileType: 'image', extension: 'png', width: 320, sizes: [320, 160] };
+    expect(getAvailableImageSize({ asset, size: 640 })).toBe(320);
   });
 });
