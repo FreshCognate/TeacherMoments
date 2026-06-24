@@ -32,10 +32,11 @@ export default async (data) => {
     ssl: { rejectUnauthorized: false }
   });
 
+  let connection;
   let models;
   if (!dryRun) {
-    const db = await connectDatabase();
-    models = db.models;
+    connection = await connectDatabase();
+    models = connection.models;
   }
 
   const summary = {
@@ -380,6 +381,7 @@ export default async (data) => {
 
   } finally {
     await pool.end();
+    if (connection) await connection.close();
   }
 
   log(dryRun, '');

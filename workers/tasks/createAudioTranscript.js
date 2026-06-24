@@ -1,10 +1,10 @@
-import connectDatabase from '../../backend/core/databases/helpers/connectDatabase.js';
+import withConnection from '../../backend/core/databases/helpers/withConnection.js';
 import getAudioTranscription from '../agents/helpers/getAudioTranscription.js';
 import createTranscript from '../../backend/modules/transcripts/services/createTranscript.js';
 
-export default async ({ assetId }) => {
+export default async ({ assetId }) => withConnection(async (connection) => {
 
-  const { models } = await connectDatabase();
+  const { models } = connection;
   const asset = await models.Asset.findById(assetId);
 
   const transcript = await getAudioTranscription({ asset });
@@ -16,4 +16,4 @@ export default async ({ assetId }) => {
 
   await asset.save();
 
-}
+});

@@ -1,5 +1,5 @@
 import Sharp from 'sharp';
-import connectDatabase from '../../backend/core/databases/helpers/connectDatabase.js';
+import withConnection from '../../backend/core/databases/helpers/withConnection.js';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import getAssetKey from '../helpers/getAssetKey.js';
@@ -27,9 +27,9 @@ const resizeAndUploadImage = async ({ stream, size, asset, s3Client, Bucket }) =
   await upload.done();
 }
 
-export default async ({ assetId }) => {
+export default async ({ assetId }) => withConnection(async (connection) => {
 
-  const { models } = await connectDatabase();
+  const { models } = connection;
   const asset = await models.Asset.findById(assetId);
   const assetKey = getAssetKey(asset, 'original');
 
@@ -65,4 +65,4 @@ export default async ({ assetId }) => {
 
   await asset.save();
 
-}
+});

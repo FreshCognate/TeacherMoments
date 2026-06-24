@@ -41,7 +41,7 @@ beforeEach(() => {
     addUserMessage: addUserMessageMock,
     run: agentRunMock
   });
-  connectDatabaseMock.mockResolvedValue({ models: {} });
+  connectDatabaseMock.mockResolvedValue({ models: {}, close: vi.fn() });
 });
 
 describe('generateUserResponsesSummary', () => {

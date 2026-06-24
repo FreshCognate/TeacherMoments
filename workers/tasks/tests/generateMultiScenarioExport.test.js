@@ -70,7 +70,7 @@ describe('generateMultiScenarioExport', () => {
       scenarios: [{ _id: 's1', name: 'A' }],
       userRecords: [{ _id: 'u1' }]
     });
-    connectDatabaseMock.mockResolvedValue({ models: setup.models });
+    connectDatabaseMock.mockResolvedValue({ models: setup.models, close: vi.fn() });
 
     await generateMultiScenarioExport({
       exportId: 'e1',
@@ -88,7 +88,7 @@ describe('generateMultiScenarioExport', () => {
       scenarios: [{ _id: 's1', name: 'A' }],
       userRecords: [{ _id: 'u1' }, { _id: 'u2' }]
     });
-    connectDatabaseMock.mockResolvedValue({ models: setup.models });
+    connectDatabaseMock.mockResolvedValue({ models: setup.models, close: vi.fn() });
 
     await generateMultiScenarioExport({
       exportId: 'e1',
@@ -105,7 +105,7 @@ describe('generateMultiScenarioExport', () => {
       runs: [{ scenario: 's1' }, { scenario: 's2' }, { scenario: 's1' }],
       userRecords: [{ _id: 'u1' }]
     });
-    connectDatabaseMock.mockResolvedValue({ models: setup.models });
+    connectDatabaseMock.mockResolvedValue({ models: setup.models, close: vi.fn() });
 
     await generateMultiScenarioExport({
       exportId: 'e1',
@@ -125,7 +125,7 @@ describe('generateMultiScenarioExport', () => {
       scenarios: [{ _id: 's1', name: 'Empty' }, { _id: 's2', name: 'Populated' }],
       userRecords: [{ _id: 'u1' }]
     });
-    connectDatabaseMock.mockResolvedValue({ models: setup.models });
+    connectDatabaseMock.mockResolvedValue({ models: setup.models, close: vi.fn() });
 
     buildScenarioCsvRowsMock
       .mockResolvedValueOnce([['header']])           // s1 — only header → skipped
@@ -147,7 +147,7 @@ describe('generateMultiScenarioExport', () => {
       scenarios: [{ _id: 's1', name: 'Scn' }],
       userRecords: [{ _id: 'u1' }]
     });
-    connectDatabaseMock.mockResolvedValue({ models: setup.models });
+    connectDatabaseMock.mockResolvedValue({ models: setup.models, close: vi.fn() });
 
     await generateMultiScenarioExport({
       exportId: 'e1',

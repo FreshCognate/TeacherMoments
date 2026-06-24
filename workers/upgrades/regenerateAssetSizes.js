@@ -1,7 +1,7 @@
 import isEqual from 'lodash/isEqual.js';
 import sortBy from 'lodash/sortBy.js';
 import '../../backend/modules/assets/index.js';
-import connectDatabase from '../../backend/core/databases/helpers/connectDatabase.js';
+import withConnection from '../../backend/core/databases/helpers/withConnection.js';
 import getAvailableImageSizes, { SIZES } from '../helpers/getAvailableImageSizes.js';
 import createAssetSizes from '../tasks/createAssetSizes.js';
 
@@ -10,9 +10,9 @@ const hasExpectedSizes = (asset, expectedSizes) => {
   return isEqual(sortBy(currentSizes), sortBy(expectedSizes));
 };
 
-export default async () => {
+export default async () => withConnection(async (connection) => {
 
-  const { models } = await connectDatabase();
+  const { models } = connection;
 
   // The old `width > size` check only ever skipped a rendition when the original
   // width was exactly a SIZES boundary (e.g. a 320px image lost its 320px rendition
@@ -45,4 +45,4 @@ export default async () => {
 
   console.log(`Upgrade complete — regenerated: ${regenerated}, skipped (already correct): ${skipped}, failed: ${failed}`);
 
-};
+});

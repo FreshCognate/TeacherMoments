@@ -38,7 +38,7 @@ const cohortId = new mongoose.Types.ObjectId();
 describe('generateSlideResponsesSummary (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    connectDatabaseMock.mockResolvedValue({ models: db.models });
+    connectDatabaseMock.mockResolvedValue({ models: db.models, close: vi.fn() });
     agentRunMock.mockResolvedValue({ overview: 'ov', sections: [], summary: 'sm' });
     createAgentMock.mockReturnValue({
       addSystemMessage: vi.fn(),

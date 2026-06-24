@@ -17,7 +17,8 @@ describe('updateAssetToProcessed', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     connectDatabaseMock.mockResolvedValue({
-      models: { Asset: { findByIdAndUpdate: findByIdAndUpdateMock } }
+      models: { Asset: { findByIdAndUpdate: findByIdAndUpdateMock } },
+      close: vi.fn()
     });
     vi.useFakeTimers();
     vi.setSystemTime(FIXED_NOW);

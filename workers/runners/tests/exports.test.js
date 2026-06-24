@@ -47,7 +47,8 @@ beforeEach(() => {
   generateScenarioExportMock.mockResolvedValue();
   generateMultiScenarioExportMock.mockResolvedValue();
   connectDatabaseMock.mockResolvedValue({
-    models: { Export: { findByIdAndUpdate: exportFindByIdAndUpdateMock } }
+    models: { Export: { findByIdAndUpdate: exportFindByIdAndUpdateMock } },
+    close: vi.fn()
   });
 });
 

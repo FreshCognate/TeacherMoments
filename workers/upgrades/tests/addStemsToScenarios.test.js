@@ -15,7 +15,7 @@ const db = setupMongo();
 describe('addStemsToScenarios (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    connectDatabaseMock.mockResolvedValue({ models: db.models });
+    connectDatabaseMock.mockResolvedValue({ models: db.models, close: vi.fn() });
   });
 
   it('creates a root stem and points orphaned slides at it', async () => {
