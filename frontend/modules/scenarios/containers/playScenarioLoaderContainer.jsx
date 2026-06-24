@@ -70,21 +70,6 @@ export default WithRouter(WithCache(PlayScenarioLoaderContainer, {
       return [scenario?.data?._id]
     }
   },
-  stems: {
-    url: '/api/play/stems',
-    getInitialData: () => ([]),
-    transform: ({ data }) => data.stems,
-    getParams: ({ props }) => {
-      return {
-        publishLink: props.router.params.publishLink
-      };
-    },
-    getQuery: ({ props }) => {
-      return { scenarioId: props.router.params.id };
-    },
-    lifeTime: 0,
-    staleTime: 0
-  },
   triggers: {
     url: '/api/play/triggers',
     getQuery: () => {
