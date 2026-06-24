@@ -31,6 +31,7 @@ const ImagesBlockPlayer = ({
       {map(items, (item) => {
         const asset = getContent({ model: item, field: 'asset' });
         if (asset && asset._id) {
+          console.log(asset);
           const image = (
             <Image
               asset={asset}
