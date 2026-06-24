@@ -15,7 +15,11 @@ export default ({ asset, size }) => {
     });
 
     if (assetSizes.length > 0) {
-      if (!responsiveSize) responsiveSize = assetSizes[assetSizes.length - 1];
+      if (!responsiveSize) {
+        const largestAssetSize = assetSizes[assetSizes.length - 1];
+        if (asset.width && asset.width > largestAssetSize) return 'original';
+        responsiveSize = largestAssetSize;
+      }
     }
 
     if (!responsiveSize) return "original";
