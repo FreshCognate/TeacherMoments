@@ -3,9 +3,8 @@ import connectDatabase from '../../backend/core/databases/helpers/connectDatabas
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import getAssetKey from '../helpers/getAssetKey.js';
+import getAvailableImageSizes from '../helpers/getAvailableImageSizes.js';
 import { PassThrough } from 'stream';
-
-const SIZES = [640, 320, 160];
 
 const resizeAndUploadImage = async ({ stream, size, asset, s3Client, Bucket }) => {
   const transformStream = Sharp()
@@ -53,13 +52,7 @@ export default async ({ assetId }) => {
     throw new Error('Invalid image stream from S3');
   }
 
-  const availableSizes = [];
-
-  for (const size of SIZES) {
-    if (asset.width > size) {
-      availableSizes.push(size);
-    }
-  }
+  const availableSizes = getAvailableImageSizes(asset.width);
 
   const resizePromises = availableSizes.map((size) => {
     const clonedStream = Body.pipe(new PassThrough());
