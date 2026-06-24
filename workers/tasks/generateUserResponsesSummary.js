@@ -1,5 +1,5 @@
 import createAgent from '../agents/helpers/createAgent.js';
-import connectDatabase from '../../backend/core/databases/helpers/connectDatabase.js';
+import withConnection from '../../backend/core/databases/helpers/withConnection.js';
 import getScenarioSlidesAndBlocksByRef from '../../backend/modules/responses/helpers/getScenarioSlidesAndBlocksByRef.js';
 import buildUserScenarioResponse from '../../backend/modules/responses/helpers/buildUserScenarioResponse.js';
 import getBlockText from '../helpers/getBlockText.js';
@@ -12,9 +12,9 @@ import groupBy from 'lodash/groupBy.js';
 
 const PROMPT_BLOCK_TYPES = ['INPUT_PROMPT', 'MULTIPLE_CHOICE_PROMPT'];
 
-export default async ({ scenarioId, userId }) => {
+export default async ({ scenarioId, userId }) => withConnection(async (connection) => {
 
-  const { models } = await connectDatabase();
+  const { models } = connection;
   const context = { models };
 
   const { slidesByRef, blocksByRef } = await getScenarioSlidesAndBlocksByRef({ scenarioId }, context);
@@ -141,4 +141,4 @@ export default async ({ scenarioId, userId }) => {
 
   return response;
 
-};
+});

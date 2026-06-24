@@ -74,7 +74,7 @@ describe('generateScenarioExport', () => {
 
   it('marks export PROCESSING, looks up cohort users for COHORT_SCENARIO, uploads, and marks COMPLETED', async () => {
     const setup = buildModels({ users: [{ _id: 'u1' }, { _id: 'u2' }] });
-    connectDatabaseMock.mockResolvedValue({ models: setup.models });
+    connectDatabaseMock.mockResolvedValue({ models: setup.models, close: vi.fn() });
 
     await generateScenarioExport({
       exportId: 'e1',
@@ -113,7 +113,7 @@ describe('generateScenarioExport', () => {
       runUserIds: ['u1', 'u2', 'u1'], // duplicate u1 — should be deduped
       users: [{ _id: 'u1' }, { _id: 'u2' }]
     });
-    connectDatabaseMock.mockResolvedValue({ models: setup.models });
+    connectDatabaseMock.mockResolvedValue({ models: setup.models, close: vi.fn() });
 
     await generateScenarioExport({
       exportId: 'e1',
@@ -130,7 +130,7 @@ describe('generateScenarioExport', () => {
 
   it('falls back to "export" + sanitises invalid filename characters from the scenario name', async () => {
     const setup = buildModels({ scenarioName: 'My / Scenario!?', users: [] });
-    connectDatabaseMock.mockResolvedValue({ models: setup.models });
+    connectDatabaseMock.mockResolvedValue({ models: setup.models, close: vi.fn() });
 
     await generateScenarioExport({
       exportId: 'e1',

@@ -1,4 +1,4 @@
-import connectDatabase from '../../backend/core/databases/helpers/connectDatabase.js';
+import withConnection from '../../backend/core/databases/helpers/withConnection.js';
 import buildScenarioCsvRows from '../../backend/modules/exports/helpers/buildScenarioCsvRows.js';
 import rowsToCsvBuffer from '../../backend/modules/exports/helpers/rowsToCsvBuffer.js';
 import uploadExportToS3 from '../../backend/modules/exports/helpers/uploadExportToS3.js';
@@ -6,9 +6,9 @@ import waitForS3Object from '../../backend/modules/exports/helpers/waitForS3Obje
 import uniqBy from 'lodash/uniqBy.js';
 import map from 'lodash/map.js';
 
-export default async ({ exportId, exportType, scenarioId, cohortId }) => {
+export default async ({ exportId, exportType, scenarioId, cohortId }) => withConnection(async (connection) => {
 
-  const { models } = await connectDatabase();
+  const { models } = connection;
 
   await models.Export.findByIdAndUpdate(exportId, { status: 'PROCESSING' });
 
@@ -48,4 +48,4 @@ export default async ({ exportId, exportType, scenarioId, cohortId }) => {
     completedAt: new Date()
   });
 
-};
+});

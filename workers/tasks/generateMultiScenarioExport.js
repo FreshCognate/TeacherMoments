@@ -1,4 +1,4 @@
-import connectDatabase from '../../backend/core/databases/helpers/connectDatabase.js';
+import withConnection from '../../backend/core/databases/helpers/withConnection.js';
 import buildScenarioCsvRows from '../../backend/modules/exports/helpers/buildScenarioCsvRows.js';
 import rowsToCsvBuffer from '../../backend/modules/exports/helpers/rowsToCsvBuffer.js';
 import uploadExportToS3 from '../../backend/modules/exports/helpers/uploadExportToS3.js';
@@ -22,9 +22,9 @@ const createZipBuffer = (csvFiles) => {
   });
 };
 
-export default async ({ exportId, exportType, cohortId, userId }) => {
+export default async ({ exportId, exportType, cohortId, userId }) => withConnection(async (connection) => {
 
-  const { models } = await connectDatabase();
+  const { models } = connection;
 
   await models.Export.findByIdAndUpdate(exportId, { status: 'PROCESSING' });
 
@@ -78,4 +78,4 @@ export default async ({ exportId, exportType, cohortId, userId }) => {
     completedAt: new Date()
   });
 
-};
+});

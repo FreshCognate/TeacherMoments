@@ -1,11 +1,11 @@
 import '../../backend/modules/scenarios/index.js';
 import '../../backend/modules/slides/index.js';
 import '../../backend/modules/stems/index.js';
-import connectDatabase from '../../backend/core/databases/helpers/connectDatabase.js';
+import withConnection from '../../backend/core/databases/helpers/withConnection.js';
 
-export default async () => {
+export default async () => withConnection(async (connection) => {
 
-  const { models } = await connectDatabase();
+  const { models } = connection;
 
   // await models.Stem.deleteMany({});
   // await models.Published_Stem.deleteMany({});
@@ -84,4 +84,4 @@ export default async () => {
 
   console.log('Upgrade complete');
 
-};
+});

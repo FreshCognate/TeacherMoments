@@ -8,6 +8,7 @@ import '../../backend/modules/runs/index.js';
 import '../../backend/modules/assets/index.js';
 import generateScenarioExport from '../tasks/generateScenarioExport.js';
 import generateMultiScenarioExport from '../tasks/generateMultiScenarioExport.js';
+import withConnection from '../../backend/core/databases/helpers/withConnection.js';
 import getSockets from '../getSockets.js';
 
 export default async (job) => {
@@ -47,8 +48,9 @@ export default async (job) => {
   } catch (error) {
     console.log(error);
 
-    const { models } = await (await import('../../backend/core/databases/helpers/connectDatabase.js')).default();
-    await models.Export.findByIdAndUpdate(job.data.exportId, { status: 'FAILED' });
+    await withConnection(async (connection) => {
+      await connection.models.Export.findByIdAndUpdate(job.data.exportId, { status: 'FAILED' });
+    });
 
     const sockets = await getSockets();
     sockets.emit(`workers:exports:${job.id}`, {

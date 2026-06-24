@@ -25,7 +25,7 @@ const db = setupMongo();
 describe('createAudioTranscript (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    connectDatabaseMock.mockResolvedValue({ models: db.models });
+    connectDatabaseMock.mockResolvedValue({ models: db.models, close: vi.fn() });
   });
 
   it('transcribes the asset, persists a Transcript, and stamps the asset with both', async () => {

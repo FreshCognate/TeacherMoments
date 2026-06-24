@@ -48,7 +48,8 @@ const setupDb = ({ slidesByRef = {}, blocksByRef = {}, runs = [], cohortUsers = 
   const userFind = vi.fn(() => ({ lean: vi.fn().mockResolvedValue(cohortUsers) }));
 
   connectDatabaseMock.mockResolvedValue({
-    models: { Run: { find: runFind }, User: { find: userFind } }
+    models: { Run: { find: runFind }, User: { find: userFind } },
+    close: vi.fn()
   });
   getScenarioSlidesAndBlocksByRefMock.mockResolvedValue({ slidesByRef, blocksByRef });
 

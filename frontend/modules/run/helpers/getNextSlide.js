@@ -14,13 +14,10 @@ export default () => {
   const currentSlide = find(getCache('slides').data, { ref: activeSlideRef });
 
   if (currentSlide) {
-    console.log(currentSlide);
     const currentStem = find(getCache('stems').data, { ref: currentSlide.stemRef });
     if (currentStem) {
 
-      console.log(currentStem);
       const nextSlide = find(getCache('slides').data, { stemRef: currentStem.ref, sortOrder: currentSlide.sortOrder + 1 });
-      console.log(nextSlide);
       if (nextSlide) {
         return nextSlide;
       }
