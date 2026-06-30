@@ -21,7 +21,7 @@ class FeedbackItemConditionsContainer extends Component {
 
   onAddConditionClicked = () => {
     const clonedValue = cloneDeep(this.props.value);
-    clonedValue.push({ blocksByRef: {} });
+    clonedValue.push({});
     this.props.updateField(clonedValue);
   }
 

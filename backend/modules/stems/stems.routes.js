@@ -30,7 +30,7 @@ export default {
     param: 'id',
     body: {
       name: Joi.string().allow(''),
-      description: Joi.string().allow('')
+      description: Joi.array()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },

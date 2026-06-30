@@ -33,6 +33,7 @@ export default {
       items: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('body', Joi.array()),
+        elementRef: Joi.string(),
         conditions: Joi.array(),
       }),
       shouldGenerateFeedbackFromAI: Joi.boolean(),

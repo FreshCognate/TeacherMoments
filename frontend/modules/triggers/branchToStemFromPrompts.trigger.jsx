@@ -1,13 +1,6 @@
 import getScenarioDetails from "../run/helpers/getScenarioDetails";
 import getStemsBySlideRef from "../stems/helpers/getStemsBySlideRef";
 import registerTrigger from "./helpers/registerTrigger";
-import buildLanguageSchema from "~/core/app/helpers/buildLanguageSchema";
-
-const body = buildLanguageSchema('body', {
-  type: 'TextArea',
-  label: 'Feedback message',
-  features: ['bold', 'italic', 'underline', 'strikethrough', 'code', 'blockquote', 'link', 'leftAlign', 'centerAlign', 'rightAlign', 'justifyAlign', 'bulletedList', 'numberedList']
-});
 
 const BranchToStemFromPrompts = {
   trigger: async (trigger) => {
@@ -39,7 +32,10 @@ const BranchToStemFromPrompts = {
   },
   getSchema: (trigger) => {
     return {
-
+      items: {
+        type: 'TriggerStems',
+        label: 'Stems'
+      }
     }
   }
 }
