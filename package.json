@@ -15,7 +15,8 @@
     "workers": "yarn workspace workers run workers",
     "workers:start": "yarn workspace workers run workers:start",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",
