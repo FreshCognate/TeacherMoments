@@ -21,10 +21,6 @@ vi.mock('../helpers/getTrigger', () => ({
   default: (action) => getTriggerMock(action)
 }));
 
-vi.mock('../schemas/getEditTriggerSchema', () => ({
-  default: () => ({ baseField: { type: 'Text' } })
-}));
-
 let capturedProps = null;
 vi.mock('../components/triggerItem', () => ({
   default: (props) => {
@@ -53,10 +49,9 @@ describe('TriggerItemContainer', () => {
     });
   });
 
-  it('combines the base schema and the registered trigger schema', () => {
+  it('uses the registered trigger schema', () => {
     render(<TriggerItemContainer {...buildProps()} />);
     expect(capturedProps.schema).toEqual({
-      baseField: { type: 'Text' },
       extraField: { type: 'Text' }
     });
   });

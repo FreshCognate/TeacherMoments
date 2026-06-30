@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import TriggerItem from '../components/triggerItem';
-import getEditTriggerSchema from '../schemas/getEditTriggerSchema';
 import getTrigger from '../helpers/getTrigger';
 import getCache from '~/core/cache/helpers/getCache';
 import axios from 'axios';
@@ -36,10 +35,7 @@ class TriggerItemContainer extends Component {
     return (
       <TriggerItem
         trigger={this.props.trigger}
-        schema={{
-          ...getEditTriggerSchema(),
-          ...trigger.getSchema(this.props.trigger)
-        }}
+        schema={trigger.getSchema(this.props.trigger)}
         isLastTrigger={this.props.isLastTrigger}
         isOptionsOpen={this.state.isOptionsOpen}
         onDeleteTriggerClicked={this.props.onDeleteTriggerClicked}

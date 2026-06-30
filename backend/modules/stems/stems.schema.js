@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import textAreaSchema from '#core/app/textArea.schema.js';
 
 const schema = {
   type: { type: String, default: 'stem' },
@@ -7,7 +8,7 @@ const schema = {
   originalRef: mongoose.Schema.Types.ObjectId,
   originalScenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario' },
   name: { type: String, default: '' },
-  description: { type: String, default: '' },
+  description: textAreaSchema,
   stemRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Stem' },
   slideRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Slide' },
   isRoot: { type: Boolean, default: false },
