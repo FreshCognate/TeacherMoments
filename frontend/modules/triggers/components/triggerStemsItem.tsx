@@ -8,6 +8,7 @@ import getString from '~/modules/ls/helpers/getString';
 import Body from '~/uikit/content/components/body';
 import Badge from '~/uikit/badges/components/badge';
 import Icon from '~/uikit/icons/components/icon';
+import { StemItem, OnEditPromptConditionClicked, OnRemoveConditionClicked } from '../triggers.types';
 
 const TriggerStemsItem = ({
   prompts,
@@ -15,9 +16,13 @@ const TriggerStemsItem = ({
   onAddConditionClicked,
   onEditPromptConditionClicked,
   onRemoveConditionClicked
+}: {
+  prompts: any[],
+  slideStemItem?: StemItem,
+  onAddConditionClicked: () => void,
+  onEditPromptConditionClicked: OnEditPromptConditionClicked,
+  onRemoveConditionClicked: OnRemoveConditionClicked
 }) => {
-  console.log(prompts);
-  console.log(slideStemItem);
   return (
     <div>
       <div className="mb-2 inline-flex items-center gap-1.5 text-xs text-black/60 dark:text-white/60 font-bold">

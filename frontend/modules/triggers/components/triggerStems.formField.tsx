@@ -1,31 +1,28 @@
 import React from 'react';
 import { Stem } from '~/modules/stems/stems.types';
+import { StemItem, OnEditPromptConditionClicked, OnRemoveConditionClicked } from '../triggers.types';
 import map from 'lodash/map';
 import find from 'lodash/find';
 import getTextString from '~/core/slate/helpers/getTextString';
 import Body from '~/uikit/content/components/body';
 import Title from '~/uikit/content/components/title';
-import FormContainer from '~/core/forms/containers/formContainer';
 import TriggerStemsItem from './triggerStemsItem';
 
 const TriggerStems = ({
   slideStems,
   items,
   prompts,
-  subSchema,
   onAddConditionClicked,
   onEditPromptConditionClicked,
   onRemoveConditionClicked
 }: {
   slideStems: Stem[],
-  items: any[],
+  items: StemItem[],
   prompts: any[],
-  subSchema: any,
   onAddConditionClicked: ({ elementRef }: { elementRef: string }) => void,
-  onEditPromptConditionClicked: () => void,
-  onRemoveConditionClicked: () => void
+  onEditPromptConditionClicked: OnEditPromptConditionClicked,
+  onRemoveConditionClicked: OnRemoveConditionClicked
 }) => {
-  console.log(subSchema);
   return (
     <div className="bg-lm-2 dark:bg-dm-2 rounded-md p-2">
       {map(slideStems, (slideStem) => {

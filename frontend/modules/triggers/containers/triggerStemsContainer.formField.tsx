@@ -10,8 +10,15 @@ import cloneDeep from 'lodash/cloneDeep';
 import remove from 'lodash/remove';
 import addModal from '~/core/dialogs/helpers/addModal';
 import EditPromptConditionContainer from './editPromptConditionContainer';
+import { ConditionPrompt, Condition, StemItem } from '../triggers.types';
 
-class TriggerStemsContainer extends Component {
+type TriggerStemsContainerProps = {
+  model: { elementRef: string },
+  value: StemItem[],
+  updateField: (value: StemItem[]) => void
+};
+
+class TriggerStemsContainer extends Component<TriggerStemsContainerProps> {
 
   getPrompts = () => {
 
@@ -23,7 +30,6 @@ class TriggerStemsContainer extends Component {
   onAddConditionClicked = ({ elementRef }: { elementRef: string }) => {
     const clonedValue = cloneDeep(this.props.value);
     const currentItem = find(clonedValue, { elementRef });
-    console.log(currentItem);
     if (currentItem) {
       currentItem.conditions.push({});
       this.props.updateField(clonedValue);
@@ -33,12 +39,12 @@ class TriggerStemsContainer extends Component {
     }
   }
 
-  onEditPromptConditionClicked = ({ elementRef, prompt, condition }) => {
+  onEditPromptConditionClicked = ({ elementRef, prompt, condition }: { elementRef: string, prompt: any, condition: Condition }) => {
 
-    const conditionPrompt = find(condition.prompts, { ref: prompt.ref }) || {};
+    const conditionPrompt: ConditionPrompt | {} = find(condition.prompts, { ref: prompt.ref }) || {};
 
-    const selectedOptions = conditionPrompt.options || [];
-    const textValue = conditionPrompt.text || '';
+    const selectedOptions = (conditionPrompt as ConditionPrompt).options || [];
+    const textValue = (conditionPrompt as ConditionPrompt).text || '';
 
     addModal({
       title: 'Edit prompt condition',
@@ -52,7 +58,7 @@ class TriggerStemsContainer extends Component {
         text: 'Save',
         color: 'primary'
       }]
-    }, (state, { type, modal }) => {
+    }, (state: string, { type, modal }: { type: string, modal: any }) => {
       if (state === 'ACTION' && type === 'SAVE') {
         if (prompt.blockType === 'MULTIPLE_CHOICE_PROMPT') {
           this.onPromptConditionValueChanged({
@@ -76,18 +82,22 @@ class TriggerStemsContainer extends Component {
     })
   }
 
-  onPromptConditionValueChanged = ({ elementRef, key, value, blockRef, conditionId }) => {
+  onPromptConditionValueChanged = ({ elementRef, key, value, blockRef, conditionId }: { elementRef: string, key: 'options' | 'text', value: any, blockRef: string, conditionId?: string }) => {
     const clonedValue = cloneDeep(this.props.value);
     const currentItem = find(clonedValue, { elementRef });
-    const condition = find(currentItem.conditions, { _id: conditionId });
+    const condition = currentItem && find(currentItem.conditions, { _id: conditionId });
+
+    if (!condition) return;
+
+    condition.prompts = condition.prompts || [];
     const prompt = find(condition.prompts, { ref: blockRef });
 
     if (!prompt) {
-      let prompt = {
+      const newPrompt: ConditionPrompt = {
         ref: blockRef
       };
-      prompt[key] = value;
-      condition.prompts.push(prompt);
+      newPrompt[key] = value;
+      condition.prompts.push(newPrompt);
     } else {
       prompt[key] = value;
     }
@@ -95,9 +105,10 @@ class TriggerStemsContainer extends Component {
     this.props.updateField(clonedValue);
   }
 
-  onRemoveConditionClicked = ({ elementRef, conditionId }) => {
+  onRemoveConditionClicked = ({ elementRef, conditionId }: { elementRef: string, conditionId?: string }) => {
     const clonedValue = cloneDeep(this.props.value);
     const currentItem = find(clonedValue, { elementRef });
+    if (!currentItem) return;
     remove(currentItem.conditions, { _id: conditionId });
     this.props.updateField(clonedValue);
   }
@@ -105,8 +116,6 @@ class TriggerStemsContainer extends Component {
   render() {
 
     const slideStems = getStemsBySlideRef({ slideRef: this.props.model.elementRef })
-
-    console.log(this.props.value);
 
     return (
       <TriggerStems
