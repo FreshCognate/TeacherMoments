@@ -28,6 +28,7 @@ const schema = {
       }
     },
     triggersByRef: {},
+    navigateToSlide: { type: mongoose.Schema.Types.ObjectId }
   }],
   totalTimeSpentMs: { type: Number },
   isArchived: { type: Boolean, default: false },
