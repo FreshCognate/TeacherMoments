@@ -152,6 +152,10 @@ class SlidePlayerContainer extends Component {
 
   onNextSlideClicked = () => {
     setSlideToComplete({ slideRef: this.props.activeSlide.ref });
+    const stage = ensureCurrentStage();
+    if (stage.navigateToSlide) {
+      return navigateTo({ slideRef: stage.navigateToSlide, router: this.props.router });
+    }
     return navigateToNextSlide({ router: this.props.router });
   }
 
@@ -170,9 +174,9 @@ class SlidePlayerContainer extends Component {
         console.warn(`Skipping invalid trigger: ${triggerItem.getText()}`, triggerErrors);
         continue;
       }
-      console.log(`Triggering: ${triggerItem.getText()}`);
-      await triggerItem.trigger(trigger);
-      console.log(`Triggered: ${triggerItem.getText()}`);
+      console.log(`⚡️ Triggering: ${triggerItem.getText()}`);
+      await triggerItem.trigger(trigger, this.props.router);
+      console.log(`✅ Triggered: ${triggerItem.getText()}`);
     }
 
     setSlideToSubmitted();
