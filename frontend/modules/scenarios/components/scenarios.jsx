@@ -77,7 +77,7 @@ const Scenarios = ({
             {map(scenarios, (scenario) => {
               return (
                 <Card key={scenario._id}>
-                  <Link to={`/scenarios/${scenario._id}/create`}>
+                  <Link to={`/scenarios/${scenario._id}/create`} className="h-full">
                     <CardContent>
                       <Title title={truncate(scenario.name, { length: 60 })} className="text-lg mb-1" />
                       <Body body={truncate(getString({ model: scenario, field: 'description' }), { length: 120 })} className="text-sm text-gray-800 dark:text-gray-400" />
