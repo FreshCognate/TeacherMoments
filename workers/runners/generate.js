@@ -5,6 +5,7 @@ import '../../backend/modules/runs/index.js';
 import '../../backend/modules/assets/index.js';
 import generateShowFeedbackFromPrompts from '../tasks/generateShowFeedbackFromPrompts.js';
 import generateMatchUserFeedbackToConditions from '../tasks/generateMatchUserFeedbackToConditions.js';
+import generateMatchStemToConditions from '../tasks/generateMatchStemToConditions.js';
 import generatedFeedbackFromFeedbackItems from '../tasks/generatedFeedbackFromFeedbackItems.js';
 import generateSlideResponsesSummary from '../tasks/generateSlideResponsesSummary.js';
 import generateScenarioResponsesSummary from '../tasks/generateScenarioResponsesSummary.js';
