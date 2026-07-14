@@ -1,5 +1,6 @@
 import getCache from "~/core/cache/helpers/getCache";
 import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
 import filter from 'lodash/filter';
 import getScenarioDetails from "./getScenarioDetails";
 import navigateTo from "./navigateTo";
@@ -31,6 +32,18 @@ export default async ({ router }) => {
       }
       // If in nested stem - we should find the parent slide in the root stem
       navigateTo({ slideRef: currentStem.slideRef, router })
+    }
+
+    const run = getCache('run');
+    const currentRunStageIndex = findIndex(run.data.stages, {
+      slideRef: activeSlideRef
+    })
+
+    const previousRunStage = run.data.stages[currentRunStageIndex - 1];
+
+    if (previousRunStage) {
+      navigateTo({ slideRef: previousRunStage.slideRef, router });
+      return;
     }
     const prevSlide = find(getCache('slides').data, { stemRef: currentStem.ref, sortOrder: currentSlide.sortOrder - 1 });
     if (prevSlide) {
