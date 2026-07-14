@@ -14,6 +14,7 @@ import map from 'lodash/map';
 import getCache from "~/core/cache/helpers/getCache";
 import navigateTo from "../run/helpers/navigateTo";
 import setSlideNavigation from "../run/helpers/setSlideNavigation";
+import generate from "../generate/helpers/generate";
 
 const BranchToStemFromPrompts = {
   trigger: async (trigger, router) => {
@@ -82,7 +83,6 @@ const BranchToStemFromPrompts = {
       // Mark items based upon their conditions and score each condition.
 
       for (const item of items) {
-
         if (item.blockType === 'MULTIPLE_CHOICE_PROMPT') {
           for (const condition of item.conditions) {
 
@@ -94,31 +94,31 @@ const BranchToStemFromPrompts = {
           }
         }
 
-        // if (item.blockType === 'INPUT_PROMPT') {
-        //   const stem = item.stem;
-        //   const usersAnswer = item.textValue;
-        //   const conditions = map(item.conditions, (condition) => {
-        //     return { _id: condition.conditionId, condition: condition.text };
-        //   });
+        if (item.blockType === 'INPUT_PROMPT') {
+          const stem = item.stem;
+          const usersAnswer = item.textValue;
+          const conditions = map(item.conditions, (condition) => {
+            return { _id: condition.conditionId, condition: condition.text };
+          });
 
-        //   const generatedContent = await generate({
-        //     generateType: 'USER_INPUT_PROMPT_MATCHES_CONDITION_PROMPT',
-        //     payload: {
-        //       stem,
-        //       usersAnswer,
-        //       conditions,
-        //     }
-        //   });
+          const generatedContent = await generate({
+            generateType: 'USER_INPUT_PROMPT_MATCHES_CONDITION_PROMPT',
+            payload: {
+              stem,
+              usersAnswer,
+              conditions,
+            }
+          });
 
-        //   const generatedConditions = generatedContent.payload.conditions;
+          const generatedConditions = generatedContent.payload.conditions;
 
-        //   for (const generatedCondition of generatedConditions) {
-        //     const currentCondition = find(item.conditions, { conditionId: generatedCondition._id });
-        //     currentCondition.score = generatedCondition.score;
-        //     currentCondition.reasoning = generatedCondition.reasoning;
-        //   }
+          for (const generatedCondition of generatedConditions) {
+            const currentCondition = find(item.conditions, { conditionId: generatedCondition._id });
+            currentCondition.score = generatedCondition.score;
+            currentCondition.reasoning = generatedCondition.reasoning;
+          }
 
-        // }
+        }
       }
 
       setSlideStatus('Navigating...');
@@ -175,6 +175,7 @@ const BranchToStemFromPrompts = {
 
       setSlideTrigger({ triggerRef: trigger.ref, triggerItems });
 
+      // TODO - we should sort this based upon the score - then pick the first one
       const matchedItem = matchedItems[0];
 
       setSlideStatus(null);
