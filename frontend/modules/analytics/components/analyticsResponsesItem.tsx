@@ -10,12 +10,14 @@ import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import Icon from '~/uikit/icons/components/icon';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import formatTimeSpent from '../helpers/formatTimeSpent';
+import getSlideLabel from '../helpers/getSlideLabel';
 import { AnalyticsViewType, BlockResponse, StageResponse, UserResponse } from '../analytics.types';
 
 interface SlideResponseGroup {
   slideRef: string;
   slideName?: string;
   slideSortOrder: number;
+  stemName?: string | null;
   promptResponses: BlockResponse[];
   firstBlockRef: string;
 }
@@ -43,6 +45,7 @@ const getSlideResponseGroups = (blockResponses: BlockResponse[]): SlideResponseG
         slideRef,
         slideName: blockResponse.slideName,
         slideSortOrder: blockResponse.slideSortOrder,
+        stemName: blockResponse.stemName,
         promptResponses: [],
         firstBlockRef: blockResponse.ref
       };
@@ -137,7 +140,7 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
                       onSlideNavigated(slideGroup.slideRef);
                     }}
                   >
-                    {slideGroup.slideName || `Slide ${slideGroup.slideSortOrder + 1}`}
+                    {getSlideLabel(slideGroup)}
                   </div>
                 );
               })}
@@ -239,7 +242,7 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
                       onClick={() => onResponseClicked(response, blockResponse.ref)}
                     >
                       {blockResponse.blockType === 'MULTIPLE_CHOICE_PROMPT' && (
-                        <div>{blockResponse.selectedOptions}</div>
+                        <div>{blockResponse.selectedOptionLabels}</div>
                       )}
                       {blockResponse.blockType === 'INPUT_PROMPT' && blockResponse.inputType === 'TEXT' && (
                         <div>{blockResponse.textValue}</div>

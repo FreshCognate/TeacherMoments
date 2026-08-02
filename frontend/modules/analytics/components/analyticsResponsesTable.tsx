@@ -9,6 +9,7 @@ import getUserDisplayName from '~/modules/users/helpers/getUserDisplayName';
 import Icon from '~/uikit/icons/components/icon';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import formatTimeSpent from '../helpers/formatTimeSpent';
+import getSlideLabel from '../helpers/getSlideLabel';
 import { BlockColumn, BlockResponse, SlideGroup, StageResponse, UserResponse } from '../analytics.types';
 
 interface AnalyticsResponsesTableProps {
@@ -30,7 +31,7 @@ const renderBlockAnswer = (blockResponse: BlockResponse | undefined) => {
   if (!blockResponse) return <span className="text-black/30 dark:text-white/30">-</span>;
 
   if (blockResponse.blockType === 'MULTIPLE_CHOICE_PROMPT') {
-    return <div>{blockResponse.selectedOptions}</div>;
+    return <div>{blockResponse.selectedOptionLabels}</div>;
   }
   if (blockResponse.blockType === 'INPUT_PROMPT' && blockResponse.inputType === 'TEXT') {
     return <div>{blockResponse.textValue}</div>;
@@ -121,7 +122,7 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
                 style={{ gridColumn: `span ${colSpan}` }}
                 onClick={() => onSlideNavigated(slideGroup.slideRef)}
               >
-                <span>{slideGroup.slideName || `Slide ${slideGroup.slideSortOrder + 1}`}</span>
+                <span>{getSlideLabel(slideGroup)}</span>
                 {slideGroup.promptColumns.length > 0 && (
                   <FlatButton
                     text="Summarize slide"

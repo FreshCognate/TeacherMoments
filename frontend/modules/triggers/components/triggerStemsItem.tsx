@@ -4,6 +4,7 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import map from 'lodash/map';
 import find from 'lodash/find';
 import getBlockDisplayName from '~/modules/blocks/helpers/getBlockDisplayName';
+import getOptionLabel from '~/modules/blocks/helpers/getOptionLabel';
 import getString from '~/modules/ls/helpers/getString';
 import Body from '~/uikit/content/components/body';
 import Badge from '~/uikit/badges/components/badge';
@@ -73,7 +74,7 @@ const TriggerStemsItem = ({
                                 <div className="flex">
                                   {prompt.blockType === 'MULTIPLE_CHOICE_PROMPT' && map(conditionPrompt?.options, (option, index) => {
                                     return (
-                                      <Badge text={option} key={index} className="mr-1" />
+                                      <Badge text={getOptionLabel({ options: prompt.options, optionId: option })} key={index} className="mr-1" />
                                     );
                                   })}
                                   {prompt.blockType === 'INPUT_PROMPT' && (

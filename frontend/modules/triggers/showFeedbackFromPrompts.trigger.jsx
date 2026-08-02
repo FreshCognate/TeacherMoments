@@ -138,7 +138,6 @@ const ShowFeedbackFromPrompts = {
             const item = find(items, { blockRef: prompt.ref });
 
             const itemCondition = find(item.conditions, { conditionId: condition._id });
-            console.log(itemCondition.score);
 
             if (itemCondition.score >= 0.7) {
               promptsMatched.push(prompt);

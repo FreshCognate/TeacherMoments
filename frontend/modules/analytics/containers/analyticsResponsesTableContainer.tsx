@@ -31,6 +31,7 @@ class AnalyticsResponsesTableContainer extends Component<AnalyticsResponsesTable
       slideRef: blockResponse.slideRef,
       slideName: blockResponse.slideName,
       slideSortOrder: blockResponse.slideSortOrder,
+      stemName: blockResponse.stemName,
       name: blockResponse.name,
       blockType: blockResponse.blockType,
       inputType: blockResponse.inputType,
@@ -50,6 +51,7 @@ class AnalyticsResponsesTableContainer extends Component<AnalyticsResponsesTable
           slideRef,
           slideName: blockColumn.slideName,
           slideSortOrder: blockColumn.slideSortOrder,
+          stemName: blockColumn.stemName,
           promptColumns: [],
           firstBlockRef: blockColumn.ref
         };

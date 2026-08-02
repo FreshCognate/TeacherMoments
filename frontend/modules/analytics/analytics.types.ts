@@ -8,8 +8,10 @@ export interface BlockResponse {
   suggestionType?: string;
   slideName?: string;
   slideSortOrder: number;
+  stemName?: string | null;
   sortOrder: number;
   selectedOptions?: string[];
+  selectedOptionLabels?: string[];
   textValue?: string;
   audio?: {
     transcript?: string;
@@ -21,6 +23,7 @@ export interface BlockColumn {
   slideRef: string;
   slideName?: string;
   slideSortOrder: number;
+  stemName?: string | null;
   name?: string;
   blockType: string;
   inputType?: string;
@@ -31,6 +34,7 @@ export interface SlideGroup {
   slideRef: string;
   slideName?: string;
   slideSortOrder: number;
+  stemName?: string | null;
   promptColumns: BlockColumn[];
   firstBlockRef: string;
 }

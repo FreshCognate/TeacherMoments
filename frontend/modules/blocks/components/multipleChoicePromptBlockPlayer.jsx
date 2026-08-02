@@ -24,7 +24,7 @@ const MultipleChoicePromptBlockPlayer = ({
 
       <div className="mb-2">
         {map(block.options, (option) => {
-          const isSelected = !!includes(blockTracking.selectedOptions, option.value);
+          const isSelected = !!includes(blockTracking.selectedOptions, option._id);
           return (
             <MultipleChoicePromptBlockPlayerAnswer
               key={option._id}
