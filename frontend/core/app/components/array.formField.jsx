@@ -22,6 +22,9 @@ const ArrayFormField = ({
           return (
             <div key={action._id} className="bg-lm-1 border border-lm-3 dark:border-none dark:bg-dm-1 mb-2 last:mb-0 rounded-md overflow-hidden group/actionItem">
               <div className="p-4">
+                <div className="text-black/80 dark:text-white/80 text-sm mb-4">
+                  {schema.itemPrefixText} {index + 1}
+                </div>
                 <FormContainer
                   schema={schema.subSchema}
                   model={action}

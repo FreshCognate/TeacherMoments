@@ -226,6 +226,7 @@ const ShowFeedbackFromPrompts = {
         label: 'Feedback responses',
         deleteTitleText: "Delete conditional feedback",
         addButtonText: "Add conditional feedback",
+        itemPrefixText: 'Response',
         shouldStopLastItemDelete: true,
         subSchema: {
           ...body,
