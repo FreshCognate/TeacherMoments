@@ -1,7 +1,14 @@
 import populateRun from '../../runs/helpers/populateRun.js';
+import getSlideOrderByStemTraversal from '../../slides/helpers/getSlideOrderByStemTraversal.js';
 import find from 'lodash/find.js';
 import map from 'lodash/map.js';
 import sortBy from 'lodash/sortBy.js';
+import keyBy from 'lodash/keyBy.js';
+
+const getStemName = (stem) => {
+  if (!stem || stem.isRoot) return null;
+  return stem.name || `Stem ${(stem.sortOrder ?? 0) + 1}`;
+};
 
 const resolveSelectedOptionLabels = (block, selectedOptions) => {
   return map(selectedOptions, (selectedOption) => {
@@ -18,6 +25,10 @@ const resolveSelectedOptionLabels = (block, selectedOptions) => {
 export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context) => {
 
   const { models } = context;
+
+  const stems = await models.Stem.find({ scenario: scenarioId, isDeleted: false }).lean();
+  const slideOrderByRef = getSlideOrderByStemTraversal({ slides: Object.values(slidesByRef), stems });
+  const stemsByRef = keyBy(stems, (stem) => String(stem.ref));
 
   let previousUserRuns = await models.Run.find({ scenario: scenarioId, user: userId, isDeleted: false, isArchived: true }).sort('createdAt').lean();
   let userRun = await models.Run.findOne({ scenario: scenarioId, user: userId, isDeleted: false, isArchived: false }).lean();
@@ -64,6 +75,7 @@ export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context)
         slideRef: block.slideRef,
         slideName: blockSlide.name,
         slideSortOrder: blockSlide.sortOrder ?? 0,
+        stemName: getStemName(stemsByRef[String(blockSlide.stemRef)]),
         name: block.name,
         sortOrder: block.sortOrder,
         blockType: block.blockType,
@@ -86,7 +98,7 @@ export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context)
 
       return blockResponse;
     }),
-    ['slideSortOrder', 'sortOrder']
+    [(blockResponse) => slideOrderByRef.get(String(blockResponse.slideRef)) ?? 0, 'sortOrder']
   );
 
   return currentRun;
