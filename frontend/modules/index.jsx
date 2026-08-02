@@ -18,7 +18,6 @@ import '~/modules/triggers/branchToStemFromPrompts.trigger';
 import '~/modules/triggers/containers/feedbackItemConditionsContainer.formField';
 import '~/modules/authentication/containers/usernameContainer.formField';
 import '~/modules/triggers/containers/triggerStemsContainer.formField';
-import '~/modules/blocks/containers/optionValueContainer.formField';
 
 axios.interceptors.response.use(function (response) {
   return response;
