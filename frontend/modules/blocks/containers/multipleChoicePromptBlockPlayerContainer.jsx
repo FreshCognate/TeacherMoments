@@ -12,7 +12,7 @@ class MultipleChoicePromptBlockPlayerContainer extends Component {
     const { isMultiSelect, options } = this.props.block;
     const currentOption = find(options, { _id: selectedOptionId });
 
-    let usersSelectedOption = currentOption.value;
+    let usersSelectedOption = currentOption._id;
 
     let clonedSelectedOptions = cloneDeep(selectedOptions);
     if (isMultiSelect) {
