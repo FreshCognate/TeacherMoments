@@ -43,7 +43,7 @@ export default {
         ...optionText,
         ...feedbackText,
         value: {
-          type: 'OptionValue',
+          type: 'Text',
           label: 'Option value',
           tooltip: "This must be filled out and be unique from the other options in this block. This value is also stored for analytics purposes."
         }
