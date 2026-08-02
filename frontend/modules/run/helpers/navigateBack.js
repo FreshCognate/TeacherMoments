@@ -31,7 +31,8 @@ export default async ({ router }) => {
         return;
       }
       // If in nested stem - we should find the parent slide in the root stem
-      navigateTo({ slideRef: currentStem.slideRef, router })
+      navigateTo({ slideRef: currentStem.slideRef, router });
+      return;
     }
 
     const run = getCache('run');
