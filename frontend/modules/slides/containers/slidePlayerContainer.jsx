@@ -24,6 +24,7 @@ import setScenarioToArchived from '~/modules/run/helpers/setScenarioToArchived';
 import isScenarioInPlay from '~/modules/scenarios/helpers/isScenarioInPlay';
 import getCohortFromSearchParams from '~/modules/cohorts/helpers/getCohortFromSearchParams';
 import getActiveSlideStems from '../helpers/getActiveSlideStems';
+import getIsRecordingAudio from '~/modules/run/helpers/getIsRecordingAudio';
 
 class SlidePlayerContainer extends Component {
 
@@ -57,6 +58,8 @@ class SlidePlayerContainer extends Component {
 
     const { isAbleToCompleteSlide, hasRequiredPrompts, hasPrompts, isSubmitted } = getSlideNavigationDetails();
 
+    const isRecordingAudio = getIsRecordingAudio();
+
     if (activeSlide?.slideType === 'CONSENT') {
       secondaryAction = {
         action: 'CONSENT_DENIED',
@@ -78,7 +81,8 @@ class SlidePlayerContainer extends Component {
           action: 'NEXT',
           color: 'primary',
           text: 'Next',
-          isActive: hasRequiredPrompts && !isAbleToCompleteSlide
+          isActive: hasRequiredPrompts && !isAbleToCompleteSlide,
+          isDisabled: isRecordingAudio
         }
         secondaryAction = {
           action: 'BACK',
@@ -91,7 +95,7 @@ class SlidePlayerContainer extends Component {
             action: 'SUBMIT',
             color: 'primary',
             text: isSubmitting ? 'Submitting' : 'Submit',
-            isDisabled: (hasRequiredPrompts && !isAbleToCompleteSlide) || isSubmitting
+            isDisabled: (hasRequiredPrompts && !isAbleToCompleteSlide) || isSubmitting || isRecordingAudio
           }
         }
       } else {

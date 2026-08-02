@@ -7,6 +7,7 @@ import uploadAsset from '~/modules/assets/helpers/uploadAsset';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import isScenarioInPlay from '~/modules/scenarios/helpers/isScenarioInPlay';
 import { v4 as uuidv4 } from 'uuid';
+import setIsRecordingAudio from '~/modules/run/helpers/setIsRecordingAudio';
 
 class InputPromptBlockPlayerContainer extends Component {
 
@@ -38,6 +39,7 @@ class InputPromptBlockPlayerContainer extends Component {
   }
 
   onAudioRecorded = async (mediaBlobUrl) => {
+    setIsRecordingAudio(false);
     this.setState({ isUploadingAudio: true, isAudioUploaded: false, isAudioProcessed: false, isTranscriptProcessed: false });
 
     const response = await fetch(mediaBlobUrl);
@@ -90,6 +92,7 @@ class InputPromptBlockPlayerContainer extends Component {
   }
 
   onAudioRecording = () => {
+    setIsRecordingAudio(true);
     if (this.props.blockTracking.audio) {
       if (this.props.blockTracking.audio._id) {
         axios.delete(`/api/assets/${this.props.blockTracking.audio._id}`);
