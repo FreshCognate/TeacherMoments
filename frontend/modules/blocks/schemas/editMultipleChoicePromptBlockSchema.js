@@ -44,8 +44,8 @@ export default {
         ...feedbackText,
         value: {
           type: 'Text',
-          label: 'Option value',
-          tooltip: "This must be filled out and be unique from the other options in this block. This value is also stored for analytics purposes."
+          label: 'Analytics value',
+          tooltip: "This value is also stored for analytics purposes. Use this if you want the analytics to show another value than the users selected value."
         }
       }
     }
