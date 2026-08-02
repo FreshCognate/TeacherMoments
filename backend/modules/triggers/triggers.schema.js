@@ -30,7 +30,7 @@ const schema = {
   },
   items: {
     type: [itemSchema],
-    default: [{}]
+    default: []
   },
   shouldGenerateFeedbackFromAI: {
     type: Boolean,

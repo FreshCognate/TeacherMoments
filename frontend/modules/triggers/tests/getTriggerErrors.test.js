@@ -3,6 +3,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 const getBlocksBySlideRefMock = vi.fn();
 const getBlockDisplayTypeMock = vi.fn();
 const hasContentMock = vi.fn();
+const getCacheMock = vi.fn();
+
+vi.mock('~/core/cache/helpers/getCache', () => ({
+  default: (key) => getCacheMock(key)
+}));
 
 vi.mock('~/modules/blocks/helpers/getBlocksBySlideRef', () => ({
   default: (args) => getBlocksBySlideRefMock(args)
@@ -33,10 +38,15 @@ const baseTrigger = (overrides = {}) => ({
   ...overrides
 });
 
+const setStems = (stems) => {
+  getCacheMock.mockImplementation((key) => (key === 'stems' ? { data: stems } : { data: [] }));
+};
+
 describe('getTriggerErrors', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     hasContentMock.mockReturnValue(true);
+    setStems([]);
   });
 
   it('returns no errors for unknown actions', () => {
@@ -165,6 +175,141 @@ describe('getTriggerErrors', () => {
               { ref: 'block-2', options: ['a', 'b'] }
             ]
           }]
+        }]
+      }));
+
+      expect(errors).toEqual([]);
+    });
+  });
+
+  describe('BRANCH_TO_STEM_FROM_PROMPTS', () => {
+    const slideStems = [
+      { _id: 's1', ref: 'stem-1', name: 'Calm', slideRef: 'slide-1' },
+      { _id: 's2', ref: 'stem-2', name: 'Firm', slideRef: 'slide-1' }
+    ];
+
+    const branchTrigger = (overrides = {}) => baseTrigger({
+      action: 'BRANCH_TO_STEM_FROM_PROMPTS',
+      ...overrides
+    });
+
+    beforeEach(() => {
+      setStems(slideStems);
+      getBlocksBySlideRefMock.mockReturnValue([promptBlock({ ref: 'block-1', blockType: 'INPUT_PROMPT' })]);
+      getBlockDisplayTypeMock.mockReturnValue('PROMPT');
+    });
+
+    it('reports when an item has no stem to branch to', () => {
+      const errors = getTriggerErrors(branchTrigger({
+        items: [{
+          _id: 'i1',
+          conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }]
+        }]
+      }));
+
+      expect(errors.map((e) => e.message)).toContain('Branch 1 has no stem to branch to');
+    });
+
+    it('reports when an item branches to a stem that no longer exists', () => {
+      const errors = getTriggerErrors(branchTrigger({
+        items: [{
+          _id: 'i1',
+          elementRef: 'stem-deleted',
+          conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }]
+        }]
+      }));
+
+      expect(errors.map((e) => e.message)).toContain('Branch 1 branches to a stem that no longer exists');
+    });
+
+    it('reports a condition with no prompts set', () => {
+      const errors = getTriggerErrors(branchTrigger({
+        items: [{ _id: 'i1', elementRef: 'stem-1', conditions: [{}] }]
+      }));
+
+      expect(errors.map((e) => e.message)).toContain('Stem "Calm" has a condition with no prompts set');
+    });
+
+    it('does not report when every stem has conditions', () => {
+      const errors = getTriggerErrors(branchTrigger({
+        items: [{
+          _id: 'i1',
+          elementRef: 'stem-1',
+          conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }]
+        }]
+      }));
+
+      expect(errors).toEqual([]);
+    });
+
+    it('reports when two stems use the same condition, ignoring option and prompt order', () => {
+      getBlocksBySlideRefMock.mockReturnValue([
+        promptBlock({ ref: 'block-1', blockType: 'INPUT_PROMPT' }),
+        promptBlock({ ref: 'block-2', blockType: 'MULTIPLE_CHOICE_PROMPT' })
+      ]);
+
+      const errors = getTriggerErrors(branchTrigger({
+        items: [{
+          _id: 'i1',
+          elementRef: 'stem-1',
+          conditions: [{
+            prompts: [
+              { ref: 'block-1', text: 'Yes' },
+              { ref: 'block-2', options: ['a', 'b'] }
+            ]
+          }]
+        }, {
+          _id: 'i2',
+          elementRef: 'stem-2',
+          conditions: [{
+            prompts: [
+              { ref: 'block-2', options: ['b', 'a'] },
+              { ref: 'block-1', text: '  yes  ' }
+            ]
+          }]
+        }]
+      }));
+
+      expect(errors.map((e) => e.message))
+        .toContain('More than one stem uses the same condition: Stem "Calm", Stem "Firm"');
+    });
+
+    it('does not report duplicates when the conditions differ', () => {
+      const errors = getTriggerErrors(branchTrigger({
+        items: [{
+          _id: 'i1',
+          elementRef: 'stem-1',
+          conditions: [{ prompts: [{ ref: 'block-1', text: 'yes' }] }]
+        }, {
+          _id: 'i2',
+          elementRef: 'stem-2',
+          conditions: [{ prompts: [{ ref: 'block-1', text: 'no' }] }]
+        }]
+      }));
+
+      expect(errors.map((e) => e.message).join(' ')).not.toContain('use the same condition');
+    });
+
+    it('does not require body content on branch items', () => {
+      hasContentMock.mockReturnValue(false);
+
+      const errors = getTriggerErrors(branchTrigger({
+        items: [{ _id: 'i1', elementRef: 'stem-1', conditions: [] }]
+      }));
+
+      expect(errors).toEqual([]);
+    });
+
+    it('returns no errors when everything is valid', () => {
+      const errors = getTriggerErrors(branchTrigger({
+        items: [{
+          _id: 'i1',
+          elementRef: 'stem-1',
+          conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }]
+        }, {
+          _id: 'i2',
+          elementRef: 'stem-2',
+          conditions: []
         }]
       }));
 

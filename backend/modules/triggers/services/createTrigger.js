@@ -19,6 +19,7 @@ export default async (props, options, context) => {
     elementRef,
     action,
     sortOrder,
+    items: action === 'SHOW_FEEDBACK_FROM_PROMPTS' ? [{}] : [],
     createdBy: user._id,
   };
 

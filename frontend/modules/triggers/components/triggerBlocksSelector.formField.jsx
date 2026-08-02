@@ -33,20 +33,20 @@ const triggerBlocksSelector = ({
               className="mr-4"
               onChange={() => onBlockToggled(block.ref)}
             />
-            <div className="w-full">
+            <div className="flex-1 min-w-0">
               <div className="flex items-center mb-2">
-                <div className="w-1/4">
+                <div className="w-1/4 shrink-0">
                   <Body body="Block type:" size="sm" />
                 </div>
-                <div>
+                <div className="w-3/4 min-w-0">
                   <Body body={blockDisplayName} size="sm" />
                 </div>
               </div>
               <div className="flex w-full items-center">
-                <div className="w-1/4">
+                <div className="w-1/4 shrink-0">
                   <Body body="Prompt:" size="sm" />
                 </div>
-                <div>
+                <div className="w-3/4 min-w-0">
                   <Body body={getString({ model: block, field: 'body' })} size="sm" />
                 </div>
               </div>

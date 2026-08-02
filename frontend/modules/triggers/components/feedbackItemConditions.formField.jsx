@@ -38,27 +38,27 @@ const FeedbackItemConditions = ({
 
                     return (
                       <div key={prompt._id || index} className="flex items-start justify-between bg-lm-2 dark:bg-dm-2 mb-0.5 p-4 last:border-b-0">
-                        <div className="w-1/2">
+                        <div className="w-1/2 min-w-0">
                           <div className="flex items-center mb-2">
-                            <div className="w-1/4">
+                            <div className="w-1/4 shrink-0">
                               <Body body="Block type:" size="sm" />
                             </div>
-                            <div>
+                            <div className="flex-1 min-w-0">
                               <Body body={blockDisplayName} size="sm" />
                             </div>
                           </div>
                           <div className="flex w-full items-center">
-                            <div className="w-1/4">
+                            <div className="w-1/4 shrink-0">
                               <Body body="Prompt:" size="sm" />
                             </div>
-                            <div>
+                            <div className="flex-1 min-w-0">
                               <Body body={getString({ model: prompt, field: 'body' })} size="sm" />
                             </div>
                           </div>
                         </div>
-                        <div className="w-1/2">
+                        <div className="w-1/2 min-w-0">
                           <div className="flex w-full items-center">
-                            <div className="w-5/6">
+                            <div className="flex-1 min-w-0">
                               <Body body={prompt.blockType === 'MULTIPLE_CHOICE_PROMPT' ? "Has value:" : "Has answered:"} size="sm" className="mb-1" />
                               <div className="flex">
                                 {prompt.blockType === 'MULTIPLE_CHOICE_PROMPT' && map(conditionPrompt?.options, (option, index) => {
@@ -77,7 +77,11 @@ const FeedbackItemConditions = ({
                                 )}
                               </div>
                             </div>
-                            <FlatButton icon="edit" onClick={() => onEditPromptConditionClicked({ prompt, condition })} />
+                            <FlatButton
+                              icon="edit"
+                              className="shrink-0"
+                              onClick={() => onEditPromptConditionClicked({ prompt, condition })}
+                            />
                           </div>
                         </div>
                       </div>
