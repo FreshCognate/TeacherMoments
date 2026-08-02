@@ -15,6 +15,7 @@ import getCache from "~/core/cache/helpers/getCache";
 import navigateTo from "../run/helpers/navigateTo";
 import setSlideNavigation from "../run/helpers/setSlideNavigation";
 import generate from "../generate/helpers/generate";
+import filter from 'lodash/filter';
 
 const BranchToStemFromPrompts = {
   trigger: async (trigger, router) => {

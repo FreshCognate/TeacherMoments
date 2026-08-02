@@ -45,6 +45,7 @@ describe('createTrigger', () => {
       elementRef: 'b1',
       action: 'SHOW_FEEDBACK_FROM_PROMPTS',
       sortOrder: 2,
+      items: [{}],
       createdBy: 'u1'
     });
     expect(setHasChangesMock).toHaveBeenCalledWith({ scenarioId: 's1' }, {}, context);
@@ -62,5 +63,18 @@ describe('createTrigger', () => {
     );
 
     expect(create).toHaveBeenCalledWith(expect.objectContaining({ sortOrder: 0 }));
+  });
+
+  it('creates BRANCH_TO_STEM_FROM_PROMPTS triggers with no items', async () => {
+    const find = vi.fn().mockResolvedValue([]);
+    const create = vi.fn().mockResolvedValue({ _id: 'new1' });
+
+    await createTrigger(
+      { scenario: 's1', triggerType: 'SLIDE', elementRef: 'sl1', action: 'BRANCH_TO_STEM_FROM_PROMPTS' },
+      {},
+      { models: { Trigger: { find, create } }, user: { _id: 'u1' } }
+    );
+
+    expect(create).toHaveBeenCalledWith(expect.objectContaining({ items: [] }));
   });
 });
