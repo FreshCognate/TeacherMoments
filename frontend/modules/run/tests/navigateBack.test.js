@@ -42,6 +42,7 @@ describe('navigateBack', () => {
     navigateTo.mockClear();
     seed('slides', slides);
     seed('stems', stems);
+    seed('run', { stages: [] });
   });
 
   afterEach(() => {
@@ -73,6 +74,32 @@ describe('navigateBack', () => {
     await navigateBack({ router });
     expect(navigateTo).toHaveBeenCalledWith({ slideRef: 'root-2', router });
     expect(navigateTo).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not fall through to the run history from the first slide of a nested stem', async () => {
+    seed('run', {
+      stages: [
+        { slideRef: 'root-1' },
+        { slideRef: 'nested-1' }
+      ]
+    });
+    getScenarioDetails.mockReturnValue({ activeSlideRef: 'nested-1' });
+    await navigateBack({ router });
+    expect(navigateTo).toHaveBeenCalledWith({ slideRef: 'root-2', router });
+    expect(navigateTo).toHaveBeenCalledTimes(1);
+  });
+
+  it('navigates to the previous stage in the run history when one exists', async () => {
+    seed('run', {
+      stages: [
+        { slideRef: 'root-1' },
+        { slideRef: 'nested-2' },
+        { slideRef: 'root-3' }
+      ]
+    });
+    getScenarioDetails.mockReturnValue({ activeSlideRef: 'root-3' });
+    await navigateBack({ router });
+    expect(navigateTo).toHaveBeenCalledWith({ slideRef: 'nested-2', router });
   });
 
   it('navigates to the previous slide in the same stem by sortOrder', async () => {
