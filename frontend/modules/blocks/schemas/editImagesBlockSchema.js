@@ -18,6 +18,7 @@ export default {
       label: 'Images',
       deleteTitleText: "Delete image",
       addButtonText: "Add image",
+      itemPrefixText: 'Image',
       shouldStopLastItemDelete: true,
       subSchema: {
         ...asset,

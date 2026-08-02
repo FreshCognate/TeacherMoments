@@ -37,6 +37,7 @@ export default {
       label: 'Response options',
       deleteTitleText: "Delete option",
       addButtonText: "Add option",
+      itemPrefixText: 'Option',
       shouldStopLastItemDelete: true,
       subSchema: {
         ...optionText,
