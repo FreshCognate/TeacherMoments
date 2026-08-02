@@ -99,7 +99,7 @@ describe('buildScenarioCsvRows', () => {
   it('formats MULTIPLE_CHOICE_PROMPT values as comma-separated options', async () => {
     buildUserScenarioResponseMock.mockResolvedValue({
       blockResponses: [
-        { slideRef: 's1', slideName: 'Intro', name: 'B1', sortOrder: 0, blockType: 'MULTIPLE_CHOICE_PROMPT', selectedOptions: ['Yes', 'Maybe'] }
+        { slideRef: 's1', slideName: 'Intro', name: 'B1', sortOrder: 0, blockType: 'MULTIPLE_CHOICE_PROMPT', selectedOptionLabels: ['Yes', 'Maybe'] }
       ],
       stages: [],
       totalTimeSpentMs: 0

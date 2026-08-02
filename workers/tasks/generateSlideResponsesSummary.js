@@ -66,8 +66,8 @@ export default async ({ cohortId, scenarioId, slideRef }) => withConnection(asyn
 
         if (blockResponse.textValue) {
           responseText = blockResponse.textValue;
-        } else if (blockResponse.selectedOptions && blockResponse.selectedOptions.length) {
-          responseText = blockResponse.selectedOptions.join(', ');
+        } else if (blockResponse.selectedOptionLabels && blockResponse.selectedOptionLabels.length) {
+          responseText = blockResponse.selectedOptionLabels.join(', ');
         }
 
         if (responseText) {

@@ -8,7 +8,7 @@ import each from 'lodash/each.js';
 const getBlockValue = (blockResponse) => {
   if (!blockResponse) return '';
   if (blockResponse.blockType === 'MULTIPLE_CHOICE_PROMPT') {
-    return (blockResponse.selectedOptions || []).join(', ');
+    return (blockResponse.selectedOptionLabels || []).join(', ');
   }
   if (blockResponse.blockType === 'INPUT_PROMPT' && blockResponse.inputType === 'TEXT') {
     return blockResponse.textValue || '';

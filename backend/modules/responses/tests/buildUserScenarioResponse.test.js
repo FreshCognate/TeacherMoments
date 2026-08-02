@@ -99,6 +99,86 @@ describe('buildUserScenarioResponse (in-memory mongo)', () => {
     expect(blockA).toMatchObject({ selectedOptions: ['x'], textValue: 'hi', audio: { transcript: 't' } });
   });
 
+  it('resolves selected option _ids to their value (falling back to text)', async () => {
+    const userId = new mongoose.Types.ObjectId();
+    const scenarioId = new mongoose.Types.ObjectId();
+    await db.models.Run.create({ scenario: scenarioId, user: userId, isArchived: false });
+
+    const withValueId = new mongoose.Types.ObjectId();
+    const withoutValueId = new mongoose.Types.ObjectId();
+
+    const blocksByRef = baseBlocksByRef({
+      'block-a': {
+        ref: 'block-a',
+        slideRef: 'slide-1',
+        name: 'Block A',
+        sortOrder: 0,
+        blockType: 'MULTIPLE_CHOICE_PROMPT',
+        options: [
+          { _id: withValueId, value: 'Agree', 'en-US-text': 'I agree' },
+          { _id: withoutValueId, value: '', 'en-US-text': 'No value option' }
+        ]
+      }
+    });
+
+    populateRunMock.mockResolvedValue({
+      isComplete: false,
+      totalTimeSpentMs: 0,
+      stages: [{
+        slideRef: 'slide-1',
+        timeSpentMs: 0,
+        feedbackItems: [],
+        blocksByRef: { 'block-a': { selectedOptions: [String(withValueId), String(withoutValueId)] } }
+      }]
+    });
+
+    const result = await buildUserScenarioResponse(
+      { userId, scenarioId, slidesByRef: baseSlidesByRef(), blocksByRef },
+      { models: db.models }
+    );
+
+    const blockA = result.blockResponses.find((b) => b.ref === 'block-a');
+    expect(blockA.selectedOptions).toEqual([String(withValueId), String(withoutValueId)]);
+    expect(blockA.selectedOptionLabels).toEqual(['Agree', 'No value option']);
+  });
+
+  it('resolves legacy value-based selections and leaves unknown entries unchanged', async () => {
+    const userId = new mongoose.Types.ObjectId();
+    const scenarioId = new mongoose.Types.ObjectId();
+    await db.models.Run.create({ scenario: scenarioId, user: userId, isArchived: false });
+
+    const blocksByRef = baseBlocksByRef({
+      'block-a': {
+        ref: 'block-a',
+        slideRef: 'slide-1',
+        name: 'Block A',
+        sortOrder: 0,
+        blockType: 'MULTIPLE_CHOICE_PROMPT',
+        options: [{ _id: new mongoose.Types.ObjectId(), value: 'Agree', 'en-US-text': 'I agree' }]
+      }
+    });
+
+    populateRunMock.mockResolvedValue({
+      isComplete: false,
+      totalTimeSpentMs: 0,
+      stages: [{
+        slideRef: 'slide-1',
+        timeSpentMs: 0,
+        feedbackItems: [],
+        blocksByRef: { 'block-a': { selectedOptions: ['Agree', 'DELETED'] } }
+      }]
+    });
+
+    const result = await buildUserScenarioResponse(
+      { userId, scenarioId, slidesByRef: baseSlidesByRef(), blocksByRef },
+      { models: db.models }
+    );
+
+    const blockA = result.blockResponses.find((b) => b.ref === 'block-a');
+    expect(blockA.selectedOptions).toEqual(['Agree', 'DELETED']);
+    expect(blockA.selectedOptionLabels).toEqual(['Agree', 'DELETED']);
+  });
+
   it('sorts blockResponses by slideSortOrder then sortOrder', async () => {
     const blocksByRef = {
       'block-z': { ref: 'block-z', slideRef: 'slide-2', name: 'Z', sortOrder: 0, blockType: 'TEXT' },

@@ -3,6 +3,18 @@ import find from 'lodash/find.js';
 import map from 'lodash/map.js';
 import sortBy from 'lodash/sortBy.js';
 
+const resolveSelectedOptionLabels = (block, selectedOptions) => {
+  return map(selectedOptions, (selectedOption) => {
+    const options = block.options || [];
+    const option = find(options, (candidate) => String(candidate._id) === String(selectedOption)) ||
+      find(options, (candidate) => candidate.value === selectedOption);
+
+    if (!option) return String(selectedOption);
+
+    return option.value || option['en-US-text'] || String(selectedOption);
+  });
+};
+
 export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context) => {
 
   const { models } = context;
@@ -61,7 +73,13 @@ export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context)
       };
 
       if (blockTracking) {
+        // selectedOptions stays as the stored option _ids (identity — used to
+        // highlight the chosen answer when replaying a response). Labels are
+        // exposed separately for read-only text display (tables, CSV, AI).
         blockResponse.selectedOptions = blockTracking.selectedOptions;
+        blockResponse.selectedOptionLabels = blockTracking.selectedOptions
+          ? resolveSelectedOptionLabels(block, blockTracking.selectedOptions)
+          : blockTracking.selectedOptions;
         blockResponse.textValue = blockTracking.textValue;
         blockResponse.audio = blockTracking.audio;
       }

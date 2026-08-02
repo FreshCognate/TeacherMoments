@@ -138,7 +138,7 @@ describe('generateScenarioResponsesSummary', () => {
       .mockResolvedValueOnce({
         blockResponses: [
           { ref: 'b1', textValue: 'free text answer' },
-          { ref: 'b2', selectedOptions: ['Yes', 'Maybe'] }
+          { ref: 'b2', selectedOptionLabels: ['Yes', 'Maybe'] }
         ],
         stages: []
       })

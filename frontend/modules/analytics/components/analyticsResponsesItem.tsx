@@ -239,7 +239,7 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
                       onClick={() => onResponseClicked(response, blockResponse.ref)}
                     >
                       {blockResponse.blockType === 'MULTIPLE_CHOICE_PROMPT' && (
-                        <div>{blockResponse.selectedOptions}</div>
+                        <div>{blockResponse.selectedOptionLabels}</div>
                       )}
                       {blockResponse.blockType === 'INPUT_PROMPT' && blockResponse.inputType === 'TEXT' && (
                         <div>{blockResponse.textValue}</div>

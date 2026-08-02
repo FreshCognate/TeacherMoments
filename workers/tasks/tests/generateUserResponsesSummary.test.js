@@ -71,7 +71,7 @@ describe('generateUserResponsesSummary', () => {
     buildUserScenarioResponseMock.mockResolvedValue({
       blockResponses: [
         { ref: 'b1', textValue: 'first answer' },
-        { ref: 'b2', selectedOptions: ['Yes', 'No'] }
+        { ref: 'b2', selectedOptionLabels: ['Yes', 'No'] }
       ],
       stages: [{ slideRef: 'sl1', feedbackItems: ['nice work'] }]
     });

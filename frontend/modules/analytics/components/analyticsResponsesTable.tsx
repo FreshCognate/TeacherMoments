@@ -30,7 +30,7 @@ const renderBlockAnswer = (blockResponse: BlockResponse | undefined) => {
   if (!blockResponse) return <span className="text-black/30 dark:text-white/30">-</span>;
 
   if (blockResponse.blockType === 'MULTIPLE_CHOICE_PROMPT') {
-    return <div>{blockResponse.selectedOptions}</div>;
+    return <div>{blockResponse.selectedOptionLabels}</div>;
   }
   if (blockResponse.blockType === 'INPUT_PROMPT' && blockResponse.inputType === 'TEXT') {
     return <div>{blockResponse.textValue}</div>;

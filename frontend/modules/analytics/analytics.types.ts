@@ -10,6 +10,7 @@ export interface BlockResponse {
   slideSortOrder: number;
   sortOrder: number;
   selectedOptions?: string[];
+  selectedOptionLabels?: string[];
   textValue?: string;
   audio?: {
     transcript?: string;
