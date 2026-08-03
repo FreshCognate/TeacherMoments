@@ -99,7 +99,6 @@ If a slide has stems but **no prompt blocks**, the user is not shown Back/Next b
 
 ## Limitations
 
-- Stems and branching are currently available on `mit-tm.com` and `staging.teachermoments.org` only.
 - One trigger per slide: branching and feedback triggers cannot be combined on the same slide.
 - Stems cannot be nested — branches are one level deep.
 - Branching evaluates Multiple choice prompt and Input prompt blocks only; Actions prompt responses are not evaluated.
