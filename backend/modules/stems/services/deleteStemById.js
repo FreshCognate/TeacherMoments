@@ -1,7 +1,11 @@
 import setScenarioHasChanges from '../../scenarios/services/setScenarioHasChanges.js';
 import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
+import deleteTriggersBySlideRefs from '../../triggers/services/deleteTriggersBySlideRefs.js';
 
-const deleteStemSlidesAndBlocks = async ({ stemRef, deletedAt, models, user, session }) => {
+const deleteStemContents = async ({ stemRef, deletedAt, session }, context) => {
+
+  const { models, user } = context;
+
   const slides = await models.Slide.find({ stemRef, isDeleted: false }).session(session);
   const slideRefs = slides.map(slide => slide.ref);
 
@@ -14,6 +18,8 @@ const deleteStemSlidesAndBlocks = async ({ stemRef, deletedAt, models, user, ses
     { stemRef, isDeleted: false },
     { isDeleted: true, deletedAt, deletedBy: user._id }
   ).session(session);
+
+  await deleteTriggersBySlideRefs({ slideRefs, deletedAt }, {}, { ...context, session });
 };
 
 export default async (props, options, context) => {
@@ -36,7 +42,7 @@ export default async (props, options, context) => {
     stem.deletedBy = user._id;
     await stem.save({ session });
 
-    await deleteStemSlidesAndBlocks({ stemRef: stem.ref, deletedAt, models, user, session });
+    await deleteStemContents({ stemRef: stem.ref, deletedAt, session }, context);
   }).catch(err => {
     throw { message: err, statusCode: 500 };
   });
