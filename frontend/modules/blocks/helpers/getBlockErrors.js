@@ -55,9 +55,6 @@ export default (block) => {
         if (!block.options.some(opt => hasContent(opt, 'text'))) {
           errors.push({ ...defaultError, message: 'Options need text' });
         }
-        if (!block.options.every(opt => opt.value?.trim())) {
-          errors.push({ ...defaultError, message: 'Options need values' });
-        }
         const values = block.options.map(opt => opt.value?.trim()).filter(Boolean);
         if (values.length !== new Set(values).size) {
           errors.push({ ...defaultError, message: 'Option values must be unique' });
