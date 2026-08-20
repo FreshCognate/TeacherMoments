@@ -56,4 +56,30 @@ describe('deleteStemById (in-memory mongo)', () => {
     expect(setHasChangesMock).toHaveBeenCalledWith({ scenarioId: scenario }, {}, ctx);
     expect(String(result._id)).toBe(String(stem._id));
   });
+  it('cascades to the triggers on the stem\'s slides', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+
+    const stem = await db.models.Stem.create({ scenario, isRoot: true });
+    const otherStem = await db.models.Stem.create({ scenario, sortOrder: 0 });
+
+    const slide = await db.models.Slide.create({ scenario, stemRef: stem.ref, sortOrder: 0 });
+    const otherSlide = await db.models.Slide.create({ scenario, stemRef: otherStem.ref, sortOrder: 0 });
+
+    const buildTrigger = (elementRef) => ({
+      scenario,
+      elementRef,
+      triggerType: 'SLIDE',
+      action: 'SHOW_FEEDBACK_FROM_PROMPTS'
+    });
+
+    const trigger = await db.models.Trigger.create(buildTrigger(slide.ref));
+    const otherTrigger = await db.models.Trigger.create(buildTrigger(otherSlide.ref));
+
+    await deleteStemById({ stemId: stem._id }, {}, {
+      models: db.models, user: { _id: new mongoose.Types.ObjectId() }, connection: db.connection
+    });
+
+    expect((await db.models.Trigger.findById(trigger._id).lean()).isDeleted).toBe(true);
+    expect((await db.models.Trigger.findById(otherTrigger._id).lean()).isDeleted).toBe(false);
+  });
 });
