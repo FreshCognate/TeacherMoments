@@ -12,6 +12,8 @@ import getBlockDisplayType from "../blocks/helpers/getBlockDisplayType";
 import generate from "../generate/helpers/generate";
 import setSlideTrigger from "../run/helpers/setSlideTrigger";
 import setSlideStatus from "../run/helpers/setSlideStatus";
+import getScenarioDetails from "../run/helpers/getScenarioDetails";
+import getStemsBySlideRef from "../stems/helpers/getStemsBySlideRef";
 
 const body = buildLanguageSchema('body', {
   type: 'TextArea',
@@ -204,6 +206,11 @@ const ShowFeedbackFromPrompts = {
     })
   },
   isAvailable: () => {
+    const { activeSlideRef } = getScenarioDetails();
+    const slideStems = getStemsBySlideRef({ slideRef: activeSlideRef });
+    if (slideStems.length > 0) {
+      return false;
+    }
     return true;
   },
   getShouldStopNavigation: () => {

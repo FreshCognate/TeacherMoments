@@ -21,14 +21,29 @@ class ValidationIndicatorContainer extends Component<Props> {
   onErrorClicked = (error: ValidationError) => {
     const { id: scenarioId } = this.props.router.params;
     switch (error.elementType) {
-      case 'SLIDE':
+      case 'SLIDE_TRIGGER': {
+        const currentSlide = find(this.props.slides.data, { _id: error.elementId });
+        if (currentSlide) {
+          this.props.onClose();
+          this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${currentSlide._id}`);
+          addSidePanel({
+            size: 'lg',
+            icon: 'trigger',
+            title: 'Triggers',
+            component: <TriggerDisplayContainer />
+          })
+        }
+        break;
+      }
+      case 'SLIDE': {
         const currentSlide = find(this.props.slides.data, { _id: error.elementId });
         if (currentSlide) {
           this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${error.elementId}`);
           this.props.onClose();
         }
         break;
-      case 'BLOCK':
+      }
+      case 'BLOCK': {
         const currentBlock = find(this.props.blocks.data, { _id: error.elementId });
         if (currentBlock) {
           const currentSlide = find(this.props.slides.data, { ref: currentBlock.slideRef });
@@ -52,7 +67,8 @@ class ValidationIndicatorContainer extends Component<Props> {
           }
         }
         break;
-      case 'TRIGGER':
+      }
+      case 'TRIGGER': {
         const currentTrigger = find(this.props.triggers.data, { _id: error.elementId });
         if (currentTrigger) {
           if (currentTrigger.triggerType === 'SLIDE') {
@@ -70,6 +86,7 @@ class ValidationIndicatorContainer extends Component<Props> {
           }
         }
         break;
+      }
     }
   }
 
