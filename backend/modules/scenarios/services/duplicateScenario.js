@@ -96,7 +96,7 @@ export default async (props, options, context) => {
       }
     }
 
-    await duplicateTriggers({ scenarioId: existingScenario._id, newScenarioId: newScenario._id, slideRefMap, blockRefMap }, { ...context, session });
+    await duplicateTriggers({ scenarioId: existingScenario._id, newScenarioId: newScenario._id, slideRefMap, blockRefMap, stemRefMap }, { ...context, session });
 
   }).catch(err => {
     console.log(err);

@@ -32,6 +32,9 @@ const DialogModal = ({
   const ref = useRef(null);
 
   useEffect(() => {
+    // Anything inside the dialog that autofocused itself keeps the focus;
+    // otherwise the dialog takes it so the keyboard has somewhere to land.
+    if (ref.current.contains(document.activeElement)) return;
     ref.current.focus();
   }, []);
 

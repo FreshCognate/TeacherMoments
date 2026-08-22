@@ -36,6 +36,11 @@ const schema = {
     type: Boolean,
     default: false
   },
+  defaultStemRef: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Stem',
+    default: null
+  },
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   updatedAt: { type: Date },

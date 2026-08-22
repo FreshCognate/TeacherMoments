@@ -5,6 +5,7 @@ import Body from '~/uikit/content/components/body';
 const InputPromptTextBlockPlayer = ({
   block,
   blockTracking,
+  shouldAutoFocus = false,
   isResponseBlock,
   onTextInputChanged,
 }) => {
@@ -17,6 +18,7 @@ const InputPromptTextBlockPlayer = ({
         value={blockTracking.textValue}
         disabled={blockTracking.isComplete || isResponseBlock}
         className="w-full p-2 text-sm hover:border-lm-4 dark:hover:border-dm-4 focus:outline outline-2 -outline-offset-1 outline-lm-4 dark:outline-dm-4 rounded border border-lm-3 dark:border-dm-3"
+        autoFocus={shouldAutoFocus}
         onChange={onTextInputChanged}
       />
       {(block.isRequired) && (

@@ -12,6 +12,7 @@ import '~/modules/blocks/containers/responseSelectorContainer.formField';
 import '~/modules/slides/containers/slideNavigationContainer.formField';
 import '~/core/app/conditions/modelValueIs';
 import '~/modules/slides/helpers/isRootSlide.condition';
+import '~/modules/triggers/helpers/hasConditionlessStem.condition';
 import '~/modules/ls/helpers/ls.condition'
 import '~/modules/triggers/showFeedbackFromPrompts.trigger';
 import '~/modules/triggers/branchToStemFromPrompts.trigger';

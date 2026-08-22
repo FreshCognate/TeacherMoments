@@ -294,23 +294,88 @@ describe('getTriggerErrors', () => {
       hasContentMock.mockReturnValue(false);
 
       const errors = getTriggerErrors(branchTrigger({
-        items: [{ _id: 'i1', elementRef: 'stem-1', conditions: [] }]
+        items: [{
+          _id: 'i1',
+          elementRef: 'stem-1',
+          conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }]
+        }]
       }));
 
       expect(errors).toEqual([]);
     });
 
-    it('returns no errors when everything is valid', () => {
+    it('reports when more than one stem is left without conditions', () => {
+      const errors = getTriggerErrors(branchTrigger({ items: [] }));
+
+      expect(errors.map((e) => e.message)).toContain('Only one stem can have no conditions');
+    });
+
+    it('does not report when exactly one stem is left without conditions', () => {
       const errors = getTriggerErrors(branchTrigger({
-        items: [{
-          _id: 'i1',
-          elementRef: 'stem-1',
-          conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }]
-        }, {
-          _id: 'i2',
-          elementRef: 'stem-2',
-          conditions: []
-        }]
+        items: [{ _id: 'i1', elementRef: 'stem-1', conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }] }]
+      }));
+
+      expect(errors.map((e) => e.message)).not.toContain('Only one stem can have no conditions');
+    });
+
+    it('counts a stem whose conditions were all removed as one without conditions', () => {
+      const errors = getTriggerErrors(branchTrigger({
+        items: [
+          { _id: 'i1', elementRef: 'stem-1', conditions: [] },
+          { _id: 'i2', elementRef: 'stem-2', conditions: [] }
+        ]
+      }));
+
+      expect(errors.map((e) => e.message)).toContain('Only one stem can have no conditions');
+    });
+
+    it('reports a missing default only once every stem has conditions', () => {
+      const errors = getTriggerErrors(branchTrigger({
+        items: [
+          { _id: 'i1', elementRef: 'stem-1', conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }] },
+          { _id: 'i2', elementRef: 'stem-2', conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }] }
+        ]
+      }));
+
+      expect(errors.map((e) => e.message)).toContain('No default stem set');
+    });
+
+    it('reports a default stem that no longer exists', () => {
+      const errors = getTriggerErrors(branchTrigger({
+        defaultStemRef: 'stem-deleted',
+        items: [
+          { _id: 'i1', elementRef: 'stem-1', conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }] },
+          { _id: 'i2', elementRef: 'stem-2', conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }] }
+        ]
+      }));
+
+      expect(errors.map((e) => e.message)).toContain('Default stem no longer exists');
+    });
+
+    it('ignores a dormant default while a stem is still without conditions', () => {
+      const errors = getTriggerErrors(branchTrigger({
+        defaultStemRef: 'stem-deleted',
+        items: [{ _id: 'i1', elementRef: 'stem-1', conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }] }]
+      }));
+
+      expect(errors).toEqual([]);
+    });
+
+    it('returns no errors when every stem has conditions and a default is set', () => {
+      const errors = getTriggerErrors(branchTrigger({
+        defaultStemRef: 'stem-2',
+        items: [
+          { _id: 'i1', elementRef: 'stem-1', conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }] },
+          { _id: 'i2', elementRef: 'stem-2', conditions: [{ prompts: [{ ref: 'block-1', text: 'other' }] }] }
+        ]
+      }));
+
+      expect(errors).toEqual([]);
+    });
+
+    it('returns no errors when one stem catches everything and no default is set', () => {
+      const errors = getTriggerErrors(branchTrigger({
+        items: [{ _id: 'i1', elementRef: 'stem-1', conditions: [{ prompts: [{ ref: 'block-1', text: 'something' }] }] }]
       }));
 
       expect(errors).toEqual([]);

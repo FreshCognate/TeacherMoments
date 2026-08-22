@@ -8,6 +8,7 @@ import uniq from 'lodash/uniq';
 import getBlockDisplayType from '~/modules/blocks/helpers/getBlockDisplayType';
 import getBlocksBySlideRef from '~/modules/blocks/helpers/getBlocksBySlideRef';
 import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
+import getConditionlessStems from './getConditionlessStems';
 import hasContent from '~/modules/ls/helpers/hasContent';
 
 const getConditionKey = (condition) => {
@@ -86,9 +87,18 @@ export default (trigger) => {
         errors.push({ ...defaultError, message: 'Slide has no prompt blocks to base conditions on' });
       }
 
-      const itemsWithoutConditions = filter(trigger.items, item => !item.conditions?.length);
-      if (itemsWithoutConditions.length > 1) {
+      const conditionlessStems = getConditionlessStems({ trigger });
+
+      if (conditionlessStems.length > 1) {
         errors.push({ ...defaultError, message: 'Only one stem can have no conditions' });
+      }
+
+      if (conditionlessStems.length === 0) {
+        if (!trigger.defaultStemRef) {
+          errors.push({ ...defaultError, message: 'No default stem set' });
+        } else if (!find(slideStems, { ref: trigger.defaultStemRef })) {
+          errors.push({ ...defaultError, message: 'Default stem no longer exists' });
+        }
       }
 
       const conditionKeys = [];

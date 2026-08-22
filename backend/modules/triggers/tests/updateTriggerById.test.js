@@ -59,4 +59,35 @@ describe('updateTriggerById', () => {
 
     expect(setHasChangesMock).not.toHaveBeenCalled();
   });
+  it('converts an empty defaultStemRef to null so the field can be cleared', async () => {
+    const findByIdAndUpdate = vi.fn().mockResolvedValue({ _id: 't1', scenario: 's1' });
+
+    await updateTriggerById(
+      { triggerId: 't1', update: { defaultStemRef: '' } },
+      {},
+      { models: { Trigger: { findByIdAndUpdate } }, user: { _id: 'u1' } }
+    );
+
+    expect(findByIdAndUpdate).toHaveBeenCalledWith(
+      't1',
+      { defaultStemRef: null, updatedAt: FIXED_NOW, updatedBy: 'u1' },
+      { new: true }
+    );
+  });
+
+  it('leaves a real defaultStemRef untouched', async () => {
+    const findByIdAndUpdate = vi.fn().mockResolvedValue({ _id: 't1', scenario: 's1' });
+
+    await updateTriggerById(
+      { triggerId: 't1', update: { defaultStemRef: 'stem-1' } },
+      {},
+      { models: { Trigger: { findByIdAndUpdate } }, user: { _id: 'u1' } }
+    );
+
+    expect(findByIdAndUpdate).toHaveBeenCalledWith(
+      't1',
+      { defaultStemRef: 'stem-1', updatedAt: FIXED_NOW, updatedBy: 'u1' },
+      { new: true }
+    );
+  });
 });

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import SelectOptions from '../components/selectOptions.jsx';
+import SelectOptions from '../components/selectOptions';
 
 const options = [
   { value: 'a', text: 'Apple' },
@@ -35,5 +35,26 @@ describe('SelectOptions', () => {
   it('disables the select when isDisabled is true', () => {
     render(<SelectOptions options={options} value="a" isDisabled onChange={() => {}} />);
     expect(screen.getByRole('combobox')).toBeDisabled();
+  });
+  it('treats a null value as unselected rather than warning about a null select', () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(
+      <SelectOptions
+        options={[{ value: '', text: 'None' }, ...options]}
+        value={null}
+        onChange={() => {}}
+      />
+    );
+
+    expect(screen.getByRole('combobox')).toHaveValue('');
+    expect(consoleError).not.toHaveBeenCalled();
+
+    consoleError.mockRestore();
+  });
+
+  it('treats an undefined value the same way', () => {
+    render(<SelectOptions options={[{ value: '', text: 'None' }, ...options]} onChange={() => {}} />);
+    expect(screen.getByRole('combobox')).toHaveValue('');
   });
 });

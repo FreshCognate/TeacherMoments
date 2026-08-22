@@ -37,6 +37,7 @@ export default {
         conditions: Joi.array(),
       }),
       shouldGenerateFeedbackFromAI: Joi.boolean(),
+      defaultStemRef: Joi.string().allow(null, ''),
       sourceIndex: Joi.number(),
       destinationIndex: Joi.number(),
       isDeleted: Joi.boolean().invalid(true),
