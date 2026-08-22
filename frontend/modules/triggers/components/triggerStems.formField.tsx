@@ -7,14 +7,11 @@ import getTextString from '~/core/slate/helpers/getTextString';
 import Body from '~/uikit/content/components/body';
 import Title from '~/uikit/content/components/title';
 import TriggerStemsItem from './triggerStemsItem';
-import SelectOptions from '~/uikit/select/components/selectOptions';
 
 const TriggerStems = ({
   slideStems,
   items,
   prompts,
-  defaultStemRef,
-  onDefaultStemChanged,
   onAddConditionClicked,
   onEditPromptConditionClicked,
   onRemoveConditionClicked
@@ -22,8 +19,6 @@ const TriggerStems = ({
   slideStems: Stem[],
   items: StemItem[],
   prompts: any[],
-  defaultStemRef: string,
-  onDefaultStemChanged: (elementRef: string) => void,
   onAddConditionClicked: ({ elementRef }: { elementRef: string }) => void,
   onEditPromptConditionClicked: OnEditPromptConditionClicked,
   onRemoveConditionClicked: OnRemoveConditionClicked
@@ -53,26 +48,6 @@ const TriggerStems = ({
           </div>
         );
       })}
-      <div className="py-4">
-        <div className="bg-lm-1 dark:bg-dm-1 rounded-md p-4 last:mb-0">
-          <div className="flex items-center gap-x-4">
-            <Body body="If no condition is met, default to this stem" className="" />
-            <SelectOptions
-              value={defaultStemRef}
-              options={[
-                { value: '', text: 'None' },
-                ...map(slideStems, (slideStem: Stem) => {
-                  return {
-                    value: slideStem.ref,
-                    text: slideStem.name
-                  };
-                })
-              ]}
-              onChange={onDefaultStemChanged}
-            />
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import setSlideTrigger from "../run/helpers/setSlideTrigger";
 import getStemsByRef from "../stems/helpers/getStemsByRef";
 import getStemsBySlideRef from "../stems/helpers/getStemsBySlideRef";
 import registerTrigger from "./helpers/registerTrigger";
+import getConditionlessStems from "./helpers/getConditionlessStems";
 import find from 'lodash/find';
 import xor from 'lodash/xor';
 import map from 'lodash/map';
@@ -15,7 +16,6 @@ import getCache from "~/core/cache/helpers/getCache";
 import navigateTo from "../run/helpers/navigateTo";
 import setSlideNavigation from "../run/helpers/setSlideNavigation";
 import generate from "../generate/helpers/generate";
-import filter from 'lodash/filter';
 
 const BranchToStemFromPrompts = {
   trigger: async (trigger, router) => {
@@ -150,15 +150,6 @@ const BranchToStemFromPrompts = {
         }
       }
 
-      if (matchedItems.length === 0) {
-        const unmatchedItems = filter(trigger.items, (item) => {
-          if (item.conditions.length === 0) {
-            return item;
-          }
-        });
-        matchedItems.push(...unmatchedItems);
-      }
-
       const triggerItems = map(items, (item) => {
         return {
           blockRef: item.blockRef,
@@ -181,14 +172,30 @@ const BranchToStemFromPrompts = {
 
       setSlideStatus(null);
 
+      // A stem left without conditions catches everything, and wins over the
+      // default. The default only applies once every stem has conditions.
+      const conditionlessStem = getConditionlessStems({ trigger })[0];
+
+      let targetStem = null;
+
       if (matchedItem) {
-        const matchedStem = getStemsByRef({ ref: matchedItem.elementRef });
-        const slides = getCache('slides').data;
-        const getFirstSlideOfStem = find(slides, { stemRef: matchedStem.ref });
-        resolve();
-        setSlideNavigation({ slideRef: getFirstSlideOfStem.ref })
-        navigateTo({ slideRef: getFirstSlideOfStem.ref, router });
+        targetStem = getStemsByRef({ ref: matchedItem.elementRef });
+      } else if (conditionlessStem) {
+        targetStem = conditionlessStem;
+      } else if (trigger.defaultStemRef) {
+        targetStem = getStemsByRef({ ref: trigger.defaultStemRef });
       }
+
+      if (!targetStem) return resolve();
+
+      const slides = getCache('slides').data;
+      const firstSlideOfStem = find(slides, { stemRef: targetStem.ref });
+
+      if (!firstSlideOfStem) return resolve();
+
+      resolve();
+      setSlideNavigation({ slideRef: firstSlideOfStem.ref });
+      navigateTo({ slideRef: firstSlideOfStem.ref, router });
 
     })
   },
@@ -213,12 +220,32 @@ const BranchToStemFromPrompts = {
     return `Evaluates user responses from input and multiple choice prompts and branches the user to a specific stem when transitioning to the next slide.`
   },
   getSchema: (trigger) => {
-    return {
+    const schema = {
       items: {
         type: 'TriggerStems',
         label: 'Stems'
       }
-    }
+    };
+
+    if (getConditionlessStems({ trigger }).length > 0) return schema;
+
+    const slideStems = getStemsBySlideRef({ slideRef: trigger.elementRef });
+
+    schema.defaultStemRef = {
+      type: 'Select',
+      label: 'If no condition is met, default to this stem',
+      options: [
+        { value: '', text: 'None' },
+        ...map(slideStems, (slideStem) => {
+          return {
+            value: slideStem.ref,
+            text: slideStem.name
+          };
+        })
+      ]
+    };
+
+    return schema;
   }
 }
 

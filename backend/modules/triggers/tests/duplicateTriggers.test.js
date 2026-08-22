@@ -42,7 +42,7 @@ describe('duplicateTriggers', () => {
     const blockRefMap = new Map([['blockRefOld', 'blockRefNew']]);
 
     await duplicateTriggers(
-      { scenarioId: 'sOld', newScenarioId: 'sNew', slideRefMap, blockRefMap },
+      { scenarioId: 'sOld', newScenarioId: 'sNew', slideRefMap, blockRefMap, stemRefMap: new Map() },
       { models: { Trigger: { find, create } }, session: 'SESSION_TOKEN' }
     );
 
@@ -119,5 +119,72 @@ describe('duplicateTriggers', () => {
     );
 
     expect(item.toObject).toHaveBeenCalled();
+  });
+  it('rewrites the default stem and each item stem onto the duplicated scenario stems', async () => {
+    const sourceTrigger = {
+      _id: 'origId',
+      ref: 'origRef',
+      scenario: 'sOld',
+      elementRef: 'slideRefOld',
+      triggerType: 'SLIDE',
+      action: 'BRANCH_TO_STEM_FROM_PROMPTS',
+      defaultStemRef: 'stemRefOld',
+      items: [
+        { elementRef: 'stemRefOld', conditions: [] },
+        { elementRef: 'stemRefOtherOld', conditions: [] }
+      ]
+    };
+
+    const find = vi.fn().mockResolvedValue([sourceTrigger]);
+    const create = vi.fn().mockResolvedValue([{ _id: 'newId' }]);
+
+    const slideRefMap = new Map([['slideRefOld', 'slideRefNew']]);
+    const blockRefMap = new Map();
+    const stemRefMap = new Map([
+      ['stemRefOld', 'stemRefNew'],
+      ['stemRefOtherOld', 'stemRefOtherNew']
+    ]);
+
+    await duplicateTriggers(
+      { scenarioId: 'sOld', newScenarioId: 'sNew', slideRefMap, blockRefMap, stemRefMap },
+      { models: { Trigger: { find, create } }, session: 'SESSION_TOKEN' }
+    );
+
+    const [[[duplicated]]] = create.mock.calls;
+
+    expect(duplicated.defaultStemRef).toBe('stemRefNew');
+    expect(duplicated.items[0].elementRef).toBe('stemRefNew');
+    expect(duplicated.items[1].elementRef).toBe('stemRefOtherNew');
+  });
+
+  it('keeps a stem ref that has no mapping rather than dropping it', async () => {
+    const sourceTrigger = {
+      _id: 'origId',
+      ref: 'origRef',
+      scenario: 'sOld',
+      elementRef: 'slideRefOld',
+      triggerType: 'SLIDE',
+      action: 'BRANCH_TO_STEM_FROM_PROMPTS',
+      defaultStemRef: 'stemRefUnmapped',
+      items: []
+    };
+
+    const find = vi.fn().mockResolvedValue([sourceTrigger]);
+    const create = vi.fn().mockResolvedValue([{ _id: 'newId' }]);
+
+    await duplicateTriggers(
+      {
+        scenarioId: 'sOld',
+        newScenarioId: 'sNew',
+        slideRefMap: new Map([['slideRefOld', 'slideRefNew']]),
+        blockRefMap: new Map(),
+        stemRefMap: new Map()
+      },
+      { models: { Trigger: { find, create } }, session: 'SESSION_TOKEN' }
+    );
+
+    const [[[duplicated]]] = create.mock.calls;
+
+    expect(duplicated.defaultStemRef).toBe('stemRefUnmapped');
   });
 });

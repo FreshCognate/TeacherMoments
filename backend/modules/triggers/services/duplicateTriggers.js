@@ -1,7 +1,7 @@
 import omit from 'lodash/omit.js';
 import map from 'lodash/map.js';
 
-export default async ({ scenarioId, newScenarioId, slideRefMap, blockRefMap }, context) => {
+export default async ({ scenarioId, newScenarioId, slideRefMap, blockRefMap, stemRefMap }, context) => {
 
   const { models, session } = context;
 
@@ -13,9 +13,16 @@ export default async ({ scenarioId, newScenarioId, slideRefMap, blockRefMap }, c
     duplicatedTriggerObject.elementRef = slideRefMap.get(trigger.elementRef.toString()) || trigger.elementRef;
     duplicatedTriggerObject.createdAt = new Date();
 
+    if (trigger.defaultStemRef) {
+      duplicatedTriggerObject.defaultStemRef = stemRefMap.get(trigger.defaultStemRef.toString()) || trigger.defaultStemRef;
+    }
+
     duplicatedTriggerObject.items = map(trigger.items, (item) => {
       const duplicatedItem = item.toObject ? item.toObject() : { ...item };
       delete duplicatedItem._id;
+      if (duplicatedItem.elementRef) {
+        duplicatedItem.elementRef = stemRefMap.get(duplicatedItem.elementRef.toString()) || duplicatedItem.elementRef;
+      }
       duplicatedItem.conditions = map(duplicatedItem.conditions, (condition) => {
         delete condition._id;
         condition.prompts = map(condition.prompts, (prompt) => {

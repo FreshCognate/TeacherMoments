@@ -105,32 +105,6 @@ class TriggerStemsContainer extends Component<TriggerStemsContainerProps> {
     this.props.updateField(clonedValue);
   }
 
-  getDefaultStemRef = () => {
-    const defaultItem = find(this.props.value, (item: StemItem) => item.conditions.length === 0);
-    return defaultItem ? defaultItem.elementRef : '';
-  }
-
-  onDefaultStemChanged = (elementRef: string) => {
-    const clonedValue = cloneDeep(this.props.value);
-
-    const currentDefault = find(clonedValue, (item: StemItem) => item.conditions.length === 0);
-
-    if (currentDefault && currentDefault.elementRef === elementRef) return;
-
-    if (currentDefault) remove(clonedValue, { elementRef: currentDefault.elementRef });
-
-    if (elementRef) {
-      const nextDefault = find(clonedValue, { elementRef });
-      if (nextDefault) {
-        nextDefault.conditions = [];
-      } else {
-        clonedValue.push({ elementRef, conditions: [] });
-      }
-    }
-
-    this.props.updateField(clonedValue);
-  }
-
   onRemoveConditionClicked = ({ elementRef, conditionId }: { elementRef: string, conditionId?: string }) => {
     const clonedValue = cloneDeep(this.props.value);
     const currentItem = find(clonedValue, { elementRef });
@@ -148,8 +122,6 @@ class TriggerStemsContainer extends Component<TriggerStemsContainerProps> {
         slideStems={slideStems}
         items={this.props.value}
         prompts={this.getPrompts()}
-        defaultStemRef={this.getDefaultStemRef()}
-        onDefaultStemChanged={this.onDefaultStemChanged}
         onAddConditionClicked={this.onAddConditionClicked}
         onEditPromptConditionClicked={this.onEditPromptConditionClicked}
         onRemoveConditionClicked={this.onRemoveConditionClicked}
