@@ -16,6 +16,8 @@ vi.mock('../../run/helpers/getBlockTracking', () => ({ default: (...args) => get
 vi.mock('../../generate/helpers/generate', () => ({ default: (...args) => generateMock(...args) }));
 
 import TRIGGERS from '../triggers';
+import testConditions from '~/core/forms/helpers/testConditions';
+import '../helpers/hasConditionlessStem.condition';
 import '../branchToStemFromPrompts.trigger.jsx';
 
 const BranchToStemFromPrompts = TRIGGERS['BRANCH_TO_STEM_FROM_PROMPTS'];
@@ -67,6 +69,8 @@ describe('branchToStemFromPrompts', () => {
 
   describe('getSchema', () => {
 
+    const hasCondition = (schema, model) => testConditions('defaultStemRef', schema.defaultStemRef, model).shouldHideField;
+
     const stemA = { ref: 'stem-a', name: 'A', slideRef: 'slide-1', sortOrder: 0 };
     const stemB = { ref: 'stem-b', name: 'B', slideRef: 'slide-1', sortOrder: 1 };
 
@@ -80,7 +84,7 @@ describe('branchToStemFromPrompts', () => {
       ]));
 
       expect(schema.items).toBeDefined();
-      expect(schema.defaultStemRef).toBeUndefined();
+      expect(hasCondition(schema, { elementRef: 'slide-1', items: [{ elementRef: 'stem-a', conditions: [{ prompts: [{ ref: 'block-1', text: 'yes' }] }] }] })).toBe(true);
     });
 
     it('shows the default stem once every stem has conditions', () => {
@@ -92,6 +96,10 @@ describe('branchToStemFromPrompts', () => {
       ]));
 
       expect(schema.defaultStemRef.type).toBe('Select');
+      expect(hasCondition(schema, trigger([
+        { elementRef: 'stem-a', conditions: [{ prompts: [{ ref: 'block-1', text: 'yes' }] }] },
+        { elementRef: 'stem-b', conditions: [{ prompts: [{ ref: 'block-1', text: 'yes' }] }] }
+      ]))).toBe(false);
       expect(schema.defaultStemRef.options).toEqual([
         { value: '', text: 'None' },
         { value: 'stem-a', text: 'A' },
@@ -102,12 +110,12 @@ describe('branchToStemFromPrompts', () => {
     it('hides the default stem when an item exists but its conditions were removed', () => {
       seedStems([stemA, stemB]);
 
-      const schema = BranchToStemFromPrompts.getSchema(trigger([
+      const model = trigger([
         { elementRef: 'stem-a', conditions: [{ prompts: [{ ref: 'block-1', text: 'yes' }] }] },
         { elementRef: 'stem-b', conditions: [] }
-      ]));
+      ]);
 
-      expect(schema.defaultStemRef).toBeUndefined();
+      expect(hasCondition(BranchToStemFromPrompts.getSchema(model), model)).toBe(true);
     });
 
   });

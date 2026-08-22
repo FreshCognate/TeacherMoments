@@ -220,32 +220,31 @@ const BranchToStemFromPrompts = {
     return `Evaluates user responses from input and multiple choice prompts and branches the user to a specific stem when transitioning to the next slide.`
   },
   getSchema: (trigger) => {
-    const schema = {
+    const slideStems = getStemsBySlideRef({ slideRef: trigger.elementRef });
+
+    return {
       items: {
         type: 'TriggerStems',
         label: 'Stems'
+      },
+      defaultStemRef: {
+        type: 'Select',
+        label: 'If no condition is met, default to this stem',
+        conditions: [{
+          type: 'hasConditionlessStem',
+          shouldHideField: true
+        }],
+        options: [
+          { value: '', text: 'None' },
+          ...map(slideStems, (slideStem) => {
+            return {
+              value: slideStem.ref,
+              text: slideStem.name
+            };
+          })
+        ]
       }
     };
-
-    if (getConditionlessStems({ trigger }).length > 0) return schema;
-
-    const slideStems = getStemsBySlideRef({ slideRef: trigger.elementRef });
-
-    schema.defaultStemRef = {
-      type: 'Select',
-      label: 'If no condition is met, default to this stem',
-      options: [
-        { value: '', text: 'None' },
-        ...map(slideStems, (slideStem) => {
-          return {
-            value: slideStem.ref,
-            text: slideStem.name
-          };
-        })
-      ]
-    };
-
-    return schema;
   }
 }
 

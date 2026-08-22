@@ -11,7 +11,7 @@ const SelectOptions = ({
 }: {
   className?: string,
   options: { value: string, text: string }[],
-  value: string | number,
+  value?: string | number | null,
   size?: 'sm',
   isDisabled?: boolean,
   onChange: (value: string) => void
@@ -22,7 +22,7 @@ const SelectOptions = ({
   }, className);
 
   return (
-    <select className={classes} value={value} disabled={isDisabled} onChange={(event) => onChange(event.target.value)}>
+    <select className={classes} value={value ?? ''} disabled={isDisabled} onChange={(event) => onChange(event.target.value)}>
       {map(options, (option) => {
         return (
           <option key={option.value} value={option.value}>

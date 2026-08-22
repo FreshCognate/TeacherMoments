@@ -27,6 +27,7 @@ const EditPromptCondition = ({
         block={prompt}
         blockTracking={blockTracking}
         isResponseBlock={false}
+        shouldAutoFocus={true}
         onAnswerClicked={onAnswerClicked}
         onTextInputChanged={onTextInputChanged}
       />
