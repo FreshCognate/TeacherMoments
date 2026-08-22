@@ -32,3 +32,13 @@ blockquote {
     box-shadow: 0 0 0 2px rgb(250 204 21);
   }
 }
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}

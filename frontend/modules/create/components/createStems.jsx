@@ -25,7 +25,7 @@ const CreateStems = ({
         const isDeleting = stem._id === deletingId;
         const isSelected = stem.ref === activeStemRef && !isInRootStem;
         const className = classnames(
-          "bg-lm-1 dark:bg-dm-2 rounded-md h-8 border border-lm-3 dark:border-dm-2 flex items-center justify-between cursor-pointer hover:border-lm-5 dark:hover:border-dm-4 transition-colors",
+          "bg-lm-2 dark:bg-dm-2 rounded-md h-8 border border-lm-2 dark:border-dm-2 flex items-center justify-between cursor-pointer hover:border-lm-4 dark:hover:border-dm-4 transition-colors",
           { "outline outline-blue-500 outline-1 -outline-offset-2": isSelected },
           { "opacity-50": isDeleting },
           {
