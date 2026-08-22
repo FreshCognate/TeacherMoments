@@ -47,7 +47,7 @@ const CreateNavigation = ({
           isNestedStem={false}
           onAddSlideClicked={onAddSlideClicked}
         />
-        <div className="p-2 overflow-y-scroll flex-grow">
+        <div className="p-2 overflow-y-auto no-scrollbar flex-grow">
           <CreateNavigationStaticSlide
             label="Consent"
             slideId="CONSENT"
@@ -118,7 +118,7 @@ const CreateNavigation = ({
           className="absolute left-16 bg-lm-0 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col border border-lm-3 dark:border-dm-1 rounded-lg"
         >
           <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} isInRootStem={isInRootStem} isNestedStem={true} onAddSlideClicked={onAddSlideClicked} />
-          <div className="p-2 overflow-y-scroll flex-grow">
+          <div className="p-2 overflow-y-auto no-scrollbar flex-grow">
             <Flag flag="HAS_STEMS">
               <CreateDroppableContainer
                 id={`slides`}

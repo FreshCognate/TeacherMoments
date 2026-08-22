@@ -67,7 +67,7 @@ const CreateNavigationSlidePreview = ({
 }: Props) => {
   const { setNodeRef, style, attributes, listeners, isDragging } = draggingOptions;
 
-  const className = classnames("bg-lm-0 dark:bg-dm-0 rounded-md h-36 mb-2 relative", {
+  const className = classnames("bg-lm-0 border dark:border-none dark:bg-dm-0 rounded-md h-36 mb-2 relative", {
     "outline outline-blue-500": isSelected,
     "opacity-50": isDeleting || isDragging || isDuplicating,
     "shadow-sm border border-lm-3 dark:border-dm-2": !isAnimating,
