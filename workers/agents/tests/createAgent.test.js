@@ -48,7 +48,7 @@ describe('createAgent', () => {
   });
 
   describe('run', () => {
-    it('uses gemini-2.5-flash-lite for medium quality (the default)', async () => {
+    it('uses gemini-3.5-flash-lite for medium quality (the default)', async () => {
       mockResponse('{"answer":"ok"}');
 
       const agent = createAgent();
@@ -57,11 +57,11 @@ describe('createAgent', () => {
       await agent.run();
 
       expect(createChatMock).toHaveBeenCalledWith(expect.objectContaining({
-        model: 'gemini-2.5-flash-lite'
+        model: 'gemini-3.5-flash-lite'
       }));
     });
 
-    it('uses gemini-3-flash-preview when quality is not medium', async () => {
+    it('uses gemini-3.7-flash when quality is not medium', async () => {
       mockResponse('{"answer":"ok"}');
 
       const agent = createAgent({ quality: 'high' });
@@ -70,7 +70,7 @@ describe('createAgent', () => {
       await agent.run();
 
       expect(createChatMock).toHaveBeenCalledWith(expect.objectContaining({
-        model: 'gemini-3-flash-preview'
+        model: 'gemini-3.7-flash'
       }));
     });
 

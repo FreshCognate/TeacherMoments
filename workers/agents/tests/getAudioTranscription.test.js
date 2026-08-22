@@ -47,7 +47,7 @@ describe('getAudioTranscription', () => {
     await getAudioTranscription({ asset });
 
     const callArgs = generateContentMock.mock.calls[0][0];
-    expect(callArgs.model).toBe('gemini-2.5-flash-lite');
+    expect(callArgs.model).toBe('gemini-3.5-flash-lite');
     expect(callArgs.contents[1]).toEqual({
       inlineData: { mimeType: 'audio/wav', data: 'BASE64DATA' }
     });

@@ -13,7 +13,7 @@ export default (options) => {
       const ai = getGemini();
 
       const { format, quality } = this.options;
-      const model = quality === 'medium' ? 'gemini-2.5-flash-lite' : 'gemini-3-flash-preview';
+      const model = quality === 'medium' ? 'gemini-3.5-flash-lite' : 'gemini-3.7-flash';
 
       const systemMessage = this.messages.find(m => m.role === 'system');
       const nonSystemMessages = this.messages.filter(m => m.role !== 'system');

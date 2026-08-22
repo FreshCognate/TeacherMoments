@@ -12,7 +12,7 @@ export default async ({ asset }) => {
   const base64Audio = fs.readFileSync(assetPath, { encoding: 'base64' });
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash-lite',
+    model: 'gemini-3.5-flash-lite',
     contents: [
       {
         text: `Transcribe the following audio file. If the audio is empty or contains no speech, return an empty string for the text field and an empty array for segments.
