@@ -9,6 +9,8 @@ export default async (props, options, context) => {
 
   await checkHasAccessToScenario({ modelId: triggerId, modelType: 'Trigger' }, context);
 
+  if (update.defaultStemRef === '') update.defaultStemRef = null;
+
   update.updatedAt = new Date();
   update.updatedBy = user._id;
 

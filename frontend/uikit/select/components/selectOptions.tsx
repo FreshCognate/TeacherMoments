@@ -1,4 +1,3 @@
-import React from 'react';
 import map from 'lodash/map';
 import classnames from 'classnames';
 
@@ -9,6 +8,13 @@ const SelectOptions = ({
   size,
   isDisabled,
   onChange
+}: {
+  className?: string,
+  options: { value: string, text: string }[],
+  value: string | number,
+  size?: 'sm',
+  isDisabled?: boolean,
+  onChange: (value: string) => void
 }) => {
 
   const classes = classnames('p-2 rounded bg-lm-0/60 dark:bg-dm-0/30', {
