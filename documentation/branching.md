@@ -37,6 +37,8 @@ New stems are created without a name, and the name is what identifies the stem i
 
 The branching trigger evaluates the prompts on the slide it belongs to, so the branch-point slide needs at least one **Multiple choice prompt** or **Input prompt** block. Add and configure these in the slide editor as usual.
 
+Do not put an **Actions prompt** on a branch-point slide. Branching cannot evaluate it, but the condition editor still shows a row for it — and opening that row errors. A condition that includes an Actions prompt can never match, and nothing flags it.
+
 ### 4. Add the branching trigger
 
 1. With the branch-point slide open, click **Edit triggers** in the bottom bar of the slide editor. The **Triggers** panel opens.
@@ -64,7 +66,8 @@ How conditions combine:
 
 - Within one condition, every prompt value you set must match (AND).
 - Multiple conditions on the same stem are alternatives, shown separated by **OR** — any one of them sends the user to that stem.
-- If several stems match, the first matching stem in the list wins.
+- An input prompt has to score at least 0.7 against your description for the AI to count it as a match.
+- Write conditions so that only one stem can match a given answer. If two stems both match, the winner is the stem that received its first condition earliest — not the one shown highest in the list — so overlapping conditions are effectively unpredictable. The validation indicator flags two stems sharing an identical condition, but it cannot catch conditions that merely overlap.
 
 ### 6. Set the fallback
 
@@ -75,28 +78,34 @@ Every branching trigger needs somewhere to send users whose answers match nothin
 
 The dropdown is hidden while any stem still has no conditions, because that stem is already the catch-all. A condition-less stem always wins over the default.
 
-If neither is set, users whose answers match nothing simply continue to the next slide in the main scenario instead of branching.
+If neither is set, an unmatched user does not branch: they stay on the branch-point slide, and the button becomes **Next**, which takes them to the following slide in the main scenario. Nothing tells them a branch was skipped, which is why the validation indicator treats a missing fallback as an error.
 
 ### 7. Check the validation indicator
 
-The **Triggers** panel header shows a validation indicator for the slide's trigger, and the same issues appear on the slide's card in the navigation rail and in the scenario's validation indicator.
+Trigger issues appear in the header of the **Triggers** panel and in the scenario's validation indicator, which lists every issue across the scenario and jumps to the one you click. Slide and block issues also appear on the slide's own card in the navigation rail, but trigger issues do not — check the scenario indicator for the full picture.
 
-These are not advisory. **A scenario with any validation issue cannot be published** — the **Publish** button is disabled and shows "Scenarios cannot be published whilst there are issues". And while you are still testing, a trigger with validation errors is skipped when the slide is played, so no branching happens and users continue straight to the next slide.
+These are not advisory. **A scenario with any validation issue cannot be published**: the **Publish** button stays disabled, and where there are unpublished changes it explains why with "Scenarios cannot be published whilst there are issues". While you are still testing, an invalid branching trigger is skipped — the user is left on the branch-point slide with a **Next** button and no branching happens.
 
 Branching triggers are checked for:
 
 - The slide has no prompt blocks to base conditions on.
-- A condition has no prompt values set, an input prompt condition has no text, or a multiple choice condition has no options selected.
+- A condition has no prompts set, no prompt selected, an input prompt condition with no text, or a multiple choice condition with no options selected.
+- A branch has no stem to route to.
 - More than one stem has no conditions (only one stem can be the fallback).
 - No fallback exists: every stem has conditions and no default stem is set, or the default stem has since been deleted.
 - Two stems use the same condition, so one of them can never be reached.
 - A condition references a prompt block, or a branch references a stem, that has since been deleted.
 
-Slides are checked too: a slide that has stems but no branching trigger is flagged as **Slide with stems has no branching trigger**.
+Slides are checked too, and two slide-level issues come up routinely when building a branch:
+
+- **Slide with stems has no branching trigger** — the stems exist but nothing routes users into them.
+- **Slide has no blocks** — every new stem starts with one empty slide, so this appears the moment you create a stem and clears once you add content to that slide.
 
 ### 8. Test it
 
-Preview or run the scenario. On the branch-point slide, answer the prompts and press **Submit**. You will see **Analyzing prompts** while conditions are evaluated (input prompts are scored by AI), then **Navigating...** as you are taken to the first slide of the matching stem.
+Preview or run the scenario. On the branch-point slide, answer the prompts and press **Submit**. You will see **Analyzing prompts** while conditions are evaluated (input prompts are scored by AI), then **Navigating...** as the matching stem is worked out, and then the stem's first slide.
+
+Test each path, including the fallback, and answer free-text prompts the way a real user might rather than in the words you used in the condition — that is what the AI scoring has to cope with.
 
 ## Manual branching (user chooses)
 
@@ -106,9 +115,9 @@ Note that this currently conflicts with validation: a slide that has stems but n
 
 ## How users move through a branch
 
-- At the end of a stem, **Next** returns the user to the main scenario at the slide following the branch point.
-- **Back** follows the user's actual history, so pressing Back after being branched returns to the branch-point slide.
-- The branch decision is remembered on the run: if the user returns to the branch-point slide and presses **Next**, they are taken down the same stem they were originally sent to — the trigger is not re-evaluated.
+- At the end of a stem, **Next** returns the user to the main scenario at the slide following the branch point. Give every branch point at least one slide after it in the main scenario: if the branch point is the last slide, a user reaching the end of a stem has nowhere to return to and finishes the scenario without seeing the summary.
+- **Back** from the first slide of a stem returns to the branch-point slide. Anywhere else, **Back** follows the slides the user actually visited rather than their position in the scenario.
+- The branch a user took is recorded on their run. If they go back to the branch-point slide and press **Next**, that recorded branch is used again rather than the linear next slide.
 
 ## Editing and deleting
 
@@ -117,9 +126,12 @@ Note that this currently conflicts with validation: a slide that has stems but n
 - **Edit a stem** — use the stem's edit button in the slide navigation rail (**Edit stem** modal).
 - **Delete a stem** — use the stem's delete button. This removes the stem **and all slides in it**, along with their blocks and triggers, after a confirmation dialog.
 - **Delete a branch-point slide** — deleting a slide also deletes every stem branching off it, including all of their slides, blocks and triggers, and any stems nested below those. Deleting a branch point removes the whole branch, so check what hangs off a slide before removing it.
+- **Duplicate a branch-point slide** — **Duplicate slide** copies the slide and its blocks but not its stems, so the copy is an ordinary slide with no branches. Rebuild the stems on the copy, or duplicate the whole scenario instead, which does carry stems across.
 
 ## Limitations
 
 - One trigger per slide. On a slide with stems, branching is the only trigger available — you cannot also give that slide feedback.
 - Stems cannot be nested — branches are one level deep.
-- Branching evaluates Multiple choice prompt and Input prompt blocks only; Actions prompt responses are not evaluated.
+- Branching evaluates Multiple choice prompt and Input prompt blocks only. Actions prompts cannot be used in a condition (see step 3).
+- Manual branching cannot be published. A slide with stems and no branching trigger fails validation, and adding a trigger to a prompt-less slide fails validation too, so user-chosen branches work in preview only.
+- **Duplicate slide** does not copy a slide's stems.
