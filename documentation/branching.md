@@ -79,7 +79,11 @@ If neither is set, users whose answers match nothing simply continue to the next
 
 ### 7. Check the validation indicator
 
-The **Triggers** panel header shows a validation indicator for the slide's trigger. Fix any warnings before publishing — **a trigger with validation errors is skipped when the scenario is played**, meaning no branching happens and users continue straight to the next slide. Branching triggers are checked for:
+The **Triggers** panel header shows a validation indicator for the slide's trigger, and the same issues appear on the slide's card in the navigation rail and in the scenario's validation indicator.
+
+These are not advisory. **A scenario with any validation issue cannot be published** — the **Publish** button is disabled and shows "Scenarios cannot be published whilst there are issues". And while you are still testing, a trigger with validation errors is skipped when the slide is played, so no branching happens and users continue straight to the next slide.
+
+Branching triggers are checked for:
 
 - The slide has no prompt blocks to base conditions on.
 - A condition has no prompt values set, an input prompt condition has no text, or a multiple choice condition has no options selected.
@@ -96,7 +100,9 @@ Preview or run the scenario. On the branch-point slide, answer the prompts and p
 
 ## Manual branching (user chooses)
 
-If a slide has stems but **no prompt blocks**, the user is not shown Back/Next buttons. Instead, one button per stem is shown, labelled with the stem's name, and the user picks their own path. This requires no trigger — just create and name the stems.
+If a slide has stems but **no prompt blocks**, the user is not shown Back/Next buttons. Instead, one button per stem is shown, labelled with the stem's name, and the user picks their own path. No trigger is involved — the buttons come from the stems themselves.
+
+Note that this currently conflicts with validation: a slide that has stems but no branching trigger is flagged as **Slide with stems has no branching trigger**, and that blocks publishing. Adding a branching trigger does not resolve it either, because a trigger on a prompt-less slide is itself flagged as having no prompts to base conditions on. Manual branching therefore works in preview but cannot be published yet.
 
 ## How users move through a branch
 
