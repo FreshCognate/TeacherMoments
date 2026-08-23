@@ -9,6 +9,7 @@ Every scenario has one root stem that contains all of its normal slides. Stems y
 - **Stem** — a branch: an ordered set of slides attached to a specific slide (the branch point). Created from the slide navigation rail.
 - **Branching trigger** — logic attached to a slide that runs when the user presses Submit. It evaluates the slide's prompt responses and navigates the user to the first slide of the matching stem.
 - **Condition** — a rule on a stem describing which prompt answers should send the user there. A stem can have multiple conditions (OR). A condition can reference multiple prompts on the slide (all must match).
+- **Fallback** — where users go when their answers match no condition. This is either a stem you leave without conditions, or the stem you pick in **If no condition is met, default to this stem**.
 
 Branching triggers evaluate two prompt block types:
 
@@ -44,7 +45,7 @@ The branching trigger evaluates the prompts on the slide it belongs to, so the b
 Notes:
 
 - The branching option only appears in the picker if the slide already has at least one stem (step 1).
-- A slide holds one trigger, so a slide can branch or provide feedback, not both.
+- On a slide with stems, branching is the only trigger offered — the feedback trigger is not available there.
 
 ### 5. Configure the branching rules
 
@@ -64,19 +65,32 @@ How conditions combine:
 - Within one condition, every prompt value you set must match (AND).
 - Multiple conditions on the same stem are alternatives, shown separated by **OR** — any one of them sends the user to that stem.
 - If several stems match, the first matching stem in the list wins.
-- A stem with **no** conditions acts as the fallback: it is chosen when the user's answers match nothing else. Always leave one stem as the fallback so every user has somewhere to go — and only one stem can be the fallback.
 
-### 6. Check the validation indicator
+### 6. Set the fallback
+
+Every branching trigger needs somewhere to send users whose answers match nothing. You have two ways to provide one, and you must use one of them:
+
+- **Leave a stem without conditions.** Any stem you never add a condition to becomes a catch-all, marked in the editor with **If the users prompt answers do not match anything.** Only one stem can be left this way.
+- **Choose a default stem.** Once every stem has at least one condition, the trigger shows a **If no condition is met, default to this stem** dropdown listing the slide's stems (plus **None**). Pick the stem that should catch unmatched users.
+
+The dropdown is hidden while any stem still has no conditions, because that stem is already the catch-all. A condition-less stem always wins over the default.
+
+If neither is set, users whose answers match nothing simply continue to the next slide in the main scenario instead of branching.
+
+### 7. Check the validation indicator
 
 The **Triggers** panel header shows a validation indicator for the slide's trigger. Fix any warnings before publishing — **a trigger with validation errors is skipped when the scenario is played**, meaning no branching happens and users continue straight to the next slide. Branching triggers are checked for:
 
 - The slide has no prompt blocks to base conditions on.
 - A condition has no prompt values set, an input prompt condition has no text, or a multiple choice condition has no options selected.
 - More than one stem has no conditions (only one stem can be the fallback).
+- No fallback exists: every stem has conditions and no default stem is set, or the default stem has since been deleted.
 - Two stems use the same condition, so one of them can never be reached.
 - A condition references a prompt block, or a branch references a stem, that has since been deleted.
 
-### 7. Test it
+Slides are checked too: a slide that has stems but no branching trigger is flagged as **Slide with stems has no branching trigger**.
+
+### 8. Test it
 
 Preview or run the scenario. On the branch-point slide, answer the prompts and press **Submit**. You will see **Analyzing prompts** while conditions are evaluated (input prompts are scored by AI), then **Navigating...** as you are taken to the first slide of the matching stem.
 
@@ -95,10 +109,11 @@ If a slide has stems but **no prompt blocks**, the user is not shown Back/Next b
 - **Edit a trigger** — reopen **Edit triggers** on the slide; all changes in the panel save automatically. Delete a condition with its **Delete condition** button.
 - **Delete a trigger** — in the trigger's **Trigger options** menu, choose **Delete trigger**. This happens immediately, without a confirmation step.
 - **Edit a stem** — use the stem's edit button in the slide navigation rail (**Edit stem** modal).
-- **Delete a stem** — use the stem's delete button. This removes the stem **and all slides in it**, after a confirmation dialog.
+- **Delete a stem** — use the stem's delete button. This removes the stem **and all slides in it**, along with their blocks and triggers, after a confirmation dialog.
+- **Delete a branch-point slide** — deleting a slide also deletes every stem branching off it, including all of their slides, blocks and triggers, and any stems nested below those. Deleting a branch point removes the whole branch, so check what hangs off a slide before removing it.
 
 ## Limitations
 
-- One trigger per slide: branching and feedback triggers cannot be combined on the same slide.
+- One trigger per slide. On a slide with stems, branching is the only trigger available — you cannot also give that slide feedback.
 - Stems cannot be nested — branches are one level deep.
 - Branching evaluates Multiple choice prompt and Input prompt blocks only; Actions prompt responses are not evaluated.
