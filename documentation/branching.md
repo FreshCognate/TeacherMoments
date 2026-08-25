@@ -74,7 +74,7 @@ How conditions combine:
 Every branching trigger needs somewhere to send users whose answers match nothing. You have two ways to provide one, and you must use one of them:
 
 - **Leave a stem without conditions.** Any stem you never add a condition to becomes a catch-all, marked in the editor with **If the users prompt answers do not match anything.** Only one stem can be left this way.
-- **Choose a default stem.** Once every stem has at least one condition, the trigger shows a **If no condition is met, default to this stem** dropdown listing the slide's stems (plus **None**). Pick the stem that should catch unmatched users.
+- **Choose a default stem.** Once every stem has at least one condition, the trigger shows an **If no condition is met, default to this stem** dropdown listing the slide's stems (plus **None**). Pick the stem that should catch unmatched users.
 
 The dropdown is hidden while any stem still has no conditions, because that stem is already the catch-all. A condition-less stem always wins over the default.
 
