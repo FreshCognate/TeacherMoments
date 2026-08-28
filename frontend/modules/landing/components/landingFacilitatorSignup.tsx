@@ -17,16 +17,16 @@ const FacilitatorIcon = () => (
 
 const LandingFacilitatorSignup = () => {
     return (
-        <section className="bg-[#f0f6f7] py-16 px-6">
+        <section className="bg-[#f0f6f7] dark:bg-[#122726] py-16 px-6">
             <div className="max-w-3xl mx-auto text-center">
-                <div className="mb-6 flex justify-center">
+                <div className="mb-6 flex justify-center dark:invert">
                     <FacilitatorIcon />
                 </div>
-                <h2 className="text-3xl md:text-4xl font-black text-[#174650] mb-4">
+                <h2 className="text-3xl md:text-4xl font-black text-[#174650] dark:text-[#e3efef] mb-4">
                     Become a Facilitator
                 </h2>
-                <p className="text-lg text-[#174650]/80 mb-8">
-                    Create scenarios, manage cohorts, track learner progress, and analyze response data across your groups.
+                <p className="text-lg text-[#174650]/80 dark:text-[#e3efef]/70 mb-8">
+                    Setting up your fall course? Create scenarios, manage cohorts, track learner progress, and analyze response data across your groups.
                 </p>
                 <a
                     href="https://forms.gle/CeirVbWNcQowXjN49"

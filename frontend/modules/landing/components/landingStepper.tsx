@@ -32,7 +32,7 @@ const AIFeedbackIcon = () => (
 );
 
 const steps = [
-  { icon: <CreateScenarioIcon />, title: 'Create your own scenario' },
+  { icon: <CreateScenarioIcon />, title: 'Create scenarios that branch and adapt' },
   { icon: <AssignCohortsIcon />, title: 'Assign scenarios to your student cohorts' },
   { icon: <RichDataIcon />, title: 'Gather rich data from your cohorts' },
   { icon: <AIFeedbackIcon />, title: 'Deliver AI-powered feedback to learners' },
@@ -40,15 +40,15 @@ const steps = [
 
 const LandingStepper = ({ onAuthClicked }: { onAuthClicked: () => void }) => {
   return (
-    <section className="bg-white py-12 px-6 relative z-10">
+    <section className="bg-white dark:bg-[#111113] py-12 px-6 relative z-10">
       <div className="max-w-4xl mx-auto">
         <ol className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 -mt-12 md:-mt-24">
           {steps.map((step, index) => (
-            <li key={index} className="flex flex-col items-center text-center border border-[#e6e6e6] bg-white p-4 md:p-8">
-              <div className="mb-4 h-16 flex items-center justify-center">
+            <li key={index} className="flex flex-col items-center text-center border border-[#e6e6e6] dark:border-[#34343a] bg-white dark:bg-[#1f1f23] p-4 md:p-8">
+              <div className="mb-4 h-16 flex items-center justify-center dark:invert">
                 {step.icon}
               </div>
-              <p className="font-bold text-[#174650]">{step.title}</p>
+              <p className="font-bold text-[#174650] dark:text-[#e3efef]">{step.title}</p>
             </li>
           ))}
         </ol>
