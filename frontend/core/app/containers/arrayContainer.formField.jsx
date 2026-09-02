@@ -20,7 +20,11 @@ class ArrayFormFieldContainer extends Component {
   }
 
   onAddActionClicked = () => {
-    this.props.value.push({});
+    let value = {};
+    if (this.props.schema.getNewItemData) {
+      value = this.props.schema.getNewItemData({ items: this.props.value });
+    }
+    this.props.value.push(value);
     this.props.updateField(this.props.value);
   }
 
