@@ -39,6 +39,13 @@ export default {
       addButtonText: "Add option",
       itemPrefixText: 'Option',
       shouldStopLastItemDelete: true,
+      getNewItemData: ({ items }) => {
+        const letter = String.fromCharCode(65 + items.length);
+        return {
+          'en-US-text': letter,
+          value: letter
+        };
+      },
       subSchema: {
         ...optionText,
         ...feedbackText,

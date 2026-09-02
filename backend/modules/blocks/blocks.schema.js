@@ -49,7 +49,7 @@ const schema = {
       ...text,
       ...feedback,
       value: { type: String, default: '' },
-    }], default: [{ "en-US-text": "" }]
+    }], default: [{ "en-US-text": "A", "value": "A" }]
   },
   actions: {
     type: [{
