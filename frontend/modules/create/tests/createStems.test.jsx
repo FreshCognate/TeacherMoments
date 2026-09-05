@@ -40,8 +40,10 @@ describe('CreateStems', () => {
 
   it('renders one row per stem with the slide count', () => {
     render(<CreateStems {...baseProps} />);
-    expect(screen.getByText('Branch A (3)')).toBeInTheDocument();
-    expect(screen.getByText('Branch B (1)')).toBeInTheDocument();
+    expect(screen.getByText('Branch A')).toBeInTheDocument();
+    expect(screen.getByText('Branch B')).toBeInTheDocument();
+    expect(screen.getByText('3')).toBeInTheDocument();
+    expect(screen.getByText('1')).toBeInTheDocument();
   });
 
   it('fires onStemClicked with the stem ref when the row is clicked', async () => {
@@ -49,7 +51,7 @@ describe('CreateStems', () => {
     const onStemClicked = vi.fn();
 
     render(<CreateStems {...baseProps} onStemClicked={onStemClicked} />);
-    await user.click(screen.getByText('Branch A (3)'));
+    await user.click(screen.getByText('Branch A'));
 
     expect(onStemClicked).toHaveBeenCalledWith('ref-1');
   });
