@@ -20,6 +20,7 @@ type SlideBlock = {
 
 type SlideTrigger = {
   _id: string;
+  action: 'SHOW_FEEDBACK_FROM_PROMPTS' | 'BRANCH_TO_STEM_FROM_PROMPTS';
 };
 
 type DraggingOptions = {
@@ -34,7 +35,7 @@ type Props = {
   scenarioId: string;
   slide: Slide;
   slideBlocks: SlideBlock[];
-  slideTriggers: SlideTrigger[];
+  slideTrigger: SlideTrigger;
   draggingOptions: DraggingOptions;
   canDeleteSlides: boolean;
   isInRootStem: boolean;
@@ -52,7 +53,7 @@ const CreateNavigationSlidePreview = ({
   scenarioId,
   slide,
   slideBlocks,
-  slideTriggers,
+  slideTrigger,
   draggingOptions,
   canDeleteSlides,
   isInRootStem,
@@ -81,7 +82,7 @@ const CreateNavigationSlidePreview = ({
               <Icon icon="slides" size={16} />
             </div>
             <span className="p-2 opacity-60">
-              {(slideTriggers.length > 0) && (
+              {(slideTrigger) && (
                 <Icon icon="trigger" size={16} />
               )}
             </span>
@@ -135,13 +136,16 @@ const CreateNavigationSlidePreview = ({
               </div>
               <div className="absolute bottom-1 w-full flex justify-between">
                 <span>
-                  {(slideTriggers.length > 0) && (
+                  {(slideTrigger) && (
                     <Badge icon="trigger" size='sm' />
                   )}
                 </span>
                 <span>
                   {(hasChildStems) && (
                     <Badge icon="branching" />
+                  )}
+                  {(slideTrigger && slideTrigger.action === 'SHOW_FEEDBACK_FROM_PROMPTS') && (
+                    <Badge icon="feedback" />
                   )}
                 </span>
               </div>

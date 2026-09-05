@@ -19,6 +19,8 @@ import addToast from '~/core/dialogs/helpers/addToast';
 import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
 import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
 import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlideRef';
+import getPromptBlocksBySlideRef from '../helpers/getPromptBlocksBySlideRef';
+import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
 
 class BlocksEditorContainer extends Component {
 
@@ -102,6 +104,25 @@ class BlocksEditorContainer extends Component {
         const { isLocked, lockedBy } = slide;
         const isCurrentUser = getIsCurrentUser(lockedBy);
         if (isLocked && !isCurrentUser) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  getShouldShowTriggerPromptAction = () => {
+    const slides = getCache('slides');
+    if (slides.data) {
+      const searchParams = new URLSearchParams(this.props.router.location.search);
+      const slideId = searchParams.get('slide');
+
+      const slide = find(slides.data, { _id: slideId })
+      if (slide) {
+        const slideRef = slide.ref;
+        const triggersBySlide = this.getTriggersBySlide();
+        const promptBlocksBySlideRef = getPromptBlocksBySlideRef({ slideRef });
+        if (triggersBySlide.length === 0 && promptBlocksBySlideRef.length > 0) {
           return true;
         }
       }
@@ -247,12 +268,18 @@ class BlocksEditorContainer extends Component {
 
   render() {
     const isLockedFromEditing = this.getIsLockedFromEditing();
+    const shouldShowTriggerPromptAction = this.getShouldShowTriggerPromptAction();
+
+    const { activeSlideRef } = getScenarioDetails();
+
     return (
       <BlocksEditor
+        activeSlideRef={activeSlideRef}
         slides={getCache('slides').data}
         blocks={this.getBlocksBySlide()}
         triggers={this.getTriggersBySlide()}
         isLockedFromEditing={isLockedFromEditing}
+        shouldShowTriggerPromptAction={shouldShowTriggerPromptAction}
         onCreateBlockClicked={this.onCreateBlockClicked}
         onSortUpClicked={this.onSortUpClicked}
         onSortDownClicked={this.onSortDownClicked}

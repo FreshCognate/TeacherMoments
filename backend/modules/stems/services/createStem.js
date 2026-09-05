@@ -14,20 +14,32 @@ export default async (props, options, context) => {
 
   if (!scenarioModel) throw { message: 'This scenario does not exist', statusCode: 400 };
 
-  const newStemObject = {
+  const slideStems = await models.Stem.find({ slideRef, isDeleted: false });
+
+  const newStem = await models.Stem.create({
     scenario,
     slideRef,
-    sortOrder,
-    name,
+    sortOrder: sortOrder || 0,
+    name: name || `Stem ${slideStems.length + 1}`,
     isRoot,
     createdBy: user._id
-  };
-
-  const newStem = await models.Stem.create(newStemObject);
+  });
 
   if (!isRoot) {
     await createSlide({ scenario, sortOrder: 0, stemRef: newStem.ref }, {}, context);
+    if (slideStems.length === 0) {
+      const secondaryStem = await models.Stem.create({
+        scenario,
+        slideRef,
+        sortOrder: sortOrder || 1,
+        name: `Stem ${slideStems.length + 2}`,
+        isRoot,
+        createdBy: user._id
+      });
+      await createSlide({ scenario, sortOrder: 0, stemRef: secondaryStem.ref }, {}, context);
+    }
   }
+
 
   setScenarioHasChanges({ scenarioId: scenario }, {}, context);
 

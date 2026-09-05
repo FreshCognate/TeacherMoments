@@ -5,6 +5,7 @@ import map from 'lodash/map';
 import Icon from '~/uikit/icons/components/icon';
 import CreateNavigationSlideIcon from './createNavigationSlideIcon';
 import getSlideCountForStem from '../helpers/getSlideCountForStem';
+import Badge from '~/uikit/badges/components/badge';
 
 const CreateStems = ({
   activeStemRef,
@@ -45,10 +46,13 @@ const CreateStems = ({
             {(isInRootStem) && (
               <>
                 <span className="text-xs text-lm-5 dark:text-dm-5 font-medium flex items-center gap-x-2">
-                  <Icon icon="branching" size={12} />{stem.name} ({getSlideCountForStem(stem.ref)})
+                  <Icon icon="branching" size={12} />
+                  {stem.name}
                 </span>
 
+
                 <div className="flex items-center gap-2">
+                  <Badge icon="slides" size="sm" text={getSlideCountForStem(stem.ref)} />
                   <FlatButton
                     icon="edit"
                     size="sm"

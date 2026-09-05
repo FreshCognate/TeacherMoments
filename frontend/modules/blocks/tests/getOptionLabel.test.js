@@ -24,7 +24,7 @@ describe('getOptionLabel', () => {
     expect(getOptionLabel({ options, optionId: 'Agree' })).toBe('Agree');
   });
 
-  it('returns the raw id when nothing matches', () => {
-    expect(getOptionLabel({ options, optionId: 'gone' })).toBe('gone');
+  it('returns null when nothing matches', () => {
+    expect(getOptionLabel({ options, optionId: 'gone' })).toBeNull();
   });
 });

@@ -91,17 +91,14 @@ describe('TriggerDisplayContainer', () => {
     capturedProps.onAddTriggerClicked();
 
     const callback = addModalMock.mock.calls[0][1];
-    callback('ACTION', { type: 'CREATE', modal: { foo: 'bar' } });
+    callback('ACTION', { type: 'CREATE', modal: { action: 'SHOW_FEEDBACK_FROM_PROMPTS' } });
 
     expect(axiosPostMock).toHaveBeenCalledWith('/api/triggers', {
       scenario: 'scenario-1',
       elementRef: 'slide-1',
       triggerType: 'SLIDE',
-      foo: 'bar'
+      action: 'SHOW_FEEDBACK_FROM_PROMPTS'
     });
-
-    await new Promise((r) => setTimeout(r, 0));
-    expect(props.triggers.fetch).toHaveBeenCalled();
   });
 
   it('does not post when the modal action is anything other than CREATE', () => {

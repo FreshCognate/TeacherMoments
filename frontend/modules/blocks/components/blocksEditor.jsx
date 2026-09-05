@@ -5,12 +5,15 @@ import EditBlockContainer from '../containers/editBlockContainer';
 import Icon from '~/uikit/icons/components/icon';
 import Body from '~/uikit/content/components/body';
 import Title from '~/uikit/content/components/title';
+import TriggerPromptActionContainer from '~/modules/triggers/containers/triggerPromptActionContainer';
 
 const BlocksEditor = ({
+  activeSlideRef,
   slides,
   blocks,
   triggers,
   isLockedFromEditing,
+  shouldShowTriggerPromptAction,
   onSortUpClicked,
   onSortDownClicked,
   onCreateBlockClicked,
@@ -40,7 +43,7 @@ const BlocksEditor = ({
           </div>
         )}
 
-        <div className="p-8" style={{ minHeight: "calc(100vh - 261px)" }}>
+        <div className="p-8" style={{ minHeight: "calc(100vh - 283px)" }}>
           {(map(blocks, (block) => {
             return (
               <EditBlockContainer
@@ -66,6 +69,9 @@ const BlocksEditor = ({
               <Title title="This slide has no blocks" className="text-black dark:text-white/80 mb-2" />
               <Body body="Click Add block to create a new block for this slide" size="sm" className="text-black/60 dark:text-white/60" />
             </div>
+          )}
+          {(blocks.length > 0 && shouldShowTriggerPromptAction) && (
+            <TriggerPromptActionContainer slideRef={activeSlideRef} onOpenTriggersClicked={onOpenTriggersClicked} />
           )}
         </div>
         {(blocks.length > 0) && (
