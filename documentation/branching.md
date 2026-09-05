@@ -18,19 +18,31 @@ Branching triggers evaluate two prompt block types:
 
 ## Creating a branch, step by step
 
-### 1. Create a stem on the branch-point slide
+There are two ways to start a branch. The **quick path** sets up the stems and the trigger for you in one click; the **manual path** lets you create each piece yourself. Both end in the same trigger editor (step 5).
+
+### Quick path: start from a prompt
+
+1. Add a **Multiple choice prompt** or **Input prompt** block to the slide where the path should split (the branch point).
+2. A panel appears beneath the blocks: *"You've added a prompt, would you like to give the user feedback based upon their answer or branch to stem?"* Click **Branch to a stem**.
+3. Teacher Moments creates the stems — two of them if the slide had none (**Stem 1** and **Stem 2**, each with an empty starter slide), or one more if the slide already had one — creates the branching trigger, and opens the **Triggers** panel. Skip ahead to step 5 to set the conditions, then come back to step 2 to give the stems meaningful names and step 1 to add slides to them.
+
+The panel only appears while the slide has a prompt and no trigger yet, so it goes away once you have chosen. If the slide already has stems, only **Branch to a stem** is offered, because feedback triggers are not available on slides with stems.
+
+### Manual path
+
+### 1. Create stems on the branch-point slide
 
 1. In the scenario editor, find the slide where the path should split in the left slide navigation rail.
-2. Open the slide's options menu (**Slide options**) and choose **Create stem**. This option only appears for slides in the main scenario — you cannot create a stem from inside another stem.
-3. The editor switches into the new stem: the main rail collapses and a panel for the stem's slides opens. A first slide is created for you automatically. Use **Add slide** to add more slides to the stem, and the home button (**Back to parent**) to return to the main scenario.
-4. Repeat **Create stem** on the same slide for each path you need. Stems attached to a slide are listed under its card in the navigation rail.
+2. Open the slide's options menu (**Slide options**) and choose **Create stems**. This creates two stems at once — **Stem 1** and **Stem 2** — because a branch needs at least two paths. Each stem starts with one empty slide. This option only appears for slides in the main scenario — you cannot create a stem from inside another stem.
+3. The editor switches into the first new stem: the main rail collapses and a panel for the stem's slides opens. Use **Add slide** to add more slides to the stem, and the home button (**Back to parent**) to return to the main scenario.
+4. For a third or later path, open **Slide options** again and choose **Create stem** (singular), which adds one more stem. Stems attached to a slide are listed under its card in the navigation rail, each with a badge showing how many slides it holds. The slide card itself shows a branching badge once it has stems, and a trigger badge once it has a trigger.
 
-### 2. Name the stem
+### 2. Rename the stems
 
-New stems are created without a name, and the name is what identifies the stem in the trigger editor (and is the button label if you use manual branching), so name it right away:
+Stems are created with placeholder names (**Stem 1**, **Stem 2**, and so on). The name is what identifies the stem in the trigger editor, and is the button label if you use manual branching, so give each one a meaningful name:
 
-1. Back in the root stem, find the stem in the list under its slide.
-2. Click the stem's edit button to open the **Edit stem** modal.
+1. Back in the main scenario, find the stem in the list under its slide.
+2. Click the stem's edit (pencil) button to open the **Edit stem** modal.
 3. Fill in **Name** (and optionally **Description**) and press **Save**.
 
 ### 3. Add prompts to the branch-point slide
@@ -46,7 +58,7 @@ Do not put an **Actions prompt** on a branch-point slide. Branching cannot evalu
 
 Notes:
 
-- The branching option only appears in the picker if the slide already has at least one stem (step 1).
+- The branching option only appears in the picker if the slide already has at least one stem (step 1). The quick path above avoids this ordering because it creates the stems and the trigger together.
 - On a slide with stems, branching is the only trigger offered — the feedback trigger is not available there.
 
 ### 5. Configure the branching rules
