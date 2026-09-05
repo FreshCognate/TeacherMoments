@@ -11,7 +11,7 @@ const CreateNavigationSlide = ({
   scenarioId,
   slide,
   slideBlocks,
-  slideTriggers,
+  slideTrigger,
   draggingOptions = {},
   isSelected,
   isDeleting,
@@ -33,7 +33,7 @@ const CreateNavigationSlide = ({
         scenarioId={scenarioId}
         slide={slide}
         slideBlocks={slideBlocks}
-        slideTriggers={slideTriggers}
+        slideTrigger={slideTrigger}
         canDeleteSlides={canDeleteSlides}
         isInRootStem={isInRootStem}
         hasChildStems={hasChildStems}

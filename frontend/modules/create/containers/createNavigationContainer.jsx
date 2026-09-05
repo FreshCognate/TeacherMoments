@@ -215,7 +215,6 @@ class CreateNavigationContainer extends Component {
         slides={this.getCurrentStemOfSlides()}
         blocks={this.props.blocks.data}
         rootSlides={this.getRootSlides()}
-        triggers={this.props.triggers.data}
         activeSlideId={activeSlideId}
         activeStemSlideId={activeStemSlideId}
         activeStem={activeStem}

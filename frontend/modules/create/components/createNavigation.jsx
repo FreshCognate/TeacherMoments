@@ -5,12 +5,10 @@ import CreateNavigationStaticSlide from './createNavigationStaticSlide';
 import CreateDroppableContainer from '../containers/createDroppableContainer';
 import filter from 'lodash/filter';
 import Flag from '~/modules/flags/components/flag';
-import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlideRef';
 import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
-import map from 'lodash/map';
 import classnames from 'classnames';
-import CreateNavigationSlideIcon from './createNavigationSlideIcon';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import getTriggerBySlideRef from '~/modules/triggers/helpers/getTriggerBySlideRef';
 
 const CreateNavigation = ({
   scenarioId,
@@ -71,16 +69,15 @@ const CreateNavigation = ({
               if (item._id === deletingId) isDeletingSlide = true;
               const slideBlocks = filter(blocks, { slideRef: item.ref });
 
-              const slideTriggers = getTriggersBySlideRef({ slideRef: item.ref });
+              const slideTrigger = getTriggerBySlideRef({ slideRef: item.ref });
               const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
-
               return (
                 <CreateNavigationSlide
                   key={item._id}
                   scenarioId={scenarioId}
                   slide={item}
                   slideBlocks={slideBlocks}
-                  slideTriggers={slideTriggers}
+                  slideTrigger={slideTrigger}
                   activeStem={activeStem}
                   activeSlideStems={activeSlideStems}
                   draggingOptions={draggingOptions}
@@ -135,16 +132,15 @@ const CreateNavigation = ({
                   if (item._id === deletingId) isDeletingSlide = true;
                   const slideBlocks = filter(blocks, { slideRef: item.ref });
 
-                  const slideTriggers = getTriggersBySlideRef({ slideRef: item.ref });
+                  const slideTrigger = getTriggerBySlideRef({ slideRef: item.ref });
                   const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
-
                   return (
                     <CreateNavigationSlide
                       key={item._id}
                       scenarioId={scenarioId}
                       slide={item}
                       slideBlocks={slideBlocks}
-                      slideTriggers={slideTriggers}
+                      slideTrigger={slideTrigger}
                       draggingOptions={draggingOptions}
                       isSelected={isSelected}
                       isDeleting={isDeletingSlide}

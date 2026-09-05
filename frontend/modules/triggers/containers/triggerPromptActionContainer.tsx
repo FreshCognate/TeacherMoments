@@ -45,8 +45,10 @@ class TriggerPromptActionContainer extends Component<TriggerPromptActionContaine
   }
 
   render() {
+    const stems = getStemsBySlideRef({ slideRef: this.props.slideRef });
     return (
       <TriggerPromptAction
+        stemsCount={stems.length}
         onAddFeedbackClicked={this.onAddFeedbackClicked}
         onAddStemClicked={this.onAddStemClicked}
       />
