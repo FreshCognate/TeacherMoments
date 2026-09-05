@@ -120,4 +120,4 @@ class CreateStemsContainer extends Component {
   }
 }
 
-export default WithRouter(WithCache(CreateStemsContainer, null, ['stems', 'scenario', 'slides', 'editor', 'triggers']));
+export default WithRouter(WithCache(CreateStemsContainer, null, ['stems', 'scenario', 'slides', 'blocks', 'editor', 'triggers']));
