@@ -7,6 +7,7 @@ import WithRouter from '~/core/app/components/withRouter';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import getTriggers from '../helpers/getTriggers';
+import createTrigger from '../helpers/createTrigger';
 import cloneDeep from 'lodash/cloneDeep';
 import each from 'lodash/each';
 import AddTriggerContainer from './addTriggerContainer';
@@ -16,17 +17,6 @@ class TriggerDisplayContainer extends Component {
   getTriggers = () => {
     const { data } = this.props.triggers;
     return filter(data, (trigger) => trigger.elementRef === this.props.slide.data?.ref);
-  }
-
-  getTriggerBaseModel = () => {
-    const { params } = this.props.router;
-    const scenario = params.id;
-
-    return {
-      scenario,
-      elementRef: this.props.slide.data.ref,
-      triggerType: 'SLIDE'
-    }
   }
 
   onAddTriggerClicked = () => {
@@ -44,10 +34,11 @@ class TriggerDisplayContainer extends Component {
     }, (state, { type, modal }) => {
       if (state === 'ACTION') {
         if (type === 'CREATE') {
-          const triggerBaseModel = this.getTriggerBaseModel();
-          axios.post('/api/triggers', { ...triggerBaseModel, ...modal }).then((response) => {
-            this.props.triggers.fetch();
-          }).catch(handleRequestError);
+          createTrigger({
+            scenario: this.props.router.params.id,
+            elementRef: this.props.slide.data.ref,
+            action: modal.action
+          });
         }
       }
     })
