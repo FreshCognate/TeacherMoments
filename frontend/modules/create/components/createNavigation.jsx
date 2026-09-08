@@ -116,48 +116,46 @@ const CreateNavigation = ({
         >
           <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} isInRootStem={isInRootStem} isNestedStem={true} onAddSlideClicked={onAddSlideClicked} />
           <div className="p-2 overflow-y-auto no-scrollbar flex-grow">
-            <Flag flag="HAS_STEMS">
-              <CreateDroppableContainer
-                id={`slides`}
-                items={slides}
-                data={{
-                  type: 'SLIDES'
-                }}
-                renderItem={({ item, index, items, draggingOptions }) => {
+            <CreateDroppableContainer
+              id={`slides`}
+              items={slides}
+              data={{
+                type: 'SLIDES'
+              }}
+              renderItem={({ item, index, items, draggingOptions }) => {
 
-                  const canDeleteSlides = items.length > 1;
-                  let isSelected = false;
-                  let isDeletingSlide = false;
-                  if (item._id === activeSlideId) isSelected = true;
-                  if (item._id === deletingId) isDeletingSlide = true;
-                  const slideBlocks = filter(blocks, { slideRef: item.ref });
+                const canDeleteSlides = items.length > 1;
+                let isSelected = false;
+                let isDeletingSlide = false;
+                if (item._id === activeSlideId) isSelected = true;
+                if (item._id === deletingId) isDeletingSlide = true;
+                const slideBlocks = filter(blocks, { slideRef: item.ref });
 
-                  const slideTrigger = getTriggerBySlideRef({ slideRef: item.ref });
-                  const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
-                  return (
-                    <CreateNavigationSlide
-                      key={item._id}
-                      scenarioId={scenarioId}
-                      slide={item}
-                      slideBlocks={slideBlocks}
-                      slideTrigger={slideTrigger}
-                      draggingOptions={draggingOptions}
-                      isSelected={isSelected}
-                      isDeleting={isDeletingSlide}
-                      isDuplicating={isDuplicating}
-                      isInRootStem={isInRootStem}
-                      isNestedStem={true}
-                      canDeleteSlides={canDeleteSlides}
-                      hasChildStems={hasChildStems}
-                      onDuplicateSlideClicked={onDuplicateSlideClicked}
-                      onDeleteSlideClicked={onDeleteSlideClicked}
-                      onCreateStemClicked={onCreateStemClicked}
-                    />
-                  );
+                const slideTrigger = getTriggerBySlideRef({ slideRef: item.ref });
+                const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
+                return (
+                  <CreateNavigationSlide
+                    key={item._id}
+                    scenarioId={scenarioId}
+                    slide={item}
+                    slideBlocks={slideBlocks}
+                    slideTrigger={slideTrigger}
+                    draggingOptions={draggingOptions}
+                    isSelected={isSelected}
+                    isDeleting={isDeletingSlide}
+                    isDuplicating={isDuplicating}
+                    isInRootStem={isInRootStem}
+                    isNestedStem={true}
+                    canDeleteSlides={canDeleteSlides}
+                    hasChildStems={hasChildStems}
+                    onDuplicateSlideClicked={onDuplicateSlideClicked}
+                    onDeleteSlideClicked={onDeleteSlideClicked}
+                    onCreateStemClicked={onCreateStemClicked}
+                  />
+                );
 
-                }}
-              />
-            </Flag>
+              }}
+            />
           </div>
         </motion.div>
       )}
