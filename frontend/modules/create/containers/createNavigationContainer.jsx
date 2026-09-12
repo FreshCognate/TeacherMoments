@@ -115,6 +115,10 @@ class CreateNavigationContainer extends Component {
     })
   }
 
+  onAddStemClicked = () => {
+    console.log('adds stem');
+  }
+
   onDuplicateSlideClicked = (slideId) => {
     this.setState({ isDuplicating: true });
     const scenarioId = this.props.scenario.data._id;
@@ -228,6 +232,7 @@ class CreateNavigationContainer extends Component {
         onDeleteSlideClicked={this.onDeleteSlideClicked}
         onToggleNavigationTypeClicked={this.onToggleNavigationTypeClicked}
         onCreateStemClicked={this.onCreateStemClicked}
+        onAddStemClicked={this.onAddStemClicked}
       />
     );
   }
