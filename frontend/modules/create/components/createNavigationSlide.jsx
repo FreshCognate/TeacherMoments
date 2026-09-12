@@ -47,9 +47,9 @@ const CreateNavigationSlide = ({
         onCreateStemClicked={onCreateStemClicked}
       />
 
-      <Flag>
-        <CreateStemsContainer slideRef={slide.ref} isInRootStem={isInRootStem} />
-      </Flag>
+
+      <CreateStemsContainer slideRef={slide.ref} isInRootStem={isInRootStem} />
+
 
     </div>
   );

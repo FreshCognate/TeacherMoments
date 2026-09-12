@@ -24,6 +24,7 @@ const CreateNavigation = ({
   isDuplicating,
   isInRootStem,
   onAddSlideClicked,
+  onAddStemClicked,
   onDuplicateSlideClicked,
   onDeleteSlideClicked,
   onCreateStemClicked
@@ -44,6 +45,7 @@ const CreateNavigation = ({
           isInRootStem={isInRootStem}
           isNestedStem={false}
           onAddSlideClicked={onAddSlideClicked}
+          onAddStemClicked={onAddStemClicked}
         />
         <div className="p-2 overflow-y-auto no-scrollbar flex-grow">
           <CreateNavigationStaticSlide
@@ -114,7 +116,14 @@ const CreateNavigation = ({
           transition={{ duration: 0.25, ease: 'easeOut' }}
           className="absolute left-16 bg-lm-0 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col border border-lm-3 dark:border-dm-1 rounded-lg"
         >
-          <CreateNavigationActions isCreating={isCreating} isDuplicating={isDuplicating} isInRootStem={isInRootStem} isNestedStem={true} onAddSlideClicked={onAddSlideClicked} />
+          <CreateNavigationActions
+            isCreating={isCreating}
+            isDuplicating={isDuplicating}
+            isInRootStem={isInRootStem}
+            isNestedStem={true}
+            onAddSlideClicked={onAddSlideClicked}
+            onAddStemClicked={onAddStemClicked}
+          />
           <div className="p-2 overflow-y-auto no-scrollbar flex-grow">
             <CreateDroppableContainer
               id={`slides`}
