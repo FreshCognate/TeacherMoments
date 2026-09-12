@@ -3,6 +3,7 @@ import BlocksEditorContainer from '~/modules/blocks/containers/blocksEditorConta
 import CreateWorkspaceToolbarContainer from '../containers/createWorkspaceToolbarContainer';
 import CreateStaticSlideEditorContainer from '../containers/createStaticSlideEditorContainer';
 import PlayScenarioContainer from '~/modules/scenarios/containers/playScenarioContainer';
+import SlideActionsContainer from '~/modules/slides/containers/slideActionsContainer';
 
 const CreateWorkspace = ({
   activeSlideId,
@@ -23,7 +24,7 @@ const CreateWorkspace = ({
 
         <>
           {(displayMode === 'EDITING') && (
-            <div className="">
+            <>
               {(isStaticSlide) && (
                 <CreateStaticSlideEditorContainer key={activeSlideId} type={activeSlideId} />
               )}
@@ -32,7 +33,8 @@ const CreateWorkspace = ({
                   slideId={activeSlideId}
                 />
               )}
-            </div>
+              <SlideActionsContainer />
+            </>
           )}
           {(displayMode === 'PREVIEW') && (
             <div className="">

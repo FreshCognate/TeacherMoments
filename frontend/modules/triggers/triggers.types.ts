@@ -17,3 +17,7 @@ export type StemItem = {
 export type OnEditPromptConditionClicked = (args: { elementRef: string, prompt: any, condition: any }) => void;
 
 export type OnRemoveConditionClicked = (args: { elementRef: string, conditionId?: string }) => void;
+
+export type Trigger = {
+  _id: string;
+}

@@ -7,6 +7,8 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import axios from 'axios';
 import getCache from '~/core/cache/helpers/getCache';
 import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
+import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
+import TriggerDisplayContainer from './triggerDisplayContainer';
 
 interface TriggerPromptActionContainerProps {
   slideRef: string;
@@ -20,7 +22,7 @@ class TriggerPromptActionContainer extends Component<TriggerPromptActionContaine
 
   onAddFeedbackClicked = () => {
     createTrigger({ scenario: this.props.scenario.data._id, elementRef: this.props.slideRef, action: "SHOW_FEEDBACK_FROM_PROMPTS" });
-    this.props.onOpenTriggersClicked();
+    this.onOpenTriggersClicked();
   }
 
   onAddStemClicked = () => {
@@ -41,7 +43,16 @@ class TriggerPromptActionContainer extends Component<TriggerPromptActionContaine
         }
       }).catch(handleRequestError);
     }
-    this.props.onOpenTriggersClicked();
+    this.onOpenTriggersClicked();
+  }
+
+  onOpenTriggersClicked = () => {
+    addSidePanel({
+      size: 'lg',
+      icon: 'trigger',
+      title: 'Triggers',
+      component: <TriggerDisplayContainer />
+    })
   }
 
   render() {
