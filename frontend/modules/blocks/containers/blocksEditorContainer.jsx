@@ -184,17 +184,6 @@ class BlocksEditorContainer extends Component {
 
   }
 
-  onCreateBlockClicked = () => {
-    addModal({
-      title: 'Choose a block type to add to your slide:',
-      component: <BlockSelectorContainer />,
-      actions: [{
-        type: 'CANCEL',
-        text: 'Cancel'
-      }]
-    })
-  }
-
   onRequestAccessClicked = async () => {
     let removeCurrentModal;
     const sockets = await getSockets();
@@ -257,15 +246,6 @@ class BlocksEditorContainer extends Component {
     })
   }
 
-  onOpenTriggersClicked = () => {
-    addSidePanel({
-      size: 'lg',
-      icon: 'trigger',
-      title: 'Triggers',
-      component: <TriggerDisplayContainer />
-    })
-  }
-
   render() {
     const isLockedFromEditing = this.getIsLockedFromEditing();
     const shouldShowTriggerPromptAction = this.getShouldShowTriggerPromptAction();
@@ -280,11 +260,9 @@ class BlocksEditorContainer extends Component {
         triggers={this.getTriggersBySlide()}
         isLockedFromEditing={isLockedFromEditing}
         shouldShowTriggerPromptAction={shouldShowTriggerPromptAction}
-        onCreateBlockClicked={this.onCreateBlockClicked}
         onSortUpClicked={this.onSortUpClicked}
         onSortDownClicked={this.onSortDownClicked}
         onRequestAccessClicked={this.onRequestAccessClicked}
-        onOpenTriggersClicked={this.onOpenTriggersClicked}
       />
     );
   }

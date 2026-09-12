@@ -13,6 +13,9 @@ vi.mock('../containers/createStaticSlideEditorContainer', () => ({
 vi.mock('~/modules/scenarios/containers/playScenarioContainer', () => ({
   default: () => <div data-testid="play-scenario-stub">play scenario</div>
 }));
+vi.mock('~/modules/slides/containers/slideActionsContainer', () => ({
+  default: () => <div data-testid="slide-actions-stub">slide actions</div>
+}));
 
 import CreateWorkspace from '../components/createWorkspace';
 
