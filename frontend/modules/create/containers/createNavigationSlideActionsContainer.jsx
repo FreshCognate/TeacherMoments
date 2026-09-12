@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import CreateNavigationSlideActions from '../components/createNavigationSlideActions';
 import getSlideErrors from '~/modules/slides/helpers/getSlideErrors';
-import hasFlag from '~/modules/flags/helpers/hasFlag';
 import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
 
 class CreateNavigationSlideActionsContainer extends Component {
@@ -17,7 +16,7 @@ class CreateNavigationSlideActionsContainer extends Component {
       color: 'primary',
       action: 'DUPLICATE'
     }];
-    if (hasFlag() && this.props.isInRootStem) {
+    if (this.props.isInRootStem) {
       const stems = getStemsBySlideRef({ slideRef: this.props.slide.ref });
       let text = stems.length > 0 ? 'Create stem' : 'Create stems';
       options.unshift({
