@@ -23,10 +23,12 @@ class TriggerItemContainer extends Component {
   }
 
   onFormUpdate = ({ update }) => {
-    getCache('triggers').set(update, { setType: 'itemExtend', setFind: { _id: this.props.trigger._id } })
-    axios.put(`/api/triggers/${this.props.trigger._id}`, update).then(() => {
-      getCache('triggers').fetch();
-    }).catch(handleRequestError);
+    getCache('triggers').mutate(update, {
+      method: 'put',
+      url: `/api/triggers/${this.props.trigger._id}`,
+      setType: 'itemExtend',
+      setFind: { _id: this.props.trigger._id }
+    });
   }
 
   render() {
