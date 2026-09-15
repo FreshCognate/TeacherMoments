@@ -26,7 +26,7 @@ const SlideActions = ({
               onClick={onOpenTriggersClicked}
             />
             <Body
-              body={triggers.length === 0 ? 'Add triggers to provide feedback on user responses' : `This slide has ${triggers.length} trigger${triggers.length > 1 || triggers.length === 0 ? 's' : ''}`}
+              body={triggers.length === 0 ? 'Add a trigger to give feedback or branch based on user responses' : `This slide has ${triggers.length} trigger${triggers.length > 1 || triggers.length === 0 ? 's' : ''}`}
               size="xs"
               className="text-black/60 dark:text-white/80"
             />
