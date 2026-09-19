@@ -45,14 +45,6 @@ class EditBlockContainer extends Component {
     return currentBlockSchema;
   }
 
-  debouncedSave = debounce(({ update }) => {
-    this.isSaving = true;
-    axios.put(`/api/blocks/${this.props.block._id}`, update).then(() => {
-      const { blocks } = this.props;
-      blocks.fetch();
-    }).catch(handleRequestError);
-  }, 2000);
-
   getSortingDetails = () => {
     let canSortUp = false;
     let canSortDown = false;
@@ -74,9 +66,16 @@ class EditBlockContainer extends Component {
   onEditBlockUpdate = ({ update }) => {
     const { blocks } = this.props;
     blocks.setStatus('syncing');
-    blocks.set(update, { setType: 'itemExtend', setFind: { _id: this.props.block._id } });
+    blocks.mutate(update, {
+      method: 'put',
+      url: `/api/blocks/${this.props.block._id}`,
+      setType: 'itemExtend',
+      setFind: { _id: this.props.block._id },
+      transform: ({ data }) => {
+        return data.block
+      }
+    });
     this.setState({ renderKey: this.state.renderKey + 1 });
-    this.debouncedSave({ update });
   }
 
   onToggleActionsClicked = (isOptionsOpen) => {
