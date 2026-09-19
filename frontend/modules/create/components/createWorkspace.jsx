@@ -4,6 +4,7 @@ import CreateWorkspaceToolbarContainer from '../containers/createWorkspaceToolba
 import CreateStaticSlideEditorContainer from '../containers/createStaticSlideEditorContainer';
 import PlayScenarioContainer from '~/modules/scenarios/containers/playScenarioContainer';
 import SlideActionsContainer from '~/modules/slides/containers/slideActionsContainer';
+import CreateOverviewContainer from '../containers/createOverviewContainer';
 
 const CreateWorkspace = ({
   activeSlideId,
@@ -36,8 +37,13 @@ const CreateWorkspace = ({
               <SlideActionsContainer />
             </>
           )}
+          {(displayMode === 'OVERVIEW') && (
+            <div>
+              <CreateOverviewContainer />
+            </div>
+          )}
           {(displayMode === 'PREVIEW') && (
-            <div className="">
+            <div>
               <PlayScenarioContainer />
             </div>
           )}

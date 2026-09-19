@@ -1,4 +1,5 @@
 import React from 'react';
+import hasFlag from '~/modules/flags/helpers/hasFlag';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Toggle from '~/uikit/toggles/components/toggle';
 
@@ -10,6 +11,22 @@ const CreateWorkspaceToolbar = ({
   onAddBlockClicked,
   onSlideNameChanged
 }) => {
+  const displayModeOptions = !hasFlag() ? [{
+    value: 'EDITING',
+    text: 'Edit'
+  }, {
+    value: 'PREVIEW',
+    text: 'Preview'
+  }] : [{
+    value: 'EDITING',
+    text: 'Edit'
+  }, {
+    value: 'OVERVIEW',
+    text: 'Overview'
+  }, {
+    value: 'PREVIEW',
+    text: 'Preview'
+  }];
   return (
     <div className="sticky mt-4 top-0 flex items-center justify-between z-40 shadow-md bg-lm-0 dark:bg-dm-1 rounded-lg text-xs mx-2 border border-lm-3 dark:border-dm-2">
       {(!isStaticSlide) && (
@@ -33,13 +50,7 @@ const CreateWorkspaceToolbar = ({
           <Toggle
             size="sm"
             value={displayMode}
-            options={[{
-              value: 'EDITING',
-              text: 'Edit'
-            }, {
-              value: 'PREVIEW',
-              text: 'Preview'
-            }]}
+            options={displayModeOptions}
             onClick={onDisplayModeChanged}
           />
         </div>
