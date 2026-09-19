@@ -23,11 +23,11 @@ const MultipleChoicePromptBlockPlayer = ({
       </div>
 
       <div className="mb-2">
-        {map(block.options, (option) => {
+        {map(block.options, (option, index) => {
           const isSelected = !!includes(blockTracking.selectedOptions, option._id);
           return (
             <MultipleChoicePromptBlockPlayerAnswer
-              key={option._id}
+              key={option._id || index}
               option={option}
               isMultiSelect={block.isMultiSelect}
               isSelected={isSelected}
