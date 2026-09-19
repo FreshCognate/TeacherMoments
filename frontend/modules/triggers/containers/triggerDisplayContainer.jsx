@@ -20,9 +20,6 @@ class TriggerDisplayContainer extends Component {
   }
 
   onAddTriggerClicked = () => {
-
-    const triggers = getTriggers();
-
     addModal({
       title: 'Add new trigger',
       body: "Select a trigger type to provide feedback when users respond to prompts on this slide. Triggers are only activated when the slide contains input prompts (e.g., Multiple Choice or Input Prompt blocks).",

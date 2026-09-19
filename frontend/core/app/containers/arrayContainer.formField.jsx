@@ -13,33 +13,37 @@ class ArrayFormFieldContainer extends Component {
     this.props.updateField(this.props.value);
   }
 
-  onUpdateAction = (actionId, { update }) => {
-    const currentAction = find(this.props.value, { _id: actionId });
-    extend(currentAction, update);
+  onUpdateItem = (itemId, { update }) => {
+    const currentItem = find(this.props.value, { _id: itemId });
+    extend(currentItem, update);
     this.props.updateField(this.props.value);
   }
 
-  onAddActionClicked = () => {
+  onAddItemClicked = (event) => {
+    const target = event.currentTarget || event.target;
     let value = {};
     if (this.props.schema.getNewItemData) {
       value = this.props.schema.getNewItemData({ items: this.props.value });
     }
     this.props.value.push(value);
     this.props.updateField(this.props.value);
+    setTimeout(() => {
+      target.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }, 0);
   }
 
-  onRemoveActionClicked = (actionId) => {
-    remove(this.props.value, { _id: actionId });
+  onRemoveItemClicked = (itemId) => {
+    remove(this.props.value, { _id: itemId });
     this.props.updateField(this.props.value);
   }
 
-  onSortActionUpClicked = (sortOrder) => {
+  onSortItemUpClicked = (sortOrder) => {
     const sourceIndex = sortOrder;
     const destinationIndex = sortOrder - 1;
     this.sortArray({ sourceIndex, destinationIndex });
   }
 
-  onSortActionDownClicked = (sortOrder) => {
+  onSortItemDownClicked = (sortOrder) => {
     const sourceIndex = sortOrder;
     const destinationIndex = sortOrder + 1;
     this.sortArray({ sourceIndex, destinationIndex });
@@ -51,11 +55,11 @@ class ArrayFormFieldContainer extends Component {
       <ArrayFormField
         schema={schema}
         value={value}
-        onUpdateAction={this.onUpdateAction}
-        onAddActionClicked={this.onAddActionClicked}
-        onRemoveActionClicked={this.onRemoveActionClicked}
-        onSortActionUpClicked={this.onSortActionUpClicked}
-        onSortActionDownClicked={this.onSortActionDownClicked}
+        onUpdateItem={this.onUpdateItem}
+        onAddItemClicked={this.onAddItemClicked}
+        onRemoveItemClicked={this.onRemoveItemClicked}
+        onSortItemUpClicked={this.onSortItemUpClicked}
+        onSortItemDownClicked={this.onSortItemDownClicked}
       />
     );
   }

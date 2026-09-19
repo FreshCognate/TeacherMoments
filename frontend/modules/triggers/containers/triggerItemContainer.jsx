@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import TriggerItem from '../components/triggerItem';
 import getTrigger from '../helpers/getTrigger';
+import WithCache from '~/core/cache/containers/withCache';
+import find from 'lodash/find';
 import getCache from '~/core/cache/helpers/getCache';
-import axios from 'axios';
-import handleRequestError from '~/core/app/helpers/handleRequestError';
 
 class TriggerItemContainer extends Component {
 
@@ -27,7 +27,10 @@ class TriggerItemContainer extends Component {
       method: 'put',
       url: `/api/triggers/${this.props.trigger._id}`,
       setType: 'itemExtend',
-      setFind: { _id: this.props.trigger._id }
+      setFind: { _id: this.props.trigger._id },
+      transform: ({ data }) => {
+        return data.trigger
+      }
     });
   }
 
