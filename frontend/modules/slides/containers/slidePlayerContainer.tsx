@@ -327,7 +327,7 @@ class SlidePlayerContainer extends Component<SlidePlayerContainerProps, SlidePla
       secondaryAction,
     } = this.getNavigationDetails();
 
-    const activeSlideStems = getActiveSlideStems({ activeSlideRef: activeSlide?.ref as string });
+    const activeSlideStems = getActiveSlideStems({ activeSlideRef: activeSlide?.ref });
 
     return (
       <SlidePlayer

@@ -3,6 +3,13 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 import map from 'lodash/map';
 import useOnClickOutside from '~/core/app/hooks/useOnClickOutside';
 
+type Option = {
+  text: string,
+  action: string,
+  icon?: string,
+  color?: string
+};
+
 const Options = ({
   options,
   title,
@@ -11,8 +18,16 @@ const Options = ({
   isOpen,
   onToggle,
   onOptionClicked
+}: {
+  options: Option[],
+  title?: string,
+  text?: string,
+  icon?: string,
+  isOpen: boolean,
+  onToggle: (isOpen: boolean) => void,
+  onOptionClicked: (action: string) => void
 }) => {
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
 
   useOnClickOutside(ref, () => onToggle(false));
   return (

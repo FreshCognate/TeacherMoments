@@ -23,8 +23,6 @@ const SlidePlayerHeader = ({
       <div>
         <Options
           icon="menu"
-          title={undefined}
-          text={undefined}
           options={[{
             text: 'End scenario run',
             action: 'END_SCENARIO_RUN'
