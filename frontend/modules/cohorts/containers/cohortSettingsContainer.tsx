@@ -50,4 +50,4 @@ class CohortSettingsContainer extends Component<any> {
   }
 }
 
-export default WithRouter(WithCache(CohortSettingsContainer, null, ['cohort']));
+export default WithRouter(WithCache(CohortSettingsContainer, {}, ['cohort']));

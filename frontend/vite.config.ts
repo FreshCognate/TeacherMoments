@@ -8,8 +8,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 export default defineConfig({
   server: {
     port: 3000,
-    hmr: { port: 3001 },
-    allowedHosts: ['mit-tm.com']
+    hmr: { port: 3001 }
   },
   build: {
     target: "esnext",

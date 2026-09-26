@@ -36,7 +36,7 @@ const Badge = ({
         "border-primary-regular dark:border-primary-light text-primary-regular dark:text-primary-light": color === 'primary'
       })}>
       {(icon) && (
-        <Icon icon={icon} color={color} className={classnames("dark:text-white text-1 mr-1", {
+        <Icon icon={icon} className={classnames("dark:text-white text-1 mr-1", {
           "text-warning-regular dark:text-warning-light": color === 'warning',
           "text-primary-regular dark:text-primary-light": color === 'primary',
         })} size={iconSizeValue} />
