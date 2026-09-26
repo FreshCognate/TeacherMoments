@@ -20,7 +20,7 @@ const CreateOverview = ({
 }: Props) => {
   return (
     <div className="">
-      <div className="relative">
+      <div className="relative m-8">
         <svg
           style={{ position: "absolute", top: 0, left: 0 }}
           width={maxWidth}
@@ -36,7 +36,7 @@ const CreateOverview = ({
                 key={index}
                 d={getPath(edge)}
                 fill="none"
-                stroke="#ff5567"
+                stroke="#3b82f6"
                 strokeWidth={2}
               />
             );

@@ -16,7 +16,8 @@
     "workers:start": "yarn workspace workers run workers:start",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit -p frontend"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",
