@@ -10,6 +10,7 @@ import find from 'lodash/find';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
 import xor from 'lodash/xor';
+import compact from 'lodash/compact';
 import generate from "~/modules/generate/helpers/generate";
 import setSlideFeedbackResponses from "~/modules/run/helpers/setSlideFeedbackResponses";
 import setSlideFeedbackItems from "~/modules/run/helpers/setSlideFeedbackItems";
@@ -207,7 +208,6 @@ export default async ({ slide }: { slide: Slide }) => {
   } else {
     feedback = matchedItemsFeedback;
   }
-
-  setSlideFeedbackResponses(feedback);
+  setSlideFeedbackResponses(compact(feedback));
   setSlideStatus(null);
 }
