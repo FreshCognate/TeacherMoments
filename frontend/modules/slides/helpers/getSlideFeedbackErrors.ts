@@ -29,7 +29,6 @@ export default (slide: Slide) => {
   }
 
   each(slide.feedbackItems, (feedbackItem, index) => {
-    console.log(feedbackItem);
     if (!hasContent(feedbackItem, 'body')) {
       errors.push({ ...defaultError, message: `Feedback item ${index + 1} has no content` });
     }
@@ -48,7 +47,6 @@ export default (slide: Slide) => {
         }
 
         if (block.blockType === 'INPUT_PROMPT') {
-          console.log('takaaaaa')
           if (!prompt.text?.trim()) {
             errors.push({ ...defaultError, message: 'Input prompt condition needs text' });
           }
