@@ -17,11 +17,8 @@ const SlideActions = ({
 }) => {
   if (!doesSlideContainPrompts) return null;
 
-  console.log(slide);
-
   return (
     <div className="w-full  max-w-screen-lg mx-auto" >
-
       <div className="bg-lm-1 dark:bg-dm-2 rounded-lg p-4 mx-8">
         {slide.hasFeedback && (
           <div className="flex justify-between">
@@ -57,7 +54,6 @@ const SlideActions = ({
       </div>
     </div>
   );
-
 };
 
 export default SlideActions;

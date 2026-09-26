@@ -1,24 +1,36 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import Dashboard from '../components/dashboard';
+
+const renderDashboard = () => render(
+  <MemoryRouter>
+    <Dashboard />
+  </MemoryRouter>
+);
 
 describe('Dashboard', () => {
   it('renders the welcome heading', () => {
-    render(<Dashboard />);
-    expect(screen.getByText('Welcome to Teacher Moments 2.0')).toBeInTheDocument();
+    renderDashboard();
+    expect(screen.getByText('Welcome to Teacher Moments')).toBeInTheDocument();
   });
 
-  it('renders the launch timeline section', () => {
-    render(<Dashboard />);
-    expect(screen.getByText(/Launch Timeline/)).toBeInTheDocument();
-    expect(screen.getByText(/Full access begins Early Spring 2026/)).toBeInTheDocument();
+  it('highlights branching as the new feature', () => {
+    renderDashboard();
+    expect(screen.getByText(/New this school year — Branching scenarios/)).toBeInTheDocument();
+    expect(screen.getByText(/🌿 Branching scenarios/)).toBeInTheDocument();
   });
 
-  it('renders the "What\'s New" section', () => {
-    render(<Dashboard />);
-    expect(screen.getByText(/What.s New in Version 2.0/)).toBeInTheDocument();
-    expect(screen.getByText(/AI-Powered Coaching/)).toBeInTheDocument();
-    expect(screen.getByText(/Enhanced Performance & Security/)).toBeInTheDocument();
-    expect(screen.getByText(/Streamlined Interface/)).toBeInTheDocument();
+  it('links to scenarios and cohorts', () => {
+    renderDashboard();
+    expect(screen.getByText('Browse & build scenarios').closest('a')).toHaveAttribute('href', '/scenarios');
+    expect(screen.getByText('Set up your cohorts').closest('a')).toHaveAttribute('href', '/cohorts');
+  });
+
+  it('renders the "What\'s new" section with current features', () => {
+    renderDashboard();
+    expect(screen.getByText(/What’s new/)).toBeInTheDocument();
+    expect(screen.getByText(/AI coaching feedback/)).toBeInTheDocument();
+    expect(screen.getByText(/Rich response data/)).toBeInTheDocument();
   });
 });
