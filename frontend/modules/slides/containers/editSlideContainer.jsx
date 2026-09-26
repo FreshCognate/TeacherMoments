@@ -10,7 +10,6 @@ class EditSlideContainer extends Component {
   onSlideFormUpdate = ({ update }) => {
     const slides = getCache('slides');
     slides.setStatus('syncing');
-    slides.set(update, { setType: 'itemExtend', setFind: { _id: this.props.slide.data._id } })
     this.props.slide.mutate(update, { method: 'put' }, (status) => {
       if (status === 'MUTATED') {
         const slides = getCache('slides');

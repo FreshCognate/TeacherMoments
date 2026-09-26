@@ -37,7 +37,7 @@ const BlocksEditor = ({
           </div>
         )}
 
-        <div className="p-8">
+        <div className="p-8 pb-0">
           {(map(blocks, (block) => {
             return (
               <EditBlockContainer

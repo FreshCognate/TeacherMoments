@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
+import buildLanguageValidation from '#core/app/helpers/buildLanguageValidation.js';
 import controller from './slides.controller.js';
 
 export default {
@@ -40,6 +41,14 @@ export default {
       destinationIndex: Joi.number(),
       isLocked: Joi.boolean(),
       isDeleted: Joi.boolean().invalid(true),
+      hasFeedback: Joi.boolean(),
+      shouldGenerateFeedbackFromAI: Joi.boolean(),
+      feedbackItems: Joi.array().items({
+        _id: Joi.string(),
+        ...buildLanguageValidation('body', Joi.array()),
+        elementRef: Joi.string(),
+        conditions: Joi.array(),
+      }),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },

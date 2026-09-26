@@ -40,7 +40,7 @@ const schema = {
   },
   feedbackItems: {
     type: [feedbackItemSchema],
-    default: []
+    default: [{}]
   },
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

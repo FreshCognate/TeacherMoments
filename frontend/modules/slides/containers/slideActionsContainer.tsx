@@ -5,6 +5,9 @@ import WithRouter from '~/core/app/components/withRouter';
 import getDoesSlideContainPrompts from '../helpers/getDoesSlideContainPrompts';
 import getCache from '~/core/cache/helpers/getCache';
 import { Slide } from '../slides.types';
+import addModal from '~/core/dialogs/helpers/addModal';
+import EditSlideFeedbackContainer from './editSlideFeedbackContainer';
+import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
 
 
 interface SlideActionsContainerProps {
@@ -21,8 +24,8 @@ interface SlideActionsContainerProps {
 
 class SlideActionsContainer extends Component<SlideActionsContainerProps> {
 
-  onTurnOnFeedbackClicked = () => {
-    this.props.slide.mutate({ hasFeedback: true }, { method: 'put' }, (status) => {
+  onToggleFeedbackClicked = (hasFeedback: boolean) => {
+    this.props.slide.mutate({ hasFeedback }, { method: 'put' }, (status) => {
       if (status === 'MUTATED') {
         const slides = getCache('slides');
         if (slides.fetch) {
@@ -30,6 +33,15 @@ class SlideActionsContainer extends Component<SlideActionsContainerProps> {
         }
       }
     });
+  }
+
+  onEditFeedbackClicked = () => {
+    addSidePanel({
+      size: 'lg',
+      icon: 'feedback',
+      title: 'Slide feedback',
+      component: <EditSlideFeedbackContainer />
+    })
   }
 
   render() {
@@ -42,7 +54,8 @@ class SlideActionsContainer extends Component<SlideActionsContainerProps> {
       <SlideActions
         slide={this.props.slide.data}
         doesSlideContainPrompts={doesSlideContainPrompts}
-        onTurnOnFeedbackClicked={this.onTurnOnFeedbackClicked}
+        onToggleFeedbackClicked={this.onToggleFeedbackClicked}
+        onEditFeedbackClicked={this.onEditFeedbackClicked}
       />
     );
   }
