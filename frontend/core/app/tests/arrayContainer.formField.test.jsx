@@ -5,16 +5,16 @@ import userEvent from '@testing-library/user-event';
 vi.mock('../components/array.formField', () => ({
   default: (props) => (
     <div>
-      <button type="button" onClick={props.onAddActionClicked}>add</button>
-      <button type="button" onClick={() => props.onRemoveActionClicked('id-1')}>remove</button>
+      <button type="button" onClick={props.onAddItemClicked}>add</button>
+      <button type="button" onClick={() => props.onRemoveItemClicked('id-1')}>remove</button>
       <button
         type="button"
-        onClick={() => props.onUpdateAction('id-1', { update: { name: 'updated' } })}
+        onClick={() => props.onUpdateItem('id-1', { update: { name: 'updated' } })}
       >
         update
       </button>
-      <button type="button" onClick={() => props.onSortActionUpClicked(1)}>up</button>
-      <button type="button" onClick={() => props.onSortActionDownClicked(0)}>down</button>
+      <button type="button" onClick={() => props.onSortItemUpClicked(1)}>up</button>
+      <button type="button" onClick={() => props.onSortItemDownClicked(0)}>down</button>
     </div>
   )
 }));
@@ -23,6 +23,8 @@ import '../containers/arrayContainer.formField.jsx';
 import Fields from '~/core/forms/forms.fields';
 
 const ArrayFormFieldContainer = Fields.Array;
+
+Element.prototype.scrollIntoView = vi.fn();
 
 const buildItems = () => [
   { _id: 'id-1', name: 'first' },
