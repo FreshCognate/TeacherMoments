@@ -4,7 +4,7 @@ vi.mock('../helpers/getScenarioDetails', () => ({
   default: vi.fn(() => ({ activeSlideRef: 'ref-1' }))
 }));
 
-import getSlideFeedbackItems from '../helpers/getSlideFeedbackItems';
+import getSlideFeedbackResponses from '../helpers/getSlideFeedbackResponses';
 import { createCache, resetCache } from '~/core/cache/helpers/cacheManager';
 
 const seedRun = (data) => {
@@ -16,27 +16,27 @@ const seedRun = (data) => {
   });
 };
 
-describe('getSlideFeedbackItems', () => {
+describe('getSlideFeedbackResponses', () => {
   beforeEach(() => {
     seedRun({ stages: [] });
   });
 
-  it('returns the feedbackItems on the matching stage', () => {
+  it('returns the feedbackResponses on the matching stage', () => {
     seedRun({
       stages: [
-        { slideRef: 'ref-1', feedbackItems: [{ id: 'fb-1' }] }
+        { slideRef: 'ref-1', feedbackResponses: ['Great answer!'] }
       ]
     });
-    expect(getSlideFeedbackItems()).toEqual([{ id: 'fb-1' }]);
+    expect(getSlideFeedbackResponses()).toEqual(['Great answer!']);
   });
 
-  it('returns an empty array when the stage has no feedbackItems', () => {
+  it('returns an empty array when the stage has no feedbackResponses', () => {
     seedRun({ stages: [{ slideRef: 'ref-1' }] });
-    expect(getSlideFeedbackItems()).toEqual([]);
+    expect(getSlideFeedbackResponses()).toEqual([]);
   });
 
   it('returns an empty array when no stage matches the active slide', () => {
-    seedRun({ stages: [{ slideRef: 'other', feedbackItems: [{ id: 'fb-x' }] }] });
-    expect(getSlideFeedbackItems()).toEqual([]);
+    seedRun({ stages: [{ slideRef: 'other', feedbackResponses: ['Other feedback'] }] });
+    expect(getSlideFeedbackResponses()).toEqual([]);
   });
 });

@@ -3,19 +3,34 @@ import EditSlide from '../components/editSlide';
 import WithCache from '~/core/cache/containers/withCache';
 import getCache from '~/core/cache/helpers/getCache';
 import editSlideSchema from '../schemas/editSlideSchema';
-import find from 'lodash/find';
+import { Slide } from '../slides.types';
 
-class EditSlideContainer extends Component {
+interface EditSlideContainerProps {
+  slide: {
+    data: Slide,
+    mutate: (
+      update: Partial<Slide>,
+      options: { method: string },
+      callback: (status: string) => void
+    ) => void
+  }
+}
 
-  onSlideFormUpdate = ({ update }) => {
+class EditSlideContainer extends Component<EditSlideContainerProps> {
+
+  onSlideFormUpdate = ({ update }: { update: Partial<Slide> }) => {
     const slides = getCache('slides');
     slides.setStatus('syncing');
     this.props.slide.mutate(update, { method: 'put' }, (status) => {
       if (status === 'MUTATED') {
         const slides = getCache('slides');
-        slides.fetch();
+        if (slides.fetch) {
+          slides.fetch();
+        }
         const scenario = getCache('scenario');
-        scenario.fetch();
+        if (scenario.fetch) {
+          scenario.fetch();
+        }
       }
     });
   }
@@ -35,13 +50,13 @@ class EditSlideContainer extends Component {
 export default WithCache(EditSlideContainer, {
   slide: {
     url: '/api/slides/:id',
-    getInitialData: ({ props }) => {
+    getInitialData: ({ props }: { props: any }) => {
       const slides = getCache('slides');
       const currentSlide = slides.get('active');
       return currentSlide;
     },
-    transform: ({ data }) => data.slide,
-    getParams: ({ props }) => {
+    transform: ({ data }: { data: { slide: Slide } }) => data.slide,
+    getParams: ({ props }: { props: any }) => {
       const slides = getCache('slides');
       const currentSlide = slides.get('active');
       return {

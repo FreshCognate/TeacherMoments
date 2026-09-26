@@ -5,15 +5,27 @@ import Body from '~/uikit/content/components/body';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import classnames from 'classnames';
 
+type NavigationOption = {
+  value: string,
+  text: string,
+  description: string
+};
+
 const SlideNavigationFormField = ({
   value,
   schema,
   isEditing,
   onEditClicked,
   onNavigationOptionClicked
+}: {
+  value: string,
+  schema: { options: NavigationOption[] },
+  isEditing: boolean,
+  onEditClicked: () => void,
+  onNavigationOptionClicked: (value: string) => void
 }) => {
 
-  const selectedOptionText = find(schema.options, { value });
+  const selectedOptionText = find(schema.options, { value }) as NavigationOption;
 
   const selectedOptionClassName = classnames("flex items-center justify-between p-2", {
     "border-b-2 border-lm-3 dark:border-dm-3 ": isEditing

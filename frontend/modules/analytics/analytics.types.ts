@@ -42,7 +42,7 @@ export interface SlideGroup {
 export interface StageResponse {
   slideRef: string;
   timeSpentMs?: number;
-  feedbackItems?: string[];
+  feedbackResponses?: string[];
 }
 
 export type AnalyticsViewType = 'byScenarioUsers' | 'byUserScenarios';

@@ -11,7 +11,7 @@ interface AnalyticsSlideViewerProps {
   activeBlocks: any[];
   allBlocks: any[];
   blockTrackingByRef: Record<string, any>;
-  feedbackItems: string[];
+  feedbackResponses: string[];
   selectedBlockResponseRef: string | null;
   currentSlideIndex: number;
   totalSlides: number;
@@ -24,7 +24,7 @@ const AnalyticsSlideViewer: React.FC<AnalyticsSlideViewerProps> = ({
   activeBlocks,
   allBlocks,
   blockTrackingByRef,
-  feedbackItems,
+  feedbackResponses,
   selectedBlockResponseRef,
   currentSlideIndex,
   totalSlides,
@@ -70,10 +70,10 @@ const AnalyticsSlideViewer: React.FC<AnalyticsSlideViewerProps> = ({
           </div>
         );
       })}
-      {feedbackItems.length > 0 && (
+      {feedbackResponses.length > 0 && (
         <div className="mt-4 p-4 bg-lm-2 dark:bg-dm-2 rounded-md">
           <div className="text-xs font-semibold text-black/40 dark:text-white/40 mb-2">Feedback</div>
-          {map(feedbackItems, (item, index) => (
+          {map(feedbackResponses, (item, index) => (
             <div key={index} className="text-sm text-black/60 dark:text-white/60 mb-2 last:mb-0">{item}</div>
           ))}
         </div>

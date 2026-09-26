@@ -3,6 +3,8 @@ import registerCondition from '~/core/forms/helpers/registerCondition';
 
 const isRootSlide = function ({
   condition,
+}: {
+  condition: any
 }) {
 
   const slide = getCache('slide');

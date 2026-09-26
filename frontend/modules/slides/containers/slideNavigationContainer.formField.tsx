@@ -2,7 +2,17 @@ import React, { Component } from 'react';
 import registerField from '~/core/forms/helpers/registerField';
 import SlideNavigationFormField from '../components/slideNavigation.formField';
 
-class SlideNavigationContainerFormField extends Component {
+interface SlideNavigationContainerFormFieldProps {
+  value: string,
+  schema: any,
+  updateField: (value: string) => void
+}
+
+interface SlideNavigationContainerFormFieldState {
+  isEditing: boolean
+}
+
+class SlideNavigationContainerFormField extends Component<SlideNavigationContainerFormFieldProps, SlideNavigationContainerFormFieldState> {
 
   state = {
     isEditing: false,
@@ -12,7 +22,7 @@ class SlideNavigationContainerFormField extends Component {
     this.setState({ isEditing: true });
   }
 
-  onNavigationOptionClicked = (value) => {
+  onNavigationOptionClicked = (value: string) => {
     this.setState({ isEditing: false });
     this.props.updateField(value);
   }

@@ -262,7 +262,7 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
               {map(slideGroups, (slideGroup) => {
                 const colSpan = Math.max(1, slideGroup.promptResponses.length);
                 const stage = getStageForSlide(response.stages, slideGroup.slideRef);
-                const hasFeedback = stage?.feedbackItems && stage.feedbackItems.length > 0;
+                const hasFeedback = stage?.feedbackResponses && stage.feedbackResponses.length > 0;
                 return (
                   <div
                     key={`fb-${slideGroup.slideRef}`}
@@ -270,7 +270,7 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
                     style={{ gridColumn: `span ${colSpan}` }}
                   >
                     {hasFeedback && (
-                      <div className="line-clamp-2">{stage!.feedbackItems!.join('; ')}</div>
+                      <div className="line-clamp-2">{stage!.feedbackResponses!.join('; ')}</div>
                     )}
                   </div>
                 );

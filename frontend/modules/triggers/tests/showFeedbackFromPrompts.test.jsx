@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 vi.mock('../../run/helpers/getBlockTracking', () => ({ default: vi.fn() }));
-vi.mock('../../run/helpers/setSlideFeedback', () => ({ default: vi.fn() }));
+vi.mock('../../run/helpers/setSlideFeedbackResponses', () => ({ default: vi.fn() }));
 vi.mock('../../run/helpers/setSlideStatus', () => ({ default: vi.fn() }));
 vi.mock('../../run/helpers/setSlideTrigger', () => ({ default: vi.fn() }));
 vi.mock('../../ls/helpers/getString', () => ({ default: vi.fn() }));

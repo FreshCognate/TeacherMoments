@@ -80,7 +80,7 @@ describe('buildScenarioCsvRows', () => {
       blockResponses: [
         { slideRef: 'slide-1', slideName: 'Intro', name: 'B1', sortOrder: 0, blockType: 'INPUT_PROMPT', inputType: 'TEXT', textValue: 'Answer' }
       ],
-      stages: [{ slideRef: 'slide-1', feedbackItems: ['Nice'], timeSpentMs: 5000 }],
+      stages: [{ slideRef: 'slide-1', feedbackResponses: ['Nice'], timeSpentMs: 5000 }],
       totalTimeSpentMs: 5000
     });
 
@@ -140,8 +140,8 @@ describe('buildScenarioCsvRows', () => {
         { slideRef: 'slide-2', slideName: 'Next', name: 'B3', sortOrder: 0, blockType: 'INPUT_PROMPT', inputType: 'TEXT' }
       ],
       stages: [
-        { slideRef: 'slide-1', feedbackItems: ['Slide 1 feedback'], timeSpentMs: 1000 },
-        { slideRef: 'slide-2', feedbackItems: ['Slide 2 feedback'], timeSpentMs: 2000 }
+        { slideRef: 'slide-1', feedbackResponses: ['Slide 1 feedback'], timeSpentMs: 1000 },
+        { slideRef: 'slide-2', feedbackResponses: ['Slide 2 feedback'], timeSpentMs: 2000 }
       ],
       totalTimeSpentMs: 3000
     });

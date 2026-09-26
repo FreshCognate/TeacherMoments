@@ -4,7 +4,7 @@ vi.mock('../helpers/getScenarioDetails', () => ({
   default: vi.fn(() => ({ activeSlideRef: 'ref-1' }))
 }));
 
-import setSlideFeedback from '../helpers/setSlideFeedback';
+import setSlideFeedback from '../helpers/setSlideFeedbackResponses';
 import { createCache, resetCache, getCache } from '~/core/cache/helpers/cacheManager';
 
 const seedRun = (data) => {

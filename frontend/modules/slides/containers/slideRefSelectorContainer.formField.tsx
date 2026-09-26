@@ -4,8 +4,21 @@ import registerField from '~/core/forms/helpers/registerField';
 import WithCache from '~/core/cache/containers/withCache';
 import each from 'lodash/each';
 import find from 'lodash/find';
+import { Slide } from '../slides.types';
 
-class SlideRefSelectorContainer extends Component {
+interface SlideRefSelectorContainerProps {
+  value: string,
+  slides: { data: Slide[] },
+  block: { data: { slideRef: string } },
+  updateField: (value: string) => void
+}
+
+interface SlideRefSelectorContainerState {
+  searchValue: string,
+  isDropdownOpen: boolean
+}
+
+class SlideRefSelectorContainer extends Component<SlideRefSelectorContainerProps, SlideRefSelectorContainerState> {
 
   state = {
     searchValue: '',
@@ -13,7 +26,7 @@ class SlideRefSelectorContainer extends Component {
   }
 
   getAvailableSlidesOptions = () => {
-    const options = [];
+    const options: { value: string, text: string }[] = [];
     each(this.props.slides.data, (slide) => {
       if (slide.ref !== this.props.block.data.slideRef) {
         if (slide.name.toLowerCase().includes(this.state.searchValue.toLowerCase())) {
@@ -24,7 +37,7 @@ class SlideRefSelectorContainer extends Component {
     return options;
   }
 
-  getValue = () => {
+  getValue = (): { selectedSlideRef?: string, selectedSlideName?: string } => {
     const slide = find(this.props.slides.data, { ref: this.props.value });
     if (!slide) {
       return {};
@@ -35,16 +48,16 @@ class SlideRefSelectorContainer extends Component {
     }
   }
 
-  onToggleDropdown = (isDropdownOpen) => {
+  onToggleDropdown = (isDropdownOpen: boolean) => {
     this.setState({ isDropdownOpen });
   }
 
-  onSlideSelected = (slideRef) => {
+  onSlideSelected = (slideRef: string) => {
     this.setState({ isDropdownOpen: false });
     this.props.updateField(slideRef);
   }
 
-  onSearchInputChanged = (event) => {
+  onSearchInputChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ searchValue: event.target.value })
   }
 

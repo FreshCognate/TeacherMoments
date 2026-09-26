@@ -4,9 +4,17 @@ import getBlocksBySlideRef from '~/modules/blocks/helpers/getBlocksBySlideRef';
 import getBlockErrors from '~/modules/blocks/helpers/getBlockErrors';
 import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
 import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlideRef';
+import getSlideFeedbackErrors from './getSlideFeedbackErrors';
+import { Slide } from '../slides.types';
 
-export default (slide) => {
-  const errors = [];
+type SlideError = {
+  message: string,
+  elementType: string,
+  elementId: string
+};
+
+export default (slide: Slide) => {
+  const errors: SlideError[] = [];
 
   const blocks = getBlocksBySlideRef({ slideRef: slide.ref });
   if (!blocks?.length) {
@@ -21,6 +29,10 @@ export default (slide) => {
     if (branchingTriggers.length === 0) {
       errors.push({ message: 'Slide with stems has no branching trigger', elementType: 'SLIDE_TRIGGER', elementId: slide._id });
     }
+  }
+
+  if (slide.hasFeedback) {
+    errors.push(...getSlideFeedbackErrors(slide));
   }
 
   each(blocks, block => {

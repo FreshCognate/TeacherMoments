@@ -60,7 +60,7 @@ describe('buildUserScenarioResponse (in-memory mongo)', () => {
     populateRunMock.mockResolvedValue({
       isComplete: true,
       totalTimeSpentMs: 5000,
-      stages: [{ slideRef: 'slide-1', timeSpentMs: 2000, feedbackItems: ['Good'], blocksByRef: {} }]
+      stages: [{ slideRef: 'slide-1', timeSpentMs: 2000, feedbackResponses: ['Good'], blocksByRef: {} }]
     });
 
     const result = await buildUserScenarioResponse(
@@ -71,7 +71,7 @@ describe('buildUserScenarioResponse (in-memory mongo)', () => {
     expect(result.hasStarted).toBe(true);
     expect(result.isComplete).toBe(true);
     expect(result.totalTimeSpentMs).toBe(5000);
-    expect(result.stages).toEqual([{ slideRef: 'slide-1', timeSpentMs: 2000, feedbackItems: ['Good'] }]);
+    expect(result.stages).toEqual([{ slideRef: 'slide-1', timeSpentMs: 2000, feedbackResponses: ['Good'] }]);
   });
 
   it('attaches block tracking from stages.blocksByRef onto the matching block response', async () => {
