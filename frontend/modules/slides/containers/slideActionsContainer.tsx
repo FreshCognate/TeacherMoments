@@ -3,12 +3,18 @@ import SlideActions from '../components/slideActions';
 import WithCache from '~/core/cache/containers/withCache';
 import WithRouter from '~/core/app/components/withRouter';
 import getDoesSlideContainPrompts from '../helpers/getDoesSlideContainPrompts';
+import getCache from '~/core/cache/helpers/getCache';
+import { Slide } from '../slides.types';
 
 
 interface SlideActionsContainerProps {
-  slides: {
-    data: any,
-    get: (getter: string) => any
+  slide: {
+    data: Slide,
+    mutate: (
+      update: Partial<Slide>,
+      options: { method: string },
+      callback: (status: string) => void
+    ) => void
   }
   router: any
 }
@@ -16,18 +22,25 @@ interface SlideActionsContainerProps {
 class SlideActionsContainer extends Component<SlideActionsContainerProps> {
 
   onTurnOnFeedbackClicked = () => {
-    console.log('Turn on feedback clicked');
+    this.props.slide.mutate({ hasFeedback: true }, { method: 'put' }, (status) => {
+      if (status === 'MUTATED') {
+        const slides = getCache('slides');
+        if (slides.fetch) {
+          slides.fetch();
+        }
+      }
+    });
   }
 
   render() {
 
-    const slide = this.props.slides.get('active');
+    if (!this.props.slide.data) return null;
 
-    const doesSlideContainPrompts = getDoesSlideContainPrompts({ slide });
+    const doesSlideContainPrompts = getDoesSlideContainPrompts({ slide: this.props.slide.data });
 
     return (
       <SlideActions
-        slide={slide}
+        slide={this.props.slide.data}
         doesSlideContainPrompts={doesSlideContainPrompts}
         onTurnOnFeedbackClicked={this.onTurnOnFeedbackClicked}
       />
@@ -35,4 +48,4 @@ class SlideActionsContainer extends Component<SlideActionsContainerProps> {
   }
 };
 
-export default WithRouter(WithCache(SlideActionsContainer, {}, ['slides']));
+export default WithRouter(WithCache(SlideActionsContainer, {}, ['slide']));

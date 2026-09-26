@@ -8,12 +8,25 @@ const SlideActions = ({
   doesSlideContainPrompts,
   onTurnOnFeedbackClicked
 }: {
-  slide?: Slide,
+  slide: Slide,
   doesSlideContainPrompts: boolean,
   onTurnOnFeedbackClicked: () => void;
 }) => {
   if (!doesSlideContainPrompts) return null;
-  if (slide?.hasFeedback) return null;
+
+  if (slide.hasFeedback) {
+    return (
+      <div className="flex justify-between bg-lm-1 dark:bg-dm-2 rounded-lg p-4 m-8">
+        <Body
+          body={`You've added a prompt. Would you like to give the user feedback based upon their answer?`}
+          className="w-2/3 opacity-60" />
+        <Button
+          text="Turn off feedback"
+          onClick={onTurnOnFeedbackClicked}
+        />
+      </div>
+    );
+  }
   return (
     <div className="flex justify-between bg-lm-1 dark:bg-dm-2 rounded-lg p-4 m-8">
       <Body
@@ -25,6 +38,7 @@ const SlideActions = ({
       />
     </div>
   );
+
 };
 
 export default SlideActions;
