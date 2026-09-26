@@ -1,4 +1,5 @@
 import omit from 'lodash/omit.js';
+import each from 'lodash/each.js';
 import duplicateBlocks from '../../blocks/services/duplicateBlocks.js';
 import setScenarioHasChanges from '../../scenarios/services/setScenarioHasChanges.js';
 import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
@@ -41,6 +42,27 @@ export default async ({ scenario, parentId, slideId }, context) => {
     }
 
     await duplicateBlocks({ scenarioId: existingSlide.scenario, slideRef: existingSlide.ref, newScenarioId: scenario, newSlideRef: duplicatedSlide.ref }, { ...context, session });
+
+    const duplicatedBlocks = await models.Block.find({ slideRef: duplicatedSlide.ref }, null, { session });
+    const blockRefMap = new Map();
+    each(duplicatedBlocks, (block) => {
+      if (block.originalRef) {
+        blockRefMap.set(block.originalRef.toString(), block.ref);
+      }
+    });
+
+    each(duplicatedSlide.feedbackItems, (feedbackItem) => {
+      each(feedbackItem.conditions, (condition) => {
+        each(condition.prompts, (prompt) => {
+          if (prompt.ref) {
+            prompt.ref = blockRefMap.get(prompt.ref.toString()) || prompt.ref;
+          }
+        });
+      });
+    });
+
+    duplicatedSlide.markModified('feedbackItems');
+    await duplicatedSlide.save({ session });
 
     setScenarioHasChanges({ scenarioId: existingSlide.scenario }, {}, context);
 

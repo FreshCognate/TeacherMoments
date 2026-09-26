@@ -70,7 +70,7 @@ export default WithCache(CreateWorkspaceToolbarContainer, {
       const slides = getCache('slides');
       const currentSlide = slides.get('active');
       return {
-        id: currentSlide._id
+        id: currentSlide?._id
       }
     },
     getDependencies: ({ props }) => {

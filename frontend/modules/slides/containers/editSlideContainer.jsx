@@ -45,7 +45,7 @@ export default WithCache(EditSlideContainer, {
       const slides = getCache('slides');
       const currentSlide = slides.get('active');
       return {
-        id: currentSlide._id
+        id: currentSlide?._id
       }
     }
   }

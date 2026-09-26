@@ -107,4 +107,43 @@ describe('duplicateSlideInScenario (in-memory mongo)', () => {
     expect(await sortOrdersFor(scenario, stemA)).toEqual([0, 1, 2]);
     expect(await sortOrdersFor(scenario, stemB)).toEqual([0, 1]);
   });
+
+  it('remaps feedback item prompt refs to the duplicated slide\'s blocks', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+    const stemRef = new mongoose.Types.ObjectId();
+    const originalBlockRef = new mongoose.Types.ObjectId();
+    const unmatchedBlockRef = new mongoose.Types.ObjectId();
+
+    const [source] = await Slide.create([{
+      scenario,
+      stemRef,
+      sortOrder: 0,
+      feedbackItems: [{
+        conditions: [{
+          prompts: [{ ref: originalBlockRef }, { ref: unmatchedBlockRef }]
+        }]
+      }]
+    }]);
+
+    let duplicatedBlockRef;
+    duplicateBlocksMock.mockImplementation(async ({ newScenarioId, newSlideRef }, { session }) => {
+      const [block] = await db.models.Block.create([{
+        scenario: newScenarioId,
+        slideRef: newSlideRef,
+        originalRef: originalBlockRef
+      }], { session });
+      duplicatedBlockRef = block.ref;
+    });
+
+    const duplicated = await duplicateSlideInScenario(
+      { scenario, slideId: source._id },
+      buildContext()
+    );
+
+    const savedSlide = await Slide.findById(duplicated._id).lean();
+    const prompts = savedSlide.feedbackItems[0].conditions[0].prompts;
+
+    expect(String(prompts[0].ref)).toBe(String(duplicatedBlockRef));
+    expect(String(prompts[1].ref)).toBe(String(unmatchedBlockRef));
+  });
 });
