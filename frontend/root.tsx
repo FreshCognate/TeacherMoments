@@ -9,6 +9,8 @@ import {
   useLocation,
   useMatches,
 } from "react-router";
+import type { UIMatch } from "react-router";
+import type { RouteHandle } from "~/core/app/app.types";
 
 import type { Route } from "./.react-router/types/+types/root";
 import stylesheet from "./app.css?url";
@@ -33,11 +35,11 @@ export function meta({ }) {
 
 export const shouldRevalidate = () => false;
 
-export async function loader({ request }) {
+export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   let isAuthenticated;
   let authentication;
-  const headers = {};
+  const headers: Record<string, string> = {};
 
   for (const pair of request.headers.entries()) {
     headers[pair[0]] = pair[1];
@@ -82,9 +84,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App(props) {
+export default function App(props: Route.ComponentProps) {
 
-  const matches = useMatches();
+  const matches = useMatches() as UIMatch<unknown, RouteHandle>[];
 
   const location = useLocation();
   let isNavigationVisible = true;
