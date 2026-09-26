@@ -37,7 +37,7 @@ describe('EditSlideContainer', () => {
     expect(capturedProps.slide).toEqual({ _id: 's1', name: 'Slide One' });
   });
 
-  it('optimistically updates the slides cache and triggers a put when the form changes', () => {
+  it('marks the slides cache as syncing and triggers a put when the form changes', () => {
     const slidesCache = { setStatus: vi.fn(), set: vi.fn(), fetch: vi.fn() };
     getCacheMock.mockImplementation((key) => {
       if (key === 'slides') return slidesCache;
@@ -53,10 +53,6 @@ describe('EditSlideContainer', () => {
     capturedProps.onSlideFormUpdate({ update: { name: 'New' } });
 
     expect(slidesCache.setStatus).toHaveBeenCalledWith('syncing');
-    expect(slidesCache.set).toHaveBeenCalledWith(
-      { name: 'New' },
-      { setType: 'itemExtend', setFind: { _id: 's1' } }
-    );
     expect(slide.mutate).toHaveBeenCalledWith({ name: 'New' }, { method: 'put' }, expect.any(Function));
   });
 

@@ -3,6 +3,7 @@ import uniqueId from 'lodash/uniqueId';
 import remove from 'lodash/remove';
 import find from 'lodash/find';
 import extend from 'lodash/extend';
+import { RemoveToastOptions } from '../dialogs.types';
 
 export default (toast: any, callback: any) => {
 
@@ -16,7 +17,7 @@ export default (toast: any, callback: any) => {
     toasts: dialogsCache.data.toasts
   });
 
-  const removeToast = ({ callback, type }: { callback: any, type: any }) => {
+  const removeToast = ({ callback, type }: RemoveToastOptions) => {
     remove(dialogsCache.data.toasts, (toastItem: { _id: string }) => {
       return (toastItem._id === toast._id);
     });

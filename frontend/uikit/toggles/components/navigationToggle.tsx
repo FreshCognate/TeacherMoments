@@ -32,7 +32,7 @@ const NavigationToggle = ({
           'border-b-transparent': !isSelected
         });
 
-        let selectedColor = isSelected ? color : null;
+        let selectedColor = isSelected ? color : undefined;
         return (
           <FlatButton color={selectedColor} size={size} isDisabled={isDisabled} className={className} key={option.value} {...option} onClick={(event) => {
             event.stopPropagation();

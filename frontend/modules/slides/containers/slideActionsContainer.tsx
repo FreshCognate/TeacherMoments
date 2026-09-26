@@ -1,69 +1,64 @@
 import React, { Component } from 'react';
 import SlideActions from '../components/slideActions';
-import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
-import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
-import addModal from '~/core/dialogs/helpers/addModal';
-import BlockSelectorContainer from '~/modules/blocks/containers/blockSelectorContainer';
-import getCache from '~/core/cache/helpers/getCache';
 import WithCache from '~/core/cache/containers/withCache';
 import WithRouter from '~/core/app/components/withRouter';
-import find from 'lodash/find';
-import getBlocksBySlideRef from '~/modules/blocks/helpers/getBlocksBySlideRef';
-import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlideRef';
-import { Block } from '~/modules/blocks/blocks.types';
-import { Trigger } from '~/modules/triggers/triggers.types';
+import getDoesSlideContainPrompts from '../helpers/getDoesSlideContainPrompts';
+import getCache from '~/core/cache/helpers/getCache';
+import { Slide } from '../slides.types';
+import addModal from '~/core/dialogs/helpers/addModal';
+import EditSlideFeedbackContainer from './editSlideFeedbackContainer';
+import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
 
 
 interface SlideActionsContainerProps {
+  slide: {
+    data: Slide,
+    mutate: (
+      update: Partial<Slide>,
+      options: { method: string },
+      callback: (status: string) => void
+    ) => void
+  }
   router: any
 }
 
 class SlideActionsContainer extends Component<SlideActionsContainerProps> {
 
-  onOpenTriggersClicked = () => {
+  onToggleFeedbackClicked = (hasFeedback: boolean) => {
+    this.props.slide.mutate({ hasFeedback }, { method: 'put' }, (status) => {
+      if (status === 'MUTATED') {
+        const slides = getCache('slides');
+        if (slides.fetch) {
+          slides.fetch();
+        }
+      }
+    });
+  }
+
+  onEditFeedbackClicked = () => {
     addSidePanel({
       size: 'lg',
-      icon: 'trigger',
-      title: 'Triggers',
-      component: <TriggerDisplayContainer />
+      icon: 'feedback',
+      title: 'Slide feedback',
+      component: <EditSlideFeedbackContainer />
     })
   }
 
-  onCreateBlockClicked = () => {
-    addModal({
-      title: 'Choose a block type to add to your slide:',
-      component: <BlockSelectorContainer />,
-      actions: [{
-        type: 'CANCEL',
-        text: 'Cancel'
-      }]
-    }, () => { })
-  }
-
   render() {
-    let blocks: Block[] = [];
-    let triggers: Trigger[] = [];
-    const slides = getCache('slides');
-    if (slides.data) {
-      const searchParams = new URLSearchParams(this.props.router.location.search);
-      const slideId = searchParams.get('slide');
 
-      const slide = find(slides.data, { _id: slideId })
-      if (slide) {
-        const slideRef = slide.ref;
-        blocks = getBlocksBySlideRef({ slideRef });
-        triggers = getTriggersBySlideRef({ slideRef });
-      }
-    }
+    if (!this.props.slide.data) return null;
+
+    const doesSlideContainPrompts = getDoesSlideContainPrompts({ slide: this.props.slide.data });
+
     return (
       <SlideActions
-        blocks={blocks}
-        triggers={triggers}
-        onOpenTriggersClicked={this.onOpenTriggersClicked}
-        onCreateBlockClicked={this.onCreateBlockClicked}
+        slide={this.props.slide.data}
+        doesSlideContainPrompts={doesSlideContainPrompts}
+        onToggleFeedbackClicked={this.onToggleFeedbackClicked}
+        onEditFeedbackClicked={this.onEditFeedbackClicked}
       />
     );
   }
 };
 
-export default WithRouter(WithCache(SlideActionsContainer));
+export default WithRouter(WithCache(SlideActionsContainer, {}, ['slide']));

@@ -52,10 +52,8 @@ export default function Button({
       icon={icon}
       iconPosition={iconPosition}
       iconSize={14}
-      color={color}
       className={classes}
       style={style}
-      size={size}
       isDisabled={isDisabled}
       isFullWidth={isFullWidth}
       onClick={onClick}

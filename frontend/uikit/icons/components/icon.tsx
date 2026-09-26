@@ -20,7 +20,7 @@ const Icon = ({ icon, size, className, ariaLabel }: { icon: string, size?: numbe
   });
 
   return (
-    <svg className={className} fill='none' aria-hidden={!ariaLabel} aria-label={ariaLabel} width={iconSize} height={iconSize} viewBox={Icons[icon].viewBox}>
+    <svg className={className} fill='none' aria-hidden={!ariaLabel} aria-label={ariaLabel} width={iconSize} height={iconSize} viewBox={Icons[icon as keyof typeof Icons].viewBox}>
       {elements}
     </svg>
   );

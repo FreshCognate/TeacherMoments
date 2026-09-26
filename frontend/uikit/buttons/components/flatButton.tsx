@@ -74,13 +74,11 @@ export default function FlatButton({
       icon={icon}
       iconPosition={iconPosition}
       iconSize={iconSize}
-      size={size}
       className={classNames}
       style={style}
       ariaLabel={ariaLabel}
       ariaControls={ariaControls}
       isDisabled={isDisabled}
-      isCircular={isCircular}
       isFullWidth={isFullWidth}
       onClick={onClick}
     />

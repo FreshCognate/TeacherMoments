@@ -1,51 +1,58 @@
 import React from 'react';
-import { Block } from '~/modules/blocks/blocks.types';
-import { Trigger } from '~/modules/triggers/triggers.types';
+import { Slide } from '~/modules/slides/slides.types';
+import Button from '~/uikit/buttons/components/button';
 import FlatButton from '~/uikit/buttons/components/flatButton';
 import Body from '~/uikit/content/components/body';
 
 const SlideActions = ({
-  blocks,
-  triggers,
-  onOpenTriggersClicked,
-  onCreateBlockClicked
+  slide,
+  doesSlideContainPrompts,
+  onToggleFeedbackClicked,
+  onEditFeedbackClicked
 }: {
-  blocks: Block[]
-  triggers: Trigger[]
-  onOpenTriggersClicked: () => void;
-  onCreateBlockClicked: () => void;
+  slide: Slide,
+  doesSlideContainPrompts: boolean,
+  onToggleFeedbackClicked: (hasFeedback: boolean) => void;
+  onEditFeedbackClicked: () => void;
 }) => {
+  if (!doesSlideContainPrompts) return null;
+
   return (
-    <>
-      {(blocks.length > 0) && (
-        <div className="px-8 flex justify-between sticky bottom-0 bg-lm-0 dark:bg-dm-1 border-t border-t-lm-3 dark:border-t-dm-2 py-4">
-          <div>
-            <FlatButton
-              text="Edit triggers"
-              icon="trigger"
-              onClick={onOpenTriggersClicked}
-            />
-            <Body
-              body={triggers.length === 0 ? 'Add a trigger to give feedback or branch based on user responses' : `This slide has ${triggers.length} trigger${triggers.length > 1 || triggers.length === 0 ? 's' : ''}`}
-              size="xs"
-              className="text-black/60 dark:text-white/80"
-            />
+    <div className="w-full  max-w-screen-lg mx-auto" >
+      <div className="bg-lm-1 dark:bg-dm-2 rounded-lg p-4 mx-8">
+        {slide.hasFeedback && (
+          <div className="flex justify-between">
+            <div className="w-1/2">
+              <Body
+                body={`You've got feedback turned on. You have ${slide.feedbackItems.length} feedback items setup.`}
+                className="opacity-60 mb-4" />
+              <FlatButton icon="edit" text="Edit feedback" onClick={onEditFeedbackClicked} />
+            </div>
+            <div>
+              <Button
+                text="Turn off feedback"
+                onClick={() => onToggleFeedbackClicked(false)}
+              />
+            </div>
           </div>
-          <div className="flex flex-col items-end">
-            <FlatButton
-              text="Add block"
-              icon="create"
-              onClick={onCreateBlockClicked}
-            />
-            <Body
-              body={`This slide has ${blocks.length} block${blocks.length > 1 ? 's' : ''}`}
-              size="xs"
-              className="text-black/60 dark:text-white/80"
-            />
+        )}
+        {!slide.hasFeedback && (
+          <div className="flex justify-between">
+            <div className="w-1/2">
+              <Body
+                body={`You've added a prompt. Would you like to give the user feedback based upon their answer?`}
+                className="opacity-60" />
+            </div>
+            <div>
+              <Button
+                text="Turn on feedback"
+                onClick={() => onToggleFeedbackClicked(true)}
+              />
+            </div>
           </div>
-        </div>
-      )}
-    </>
+        )}
+      </div>
+    </div>
   );
 };
 

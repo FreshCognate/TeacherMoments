@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from '~/uikit/icons/components/icon';
 import classnames from 'classnames';
+import { BaseButtonProps } from '../buttons.types';
 
 const BaseButton = ({
   id,
@@ -11,16 +12,14 @@ const BaseButton = ({
   icon,
   iconSize,
   iconPosition = 'left',
-  size = 'rg',
   className,
   style,
   ariaLabel,
   ariaControls,
   isDisabled,
-  isCircular = false,
   isFullWidth = false,
   onClick
-}) => {
+}: BaseButtonProps) => {
 
   const renderContent = () => {
     if (component) {

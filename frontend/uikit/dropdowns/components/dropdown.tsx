@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import map from 'lodash/map';
 import classNames from 'classnames';
 import useOnClickOutside from '~/core/app/hooks/useOnClickOutside';
+import { DropdownProps } from '../dropdowns.types';
 
 const Dropdown = ({
   children,
@@ -11,12 +12,11 @@ const Dropdown = ({
   isOpen,
   onToggle,
   onOptionClicked
-}) => {
-  const ref = useRef();
+}: DropdownProps) => {
+  const ref = useRef<HTMLDivElement>(null);
   const childCount = React.Children.count(children);
 
   useOnClickOutside(ref, () => onToggle(false));
-
   return (
     <div className="relative inline-block" ref={ref}>
       <button
