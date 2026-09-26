@@ -11,8 +11,7 @@ import filter from 'lodash/filter';
 import map from 'lodash/map';
 import xor from 'lodash/xor';
 import generate from "~/modules/generate/helpers/generate";
-import setSlideTrigger from "~/modules/run/helpers/setSlideTrigger";
-import setSlideFeedback from "~/modules/run/helpers/setSlideFeedback";
+import setSlideFeedbackResponses from "~/modules/run/helpers/setSlideFeedbackResponses";
 import setSlideFeedbackItems from "~/modules/run/helpers/setSlideFeedbackItems";
 
 type PromptItemCondition = {
@@ -209,6 +208,6 @@ export default async ({ slide }: { slide: Slide }) => {
     feedback = matchedItemsFeedback;
   }
 
-  setSlideFeedback(feedback);
+  setSlideFeedbackResponses(feedback);
   setSlideStatus(null);
 }

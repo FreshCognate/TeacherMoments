@@ -1,5 +1,5 @@
 import getBlockTracking from "../run/helpers/getBlockTracking";
-import setSlideFeedback from "../run/helpers/setSlideFeedback";
+import setSlideFeedbackResponses from "../run/helpers/setSlideFeedbackResponses";
 import registerTrigger from "./helpers/registerTrigger";
 import buildLanguageSchema from "~/core/app/helpers/buildLanguageSchema";
 import xor from 'lodash/xor';
@@ -199,7 +199,7 @@ const ShowFeedbackFromPrompts = {
         feedback = matchedItemsFeedback;
       }
 
-      setSlideFeedback(feedback);
+      setSlideFeedbackResponses(feedback);
       setSlideStatus(null);
       resolve();
 

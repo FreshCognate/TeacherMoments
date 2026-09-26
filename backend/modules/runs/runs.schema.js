@@ -14,6 +14,7 @@ const schema = {
     completedAt: { type: Date },
     timeSpentMs: { type: Number },
     feedbackItems: [],
+    feedbackResponses: [],
     shouldStopNavigation: { type: Boolean, default: false },
     status: { type: String },
     blocksByRef: {

@@ -54,7 +54,7 @@ export default async ({ userId, scenarioId, slidesByRef, blocksByRef }, context)
     currentRun.stages = map(userRun.stages, (stage) => ({
       slideRef: stage.slideRef,
       timeSpentMs: stage.timeSpentMs,
-      feedbackItems: stage.feedbackItems || []
+      feedbackResponses: stage.feedbackResponses || []
     }));
     if (userRun.stages && userRun.stages.length > 0) {
       for (const stage of userRun.stages) {

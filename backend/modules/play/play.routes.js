@@ -83,6 +83,7 @@ export default [{
         completedAt: Joi.date(),
         timeSpentMs: Joi.number(),
         feedbackItems: Joi.array(),
+        feedbackResponses: Joi.array(),
         shouldStopNavigation: Joi.boolean(),
         navigateToSlide: Joi.string(),
         triggersByRef: Joi.object(),

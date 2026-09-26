@@ -8,6 +8,6 @@ export default () => {
 
   const currentStage = find(run.data.stages, { slideRef: activeSlideRef });
 
-  return currentStage?.feedbackItems || [];
+  return currentStage?.feedbackResponses || [];
 
 }
