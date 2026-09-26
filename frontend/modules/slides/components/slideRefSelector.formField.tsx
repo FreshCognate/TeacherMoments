@@ -12,8 +12,17 @@ const SlideRefSelector = ({
   onToggleDropdown,
   onSlideSelected,
   onSearchInputChanged
+}: {
+  selectedSlideRef?: string,
+  selectedSlideName?: string,
+  searchValue: string,
+  options: { value: string, text: string }[],
+  isDropdownOpen: boolean,
+  onToggleDropdown: (isDropdownOpen: boolean) => void,
+  onSlideSelected: (slideRef: string) => void,
+  onSearchInputChanged: (event: React.ChangeEvent<HTMLInputElement>) => void
 }) => {
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
 
   useOnClickOutside(ref, () => onToggleDropdown(false));
 

@@ -11,7 +11,7 @@ vi.mock('~/modules/blocks/helpers/getBlockErrors', () => ({
   default: (block) => getBlockErrorsMock(block)
 }));
 
-import getSlideErrors from '../helpers/getSlideErrors.js';
+import getSlideErrors from '../helpers/getSlideErrors';
 import { createCache, resetCache } from '~/core/cache/helpers/cacheManager.js';
 
 const seedCache = (key, data) => {

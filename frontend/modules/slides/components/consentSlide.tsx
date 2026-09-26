@@ -2,9 +2,12 @@ import React from 'react';
 import getString from '~/modules/ls/helpers/getString';
 import Body from '~/uikit/content/components/body';
 import Title from '~/uikit/content/components/title';
+import { Scenario } from '~/modules/scenarios/scenarios.types';
 
 const ConsentSlide = ({
   scenario
+}: {
+  scenario: Scenario
 }) => {
   return (
     <div>

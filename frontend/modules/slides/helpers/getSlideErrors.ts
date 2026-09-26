@@ -4,9 +4,16 @@ import getBlocksBySlideRef from '~/modules/blocks/helpers/getBlocksBySlideRef';
 import getBlockErrors from '~/modules/blocks/helpers/getBlockErrors';
 import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
 import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlideRef';
+import { Slide } from '../slides.types';
 
-export default (slide) => {
-  const errors = [];
+type SlideError = {
+  message: string,
+  elementType: string,
+  elementId: string
+};
+
+export default (slide: Slide) => {
+  const errors: SlideError[] = [];
 
   const blocks = getBlocksBySlideRef({ slideRef: slide.ref });
   if (!blocks?.length) {

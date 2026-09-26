@@ -4,6 +4,8 @@ import map from 'lodash/map';
 import find from 'lodash/find';
 import getCache from '~/core/cache/helpers/getCache';
 import Button from '~/uikit/buttons/components/button';
+import { Stem } from '~/modules/stems/stems.types';
+import { ActiveSlide, SlideAction } from '../slides.types';
 
 const SlidePlayerNavigation = ({
   activeSlide,
@@ -13,6 +15,14 @@ const SlidePlayerNavigation = ({
   navigateTo,
   hasPrompts,
   onActionClicked,
+}: {
+  activeSlide: ActiveSlide,
+  activeSlideStems: Stem[],
+  primaryAction?: SlideAction,
+  secondaryAction?: SlideAction,
+  navigateTo: ({ slideRef }: { slideRef: string }) => void,
+  hasPrompts: boolean,
+  onActionClicked: (action: string) => void,
 }) => {
   return (
     <div className="pb-4 px-4">

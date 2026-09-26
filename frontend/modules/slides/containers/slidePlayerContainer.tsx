@@ -25,8 +25,26 @@ import isScenarioInPlay from '~/modules/scenarios/helpers/isScenarioInPlay';
 import getCohortFromSearchParams from '~/modules/cohorts/helpers/getCohortFromSearchParams';
 import getActiveSlideStems from '../helpers/getActiveSlideStems';
 import getIsRecordingAudio from '~/modules/run/helpers/getIsRecordingAudio';
+import { Scenario } from '~/modules/scenarios/scenarios.types';
+import { ActiveSlide, SlideAction } from '../slides.types';
 
-class SlidePlayerContainer extends Component {
+interface SlidePlayerContainerProps {
+  scenario: Scenario,
+  activeSlide?: ActiveSlide | null,
+  activeBlocks: any[],
+  isPreview?: boolean,
+  run: { data: any },
+  router: any
+}
+
+interface SlidePlayerContainerState {
+  isLoading: boolean,
+  isMenuOpen: boolean,
+  isSubmitting: boolean,
+  shouldStopNavigation: boolean
+}
+
+class SlidePlayerContainer extends Component<SlidePlayerContainerProps, SlidePlayerContainerState> {
 
   state = {
     isLoading: true,
@@ -40,7 +58,7 @@ class SlidePlayerContainer extends Component {
     this.setState({ isLoading: false });
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = (prevProps: SlidePlayerContainerProps) => {
     if (this.props.activeSlide !== prevProps.activeSlide) {
       ensureCurrentStage();
       this.setState({ isLoading: false });
@@ -49,8 +67,8 @@ class SlidePlayerContainer extends Component {
 
   getNavigationDetails = () => {
 
-    let primaryAction;
-    let secondaryAction;
+    let primaryAction: SlideAction | undefined;
+    let secondaryAction: SlideAction | undefined;
 
     const { activeSlide } = this.props;
 
@@ -146,8 +164,8 @@ class SlidePlayerContainer extends Component {
 
   }
 
-  onUpdateBlockTracking = async ({ blockRef, update }) => {
-    await updateRun({ slideRef: this.props.activeSlide.ref, blockRef, update });
+  onUpdateBlockTracking = async ({ blockRef, update }: { blockRef: string, update: any }) => {
+    await updateRun({ slideRef: this.props.activeSlide!.ref, blockRef, update });
   }
 
   onPreviousSlideClicked = () => {
@@ -155,7 +173,7 @@ class SlidePlayerContainer extends Component {
   }
 
   onNextSlideClicked = () => {
-    setSlideToComplete({ slideRef: this.props.activeSlide.ref });
+    setSlideToComplete({ slideRef: this.props.activeSlide!.ref });
     const stage = ensureCurrentStage();
     if (stage.navigateToSlide) {
       return navigateTo({ slideRef: stage.navigateToSlide, router: this.props.router });
@@ -165,8 +183,9 @@ class SlidePlayerContainer extends Component {
 
   onSubmitSlideClicked = async () => {
     this.setState({ isSubmitting: true });
-    setSlideToComplete({ slideRef: this.props.activeSlide.ref });
-    const triggers = getTriggersBySlideRef({ slideRef: this.props.activeSlide.ref });
+    console.log(this.props.activeSlide);
+    setSlideToComplete({ slideRef: this.props.activeSlide!.ref });
+    const triggers = getTriggersBySlideRef({ slideRef: this.props.activeSlide!.ref });
     for (const trigger of triggers) {
       const triggerItem = getTrigger(trigger.action);
       const shouldStopNavigation = triggerItem.getShouldStopNavigation();
@@ -209,15 +228,15 @@ class SlidePlayerContainer extends Component {
   }
 
   onCompleteScenarioClicked = () => {
-    setSlideToComplete({ slideRef: this.props.activeSlide.ref });
+    setSlideToComplete({ slideRef: this.props.activeSlide!.ref });
     setScenarioToComplete();
   }
 
-  navigateTo = ({ slideRef }) => {
+  navigateTo = ({ slideRef }: { slideRef: string }) => {
     return navigateTo({ slideRef, router: this.props.router });
   }
 
-  onActionClicked = (action) => {
+  onActionClicked = (action: string) => {
     switch (action) {
       case 'CONSENT_DENIED':
         this.onConsentDeniedClicked();
@@ -263,11 +282,11 @@ class SlidePlayerContainer extends Component {
     }
   }
 
-  onMenuClicked = (isMenuOpen) => {
+  onMenuClicked = (isMenuOpen: boolean) => {
     this.setState({ isMenuOpen });
   }
 
-  onMenuActionClicked = (action) => {
+  onMenuActionClicked = (action: string) => {
     if (action === 'END_SCENARIO_RUN') {
       addModal({
         title: 'End this scenario?',
@@ -280,7 +299,7 @@ class SlidePlayerContainer extends Component {
           text: 'Yes',
           color: 'primary'
         }]
-      }, (state, { type, modal }) => {
+      }, (state: string, { type, modal }: { type: string, modal: any }) => {
         if (state === 'ACTION') {
           if (type === 'YES') {
             this.onActionClicked('FINISH_SCENARIO');
@@ -308,7 +327,7 @@ class SlidePlayerContainer extends Component {
       secondaryAction,
     } = this.getNavigationDetails();
 
-    const activeSlideStems = getActiveSlideStems({ activeSlideRef: activeSlide?.ref });
+    const activeSlideStems = getActiveSlideStems({ activeSlideRef: activeSlide?.ref as string });
 
     return (
       <SlidePlayer
@@ -333,4 +352,4 @@ class SlidePlayerContainer extends Component {
   }
 };
 
-export default WithRouter(WithCache(SlidePlayerContainer, null, ['run']));
+export default WithRouter(WithCache(SlidePlayerContainer, {}, ['run']));

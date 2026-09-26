@@ -11,6 +11,9 @@ import ConsentSlide from './consentSlide';
 import getSlideFeedbackItems from '~/modules/run/helpers/getSlideFeedbackItems';
 import Title from '~/uikit/content/components/title';
 import getSlideStatus from '~/modules/run/helpers/getSlideStatus';
+import { Scenario } from '~/modules/scenarios/scenarios.types';
+import { Stem } from '~/modules/stems/stems.types';
+import { ActiveSlide, SlideAction } from '../slides.types';
 
 const SlidePlayer = ({
   scenario,
@@ -28,6 +31,23 @@ const SlidePlayer = ({
   onUpdateBlockTracking,
   onMenuClicked,
   onMenuActionClicked
+}: {
+  scenario: Scenario,
+  activeSlide?: ActiveSlide | null,
+  activeBlocks: any[],
+  activeSlideStems: Stem[],
+  navigateTo: ({ slideRef }: { slideRef: string }) => void,
+  run?: any,
+  isLoading: boolean,
+  isMenuOpen: boolean,
+  hasPrompts: boolean,
+  slideStage?: any,
+  primaryAction?: SlideAction,
+  secondaryAction?: SlideAction,
+  onActionClicked: (action: string) => void,
+  onUpdateBlockTracking: ({ update, blockRef }: { update: any, blockRef: string }) => void,
+  onMenuClicked: (isMenuOpen: boolean) => void,
+  onMenuActionClicked: (action: string) => void
 }) => {
   if (!activeSlide || isLoading) return (
     <Loading />
@@ -55,7 +75,7 @@ const SlidePlayer = ({
         {map(activeBlocks, (block) => {
           let Block = getBlockComponent({ blockType: block.blockType });
           if (!Block) return <div key={block._id} className="mb-4 last:mb-0 border p-2 border-lm-3 dark:border-dm-3 text-center">Block is unsupported</div>;
-          let blockTracking = {}
+          let blockTracking: { isHidden?: boolean } = {}
           if (activeSlide.slideType !== 'CONSENT') {
             blockTracking = getBlockTracking({ blockRef: block.ref });
           }
@@ -70,7 +90,7 @@ const SlidePlayer = ({
               <Block
                 block={block}
                 blockTracking={blockTracking}
-                onUpdateBlockTracking={(update) => {
+                onUpdateBlockTracking={(update: any) => {
                   onUpdateBlockTracking({ update, blockRef: block.ref });
                 }}
                 navigateTo={navigateTo}

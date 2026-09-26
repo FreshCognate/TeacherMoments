@@ -34,3 +34,20 @@ export type Slide = {
   deletedAt: Date,
   deletedBy: string
 }
+
+export type StaticSlide = {
+  _id: 'CONSENT_SLIDE' | 'SUMMARY_SLIDE',
+  slideType: 'CONSENT' | 'SUMMARY',
+  ref?: string,
+  name?: string
+}
+
+export type ActiveSlide = Slide | StaticSlide
+
+export type SlideAction = {
+  action: string,
+  text: string,
+  color?: string,
+  isActive?: boolean,
+  isDisabled?: boolean
+}
