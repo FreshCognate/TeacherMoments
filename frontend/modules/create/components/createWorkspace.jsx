@@ -34,7 +34,9 @@ const CreateWorkspace = ({
                   slideId={activeSlideId}
                 />
               )}
-              <SlideActionsContainer />
+              {(!isStaticSlide) && (
+                <SlideActionsContainer activeSlideId={activeSlideId} />
+              )}
             </>
           )}
           {(displayMode === 'OVERVIEW') && (

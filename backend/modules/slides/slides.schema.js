@@ -1,4 +1,19 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import buildLanguageSchema from '#core/app/helpers/buildLanguageSchema.js';
+import textAreaSchema from '#core/app/textArea.schema.js';
+const body = buildLanguageSchema('body', textAreaSchema);
+
+const feedbackItemSchema = new Schema({
+  ...body,
+  elementRef: { type: mongoose.Schema.Types.ObjectId },
+  conditions: [{
+    prompts: [{
+      ref: mongoose.Schema.Types.ObjectId,
+      options: [{ type: String, default: [] }],
+      text: { type: String, default: '' },
+    }]
+  }]
+})
 
 const schema = {
   type: { type: String, default: 'slide' },
@@ -15,6 +30,18 @@ const schema = {
   lockedAt: { type: Date },
   lockedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   hasDiscussion: { type: Boolean, default: false },
+  hasFeedback: {
+    type: Boolean,
+    default: false
+  },
+  shouldGenerateFeedbackFromAI: {
+    type: Boolean,
+    default: false
+  },
+  feedbackItems: {
+    type: [feedbackItemSchema],
+    default: []
+  },
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   updatedAt: { type: Date },

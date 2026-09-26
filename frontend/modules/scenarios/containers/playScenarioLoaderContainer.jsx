@@ -41,6 +41,12 @@ export default WithRouter(WithCache(PlayScenarioLoaderContainer, {
       };
     },
     getters: {
+      active: ({ data, props }) => {
+        const searchParams = new URLSearchParams(props.router.location.search);
+        const slideId = searchParams.get('slide');
+
+        return find(data, { _id: slideId })
+      },
       firstStemSlide: ({ data, attributes, props }) => {
         const firstStemSlide = find(data, { stemRef: attributes.stemRef });
         return firstStemSlide;
