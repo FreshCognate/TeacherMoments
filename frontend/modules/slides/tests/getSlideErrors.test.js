@@ -11,6 +11,11 @@ vi.mock('~/modules/blocks/helpers/getBlockErrors', () => ({
   default: (block) => getBlockErrorsMock(block)
 }));
 
+const getSlideFeedbackErrorsMock = vi.fn();
+vi.mock('../helpers/getSlideFeedbackErrors', () => ({
+  default: (slide) => getSlideFeedbackErrorsMock(slide)
+}));
+
 import getSlideErrors from '../helpers/getSlideErrors';
 import { createCache, resetCache } from '~/core/cache/helpers/cacheManager.js';
 
@@ -26,6 +31,7 @@ describe('getSlideErrors', () => {
   beforeEach(() => {
     getBlocksBySlideRefMock.mockReset();
     getBlockErrorsMock.mockReset();
+    getSlideFeedbackErrorsMock.mockReset().mockReturnValue([]);
     resetCache('stems');
     resetCache('triggers');
   });
@@ -114,5 +120,28 @@ describe('getSlideErrors', () => {
     expect(getSlideErrors({ _id: 's1', ref: 'slide-1' })).toEqual([
       { message: 'Slide with stems has no branching trigger', elementType: 'SLIDE_TRIGGER', elementId: 's1' }
     ]);
+  });
+
+  it('includes feedback errors when the slide has feedback turned on', () => {
+    getBlocksBySlideRefMock.mockReturnValue([{ _id: 'b1' }]);
+    getBlockErrorsMock.mockReturnValue([]);
+    getSlideFeedbackErrorsMock.mockReturnValue([
+      { message: 'Feedback item 1 has no content', elementType: 'SLIDE', elementId: 's1' }
+    ]);
+    const slide = { _id: 's1', ref: 'slide-1', hasFeedback: true };
+
+    expect(getSlideErrors(slide)).toEqual([
+      { message: 'Feedback item 1 has no content', elementType: 'SLIDE', elementId: 's1' }
+    ]);
+    expect(getSlideFeedbackErrorsMock).toHaveBeenCalledWith(slide);
+  });
+
+  it('does not check feedback when the slide has feedback turned off', () => {
+    getBlocksBySlideRefMock.mockReturnValue([{ _id: 'b1' }]);
+    getBlockErrorsMock.mockReturnValue([]);
+
+    getSlideErrors({ _id: 's1', ref: 'slide-1', hasFeedback: false });
+
+    expect(getSlideFeedbackErrorsMock).not.toHaveBeenCalled();
   });
 });

@@ -15,9 +15,6 @@ import setScenarioToComplete from '~/modules/run/helpers/setScenarioToComplete';
 import WithRouter from '~/core/app/components/withRouter';
 import addModal from '~/core/dialogs/helpers/addModal';
 import getCache from '~/core/cache/helpers/getCache';
-import getTrigger from '~/modules/triggers/helpers/getTrigger';
-import getTriggerErrors from '~/modules/triggers/helpers/getTriggerErrors';
-import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlideRef';
 import setShouldStopNavigation from '~/modules/run/helpers/setShouldStopNavigation';
 import setSlideToSubmitted from '~/modules/run/helpers/setSlideToSubmitted';
 import setScenarioToArchived from '~/modules/run/helpers/setScenarioToArchived';
@@ -27,6 +24,7 @@ import getActiveSlideStems from '../helpers/getActiveSlideStems';
 import getIsRecordingAudio from '~/modules/run/helpers/getIsRecordingAudio';
 import { Scenario } from '~/modules/scenarios/scenarios.types';
 import { ActiveSlide, SlideAction } from '../slides.types';
+import triggerSlideFeedback from '../helpers/triggerSlideFeedback';
 
 interface SlidePlayerContainerProps {
   scenario: Scenario,
@@ -183,23 +181,10 @@ class SlidePlayerContainer extends Component<SlidePlayerContainerProps, SlidePla
 
   onSubmitSlideClicked = async () => {
     this.setState({ isSubmitting: true });
-    console.log(this.props.activeSlide);
     setSlideToComplete({ slideRef: this.props.activeSlide!.ref });
-    const triggers = getTriggersBySlideRef({ slideRef: this.props.activeSlide!.ref });
-    for (const trigger of triggers) {
-      const triggerItem = getTrigger(trigger.action);
-      const shouldStopNavigation = triggerItem.getShouldStopNavigation();
-      if (shouldStopNavigation) {
-        setShouldStopNavigation(true);
-      }
-      const triggerErrors = getTriggerErrors(trigger);
-      if (triggerErrors.length) {
-        console.warn(`Skipping invalid trigger: ${triggerItem.getText()}`, triggerErrors);
-        continue;
-      }
-      console.log(`⚡️ Triggering: ${triggerItem.getText()}`);
-      await triggerItem.trigger(trigger, this.props.router);
-      console.log(`✅ Triggered: ${triggerItem.getText()}`);
+    if (this.props.activeSlide && this.props.activeSlide.hasFeedback) {
+      setShouldStopNavigation(true);
+      await triggerSlideFeedback({ slide: this.props.activeSlide });
     }
 
     setSlideToSubmitted();

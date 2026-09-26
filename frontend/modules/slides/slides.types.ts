@@ -1,9 +1,14 @@
-import { Condition } from '../triggers/triggers.types';
+import { ConditionPrompt } from '../triggers/triggers.types';
+
+export type FeedbackItemCondition = {
+  _id: string,
+  prompts: ConditionPrompt[]
+}
 
 export type FeedbackItem = {
   _id: string,
   elementRef: string,
-  conditions: Condition[],
+  conditions: FeedbackItemCondition[],
   [languageBody: `${string}-body`]: any[]
 }
 
@@ -39,7 +44,8 @@ export type StaticSlide = {
   _id: 'CONSENT_SLIDE' | 'SUMMARY_SLIDE',
   slideType: 'CONSENT' | 'SUMMARY',
   ref?: string,
-  name?: string
+  name?: string,
+  hasFeedback?: false
 }
 
 export type ActiveSlide = Slide | StaticSlide

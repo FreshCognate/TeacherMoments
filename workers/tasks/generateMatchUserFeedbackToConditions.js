@@ -1,5 +1,4 @@
 import createAgent from "../agents/helpers/createAgent.js";
-import getSockets from "../getSockets.js";
 import each from 'lodash/each.js';
 
 export default async ({ stem, usersAnswer, conditions }) => {
