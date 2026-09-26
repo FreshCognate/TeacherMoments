@@ -62,8 +62,8 @@ export default async ({ scenarioId, users, models }) => {
     each(blockResponses, (blockResponse, index) => {
       const stage = find(response.stages, (stageItem) => String(stageItem.slideRef) === String(blockResponse.slideRef));
       const showOnThisColumn = isFirstBlockOfSlide(blockResponses, index);
-      if (showOnThisColumn && stage?.feedbackItems?.length > 0) {
-        feedbackRow.push(stage.feedbackItems.join('; '));
+      if (showOnThisColumn && stage?.feedbackResponses?.length > 0) {
+        feedbackRow.push(stage.feedbackResponses.join('; '));
       } else {
         feedbackRow.push('');
       }

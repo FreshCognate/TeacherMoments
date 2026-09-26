@@ -12,8 +12,6 @@ export default (feedbackItems: StageFeedbackItem[]) => {
   const stages = cloneDeep(run.data.stages);
   const currentStage = find(stages, { slideRef: activeSlideRef });
 
-  if (!currentStage.triggersByRef) {
-  }
   currentStage.feedbackItems = feedbackItems;
 
   if (isScenarioInPlay()) {

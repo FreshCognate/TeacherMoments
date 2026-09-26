@@ -8,7 +8,7 @@ import SlidePlayerNavigation from './slidePlayerNavigation';
 import SlidePlayerHeader from './slidePlayerHeader';
 import SummarySlide from './summarySlide';
 import ConsentSlide from './consentSlide';
-import getSlideFeedbackItems from '~/modules/run/helpers/getSlideFeedbackItems';
+import getSlideFeedbackResponses from '~/modules/run/helpers/getSlideFeedbackResponses';
 import Title from '~/uikit/content/components/title';
 import getSlideStatus from '~/modules/run/helpers/getSlideStatus';
 import { Scenario } from '~/modules/scenarios/scenarios.types';
@@ -53,7 +53,7 @@ const SlidePlayer = ({
     <Loading />
   );
 
-  const slideFeedbackItems = getSlideFeedbackItems();
+  const slideFeedbackResponses = getSlideFeedbackResponses();
 
   const slideStatus = getSlideStatus();
 
@@ -103,12 +103,12 @@ const SlidePlayer = ({
             <Loading text={slideStatus} />
           </div>
         )}
-        {(slideFeedbackItems && slideFeedbackItems.length > 0) && (
+        {(slideFeedbackResponses && slideFeedbackResponses.length > 0) && (
           <div className="bg-blue-200 bg-opacity-30 border border-blue-200 p-2 rounded-md dark:text-gray-200 text-gray-800">
             <Title title="Feedback Based on Your Response" size='lg' className="font-bold mb-2" />
-            {map(slideFeedbackItems, (feedbackItem, index) => {
+            {map(slideFeedbackResponses, (feedbackResponse, index) => {
               return (
-                <Body key={index} body={feedbackItem} />
+                <Body key={index} body={feedbackResponse} />
               )
             })}
           </div>

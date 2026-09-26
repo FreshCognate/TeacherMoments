@@ -3,12 +3,12 @@ import { render, screen } from '@testing-library/react';
 
 const getBlockTrackingMock = vi.fn();
 const getBlockComponentMock = vi.fn();
-const getSlideFeedbackItemsMock = vi.fn();
+const getSlideFeedbackResponsesMock = vi.fn();
 const getSlideStatusMock = vi.fn();
 
 vi.mock('~/modules/run/helpers/getBlockTracking', () => ({ default: (args) => getBlockTrackingMock(args) }));
 vi.mock('~/modules/blocks/helpers/getBlockComponent', () => ({ default: (args) => getBlockComponentMock(args) }));
-vi.mock('~/modules/run/helpers/getSlideFeedbackItems', () => ({ default: () => getSlideFeedbackItemsMock() }));
+vi.mock('~/modules/run/helpers/getSlideFeedbackResponses', () => ({ default: () => getSlideFeedbackResponsesMock() }));
 vi.mock('~/modules/run/helpers/getSlideStatus', () => ({ default: () => getSlideStatusMock() }));
 
 vi.mock('../components/consentSlide', () => ({
@@ -48,7 +48,7 @@ const baseProps = {
 describe('SlidePlayer', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    getSlideFeedbackItemsMock.mockReturnValue([]);
+    getSlideFeedbackResponsesMock.mockReturnValue([]);
     getSlideStatusMock.mockReturnValue(null);
     getBlockTrackingMock.mockReturnValue({ isHidden: false });
   });
@@ -152,13 +152,13 @@ describe('SlidePlayer', () => {
   });
 
   it('renders feedback items when present', () => {
-    getSlideFeedbackItemsMock.mockReturnValue(['Great answer!', 'Try again next time.']);
+    getSlideFeedbackResponsesMock.mockReturnValue(['Great answer!', 'Try again next time.']);
     render(<SlidePlayer {...baseProps} />);
     expect(screen.getByText('Feedback Based on Your Response')).toBeInTheDocument();
   });
 
   it('does not render the feedback section when there are no feedback items', () => {
-    getSlideFeedbackItemsMock.mockReturnValue([]);
+    getSlideFeedbackResponsesMock.mockReturnValue([]);
     render(<SlidePlayer {...baseProps} />);
     expect(screen.queryByText('Feedback Based on Your Response')).not.toBeInTheDocument();
   });
