@@ -1,23 +1,28 @@
 import React from 'react';
-import { Block } from '~/modules/blocks/blocks.types';
-import { Trigger } from '~/modules/triggers/triggers.types';
-import FlatButton from '~/uikit/buttons/components/flatButton';
+import { Slide } from '~/modules/slides/slides.types';
+import Button from '~/uikit/buttons/components/button';
 import Body from '~/uikit/content/components/body';
 
 const SlideActions = ({
-  blocks,
-  triggers,
-  onOpenTriggersClicked,
-  onCreateBlockClicked
+  slide,
+  doesSlideContainPrompts,
+  onTurnOnFeedbackClicked
 }: {
-  blocks: Block[]
-  triggers: Trigger[]
-  onOpenTriggersClicked: () => void;
-  onCreateBlockClicked: () => void;
+  slide?: Slide,
+  doesSlideContainPrompts: boolean,
+  onTurnOnFeedbackClicked: () => void;
 }) => {
+  if (!doesSlideContainPrompts) return null;
+  if (slide?.hasFeedback) return null;
   return (
-    <div>
-      <Body body={`You've added a prompt, would you like to give the user feedback based upon their answer or branch to stem?`} />
+    <div className="flex justify-between bg-lm-1 dark:bg-dm-2 rounded-lg p-4 m-8">
+      <Body
+        body={`You've added a prompt. Would you like to give the user feedback based upon their answer?`}
+        className="w-2/3 opacity-60" />
+      <Button
+        text="Turn on feedback"
+        onClick={onTurnOnFeedbackClicked}
+      />
     </div>
   );
 };

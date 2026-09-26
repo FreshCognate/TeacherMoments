@@ -37,7 +37,7 @@ const BlocksEditor = ({
           </div>
         )}
 
-        <div className="p-8" style={{ minHeight: "calc(100vh - 283px)" }}>
+        <div className="p-8">
           {(map(blocks, (block) => {
             return (
               <EditBlockContainer

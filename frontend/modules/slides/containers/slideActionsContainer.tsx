@@ -1,69 +1,38 @@
 import React, { Component } from 'react';
 import SlideActions from '../components/slideActions';
-import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
-import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
-import addModal from '~/core/dialogs/helpers/addModal';
-import BlockSelectorContainer from '~/modules/blocks/containers/blockSelectorContainer';
-import getCache from '~/core/cache/helpers/getCache';
 import WithCache from '~/core/cache/containers/withCache';
 import WithRouter from '~/core/app/components/withRouter';
-import find from 'lodash/find';
-import getBlocksBySlideRef from '~/modules/blocks/helpers/getBlocksBySlideRef';
-import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlideRef';
-import { Block } from '~/modules/blocks/blocks.types';
-import { Trigger } from '~/modules/triggers/triggers.types';
+import getDoesSlideContainPrompts from '../helpers/getDoesSlideContainPrompts';
 
 
 interface SlideActionsContainerProps {
+  slides: {
+    data: any,
+    get: (getter: string) => any
+  }
   router: any
 }
 
 class SlideActionsContainer extends Component<SlideActionsContainerProps> {
 
-  onOpenTriggersClicked = () => {
-    addSidePanel({
-      size: 'lg',
-      icon: 'trigger',
-      title: 'Triggers',
-      component: <TriggerDisplayContainer />
-    })
-  }
-
-  onCreateBlockClicked = () => {
-    addModal({
-      title: 'Choose a block type to add to your slide:',
-      component: <BlockSelectorContainer />,
-      actions: [{
-        type: 'CANCEL',
-        text: 'Cancel'
-      }]
-    }, () => { })
+  onTurnOnFeedbackClicked = () => {
+    console.log('Turn on feedback clicked');
   }
 
   render() {
-    let blocks: Block[] = [];
-    let triggers: Trigger[] = [];
-    const slides = getCache('slides');
-    if (slides.data) {
-      const searchParams = new URLSearchParams(this.props.router.location.search);
-      const slideId = searchParams.get('slide');
 
-      const slide = find(slides.data, { _id: slideId })
-      if (slide) {
-        const slideRef = slide.ref;
-        blocks = getBlocksBySlideRef({ slideRef });
-        triggers = getTriggersBySlideRef({ slideRef });
-      }
-    }
+    const slide = this.props.slides.get('active');
+
+    const doesSlideContainPrompts = getDoesSlideContainPrompts({ slide });
+
     return (
       <SlideActions
-        blocks={blocks}
-        triggers={triggers}
-        onOpenTriggersClicked={this.onOpenTriggersClicked}
-        onCreateBlockClicked={this.onCreateBlockClicked}
+        slide={slide}
+        doesSlideContainPrompts={doesSlideContainPrompts}
+        onTurnOnFeedbackClicked={this.onTurnOnFeedbackClicked}
       />
     );
   }
 };
 
-export default WithRouter(WithCache(SlideActionsContainer));
+export default WithRouter(WithCache(SlideActionsContainer, {}, ['slides']));
