@@ -19,7 +19,7 @@ const SlideActions = ({
 
   return (
     <div className="w-full  max-w-screen-lg mx-auto" >
-      <div className="bg-lm-1 dark:bg-dm-2 rounded-lg p-4 mx-8">
+      <div className="bg-lm-1 dark:bg-dm-2 rounded-lg p-4 mx-8 mb-8">
         {slide.hasFeedback && (
           <div className="flex justify-between">
             <div className="w-1/2">
