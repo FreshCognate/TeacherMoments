@@ -62,13 +62,15 @@ export default WithCache(CreateWorkspaceToolbarContainer, {
     url: '/api/slides/:id',
     getInitialData: ({ props }) => {
       const slides = getCache('slides');
-      const currentSlide = find(slides.data, { _id: props.activeSlideId });
+      const currentSlide = slides.get('active');
       return currentSlide;
     },
     transform: ({ data }) => data.slide,
     getParams: ({ props }) => {
+      const slides = getCache('slides');
+      const currentSlide = slides.get('active');
       return {
-        id: props.activeSlideId
+        id: currentSlide._id
       }
     },
     getDependencies: ({ props }) => {

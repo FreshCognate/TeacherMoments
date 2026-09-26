@@ -4,13 +4,14 @@ import WithCache from '~/core/cache/containers/withCache';
 import { Slide } from '../slides.types';
 import editSlideFeedbackSchema from '../schemas/editSlideFeedbackSchema';
 import getCache from '~/core/cache/helpers/getCache';
+import WithRouter from '~/core/app/components/withRouter';
 
 interface EditSlideFeedbackContainerProps {
   slide: {
     data: Slide,
     mutate: (
       update: Partial<Slide>,
-      options: { method: string },
+      options: { method: string, url?: string },
       callback: (status: string) => void
     ) => void
   }
@@ -18,8 +19,10 @@ interface EditSlideFeedbackContainerProps {
 
 class EditSlideFeedbackContainer extends Component<EditSlideFeedbackContainerProps> {
   onSlideUpdate = ({ update }: { update: Partial<Slide> }) => {
-    // @color: Why does this fail. It seems it is not putting the slide._id into the params when making the request
-    this.props.slide.mutate(update, { method: 'put' }, (status: string) => {
+    const { slide } = this.props;
+    slide.mutate(update, {
+      method: 'put'
+    }, (status: string) => {
       if (status === 'MUTATED') {
         const slides = getCache('slides');
         if (slides.fetch) {
@@ -40,4 +43,4 @@ class EditSlideFeedbackContainer extends Component<EditSlideFeedbackContainerPro
   }
 };
 
-export default WithCache(EditSlideFeedbackContainer, {}, ['slide']);
+export default WithRouter(WithCache(EditSlideFeedbackContainer, {}, ['slide']));
