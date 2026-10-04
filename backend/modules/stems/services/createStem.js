@@ -4,7 +4,7 @@ import createSlide from '../../slides/services/createSlide.js';
 
 export default async (props, options, context) => {
 
-  const { scenario, slideRef, sortOrder, name, isRoot } = props;
+  const { scenario, stemRef, sortOrder, name, isRoot } = props;
 
   const { models, user } = context;
 
@@ -14,25 +14,25 @@ export default async (props, options, context) => {
 
   if (!scenarioModel) throw { message: 'This scenario does not exist', statusCode: 400 };
 
-  const slideStems = await models.Stem.find({ slideRef, isDeleted: false });
+  const siblingStems = await models.Stem.find({ stemRef, isDeleted: false });
 
   const newStem = await models.Stem.create({
     scenario,
-    slideRef,
+    stemRef,
     sortOrder: sortOrder || 0,
-    name: name || `Stem ${slideStems.length + 1}`,
+    name: name || `Stem ${siblingStems.length + 1}`,
     isRoot,
     createdBy: user._id
   });
 
   if (!isRoot) {
     await createSlide({ scenario, sortOrder: 0, stemRef: newStem.ref }, {}, context);
-    if (slideStems.length === 0) {
+    if (siblingStems.length === 0) {
       const secondaryStem = await models.Stem.create({
         scenario,
-        slideRef,
+        stemRef,
         sortOrder: sortOrder || 1,
-        name: `Stem ${slideStems.length + 2}`,
+        name: `Stem ${siblingStems.length + 2}`,
         isRoot,
         createdBy: user._id
       });

@@ -16,37 +16,34 @@ const CreateNavigationActions = ({
 }) => {
   return (
     <div className="flex items-center justify-between p-2 sticky top-0 z-10 bg-lm-0 dark:bg-dm-1 rounded-t-lg h-10">
-      {(!isInRootStem) && (
-        <Tooltip
-          content="Back to parent"
-          placement="right"
-        >
-          <Link
-            to={`/scenarios/${scenarioId}/create?slide=${activeStemSlideId}`}>
-            <CreateNavigationSlideIcon
-              icon="home"
-              isSelected={false}
-            />
-          </Link>
-        </Tooltip>
-      )}
+      <div>
 
-      {(isInRootStem) && (
-        <>
-          <div className="relative">
-            {(!isCreating && !isDuplicating) && (
-              <FlatButton isCircular isDisabled={isCreating} text="Add slide" title="Add new slide" size="sm" icon="slides" onClick={onAddSlideClicked} />
-            )}
-            {(isCreating) && (
-              <Body body="Creating slide..." size="xs" className="text-black/60 dark:text-white/60" />
-            )}
-            {(isDuplicating) && (
-              <Body body="Duplicating slide..." size="xs" className="text-black/60 dark:text-white/60" />
-            )}
-          </div>
-        </>
-      )
-      }
+        {(!isInRootStem) && (
+          <Tooltip
+            content="Back to parent"
+            placement="right"
+          >
+            <Link
+              to={`/scenarios/${scenarioId}/create?slide=${activeStemSlideId}`}>
+              <CreateNavigationSlideIcon
+                icon="home"
+                isSelected={false}
+              />
+            </Link>
+          </Tooltip>
+        )}
+      </div>
+      <div className="relative">
+        {(!isCreating && !isDuplicating) && (
+          <FlatButton isCircular isDisabled={isCreating} text="Add slide" title="Add new slide" size="sm" icon="slides" onClick={onAddSlideClicked} />
+        )}
+        {(isCreating) && (
+          <Body body="Creating slide..." size="xs" className="text-black/60 dark:text-white/60" />
+        )}
+        {(isDuplicating) && (
+          <Body body="Duplicating slide..." size="xs" className="text-black/60 dark:text-white/60" />
+        )}
+      </div>
     </div >
   );
 };

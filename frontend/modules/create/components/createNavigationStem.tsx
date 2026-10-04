@@ -37,14 +37,16 @@ const CreateNavigationStem = ({
 }: Props) => {
   return (
     <div className="p-2 overflow-y-auto no-scrollbar flex-grow">
-      <CreateNavigationStaticSlide
-        label="Consent"
-        slideId="CONSENT"
-        icon="consent"
-        scenarioId={scenarioId}
-        isSelected={activeSlideId === 'CONSENT'}
-        isInRootStem={isInRootStem}
-      />
+      {(isInRootStem) && (
+        <CreateNavigationStaticSlide
+          label="Consent"
+          slideId="CONSENT"
+          icon="consent"
+          scenarioId={scenarioId}
+          isSelected={activeSlideId === 'CONSENT'}
+          isInRootStem={isInRootStem}
+        />
+      )}
       <CreateDroppableContainer
         id={`slides`}
         items={stemSlides}

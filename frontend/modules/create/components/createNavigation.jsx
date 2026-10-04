@@ -5,17 +5,10 @@ import CreateNavigationStemContainer from '../containers/createNavigationStemCon
 
 const CreateNavigation = ({
   scenarioId,
-  stemSlides,
-  blocks,
-  activeSlideId,
-  activeStem,
   isCreating,
-  deletingId,
   isInRootStem,
   isDuplicating,
   onAddSlideClicked,
-  onDuplicateSlideClicked,
-  onDeleteSlideClicked
 }) => {
   return (
     <div className="flex flex-row relative" style={{ minWidth: '256px' }}>
@@ -34,15 +27,8 @@ const CreateNavigation = ({
         />
         <CreateNavigationStemContainer
           scenarioId={scenarioId}
-          stemSlides={stemSlides}
-          blocks={blocks}
-          activeSlideId={activeSlideId}
-          activeStem={activeStem}
-          deletingId={deletingId}
           isDuplicating={isDuplicating}
           isInRootStem={isInRootStem}
-          onDuplicateSlideClicked={onDuplicateSlideClicked}
-          onDeleteSlideClicked={onDeleteSlideClicked}
         />
       </div>
     </div>

@@ -22,7 +22,7 @@ class CreateStemsContainer extends Component {
   getChildStems = () => {
     const activeStemRef = this.getActiveStemRef();
     if (!activeStemRef) return [];
-    return filter(this.props.stems.data, { slideRef: this.props.slideRef });
+    return filter(this.props.stems.data, { stemRef: this.props.stemRef });
   }
 
   onStemClicked = (stemRef) => {
@@ -105,13 +105,10 @@ class CreateStemsContainer extends Component {
   onCreateStemClicked = () => {
     this.setState({ isCreating: true });
     const scenarioId = this.props.scenario.data._id;
-    const { activeSlideRef } = getScenarioDetails();
-    console.log('creating a stem clicked');
 
-    return;
     axios.post('/api/stems', {
       scenarioId,
-      slideRef: activeSlideRef
+      stemRef: this.props.editor.data.activeStemRef,
     }).then((response) => {
       const newStem = response.data.stem;
       Promise.all([
