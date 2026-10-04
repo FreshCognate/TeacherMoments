@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import CreateNavigationStem from '../components/createNavigationStem';
 import { Slide } from '~/modules/slides/slides.types';
 import { Block } from '~/modules/blocks/blocks.types';
-import { Stem } from '~/modules/stems/stems.types';
 import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
@@ -16,20 +15,30 @@ import find from 'lodash/find';
 
 type Props = {
   scenarioId: string;
-  stemSlides: Slide[];
-  blocks: Block[];
-  activeSlideId: string;
-  activeStem: Stem;
-  deletingId: string | null;
   isDuplicating: boolean;
   isInRootStem: boolean;
-  onDuplicateSlideClicked: (slideId: string) => void;
-  onDeleteSlideClicked: (slideId: string) => void;
+  slides: {
+    data: Slide[];
+    fetch: () => Promise<unknown>;
+  };
+  blocks: {
+    data: Block[];
+    fetch: () => Promise<unknown>;
+  };
+  router: any;
 };
 
-class CreateNavigationStemContainer extends Component<Props> {
+type State = {
+  deletingId: string | null;
+  isDuplicating: boolean;
+};
 
-  state = { deletingId: null };
+class CreateNavigationStemContainer extends Component<Props, State> {
+
+  state: State = {
+    deletingId: null,
+    isDuplicating: false
+  };
 
   onDeleteSlideClicked = (slideId: string) => {
     const selectedSlideSortOrder = getSelectedSlideSortOrder();
@@ -48,9 +57,11 @@ class CreateNavigationStemContainer extends Component<Props> {
             })
           } else {
             const slideBeforeDeletedSlide = find(this.props.slides.data, { sortOrder: selectedSlideSortOrder - 1 });
-            this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideBeforeDeletedSlide._id}`, {
-              replace: true
-            })
+            if (slideBeforeDeletedSlide) {
+              this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideBeforeDeletedSlide._id}`, {
+                replace: true
+              })
+            }
           }
 
         });
@@ -113,4 +124,4 @@ class CreateNavigationStemContainer extends Component<Props> {
   }
 };
 
-export default WithRouter(WithCache(CreateNavigationStemContainer, null, ['slides', 'blocks']));
+export default WithRouter(WithCache(CreateNavigationStemContainer, {}, ['slides', 'blocks']));
