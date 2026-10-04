@@ -48,9 +48,6 @@ class CreateNavigationSlideActionsContainer extends Component {
   onSlideActionClicked = (action) => {
     this.setState({ isOptionsOpen: false });
     switch (action) {
-      case 'CREATE_STEM':
-        this.props.onCreateStemClicked();
-        break;
       case 'DELETE':
         this.props.onDeleteSlideClicked();
         break;

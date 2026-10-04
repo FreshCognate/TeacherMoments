@@ -6,6 +6,7 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import addModal from '~/core/dialogs/helpers/addModal';
 import filter from 'lodash/filter';
 import WithRouter from '~/core/app/components/withRouter';
+import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
 
 class CreateStemsContainer extends Component {
 
@@ -101,6 +102,38 @@ class CreateStemsContainer extends Component {
     });
   }
 
+  onCreateStemClicked = () => {
+    this.setState({ isCreating: true });
+    const scenarioId = this.props.scenario.data._id;
+    const { activeSlideRef } = getScenarioDetails();
+    console.log('creating a stem clicked');
+
+    return;
+    axios.post('/api/stems', {
+      scenarioId,
+      slideRef: activeSlideRef
+    }).then((response) => {
+      const newStem = response.data.stem;
+      Promise.all([
+        this.props.stems.fetch(),
+        this.props.slides.fetch()
+      ]).then(() => {
+        this.props.editor.set({ activeStemRef: newStem.ref });
+        const slidesCache = getCache('slides');
+        const stemSlides = filter(slidesCache.data, { stemRef: newStem.ref });
+        if (stemSlides.length > 0) {
+          this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${stemSlides[0]._id}`, {
+            replace: true
+          });
+        }
+        this.setState({ isCreating: false });
+      });
+    }).catch((error) => {
+      this.setState({ isCreating: false });
+      handleRequestError(error);
+    });
+  }
+
   render() {
     const { isCreating, deletingId } = this.state;
     const childStems = this.getChildStems();
@@ -114,6 +147,7 @@ class CreateStemsContainer extends Component {
         onEditStemClicked={this.onEditStemClicked}
         onDeleteStemClicked={this.onDeleteStemClicked}
         onStemClicked={this.onStemClicked}
+        onCreateStemClicked={this.onCreateStemClicked}
       />
     );
   }

@@ -16,7 +16,6 @@ const CreateNavigationSlide = ({
   hasChildStems,
   onDuplicateSlideClicked,
   onDeleteSlideClicked,
-  onCreateStemClicked
 }) => {
 
   return (
@@ -35,7 +34,6 @@ const CreateNavigationSlide = ({
         draggingOptions={draggingOptions}
         onDuplicateSlideClicked={onDuplicateSlideClicked}
         onDeleteSlideClicked={onDeleteSlideClicked}
-        onCreateStemClicked={onCreateStemClicked}
       />
     </div>
   );

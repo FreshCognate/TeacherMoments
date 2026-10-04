@@ -21,7 +21,6 @@ type Props = {
   isInRootStem: boolean;
   onDuplicateSlideClicked: (slideId: string) => void;
   onDeleteSlideClicked: (slideId: string) => void;
-  onCreateStemClicked: () => void;
 };
 
 const CreateNavigationStem = ({
@@ -35,7 +34,6 @@ const CreateNavigationStem = ({
   isInRootStem,
   onDuplicateSlideClicked,
   onDeleteSlideClicked,
-  onCreateStemClicked
 }: Props) => {
   return (
     <div className="p-2 overflow-y-auto no-scrollbar flex-grow">
@@ -90,7 +88,6 @@ const CreateNavigationStem = ({
               hasChildStems={hasChildStems}
               onDuplicateSlideClicked={onDuplicateSlideClicked}
               onDeleteSlideClicked={onDeleteSlideClicked}
-              onCreateStemClicked={onCreateStemClicked}
             />
           );
 

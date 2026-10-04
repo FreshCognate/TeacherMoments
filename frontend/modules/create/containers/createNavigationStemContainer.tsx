@@ -15,7 +15,6 @@ type Props = {
   isInRootStem: boolean;
   onDuplicateSlideClicked: (slideId: string) => void;
   onDeleteSlideClicked: (slideId: string) => void;
-  onCreateStemClicked: () => void;
 };
 
 class CreateNavigationStemContainer extends Component<Props> {
@@ -31,7 +30,6 @@ class CreateNavigationStemContainer extends Component<Props> {
       isInRootStem,
       onDuplicateSlideClicked,
       onDeleteSlideClicked,
-      onCreateStemClicked
     } = this.props;
     return (
       <CreateNavigationStem
@@ -45,7 +43,6 @@ class CreateNavigationStemContainer extends Component<Props> {
         isInRootStem={isInRootStem}
         onDuplicateSlideClicked={onDuplicateSlideClicked}
         onDeleteSlideClicked={onDeleteSlideClicked}
-        onCreateStemClicked={onCreateStemClicked}
       />
     );
   }

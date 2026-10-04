@@ -15,8 +15,7 @@ const CreateNavigation = ({
   isDuplicating,
   onAddSlideClicked,
   onDuplicateSlideClicked,
-  onDeleteSlideClicked,
-  onCreateStemClicked
+  onDeleteSlideClicked
 }) => {
   return (
     <div className="flex flex-row relative" style={{ minWidth: '256px' }}>
@@ -44,7 +43,6 @@ const CreateNavigation = ({
           isInRootStem={isInRootStem}
           onDuplicateSlideClicked={onDuplicateSlideClicked}
           onDeleteSlideClicked={onDeleteSlideClicked}
-          onCreateStemClicked={onCreateStemClicked}
         />
       </div>
     </div>

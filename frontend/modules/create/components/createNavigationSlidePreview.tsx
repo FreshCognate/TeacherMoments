@@ -45,7 +45,6 @@ type Props = {
   isDuplicating: boolean;
   onDuplicateSlideClicked: (slideId: string) => void;
   onDeleteSlideClicked: (slideId: string) => void;
-  onCreateStemClicked: () => void;
 };
 
 const CreateNavigationSlidePreview = ({
@@ -62,7 +61,6 @@ const CreateNavigationSlidePreview = ({
   isDuplicating,
   onDuplicateSlideClicked,
   onDeleteSlideClicked,
-  onCreateStemClicked
 }: Props) => {
   const { setNodeRef, style, attributes, listeners, isDragging } = draggingOptions;
 
@@ -75,14 +73,12 @@ const CreateNavigationSlidePreview = ({
       <div className={className} style={style} ref={setNodeRef} {...listeners} {...attributes}>
         <div>
           <CreateNavigationSlideActionsContainer
-
             slide={slide}
             slideNumber={slide.sortOrder + 1}
             canDeleteSlides={canDeleteSlides}
             isInRootStem={isInRootStem}
             onDuplicateSlideClicked={() => onDuplicateSlideClicked(slide._id)}
             onDeleteSlideClicked={() => onDeleteSlideClicked(slide._id)}
-            onCreateStemClicked={() => onCreateStemClicked()}
           />
           <div>
 

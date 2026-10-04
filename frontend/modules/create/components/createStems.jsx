@@ -12,7 +12,8 @@ const CreateStems = ({
   deletingId,
   onEditStemClicked,
   onDeleteStemClicked,
-  onStemClicked
+  onStemClicked,
+  onCreateStemClicked
 }) => {
   return (
     <div className={classnames("bg-lm-2 dark:bg-dm-2 rounded-lg p-1")}>
@@ -54,6 +55,7 @@ const CreateStems = ({
           </div>
         );
       })}
+      <FlatButton text="Create branching stem" icon="create" onClick={onCreateStemClicked} />
     </div>
   );
 };

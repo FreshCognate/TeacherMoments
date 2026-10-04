@@ -103,10 +103,6 @@ class CreateNavigationContainer extends Component {
     })
   }
 
-  onAddStemClicked = () => {
-    console.log('adds stem');
-  }
-
   onDuplicateSlideClicked = (slideId) => {
     this.setState({ isDuplicating: true });
     const scenarioId = this.props.scenario.data._id;
@@ -166,35 +162,6 @@ class CreateNavigationContainer extends Component {
     this.props.editor.set({ navigationMode: this.props.editor.data.navigationMode === 'SLIDES' ? 'STEM' : 'SLIDES' })
   }
 
-  onCreateStemClicked = () => {
-    this.setState({ isCreating: true });
-    const scenarioId = this.props.scenario.data._id;
-    const { activeSlideRef } = getScenarioDetails();
-    axios.post('/api/stems', {
-      scenarioId,
-      slideRef: activeSlideRef
-    }).then((response) => {
-      const newStem = response.data.stem;
-      Promise.all([
-        this.props.stems.fetch(),
-        this.props.slides.fetch()
-      ]).then(() => {
-        this.props.editor.set({ activeStemRef: newStem.ref });
-        const slidesCache = getCache('slides');
-        const stemSlides = filter(slidesCache.data, { stemRef: newStem.ref });
-        if (stemSlides.length > 0) {
-          this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${stemSlides[0]._id}`, {
-            replace: true
-          });
-        }
-        this.setState({ isCreating: false });
-      });
-    }).catch((error) => {
-      this.setState({ isCreating: false });
-      handleRequestError(error);
-    });
-  }
-
   render() {
     const { isCreating, deletingId, isDuplicating } = this.state;
     const { activeSlideId } = getScenarioDetails();
@@ -215,8 +182,6 @@ class CreateNavigationContainer extends Component {
         onDuplicateSlideClicked={this.onDuplicateSlideClicked}
         onDeleteSlideClicked={this.onDeleteSlideClicked}
         onToggleNavigationTypeClicked={this.onToggleNavigationTypeClicked}
-        onCreateStemClicked={this.onCreateStemClicked}
-        onAddStemClicked={this.onAddStemClicked}
       />
     );
   }
