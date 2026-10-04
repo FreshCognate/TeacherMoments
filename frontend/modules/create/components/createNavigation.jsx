@@ -1,14 +1,7 @@
 import React from 'react';
 import CreateNavigationActions from './createNavigationActions';
-import CreateNavigationSlide from './createNavigationSlide';
-import CreateNavigationStaticSlide from './createNavigationStaticSlide';
-import CreateDroppableContainer from '../containers/createDroppableContainer';
-import filter from 'lodash/filter';
-import Flag from '~/modules/flags/components/flag';
-import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
 import classnames from 'classnames';
-import { motion } from 'framer-motion';
-import getTriggerBySlideRef from '~/modules/triggers/helpers/getTriggerBySlideRef';
+import CreateNavigationStemContainer from '../containers/createNavigationStemContainer';
 
 const CreateNavigation = ({
   scenarioId,
@@ -47,127 +40,19 @@ const CreateNavigation = ({
           onAddSlideClicked={onAddSlideClicked}
           onAddStemClicked={onAddStemClicked}
         />
-        <div className="p-2 overflow-y-auto no-scrollbar flex-grow">
-          <CreateNavigationStaticSlide
-            label="Consent"
-            slideId="CONSENT"
-            icon="consent"
-            scenarioId={scenarioId}
-            isSelected={activeSlideId === 'CONSENT'}
-            isInRootStem={isInRootStem}
-          />
-          <CreateDroppableContainer
-            id={`slides`}
-            items={rootSlides}
-            data={{
-              type: 'SLIDES'
-            }}
-            renderItem={({ item, index, items, draggingOptions }) => {
-
-              const canDeleteSlides = items.length > 1;
-              let isSelected = false;
-              let isDeletingSlide = false;
-              if (item._id === activeSlideId) isSelected = true;
-              if (item._id === deletingId) isDeletingSlide = true;
-              const slideBlocks = filter(blocks, { slideRef: item.ref });
-
-              const slideTrigger = getTriggerBySlideRef({ slideRef: item.ref });
-              const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
-              return (
-                <CreateNavigationSlide
-                  key={item._id}
-                  scenarioId={scenarioId}
-                  slide={item}
-                  slideBlocks={slideBlocks}
-                  slideTrigger={slideTrigger}
-                  activeStem={activeStem}
-                  activeSlideStems={activeSlideStems}
-                  draggingOptions={draggingOptions}
-                  isSelected={isSelected}
-                  isDeleting={isDeletingSlide}
-                  isDuplicating={isDuplicating}
-                  isInRootStem={isInRootStem}
-                  isNestedStem={false}
-                  canDeleteSlides={canDeleteSlides}
-                  hasChildStems={hasChildStems}
-                  onDuplicateSlideClicked={onDuplicateSlideClicked}
-                  onDeleteSlideClicked={onDeleteSlideClicked}
-                  onCreateStemClicked={onCreateStemClicked}
-                />
-              );
-
-            }}
-          />
-          <CreateNavigationStaticSlide
-            label="Summary"
-            slideId="SUMMARY"
-            icon="summary"
-            scenarioId={scenarioId}
-            isSelected={activeSlideId === 'SUMMARY'}
-            isInRootStem={isInRootStem}
-          />
-        </div>
+        <CreateNavigationStemContainer
+          scenarioId={scenarioId}
+          rootSlides={rootSlides}
+          blocks={blocks}
+          activeSlideId={activeSlideId}
+          deletingId={deletingId}
+          isDuplicating={isDuplicating}
+          isInRootStem={isInRootStem}
+          onDuplicateSlideClicked={onDuplicateSlideClicked}
+          onDeleteSlideClicked={onDeleteSlideClicked}
+          onCreateStemClicked={onCreateStemClicked}
+        />
       </div>
-      {(!isInRootStem) && (
-        <motion.div
-          key="nested-panel"
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="absolute left-16 bg-lm-0 dark:bg-dm-1 w-full max-w-64 h-full flex flex-col border border-lm-3 dark:border-dm-1 rounded-lg"
-        >
-          <CreateNavigationActions
-            isCreating={isCreating}
-            isDuplicating={isDuplicating}
-            isInRootStem={isInRootStem}
-            isNestedStem={true}
-            onAddSlideClicked={onAddSlideClicked}
-            onAddStemClicked={onAddStemClicked}
-          />
-          <div className="p-2 overflow-y-auto no-scrollbar flex-grow">
-            <CreateDroppableContainer
-              id={`slides`}
-              items={slides}
-              data={{
-                type: 'SLIDES'
-              }}
-              renderItem={({ item, index, items, draggingOptions }) => {
-
-                const canDeleteSlides = items.length > 1;
-                let isSelected = false;
-                let isDeletingSlide = false;
-                if (item._id === activeSlideId) isSelected = true;
-                if (item._id === deletingId) isDeletingSlide = true;
-                const slideBlocks = filter(blocks, { slideRef: item.ref });
-
-                const slideTrigger = getTriggerBySlideRef({ slideRef: item.ref });
-                const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
-                return (
-                  <CreateNavigationSlide
-                    key={item._id}
-                    scenarioId={scenarioId}
-                    slide={item}
-                    slideBlocks={slideBlocks}
-                    slideTrigger={slideTrigger}
-                    draggingOptions={draggingOptions}
-                    isSelected={isSelected}
-                    isDeleting={isDeletingSlide}
-                    isDuplicating={isDuplicating}
-                    isInRootStem={isInRootStem}
-                    isNestedStem={true}
-                    canDeleteSlides={canDeleteSlides}
-                    hasChildStems={hasChildStems}
-                    onDuplicateSlideClicked={onDuplicateSlideClicked}
-                    onDeleteSlideClicked={onDeleteSlideClicked}
-                    onCreateStemClicked={onCreateStemClicked}
-                  />
-                );
-
-              }}
-            />
-          </div>
-        </motion.div>
-      )}
     </div>
   );
 };
