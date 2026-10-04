@@ -110,7 +110,6 @@ class CreateStemsContainer extends Component {
         activeStemRef={activeStemRef}
         childStems={childStems}
         isCreating={isCreating}
-        isInRootStem={this.props.isInRootStem}
         deletingId={deletingId}
         onEditStemClicked={this.onEditStemClicked}
         onDeleteStemClicked={this.onDeleteStemClicked}

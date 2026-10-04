@@ -41,11 +41,6 @@ const CreateNavigationSlide = ({
         onDeleteSlideClicked={onDeleteSlideClicked}
         onCreateStemClicked={onCreateStemClicked}
       />
-
-
-      <CreateStemsContainer slideRef={slide.ref} isInRootStem={isInRootStem} />
-
-
     </div>
   );
 };

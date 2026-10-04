@@ -6,11 +6,10 @@ import { Stem } from '~/modules/stems/stems.types';
 
 type Props = {
   scenarioId: string;
-  rootSlides: Slide[];
+  stemSlides: Slide[];
   blocks: Block[];
   activeSlideId: string;
   activeStem: Stem;
-  activeSlideStems: Stem[];
   deletingId: string | null;
   isDuplicating: boolean;
   isInRootStem: boolean;
@@ -23,9 +22,10 @@ class CreateNavigationStemContainer extends Component<Props> {
   render() {
     const {
       scenarioId,
-      rootSlides,
+      stemSlides,
       blocks,
       activeSlideId,
+      activeStem,
       deletingId,
       isDuplicating,
       isInRootStem,
@@ -36,9 +36,10 @@ class CreateNavigationStemContainer extends Component<Props> {
     return (
       <CreateNavigationStem
         scenarioId={scenarioId}
-        rootSlides={rootSlides}
+        stemSlides={stemSlides}
         blocks={blocks}
         activeSlideId={activeSlideId}
+        activeStem={activeStem}
         deletingId={deletingId}
         isDuplicating={isDuplicating}
         isInRootStem={isInRootStem}

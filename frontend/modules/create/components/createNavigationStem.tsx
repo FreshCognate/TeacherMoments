@@ -7,13 +7,15 @@ import CreateNavigationSlide from './createNavigationSlide';
 import CreateDroppableContainer from '../containers/createDroppableContainer';
 import { Slide } from '~/modules/slides/slides.types';
 import { Block } from '~/modules/blocks/blocks.types';
+import CreateStemsContainer from '../containers/createStemsContainer';
 import { Stem } from '~/modules/stems/stems.types';
 
 type Props = {
   scenarioId: string;
-  rootSlides: Slide[];
+  stemSlides: Slide[];
   blocks: Block[];
   activeSlideId: string;
+  activeStem: Stem;
   deletingId: string | null;
   isDuplicating: boolean;
   isInRootStem: boolean;
@@ -24,9 +26,10 @@ type Props = {
 
 const CreateNavigationStem = ({
   scenarioId,
-  rootSlides,
+  stemSlides,
   blocks,
   activeSlideId,
+  activeStem,
   deletingId,
   isDuplicating,
   isInRootStem,
@@ -46,7 +49,7 @@ const CreateNavigationStem = ({
       />
       <CreateDroppableContainer
         id={`slides`}
-        items={rootSlides}
+        items={stemSlides}
         data={{
           type: 'SLIDES'
         }}
@@ -94,6 +97,7 @@ const CreateNavigationStem = ({
 
         }}
       />
+      <CreateStemsContainer stemRef={activeStem.ref} />
       <CreateNavigationStaticSlide
         label="Summary"
         slideId="SUMMARY"

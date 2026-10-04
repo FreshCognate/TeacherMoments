@@ -54,16 +54,10 @@ class CreateNavigationContainer extends Component {
     return find(this.props.stems.data, { ref: activeStemRef });
   }
 
-  getCurrentStemOfSlides = () => {
+  getCurrentStemSlides = () => {
     const activeStemRef = this.getActiveStemRef();
     if (!activeStemRef) return this.props.slides.data;
     return filter(this.props.slides.data, { stemRef: activeStemRef });
-  }
-
-  getRootSlides = () => {
-    const rootStem = this.getRootStem();
-    if (!rootStem) return [];
-    return filter(this.props.slides.data, { stemRef: rootStem.ref });
   }
 
   getSelectedSlideSortOrder = () => {
@@ -74,7 +68,7 @@ class CreateNavigationContainer extends Component {
   getNewSlideSortOrder = () => {
     const { activeSlideId } = getScenarioDetails();
     if (activeSlideId === 'CONSENT') return 0;
-    if (activeSlideId === 'SUMMARY') return this.getCurrentStemOfSlides().length;
+    if (activeSlideId === 'SUMMARY') return this.getCurrentStemSlides().length;
     return this.getSelectedSlideSortOrder() + 1;
   }
 
@@ -84,12 +78,6 @@ class CreateNavigationContainer extends Component {
     const slide = find(this.props.slides.data, { ref: activeStem.slideRef });
     if (!slide) return null;
     return slide._id;
-  }
-
-  getActiveSlideStems = () => {
-    const activeStem = this.getActiveStem();
-    if (!activeStem) return [];
-    return filter(this.props.stems.data, { slideRef: activeStem.slideRef });
   }
 
   onAddSlideClicked = () => {
@@ -211,18 +199,14 @@ class CreateNavigationContainer extends Component {
     const { isCreating, deletingId, isDuplicating } = this.state;
     const { activeSlideId } = getScenarioDetails();
     const activeStem = this.getActiveStem();
-    const activeStemSlideId = this.getActiveStemSlideId();
-    const activeSlideStems = this.getActiveSlideStems();
+    const stemSlides = this.getCurrentStemSlides();
     return (
       <CreateNavigation
         scenarioId={this.props.scenario.data._id}
-        slides={this.getCurrentStemOfSlides()}
+        stemSlides={stemSlides}
         blocks={this.props.blocks.data}
-        rootSlides={this.getRootSlides()}
         activeSlideId={activeSlideId}
-        activeStemSlideId={activeStemSlideId}
         activeStem={activeStem}
-        activeSlideStems={activeSlideStems}
         isCreating={isCreating}
         deletingId={deletingId}
         isDuplicating={isDuplicating}

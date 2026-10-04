@@ -5,17 +5,14 @@ import CreateNavigationStemContainer from '../containers/createNavigationStemCon
 
 const CreateNavigation = ({
   scenarioId,
-  slides,
+  stemSlides,
   blocks,
-  rootSlides,
   activeSlideId,
-  activeStemSlideId,
   activeStem,
-  activeSlideStems,
   isCreating,
   deletingId,
-  isDuplicating,
   isInRootStem,
+  isDuplicating,
   onAddSlideClicked,
   onAddStemClicked,
   onDuplicateSlideClicked,
@@ -23,16 +20,15 @@ const CreateNavigation = ({
   onCreateStemClicked
 }) => {
   return (
-    <div className="flex flex-row relative" style={{ minWidth: isInRootStem ? '256px' : '320px' }}>
+    <div className="flex flex-row relative" style={{ minWidth: '256px' }}>
       <div className={classnames("max-w-64 h-full flex flex-col relative z-10 transition-all",
         "bg-lm-0 dark:bg-dm-1 ",
         "border border-lm-3 dark:border-dm-1 rounded-lg",
         "w-full")}
-        style={{ width: isInRootStem ? '256px' : '50px' }}
+        style={{ width: '256px' }}
       >
         <CreateNavigationActions
           scenarioId={scenarioId}
-          activeStemSlideId={activeStemSlideId}
           isCreating={isCreating}
           isDuplicating={isDuplicating}
           isInRootStem={isInRootStem}
@@ -42,9 +38,10 @@ const CreateNavigation = ({
         />
         <CreateNavigationStemContainer
           scenarioId={scenarioId}
-          rootSlides={rootSlides}
+          stemSlides={stemSlides}
           blocks={blocks}
           activeSlideId={activeSlideId}
+          activeStem={activeStem}
           deletingId={deletingId}
           isDuplicating={isDuplicating}
           isInRootStem={isInRootStem}
