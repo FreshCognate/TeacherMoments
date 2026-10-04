@@ -12,15 +12,12 @@ const CreateNavigationSlide = ({
   isDeleting,
   isDuplicating,
   isInRootStem,
-  isNestedStem,
   canDeleteSlides,
   hasChildStems,
   onDuplicateSlideClicked,
   onDeleteSlideClicked,
   onCreateStemClicked
 }) => {
-
-  const shouldShowIcon = !isInRootStem && !isNestedStem;
 
   return (
     <div className="mb-2">
@@ -35,7 +32,6 @@ const CreateNavigationSlide = ({
         isSelected={isSelected}
         isDeleting={isDeleting}
         isDuplicating={isDuplicating}
-        isAnimating={shouldShowIcon}
         draggingOptions={draggingOptions}
         onDuplicateSlideClicked={onDuplicateSlideClicked}
         onDeleteSlideClicked={onDeleteSlideClicked}

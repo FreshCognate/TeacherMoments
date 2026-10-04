@@ -15,9 +15,7 @@ const CreateStems = ({
   onStemClicked
 }) => {
   return (
-    <div className={classnames("pb-1 bg-lm-2 dark:bg-dm-2 rounded-b-lg -mt-1 pt-2 px-1", {
-      "pt-0": !childStems || childStems.length === 0
-    })}>
+    <div className={classnames("bg-lm-2 dark:bg-dm-2 rounded-lg p-1")}>
       {map(childStems, (stem) => {
         const isDeleting = stem._id === deletingId;
         const isSelected = stem.ref === activeStemRef;

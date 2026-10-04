@@ -86,7 +86,6 @@ const CreateNavigationStem = ({
               isDeleting={isDeletingSlide}
               isDuplicating={isDuplicating}
               isInRootStem={isInRootStem}
-              isNestedStem={false}
               canDeleteSlides={canDeleteSlides}
               hasChildStems={hasChildStems}
               onDuplicateSlideClicked={onDuplicateSlideClicked}
@@ -97,7 +96,9 @@ const CreateNavigationStem = ({
 
         }}
       />
-      <CreateStemsContainer stemRef={activeStem.ref} />
+      <div className="my-4">
+        <CreateStemsContainer stemRef={activeStem.ref} />
+      </div>
       <CreateNavigationStaticSlide
         label="Summary"
         slideId="SUMMARY"

@@ -43,7 +43,6 @@ type Props = {
   isSelected: boolean;
   isDeleting: boolean;
   isDuplicating: boolean;
-  isAnimating: boolean;
   onDuplicateSlideClicked: (slideId: string) => void;
   onDeleteSlideClicked: (slideId: string) => void;
   onCreateStemClicked: () => void;
@@ -61,7 +60,6 @@ const CreateNavigationSlidePreview = ({
   isSelected,
   isDeleting,
   isDuplicating,
-  isAnimating,
   onDuplicateSlideClicked,
   onDeleteSlideClicked,
   onCreateStemClicked
@@ -70,88 +68,72 @@ const CreateNavigationSlidePreview = ({
 
   const className = classnames("bg-lm-0 border dark:border-none dark:bg-dm-0 rounded-md h-36 mb-2 relative", {
     "outline outline-blue-500": isSelected,
-    "opacity-50": isDeleting || isDragging || isDuplicating,
-    "shadow-sm border border-lm-3 dark:border-dm-2": !isAnimating,
+    "opacity-50": isDeleting || isDragging || isDuplicating
   });
   return (
-    <Link to={`/scenarios/${scenarioId}/create?slide=${slide._id}`} className="block" style={{ width: isAnimating ? '32px' : '238px', height: '144px' }} replace>
+    <Link to={`/scenarios/${scenarioId}/create?slide=${slide._id}`} className="block" style={{ width: '238px', height: '144px' }} replace>
       <div className={className} style={style} ref={setNodeRef} {...listeners} {...attributes}>
-        {(isAnimating) && (
-          <div className="flex flex-col justify-between h-full">
-            <div className="p-2">
-              <Icon icon="slides" size={16} />
-            </div>
-            <span className="p-2 opacity-60">
-              {(slideTrigger) && (
-                <Icon icon="trigger" size={16} />
-              )}
-            </span>
-          </div>
-        )}
-        {(!isAnimating) && (
+        <div>
+          <CreateNavigationSlideActionsContainer
 
+            slide={slide}
+            slideNumber={slide.sortOrder + 1}
+            canDeleteSlides={canDeleteSlides}
+            isInRootStem={isInRootStem}
+            onDuplicateSlideClicked={() => onDuplicateSlideClicked(slide._id)}
+            onDeleteSlideClicked={() => onDeleteSlideClicked(slide._id)}
+            onCreateStemClicked={() => onCreateStemClicked()}
+          />
           <div>
-            <CreateNavigationSlideActionsContainer
 
-              slide={slide}
-              slideNumber={slide.sortOrder + 1}
-              canDeleteSlides={canDeleteSlides}
-              isInRootStem={isInRootStem}
-              onDuplicateSlideClicked={() => onDuplicateSlideClicked(slide._id)}
-              onDeleteSlideClicked={() => onDeleteSlideClicked(slide._id)}
-              onCreateStemClicked={() => onCreateStemClicked()}
-            />
-            <div>
+            <div className="overflow-hidden h-28 rounded-b-lg">
 
-              <div className="overflow-hidden h-28 rounded-b-lg">
-
-                <svg xmlns="http://www.w3.org/2000/svg" width="640" height="1000">
-                  <foreignObject transform={'scale(0.376)'} width={'100%'} height={'100%'}>
-                    <section>
-                      {map(slideBlocks, (block) => {
-                        let Block = getBlockComponent({ blockType: block.blockType });
-                        return (
-                          <div
-                            key={block._id}
-                            className="mb-8 last:mb-0 p-4"
-                          >
-                            <Block
-                              block={block}
-                              blockTracking={{}}
-                            />
-                          </div>
-                        );
-                      })}
-                    </section>
-                  </foreignObject>
-                  <rect
-                    x="0"
-                    y="0"
-                    fill="transparent"
-                    transform={'scale(1)'}
-                    width={'100%'}
-                    height={'100%'}
-                  />
-                </svg>
-              </div>
-              <div className="absolute bottom-1 w-full flex justify-between">
-                <span>
-                  {(slideTrigger) && (
-                    <Badge icon="trigger" size='sm' />
-                  )}
-                </span>
-                <span>
-                  {(hasChildStems) && (
-                    <Badge icon="branching" />
-                  )}
-                  {(slideTrigger && slideTrigger.action === 'SHOW_FEEDBACK_FROM_PROMPTS') && (
-                    <Badge icon="feedback" />
-                  )}
-                </span>
-              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="640" height="1000">
+                <foreignObject transform={'scale(0.376)'} width={'100%'} height={'100%'}>
+                  <section>
+                    {map(slideBlocks, (block) => {
+                      let Block = getBlockComponent({ blockType: block.blockType });
+                      return (
+                        <div
+                          key={block._id}
+                          className="mb-8 last:mb-0 p-4"
+                        >
+                          <Block
+                            block={block}
+                            blockTracking={{}}
+                          />
+                        </div>
+                      );
+                    })}
+                  </section>
+                </foreignObject>
+                <rect
+                  x="0"
+                  y="0"
+                  fill="transparent"
+                  transform={'scale(1)'}
+                  width={'100%'}
+                  height={'100%'}
+                />
+              </svg>
+            </div>
+            <div className="absolute bottom-1 w-full flex justify-between">
+              <span>
+                {(slideTrigger) && (
+                  <Badge icon="trigger" size='sm' />
+                )}
+              </span>
+              <span>
+                {(hasChildStems) && (
+                  <Badge icon="branching" />
+                )}
+                {(slideTrigger && slideTrigger.action === 'SHOW_FEEDBACK_FROM_PROMPTS') && (
+                  <Badge icon="feedback" />
+                )}
+              </span>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </Link>
   );

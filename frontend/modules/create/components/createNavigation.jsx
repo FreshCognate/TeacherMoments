@@ -14,7 +14,6 @@ const CreateNavigation = ({
   isInRootStem,
   isDuplicating,
   onAddSlideClicked,
-  onAddStemClicked,
   onDuplicateSlideClicked,
   onDeleteSlideClicked,
   onCreateStemClicked
@@ -32,9 +31,7 @@ const CreateNavigation = ({
           isCreating={isCreating}
           isDuplicating={isDuplicating}
           isInRootStem={isInRootStem}
-          isNestedStem={false}
           onAddSlideClicked={onAddSlideClicked}
-          onAddStemClicked={onAddStemClicked}
         />
         <CreateNavigationStemContainer
           scenarioId={scenarioId}
