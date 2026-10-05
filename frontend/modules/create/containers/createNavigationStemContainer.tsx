@@ -102,7 +102,6 @@ class CreateNavigationStemContainer extends Component<Props, State> {
   render() {
     const {
       scenarioId,
-      isDuplicating,
       isInRootStem,
     } = this.props;
 
@@ -120,7 +119,7 @@ class CreateNavigationStemContainer extends Component<Props, State> {
         activeStem={activeStem}
         activeStemChildrenCount={activeStemChildrenCount}
         deletingId={this.state.deletingId}
-        isDuplicating={isDuplicating}
+        isDuplicating={this.state.isDuplicating}
         isInRootStem={isInRootStem}
         onDuplicateSlideClicked={this.onDuplicateSlideClicked}
         onDeleteSlideClicked={this.onDeleteSlideClicked}

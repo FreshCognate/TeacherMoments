@@ -4,7 +4,7 @@ vi.mock('../helpers/getScenarioDetails', () => ({
   default: vi.fn(() => ({ activeSlideRef: 'ref-1' }))
 }));
 
-import setSlideFeedback from '../helpers/setSlideFeedbackResponses';
+import setSlideFeedbackItems from '../helpers/setSlideFeedbackItems';
 import { createCache, resetCache, getCache } from '~/core/cache/helpers/cacheManager';
 
 const seedRun = (data) => {
@@ -16,6 +16,12 @@ const seedRun = (data) => {
   });
 };
 
+const feedbackItems = [{
+  blockRef: 'block-1',
+  blockType: 'INPUT_PROMPT',
+  conditions: [{ conditionId: 'condition-1', feedbackItemId: 'feedback-item-1', score: 1, reasoning: 'Matches' }]
+}];
+
 const setEditorPathname = () => {
   window.history.replaceState({}, '', '/scenarios/scenario-1/create');
 };
@@ -24,7 +30,7 @@ const setPlayPathname = () => {
   window.history.replaceState({}, '', '/play/scenario-1');
 };
 
-describe('setSlideFeedback', () => {
+describe('setSlideFeedbackItems', () => {
   const originalUrl = window.location.href;
 
   beforeEach(() => {
@@ -37,15 +43,15 @@ describe('setSlideFeedback', () => {
   });
 
   it('sets feedbackItems on the active stage in edit mode', () => {
-    setSlideFeedback([{ id: 'fb-1' }]);
-    expect(getCache('run').data.stages[0].feedbackItems).toEqual([{ id: 'fb-1' }]);
+    setSlideFeedbackItems(feedbackItems);
+    expect(getCache('run').data.stages[0].feedbackItems).toEqual(feedbackItems);
   });
 
   it('mutates the run cache via PUT in play mode', () => {
     setPlayPathname();
     const mutate = vi.spyOn(getCache('run'), 'mutate');
 
-    setSlideFeedback([{ id: 'fb-1' }]);
+    setSlideFeedbackItems(feedbackItems);
 
     expect(mutate).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -53,7 +59,7 @@ describe('setSlideFeedback', () => {
           stages: expect.arrayContaining([
             expect.objectContaining({
               slideRef: 'ref-1',
-              feedbackItems: [{ id: 'fb-1' }]
+              feedbackItems
             })
           ])
         }),

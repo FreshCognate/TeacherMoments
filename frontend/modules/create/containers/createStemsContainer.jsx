@@ -115,14 +115,6 @@ class CreateStemsContainer extends Component {
         this.props.stems.fetch(),
         this.props.slides.fetch()
       ]).then(() => {
-        this.props.editor.set({ activeStemRef: newStem.ref });
-        const slidesCache = getCache('slides');
-        const stemSlides = filter(slidesCache.data, { stemRef: newStem.ref });
-        if (stemSlides.length > 0) {
-          this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${stemSlides[0]._id}`, {
-            replace: true
-          });
-        }
         this.setState({ isCreating: false });
       });
     }).catch((error) => {

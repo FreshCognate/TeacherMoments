@@ -1,6 +1,7 @@
 import setScenarioHasChanges from '../../scenarios/services/setScenarioHasChanges.js';
 import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
 import deleteTriggersBySlideRefs from '../../triggers/services/deleteTriggersBySlideRefs.js';
+import map from 'lodash/map.js';
 
 const deleteStemContents = async ({ stemRef, deletedAt, session }, context) => {
 
@@ -43,6 +44,35 @@ export default async (props, options, context) => {
     await stem.save({ session });
 
     await deleteStemContents({ stemRef: stem.ref, deletedAt, session }, context);
+
+    let parentStemRefs = [stem.ref];
+
+    while (parentStemRefs.length > 0) {
+
+      const childStems = await models.Stem.find({ stemRef: { $in: parentStemRefs }, isDeleted: false }).session(session);
+
+      if (childStems.length === 0) break;
+
+      await models.Stem.updateMany(
+        {
+          _id: {
+            $in: map(childStems, '_id')
+          }
+        },
+        {
+          isDeleted: true,
+          deletedAt,
+          deletedBy: user._id
+        }
+      ).session(session);
+
+      for (const childStem of childStems) {
+        await deleteStemContents({ stemRef: childStem.ref, deletedAt, session }, context);
+      }
+
+      parentStemRefs = map(childStems, 'ref');
+
+    }
   }).catch(err => {
     throw { message: err, statusCode: 500 };
   });

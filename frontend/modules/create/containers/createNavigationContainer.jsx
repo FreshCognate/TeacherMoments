@@ -5,16 +5,16 @@ import WithCache from '~/core/cache/containers/withCache';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import setEditingMode from '../helpers/setEditingMode';
-import getScenarioDetails from '../../run/helpers/getScenarioDetails';
+import find from 'lodash/find';
 import getActiveStem from '~/modules/stems/helpers/getActiveStem';
 import getActiveStemRef from '~/modules/stems/helpers/getActiveStemRef';
 import getNewSlideSortOrder from '~/modules/stems/helpers/getNewSlideSortOrder';
+import getParentStemSlideId from '~/modules/stems/helpers/getParentStemSlideId';
 
 class CreateNavigationContainer extends Component {
 
   state = {
     isCreating: false,
-    isDuplicating: false,
     navigationType: 'SLIDES',
     deletingId: null
   }
@@ -62,20 +62,26 @@ class CreateNavigationContainer extends Component {
     this.props.editor.set({ navigationMode: this.props.editor.data.navigationMode === 'SLIDES' ? 'STEM' : 'SLIDES' })
   }
 
+  onBackToParentClicked = ({ parentStemSlideId }) => {
+    const parentStemSlide = find(this.props.slides.data, { _id: parentStemSlideId });
+    this.props.editor.set({ activeStemRef: parentStemSlide.stemRef });
+  }
+
   render() {
-    const { isCreating, isDuplicating } = this.state;
-    const { activeSlideId } = getScenarioDetails();
+    const { isCreating } = this.state;
+    const parentStemSlideId = getParentStemSlideId();
     const activeStem = getActiveStem();
     return (
       <CreateNavigation
         scenarioId={this.props.scenario.data._id}
+        parentStemSlideId={parentStemSlideId}
         activeStem={activeStem}
         isCreating={isCreating}
-        isDuplicating={isDuplicating}
         isInRootStem={activeStem?.isRoot ?? true}
         onAddSlideClicked={this.onAddSlideClicked}
         onDuplicateSlideClicked={this.onDuplicateSlideClicked}
         onToggleNavigationTypeClicked={this.onToggleNavigationTypeClicked}
+        onBackToParentClicked={this.onBackToParentClicked}
       />
     );
   }

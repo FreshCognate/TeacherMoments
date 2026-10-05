@@ -56,6 +56,36 @@ describe('deleteStemById (in-memory mongo)', () => {
     expect(setHasChangesMock).toHaveBeenCalledWith({ scenarioId: scenario }, {}, ctx);
     expect(String(result._id)).toBe(String(stem._id));
   });
+  it('cascades to descendant stems and their slides and blocks', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+
+    const stem = await db.models.Stem.create({ scenario, sortOrder: 0 });
+    const childStem = await db.models.Stem.create({ scenario, stemRef: stem.ref, sortOrder: 0 });
+    const grandchildStem = await db.models.Stem.create({ scenario, stemRef: childStem.ref, sortOrder: 0 });
+    const siblingStem = await db.models.Stem.create({ scenario, sortOrder: 1 });
+
+    const childSlide = await db.models.Slide.create({ scenario, stemRef: childStem.ref, sortOrder: 0 });
+    const grandchildSlide = await db.models.Slide.create({ scenario, stemRef: grandchildStem.ref, sortOrder: 0 });
+    const siblingSlide = await db.models.Slide.create({ scenario, stemRef: siblingStem.ref, sortOrder: 0 });
+
+    const grandchildBlock = await db.models.Block.create({ scenario, slideRef: grandchildSlide.ref });
+
+    await deleteStemById({ stemId: stem._id }, {}, {
+      models: db.models, user: { _id: new mongoose.Types.ObjectId() }, connection: db.connection
+    });
+
+    const isDeleted = async (Model, id) => (await Model.findById(id).lean()).isDeleted;
+
+    expect(await isDeleted(db.models.Stem, childStem._id)).toBe(true);
+    expect(await isDeleted(db.models.Stem, grandchildStem._id)).toBe(true);
+    expect(await isDeleted(db.models.Slide, childSlide._id)).toBe(true);
+    expect(await isDeleted(db.models.Slide, grandchildSlide._id)).toBe(true);
+    expect(await isDeleted(db.models.Block, grandchildBlock._id)).toBe(true);
+
+    expect(await isDeleted(db.models.Stem, siblingStem._id)).toBe(false);
+    expect(await isDeleted(db.models.Slide, siblingSlide._id)).toBe(false);
+  });
+
   it('cascades to the triggers on the stem\'s slides', async () => {
     const scenario = new mongoose.Types.ObjectId();
 
