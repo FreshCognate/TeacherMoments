@@ -4,6 +4,7 @@ export type OverviewSlide = {
   slideType: 'STEP' | 'CONSENT' | 'SUMMARY';
   sortOrder: number;
   to: string;
+  isSelected: boolean;
 };
 
 export type OverviewStem = {

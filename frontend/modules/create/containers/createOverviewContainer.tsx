@@ -11,9 +11,13 @@ import map from 'lodash/map';
 import each from 'lodash/each';
 import { OverviewSlide, OverviewStem, PositionedStem, Edge } from '../create.types';
 import WithRouter from '~/core/app/components/withRouter';
-import getCache from '~/core/cache/helpers/getCache';
+import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
 
 type Props = {
+  editor: {
+    data: { activeStemRef?: string };
+    set: (data: { activeStemRef: string }) => void;
+  };
   scenario: { data: Scenario };
   stems: { data: Stem[] };
   slides: { data: Slide[] };
@@ -54,31 +58,47 @@ class CreateOverviewContainer extends Component<Props> {
         : map(positions, (position, depth) => `${String.fromCharCode(66 + depth)}${position}`).join('-');
       const stemSlides: OverviewSlide[] = [];
 
+      const { activeSlideId } = getScenarioDetails();
+
       each(this.props.slides.data, (slide) => {
         if (slide.stemRef === stem.ref) {
-          stemSlides.push({ ...slide, to: `/scenarios/${this.props.scenario.data._id}/create?slide=${slide._id}`, });
+          let isSelected = false;
+          if (slide._id === activeSlideId) {
+            isSelected = true;
+          }
+          stemSlides.push({ ...slide, to: `/scenarios/${this.props.scenario.data._id}/create?slide=${slide._id}`, isSelected });
         }
       });
 
       const firstSlide = stemSlides[0];
 
       if (stem.isRoot) {
+        let isSelected = false;
+        if (activeSlideId === 'CONSENT') {
+          isSelected = true;
+        }
         stemSlides.unshift({
           _id: 'CONSENT_SLIDE',
           stemRef: stem.ref,
           slideType: 'CONSENT',
           sortOrder: -1,
-          to: `/scenarios/${this.props.scenario.data._id}/create?slide=CONSENT`
+          to: `/scenarios/${this.props.scenario.data._id}/create?slide=CONSENT`,
+          isSelected
         });
       }
 
       if (childStems.length === 0) {
+        let isSelected = false;
+        if (activeSlideId === 'SUMMARY' && stem.ref === this.props.editor.data.activeStemRef) {
+          isSelected = true;
+        }
         stemSlides.push({
           _id: 'SUMMARY_SLIDE',
           stemRef: stem.ref,
           slideType: 'SUMMARY',
           sortOrder: stemSlides.length,
-          to: `/scenarios/${this.props.scenario.data._id}/create?slide=SUMMARY`
+          to: `/scenarios/${this.props.scenario.data._id}/create?slide=SUMMARY`,
+          isSelected
         });
       }
 
@@ -138,8 +158,7 @@ class CreateOverviewContainer extends Component<Props> {
   }
 
   onStemClicked = ({ stemRef }: { stemRef: string }) => {
-    const editor = getCache('editor');
-    editor.set({ activeStemRef: stemRef });
+    this.props.editor.set({ activeStemRef: stemRef });
   }
 
   render() {

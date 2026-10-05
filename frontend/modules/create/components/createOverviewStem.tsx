@@ -2,6 +2,7 @@ import React from 'react';
 import map from 'lodash/map';
 import { PositionedStem } from '../create.types';
 import { Link } from 'react-router';
+import classnames from 'classnames';
 
 const CreateOverviewStem = ({
   stem,
@@ -26,7 +27,9 @@ const CreateOverviewStem = ({
             return (
               <Link to={slide.to}
                 key={slide._id}
-                className="flex bg-lm-2 dark:bg-dm-2 w-8 h-8 rounded-full items-center justify-center"
+                className={classnames("flex bg-lm-2 dark:bg-dm-2 w-8 h-8 rounded-full items-center justify-center", {
+                  "outline outline-2 outline-blue-500": slide.isSelected
+                })}
                 onClick={() => onStemClicked({ stemRef: stem.ref })}
               >
                 <div>
