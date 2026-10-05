@@ -64,7 +64,7 @@ const CreateStems = ({
         </div>
       )}
       <div className="p-1 pt-2">
-        <FlatButton text="Create branching stem" icon="create" onClick={onCreateStemClicked} />
+        <FlatButton text="Create branching stem" size="sm" icon="create" onClick={onCreateStemClicked} />
       </div>
     </div>
   );

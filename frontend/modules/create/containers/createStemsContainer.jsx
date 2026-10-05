@@ -6,7 +6,7 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import addModal from '~/core/dialogs/helpers/addModal';
 import filter from 'lodash/filter';
 import WithRouter from '~/core/app/components/withRouter';
-import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
+import getCache from '~/core/cache/helpers/getCache';
 
 class CreateStemsContainer extends Component {
 
