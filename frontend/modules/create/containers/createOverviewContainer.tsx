@@ -2,15 +2,21 @@ import React, { Component } from 'react';
 import CreateOverview from '../components/createOverview';
 import WithCache from '~/core/cache/containers/withCache';
 import { Stem } from '~/modules/stems/stems.types';
+import { Slide } from '~/modules/slides/slides.types';
+import { Scenario } from '~/modules/scenarios/scenarios.types';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
+import each from 'lodash/each';
 import { OverviewSlide, OverviewStem, PositionedStem, Edge } from '../create.types';
+import WithRouter from '~/core/app/components/withRouter';
+import getCache from '~/core/cache/helpers/getCache';
 
 type Props = {
+  scenario: { data: Scenario };
   stems: { data: Stem[] };
-  slides: { data: OverviewSlide[] };
+  slides: { data: Slide[] };
 };
 
 const GAP_X = 120;
@@ -46,32 +52,42 @@ class CreateOverviewContainer extends Component<Props> {
       const label = positions.length === 0
         ? 'A'
         : map(positions, (position, depth) => `${String.fromCharCode(66 + depth)}${position}`).join('-');
+      const stemSlides: OverviewSlide[] = [];
 
-      const slides = filter(this.props.slides.data, { stemRef: stem.ref });
+      each(this.props.slides.data, (slide) => {
+        if (slide.stemRef === stem.ref) {
+          stemSlides.push({ ...slide, to: `/scenarios/${this.props.scenario.data._id}/create?slide=${slide._id}`, });
+        }
+      });
+
+      const firstSlide = stemSlides[0];
 
       if (stem.isRoot) {
-        slides.unshift({
+        stemSlides.unshift({
           _id: 'CONSENT_SLIDE',
           stemRef: stem.ref,
           slideType: 'CONSENT',
-          sortOrder: -1
+          sortOrder: -1,
+          to: `/scenarios/${this.props.scenario.data._id}/create?slide=CONSENT`
         });
       }
 
       if (childStems.length === 0) {
-        slides.push({
+        stemSlides.push({
           _id: 'SUMMARY_SLIDE',
           stemRef: stem.ref,
           slideType: 'SUMMARY',
-          sortOrder: slides.length
+          sortOrder: stemSlides.length,
+          to: `/scenarios/${this.props.scenario.data._id}/create?slide=SUMMARY`
         });
       }
 
       return {
         _id: stem._id,
         name: stem.name,
+        to: `/scenarios/${this.props.scenario.data._id}/create?slide=${firstSlide._id}`,
         label,
-        slides,
+        slides: stemSlides,
         stems: map(childStems, buildStem)
       };
     };
@@ -120,6 +136,11 @@ class CreateOverviewContainer extends Component<Props> {
 
   }
 
+  onStemClicked = ({ stemRef }) => {
+    const editor = getCache('editor');
+    editor.set({ activeStemRef: stemRef });
+  }
+
   render() {
     this.maxWidth = 0;
     this.maxHeight = 0;
@@ -138,9 +159,10 @@ class CreateOverviewContainer extends Component<Props> {
         maxWidth={this.maxWidth}
         maxHeight={this.maxHeight}
         edges={this.edges}
+        onStemClicked={this.onStemClicked}
       />
     );
   }
 };
 
-export default WithCache(CreateOverviewContainer, {}, ['stems', 'slides']);
+export default WithRouter(WithCache(CreateOverviewContainer, {}, ['editor', 'scenario', 'stems', 'slides']));

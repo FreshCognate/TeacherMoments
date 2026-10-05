@@ -3,11 +3,13 @@ export type OverviewSlide = {
   stemRef: string;
   slideType: 'STEP' | 'CONSENT' | 'SUMMARY';
   sortOrder: number;
+  to: string;
 };
 
 export type OverviewStem = {
   _id: string;
   name: string;
+  to: string;
   label: string;
   slides: OverviewSlide[];
   stems?: OverviewStem[];
