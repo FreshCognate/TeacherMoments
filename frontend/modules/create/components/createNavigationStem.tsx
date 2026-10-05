@@ -16,6 +16,7 @@ type Props = {
   blocks: Block[];
   activeSlideId: string;
   activeStem: Stem;
+  activeStemChildrenCount: number;
   deletingId: string | null;
   isDuplicating: boolean;
   isInRootStem: boolean;
@@ -29,6 +30,7 @@ const CreateNavigationStem = ({
   blocks,
   activeSlideId,
   activeStem,
+  activeStemChildrenCount,
   deletingId,
   isDuplicating,
   isInRootStem,
@@ -98,14 +100,16 @@ const CreateNavigationStem = ({
       <div className="my-4">
         <CreateStemsContainer stemRef={activeStem.ref} />
       </div>
-      <CreateNavigationStaticSlide
-        label="Summary"
-        slideId="SUMMARY"
-        icon="summary"
-        scenarioId={scenarioId}
-        isSelected={activeSlideId === 'SUMMARY'}
-        isInRootStem={isInRootStem}
-      />
+      {(activeStemChildrenCount === 0) && (
+        <CreateNavigationStaticSlide
+          label="Summary"
+          slideId="SUMMARY"
+          icon="summary"
+          scenarioId={scenarioId}
+          isSelected={activeSlideId === 'SUMMARY'}
+          isInRootStem={isInRootStem}
+        />
+      )}
     </div>
   );
 };

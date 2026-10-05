@@ -12,6 +12,8 @@ import setEditingMode from '../helpers/setEditingMode';
 import axios from 'axios';
 import getSelectedSlideSortOrder from '~/modules/stems/helpers/getSelectedSlideSortOrder';
 import find from 'lodash/find';
+import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
+import getStemsByStemRef from '~/modules/stems/helpers/getStemsByStemRef';
 
 type Props = {
   scenarioId: string;
@@ -107,6 +109,8 @@ class CreateNavigationStemContainer extends Component<Props, State> {
     const stemSlides = getCurrentStemSlides();
     const { activeSlideId } = getScenarioDetails();
     const activeStem = getActiveStem();
+    const activeStemChildren = getStemsByStemRef({ stemRef: activeStem.ref });
+    const activeStemChildrenCount = activeStemChildren.length;
     return (
       <CreateNavigationStem
         scenarioId={scenarioId}
@@ -114,6 +118,7 @@ class CreateNavigationStemContainer extends Component<Props, State> {
         blocks={this.props.blocks.data}
         activeSlideId={activeSlideId}
         activeStem={activeStem}
+        activeStemChildrenCount={activeStemChildrenCount}
         deletingId={this.state.deletingId}
         isDuplicating={isDuplicating}
         isInRootStem={isInRootStem}
