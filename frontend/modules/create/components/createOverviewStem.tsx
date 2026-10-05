@@ -24,11 +24,16 @@ const CreateOverviewStem = ({
                 className="flex bg-lm-2 dark:bg-dm-2 w-8 h-8 rounded-full items-center justify-center"
               >
                 <div>
-                  {`${slide.sortOrder + 1}`}
+                  {slide.slideType === 'CONSENT' && 'C'}
+                  {slide.slideType === 'SUMMARY' && 'S'}
+                  {slide.slideType === 'STEP' && `${slide.sortOrder + 1}`}
                 </div>
               </div>
             );
           })}
+        </div>
+        <div className="absolute -bottom-6 text-sm whitespace-nowrap opacity-40">
+          {stem.label}
         </div>
       </div>
       {map(stem.stems, (stem) => {

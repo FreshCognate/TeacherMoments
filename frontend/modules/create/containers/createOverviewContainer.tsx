@@ -3,6 +3,7 @@ import CreateOverview from '../components/createOverview';
 import WithCache from '~/core/cache/containers/withCache';
 import { Stem } from '~/modules/stems/stems.types';
 import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
 import filter from 'lodash/filter';
 import map from 'lodash/map';
 import { OverviewSlide, OverviewStem, PositionedStem, Edge } from '../create.types';
@@ -31,10 +32,46 @@ class CreateOverviewContainer extends Component<Props> {
     const buildStem = (stem: Stem): OverviewStem => {
       const childStems = filter(this.props.stems.data, { stemRef: stem.ref });
 
+      const positions: number[] = [];
+      let currentStem = stem;
+      let parentStem = find(this.props.stems.data, { ref: currentStem.stemRef });
+
+      while (parentStem) {
+        const siblingStems = filter(this.props.stems.data, { stemRef: parentStem.ref });
+        positions.unshift(findIndex(siblingStems, { _id: currentStem._id }) + 1);
+        currentStem = parentStem;
+        parentStem = find(this.props.stems.data, { ref: currentStem.stemRef });
+      }
+
+      const label = positions.length === 0
+        ? 'A'
+        : map(positions, (position, depth) => `${String.fromCharCode(66 + depth)}${position}`).join('-');
+
+      const slides = filter(this.props.slides.data, { stemRef: stem.ref });
+
+      if (stem.isRoot) {
+        slides.unshift({
+          _id: 'CONSENT_SLIDE',
+          stemRef: stem.ref,
+          slideType: 'CONSENT',
+          sortOrder: -1
+        });
+      }
+
+      if (childStems.length === 0) {
+        slides.push({
+          _id: 'SUMMARY_SLIDE',
+          stemRef: stem.ref,
+          slideType: 'SUMMARY',
+          sortOrder: slides.length
+        });
+      }
+
       return {
         _id: stem._id,
         name: stem.name,
-        slides: filter(this.props.slides.data, { stemRef: stem.ref }),
+        label,
+        slides,
         stems: map(childStems, buildStem)
       };
     };
