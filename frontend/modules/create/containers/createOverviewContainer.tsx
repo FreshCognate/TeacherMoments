@@ -4,6 +4,7 @@ import WithCache from '~/core/cache/containers/withCache';
 import { Stem } from '~/modules/stems/stems.types';
 import find from 'lodash/find';
 import filter from 'lodash/filter';
+import map from 'lodash/map';
 import { OverviewSlide, OverviewStem, PositionedStem, Edge } from '../create.types';
 
 type Props = {
@@ -27,76 +28,18 @@ class CreateOverviewContainer extends Component<Props> {
 
     if (!rootStem) return null;
 
-    const stemSlides = filter(this.props.slides.data, { stemRef: rootStem.ref });
+    const buildStem = (stem: Stem): OverviewStem => {
+      const childStems = filter(this.props.stems.data, { stemRef: stem.ref });
 
-    return {
-      _id: rootStem._id,
-      name: 'A',
-      slides: stemSlides,
-      stems: [{
-        _id: "stem-b1",
-        name: "B1",
-        slides: [{
-          _id: "b1-12345",
-          stemRef: "a1-12345",
-          sortOrder: 0
-        }, {
-          _id: "b1-23456",
-          stemRef: "a1-12345",
-          sortOrder: 1
-        }],
-        stems: [{
-          _id: "stem-b1-c1",
-          name: "B1-C1",
-          slides: [{
-            _id: "c1-12345",
-            stemRef: "stem-c1",
-            sortOrder: 0
-          }, {
-            _id: "c1-23456",
-            stemRef: "stem-c1",
-            sortOrder: 1
-          }, {
-            _id: "c1-34567",
-            stemRef: "stem-c1",
-            sortOrder: 2
-          }]
-        }, {
-          _id: "stem-b1-c2",
-          name: "B1-C2",
-          slides: [{
-            _id: "c2-12345",
-            stemRef: "stem-c2",
-            sortOrder: 0
-          }, {
-            _id: "c2-23456",
-            stemRef: "stem-c2",
-            sortOrder: 1
-          }]
-        }]
-      }, {
-        _id: "a2-12345",
-        name: "B2",
-        slides: [{
-          _id: "b1-12345",
-          stemRef: "a1-12345",
-          sortOrder: 0
-        }, {
-          _id: "b1-23456",
-          stemRef: "a1-12345",
-          sortOrder: 1
-        }],
-        stems: [{
-          _id: "stem-b2-c1",
-          name: "B2-C1",
-          slides: [{
-            _id: "c1-12345",
-            stemRef: "stem-c1",
-            sortOrder: 0
-          }]
-        }]
-      }]
+      return {
+        _id: stem._id,
+        name: stem.name,
+        slides: filter(this.props.slides.data, { stemRef: stem.ref }),
+        stems: map(childStems, buildStem)
+      };
     };
+
+    return buildStem(rootStem);
   }
 
   parseTree = (stem: PositionedStem, offsetX = 0): PositionedStem => {

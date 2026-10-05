@@ -10,6 +10,7 @@ import Icon from '~/uikit/icons/components/icon';
 const CreateNavigationActions = ({
   scenarioId,
   parentStemSlideId,
+  stemName,
   isCreating,
   isDuplicating,
   isInRootStem,
@@ -38,7 +39,7 @@ const CreateNavigationActions = ({
               <Icon icon="chevronRight" size={12} />
             </div>
             <div>
-              <Body body="Stem 1" size="sm" />
+              <Body body={stemName} size="sm" />
             </div>
           </>
         )}

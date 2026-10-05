@@ -6,6 +6,7 @@ import CreateNavigationStemContainer from '../containers/createNavigationStemCon
 const CreateNavigation = ({
   scenarioId,
   parentStemSlideId,
+  stemName,
   isCreating,
   isInRootStem,
   onAddSlideClicked,
@@ -22,6 +23,7 @@ const CreateNavigation = ({
         <CreateNavigationActions
           scenarioId={scenarioId}
           parentStemSlideId={parentStemSlideId}
+          stemName={stemName}
           isCreating={isCreating}
           isInRootStem={isInRootStem}
           onAddSlideClicked={onAddSlideClicked}

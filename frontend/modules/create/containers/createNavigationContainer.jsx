@@ -77,6 +77,7 @@ class CreateNavigationContainer extends Component {
       <CreateNavigation
         scenarioId={this.props.scenario.data._id}
         parentStemSlideId={parentStemSlideId}
+        stemName={activeStem?.name || ''}
         activeStem={activeStem}
         isCreating={isCreating}
         isInRootStem={activeStem?.isRoot ?? true}
