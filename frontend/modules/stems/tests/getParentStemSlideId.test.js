@@ -29,6 +29,12 @@ describe('getParentStemSlideId', () => {
     expect(getParentStemSlideId()).toBe('root-slide-2');
   });
 
+  it('returns undefined when the parent stem has no slides', () => {
+    seed('slides', [{ _id: 'child-slide-1', stemRef: 'child-stem' }]);
+    seed('editor', { activeStemRef: 'child-stem' });
+    expect(getParentStemSlideId()).toBeUndefined();
+  });
+
   it('returns undefined when the active stem has no parent', () => {
     seed('editor', { activeStemRef: 'root-stem' });
     expect(getParentStemSlideId()).toBeUndefined();

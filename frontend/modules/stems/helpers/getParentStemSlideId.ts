@@ -14,7 +14,10 @@ export default () => {
     if (parentStem) {
       const slides = getCache('slides');
       const stemSlides = filter(slides.data, { stemRef: parentStem.ref });
-      return stemSlides[stemSlides.length - 1]._id;
+      const lastSlide = stemSlides[stemSlides.length - 1];
+      if (lastSlide) {
+        return stemSlides[stemSlides.length - 1]._id;
+      }
     }
   }
 
