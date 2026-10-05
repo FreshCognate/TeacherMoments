@@ -63,8 +63,10 @@ class CreateNavigationContainer extends Component {
   }
 
   onBackToParentClicked = ({ parentStemSlideId }) => {
-    const parentStemSlide = find(this.props.slides.data, { _id: parentStemSlideId });
-    this.props.editor.set({ activeStemRef: parentStemSlide.stemRef });
+    if (parentStemSlideId) {
+      const parentStemSlide = find(this.props.slides.data, { _id: parentStemSlideId });
+      this.props.editor.set({ activeStemRef: parentStemSlide.stemRef });
+    }
   }
 
   render() {

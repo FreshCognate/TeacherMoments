@@ -5,6 +5,8 @@ import getRootStem from "./getRootStem";
 
 export default () => {
   const { activeSlideId } = getScenarioDetails();
+  const editor = getCache('editor');
+  if (editor.data.activeStemRef) return editor.data.activeStemRef;
   const slides = getCache('slides');
   const activeSlide = find(slides.data, { _id: activeSlideId });
   if (activeSlide?.stemRef) return activeSlide.stemRef;

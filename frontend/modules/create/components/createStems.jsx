@@ -22,7 +22,7 @@ const CreateStems = ({
         <Body body="Navigation" size="sm" className='opacity-60' />
       </div>
       {(childStems.length > 0) && (
-        <div className="border-b border-b-lm-3 dark:border-b-dm-3 pb-1">
+        <div className="border-b border-b-lm-3 dark:border-b-dm-3 py-1">
           {map(childStems, (stem) => {
             const isDeleting = stem._id === deletingId;
             const isSelected = stem.ref === activeStemRef;

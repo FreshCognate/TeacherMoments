@@ -46,7 +46,6 @@ const CreateNavigationStem = ({
           icon="consent"
           scenarioId={scenarioId}
           isSelected={activeSlideId === 'CONSENT'}
-          isInRootStem={isInRootStem}
         />
       )}
       <CreateDroppableContainer
@@ -107,7 +106,6 @@ const CreateNavigationStem = ({
           icon="summary"
           scenarioId={scenarioId}
           isSelected={activeSlideId === 'SUMMARY'}
-          isInRootStem={isInRootStem}
         />
       )}
     </div>
