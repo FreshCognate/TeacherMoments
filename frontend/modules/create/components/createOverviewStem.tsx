@@ -8,7 +8,7 @@ const CreateOverviewStem = ({
   onStemClicked
 }: {
   stem: PositionedStem;
-  onStemClicked: ({ stemRef: string }) => void;
+  onStemClicked: ({ stemRef }: { stemRef: string }) => void;
 }) => {
   return (
     <>

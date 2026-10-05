@@ -84,6 +84,7 @@ class CreateOverviewContainer extends Component<Props> {
 
       return {
         _id: stem._id,
+        ref: stem.ref,
         name: stem.name,
         to: `/scenarios/${this.props.scenario.data._id}/create?slide=${firstSlide._id}`,
         label,
@@ -136,7 +137,7 @@ class CreateOverviewContainer extends Component<Props> {
 
   }
 
-  onStemClicked = ({ stemRef }) => {
+  onStemClicked = ({ stemRef }: { stemRef: string }) => {
     const editor = getCache('editor');
     editor.set({ activeStemRef: stemRef });
   }

@@ -10,6 +10,7 @@ type Props = {
   maxWidth: number;
   maxHeight: number;
   edges: Edge[];
+  onStemClicked: ({ stemRef }: { stemRef: string }) => void;
 };
 
 const CreateOverview = ({

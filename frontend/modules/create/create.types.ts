@@ -8,6 +8,7 @@ export type OverviewSlide = {
 
 export type OverviewStem = {
   _id: string;
+  ref: string;
   name: string;
   to: string;
   label: string;
