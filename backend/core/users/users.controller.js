@@ -17,7 +17,7 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { emails, role = 'user' } = body;
+    const { emails, role } = body;
 
     return await createAuthoringUsers({ emails, role }, {}, context);
 

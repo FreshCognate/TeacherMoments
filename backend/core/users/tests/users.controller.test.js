@@ -50,21 +50,13 @@ describe('users.controller', () => {
   });
 
   describe('create', () => {
-    it('passes emails and role through to createAuthoringUsers (defaulting role to "user")', async () => {
+    it('passes emails and role through to createAuthoringUsers', async () => {
       createAuthoringUsersMock.mockResolvedValue({});
       const context = { ctx: 'value' };
 
-      await controller.create({ body: { emails: ['a@b.com'] } }, context);
+      await controller.create({ body: { emails: ['a@b.com'], role: 'ADMIN' } }, context);
 
-      expect(createAuthoringUsersMock).toHaveBeenCalledWith({ emails: ['a@b.com'], role: 'user' }, {}, context);
-    });
-
-    it('respects an explicit role on the body', async () => {
-      createAuthoringUsersMock.mockResolvedValue({});
-
-      await controller.create({ body: { emails: ['a@b.com'], role: 'ADMIN' } }, {});
-
-      expect(createAuthoringUsersMock).toHaveBeenCalledWith({ emails: ['a@b.com'], role: 'ADMIN' }, {}, {});
+      expect(createAuthoringUsersMock).toHaveBeenCalledWith({ emails: ['a@b.com'], role: 'ADMIN' }, {}, context);
     });
   });
 

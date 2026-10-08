@@ -1,10 +1,16 @@
+import hasUserGotPermissions from '#core/authentication/helpers/hasUserGotPermissions.js';
+
 export default async (props, options, context) => {
 
   const {
     email,
     role
   } = props;
-  const { req, models } = context;
+  const { models, user } = context;
+
+  if (role === 'SUPER_ADMIN' && (!user || !hasUserGotPermissions(user, ['SUPER_ADMIN']))) {
+    throw { message: "User doesn't have correct permissions", statusCode: 401 };
+  }
 
   const lowerCaseEmail = email.toLowerCase();
 
@@ -23,8 +29,8 @@ export default async (props, options, context) => {
     registeredAt: createdAt,
   };
 
-  const user = await models.User.create(createObject);
+  const createdUser = await models.User.create(createObject);
 
-  return user;
+  return createdUser;
 
 };

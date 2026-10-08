@@ -31,6 +31,33 @@ describe('updateUserById (in-memory mongo)', () => {
     expect(result.firstName).toBe('Sam');
   });
 
+  it('throws 401 when an admin tries to assign the SUPER_ADMIN role', async () => {
+    const target = await db.models.User.create({ email: 'target@x.com', role: 'ADMIN' });
+
+    await expect(
+      updateUserById(
+        { userId: target._id, update: { role: 'SUPER_ADMIN' } },
+        {},
+        { user: { _id: new mongoose.Types.ObjectId(), role: 'ADMIN' }, models: db.models }
+      )
+    ).rejects.toMatchObject({ statusCode: 401 });
+
+    const stored = await db.models.User.findById(target._id).lean();
+    expect(stored.role).toBe('ADMIN');
+  });
+
+  it('allows a super admin to assign the SUPER_ADMIN role', async () => {
+    const target = await db.models.User.create({ email: 'target@x.com', role: 'ADMIN' });
+
+    const result = await updateUserById(
+      { userId: target._id, update: { role: 'SUPER_ADMIN' } },
+      {},
+      { user: { _id: new mongoose.Types.ObjectId(), role: 'SUPER_ADMIN' }, models: db.models }
+    );
+
+    expect(result.role).toBe('SUPER_ADMIN');
+  });
+
   it('lowercases an email when set in the update', async () => {
     const target = await db.models.User.create({ email: 'target@x.com' });
 

@@ -15,6 +15,10 @@ export default async (props, options, context) => {
     }
   }
 
+  if (updateObject.role === 'SUPER_ADMIN' && (!user || !hasUserGotPermissions(user, ['SUPER_ADMIN']))) {
+    throw { message: "User doesn't have correct permissions", statusCode: 401 };
+  }
+
   if (updateObject.email) {
     updateObject.email = updateObject.email.toLowerCase();
     const existingUser = await models.User.findOne({ email: updateObject.email, _id: { $ne: userId } });
