@@ -108,6 +108,7 @@ class CreateNavigationStemContainer extends Component<Props, State> {
     const stemSlides = getCurrentStemSlides();
     const { activeSlideId } = getScenarioDetails();
     const activeStem = getActiveStem();
+    if (!activeStem) return null;
     const activeStemChildren = getStemsByStemRef({ stemRef: activeStem.ref });
     const activeStemChildrenCount = activeStemChildren.length;
     return (

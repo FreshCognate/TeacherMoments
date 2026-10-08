@@ -4,7 +4,7 @@ import find from 'lodash/find';
 import getScenarioDetails from "./getScenarioDetails";
 import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";
 
-export default ({ slideRef }) => {
+export default ({ slideRef, stemRef }) => {
   const run = getCache('run');
   const { activeSlideRef } = getScenarioDetails();
 
@@ -12,6 +12,9 @@ export default ({ slideRef }) => {
   const currentStage = find(stages, { slideRef: activeSlideRef });
 
   currentStage.navigateToSlide = slideRef;
+
+  const editor = getCache('editor');
+  editor.set({ activeStemRef: stemRef })
 
   if (isScenarioInPlay()) {
     return run.mutate({ stages }, { method: 'put' });

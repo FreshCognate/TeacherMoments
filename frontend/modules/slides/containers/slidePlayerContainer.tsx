@@ -23,8 +23,11 @@ import getCohortFromSearchParams from '~/modules/cohorts/helpers/getCohortFromSe
 import getActiveSlideStems from '../helpers/getActiveSlideStems';
 import getIsRecordingAudio from '~/modules/run/helpers/getIsRecordingAudio';
 import { Scenario } from '~/modules/scenarios/scenarios.types';
-import { ActiveSlide, SlideAction } from '../slides.types';
+import { ActiveSlide, Slide, SlideAction } from '../slides.types';
 import triggerSlideFeedback from '../helpers/triggerSlideFeedback';
+import getStemNavigationDetails from '~/modules/run/helpers/getStemNavigationDetails';
+import getStemByRef from '~/modules/stems/helpers/getStemByRef';
+import triggerStemBranching from '~/modules/stems/helpers/triggerStemBranching';
 
 interface SlidePlayerContainerProps {
   scenario: Scenario,
@@ -73,6 +76,8 @@ class SlidePlayerContainer extends Component<SlidePlayerContainerProps, SlidePla
     const { isSubmitting } = this.state;
 
     const { isAbleToCompleteSlide, hasRequiredPrompts, hasPrompts, isSubmitted } = getSlideNavigationDetails();
+
+    const { hasChildStems } = getStemNavigationDetails();
 
     const isRecordingAudio = getIsRecordingAudio();
 
@@ -139,6 +144,19 @@ class SlidePlayerContainer extends Component<SlidePlayerContainerProps, SlidePla
             text: isSubmitting ? 'Submitting' : 'Submit',
             isDisabled: (hasRequiredPrompts && !isAbleToCompleteSlide) || isSubmitting
           }
+        } else if (hasChildStems && !isSubmitted) {
+          secondaryAction = {
+            action: 'BACK',
+            text: 'Back',
+            isActive: true,
+            isDisabled: isSubmitting
+          }
+          primaryAction = {
+            action: 'SUBMIT',
+            color: 'primary',
+            text: isSubmitting ? 'Submitting' : 'Submit',
+            isDisabled: (hasRequiredPrompts && !isAbleToCompleteSlide) || isSubmitting
+          }
         } else {
           secondaryAction = {
             action: 'BACK',
@@ -185,6 +203,13 @@ class SlidePlayerContainer extends Component<SlidePlayerContainerProps, SlidePla
     if (this.props.activeSlide && this.props.activeSlide.hasFeedback) {
       setShouldStopNavigation(true);
       await triggerSlideFeedback({ slide: this.props.activeSlide });
+    }
+
+    const { hasChildStems, isLastSlideInStem } = getStemNavigationDetails();
+    if (this.props.activeSlide && hasChildStems && isLastSlideInStem) {
+      setShouldStopNavigation(true);
+      const stem = getStemByRef({ ref: this.props.activeSlide.stemRef });
+      await triggerStemBranching({ stem, slide: this.props.activeSlide as Slide, router: this.props.router });
     }
 
     setSlideToSubmitted();
