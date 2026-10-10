@@ -6,7 +6,9 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import addModal from '~/core/dialogs/helpers/addModal';
 import filter from 'lodash/filter';
 import WithRouter from '~/core/app/components/withRouter';
-import getCache from '~/core/cache/helpers/getCache';
+import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
+import EditStemNavigationContainer from '~/modules/stems/containers/editStemNavigationContainer';
+import getStemByRef from '~/modules/stems/helpers/getStemByRef';
 
 class CreateStemsContainer extends Component {
 
@@ -123,6 +125,16 @@ class CreateStemsContainer extends Component {
     });
   }
 
+  onEditNavigationClicked = () => {
+    const stem = getStemByRef({ ref: this.getActiveStemRef() })
+    addSidePanel({
+      size: 'lg',
+      icon: 'branching',
+      title: 'Navigation',
+      component: <EditStemNavigationContainer stem={stem} />
+    })
+  }
+
   render() {
     const { isCreating, deletingId } = this.state;
     const childStems = this.getChildStems();
@@ -137,6 +149,7 @@ class CreateStemsContainer extends Component {
         onDeleteStemClicked={this.onDeleteStemClicked}
         onStemClicked={this.onStemClicked}
         onCreateStemClicked={this.onCreateStemClicked}
+        onEditNavigationClicked={this.onEditNavigationClicked}
       />
     );
   }

@@ -3,7 +3,7 @@ import getConditionlessStems from './getConditionlessStems';
 
 const hasConditionlessStem = function ({ model, condition }) {
 
-  const conditionlessStems = getConditionlessStems({ trigger: model });
+  const conditionlessStems = getConditionlessStems({ stem: model });
 
   if (conditionlessStems.length > 0) {
     return {

@@ -9,6 +9,8 @@ export default async (props, options, context) => {
 
   await checkHasAccessToScenario({ modelId: stemId, modelType: 'Stem' }, context);
 
+  if (update.defaultBranchingStemRef === '') update.defaultBranchingStemRef = null;
+
   const stem = await models.Stem.findByIdAndUpdate(stemId, update, { new: true });
 
   if (!stem) throw { message: 'This stem does not exist', statusCode: 404 };

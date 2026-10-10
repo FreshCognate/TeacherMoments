@@ -1,4 +1,8 @@
-import { ConditionPrompt } from '../triggers/triggers.types';
+export type ConditionPrompt = {
+  ref: string,
+  options?: string[],
+  text?: string
+};
 
 export type FeedbackItemCondition = {
   _id: string,

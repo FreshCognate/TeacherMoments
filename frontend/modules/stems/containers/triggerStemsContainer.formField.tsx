@@ -1,19 +1,21 @@
 import registerField from '~/core/forms/helpers/registerField';
 import TriggerStems from '../components/triggerStems.formField';
 import WithCache from '~/core/cache/containers/withCache';
-
 import React, { Component } from 'react';
-import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
 import getPromptBlocksBySlideRef from '~/modules/blocks/helpers/getPromptBlocksBySlideRef';
 import find from 'lodash/find';
 import cloneDeep from 'lodash/cloneDeep';
 import remove from 'lodash/remove';
 import addModal from '~/core/dialogs/helpers/addModal';
-import EditPromptConditionContainer from './editPromptConditionContainer';
-import { ConditionPrompt, Condition, StemItem } from '../triggers.types';
+import EditPromptConditionContainer from '../../triggers/containers/editPromptConditionContainer';
+import { ConditionPrompt } from '../../slides/slides.types';
+import { Condition, StemItem } from '../stems.types';
+import getStemsByStemRef from '../helpers/getStemsByStemRef';
+import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
+import getLastStemSlide from '~/modules/slides/helpers/getLastStemSlide';
 
 type TriggerStemsContainerProps = {
-  model: { elementRef: string },
+  model: { ref: string },
   value: StemItem[],
   updateField: (value: StemItem[]) => void
 };
@@ -21,8 +23,8 @@ type TriggerStemsContainerProps = {
 class TriggerStemsContainer extends Component<TriggerStemsContainerProps> {
 
   getPrompts = () => {
-
-    const prompts = getPromptBlocksBySlideRef({ slideRef: this.props.model.elementRef });
+    const lastStemSlide = getLastStemSlide();
+    const prompts = getPromptBlocksBySlideRef({ slideRef: lastStemSlide.ref });
 
     return prompts;
   }
@@ -115,11 +117,11 @@ class TriggerStemsContainer extends Component<TriggerStemsContainerProps> {
 
   render() {
 
-    const slideStems = getStemsBySlideRef({ slideRef: this.props.model.elementRef })
+    const childStems = getStemsByStemRef({ stemRef: this.props.model.ref })
 
     return (
       <TriggerStems
-        slideStems={slideStems}
+        childStems={childStems}
         items={this.props.value}
         prompts={this.getPrompts()}
         onAddConditionClicked={this.onAddConditionClicked}

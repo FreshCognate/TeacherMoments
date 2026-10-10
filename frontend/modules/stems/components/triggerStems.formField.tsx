@@ -1,6 +1,5 @@
 import React from 'react';
-import { Stem } from '~/modules/stems/stems.types';
-import { StemItem, OnEditPromptConditionClicked, OnRemoveConditionClicked } from '../triggers.types';
+import { Stem, StemItem, OnEditPromptConditionClicked, OnRemoveConditionClicked } from '~/modules/stems/stems.types';
 import map from 'lodash/map';
 import find from 'lodash/find';
 import getTextString from '~/core/slate/helpers/getTextString';
@@ -9,14 +8,14 @@ import Title from '~/uikit/content/components/title';
 import TriggerStemsItem from './triggerStemsItem';
 
 const TriggerStems = ({
-  slideStems,
+  childStems,
   items,
   prompts,
   onAddConditionClicked,
   onEditPromptConditionClicked,
   onRemoveConditionClicked
 }: {
-  slideStems: Stem[],
+  childStems: Stem[],
   items: StemItem[],
   prompts: any[],
   onAddConditionClicked: ({ elementRef }: { elementRef: string }) => void,
@@ -25,7 +24,7 @@ const TriggerStems = ({
 }) => {
   return (
     <div className="bg-lm-2 dark:bg-dm-2 rounded-md p-2">
-      {map(slideStems, (slideStem) => {
+      {map(childStems, (slideStem) => {
         const slideStemItem = find(items, { elementRef: slideStem.ref });
         return (
           <div key={slideStem._id} className="bg-lm-1 dark:bg-dm-1 rounded-md p-2 mb-2 last:mb-0">
