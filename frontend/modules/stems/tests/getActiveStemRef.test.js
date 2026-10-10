@@ -21,6 +21,7 @@ const seed = (key, data) => {
 
 describe('getActiveStemRef', () => {
   beforeEach(() => {
+    resetCache('editor');
     resetCache('slides');
     resetCache('stems');
     seed('stems', [{ ref: 'root-stem', isRoot: true }, { ref: 'child-stem', isRoot: false }]);
@@ -30,6 +31,12 @@ describe('getActiveStemRef', () => {
   it('returns the stemRef of the active slide', () => {
     getScenarioDetailsMock.mockReturnValue({ activeSlideId: 'slide-1' });
     expect(getActiveStemRef()).toBe('child-stem');
+  });
+
+  it('prefers the activeStemRef set in the editor', () => {
+    seed('editor', { activeStemRef: 'root-stem' });
+    getScenarioDetailsMock.mockReturnValue({ activeSlideId: 'slide-1' });
+    expect(getActiveStemRef()).toBe('root-stem');
   });
 
   it('falls back to the root stem when the active slide is a static slide', () => {
