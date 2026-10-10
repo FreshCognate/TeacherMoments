@@ -2,6 +2,7 @@ import Joi from 'joi';
 import hasPermissions from '#core/authentication/middleware/hasPermissions.js';
 import isAuthenticated from '#core/authentication/middleware/isAuthenticated.js';
 import controller from './stems.controller.js';
+import buildLanguageValidation from '#core/app/helpers/buildLanguageValidation.js';
 
 export default {
   route: '/stems',
@@ -29,7 +30,22 @@ export default {
     param: 'id',
     body: {
       name: Joi.string().allow(''),
-      description: Joi.array()
+      description: Joi.array(),
+      branchingOptions: Joi.array().items({
+        _id: Joi.string(),
+        ...buildLanguageValidation('body', Joi.array()),
+        elementRef: Joi.string(),
+        conditions: Joi.array().items({
+          _id: Joi.string(),
+          prompts: Joi.array().items({
+            _id: Joi.string(),
+            ref: Joi.string(),
+            options: Joi.array().items(Joi.string()),
+            text: Joi.string().allow(''),
+          })
+        }),
+      }),
+      defaultBranchingStemRef: Joi.string().allow('')
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },

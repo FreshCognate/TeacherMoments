@@ -9,7 +9,7 @@ import getString from '~/modules/ls/helpers/getString';
 import Body from '~/uikit/content/components/body';
 import Badge from '~/uikit/badges/components/badge';
 import Icon from '~/uikit/icons/components/icon';
-import { StemItem, OnEditPromptConditionClicked, OnRemoveConditionClicked } from '../triggers.types';
+import { StemItem, OnEditPromptConditionClicked, OnRemoveConditionClicked } from '../stems.types';
 
 const TriggerStemsItem = ({
   prompts,

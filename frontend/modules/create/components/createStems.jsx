@@ -14,12 +14,16 @@ const CreateStems = ({
   onEditStemClicked,
   onDeleteStemClicked,
   onStemClicked,
-  onCreateStemClicked
+  onCreateStemClicked,
+  onEditNavigationClicked
 }) => {
   return (
     <div className={classnames("bg-lm-2 dark:bg-dm-2 rounded-lg p-1")}>
-      <div className="border-b border-b-lm-3 dark:border-b-dm-3 p-1 pb-2">
+      <div className="flex justify-between border-b border-b-lm-3 dark:border-b-dm-3 p-1 pb-2">
         <Body body="Navigation" size="sm" className='opacity-60' />
+        {(childStems.length > 0) && (
+          <FlatButton icon="edit" onClick={onEditNavigationClicked} />
+        )}
       </div>
       {(childStems.length > 0) && (
         <div className="border-b border-b-lm-3 dark:border-b-dm-3 py-1">

@@ -182,7 +182,6 @@ export default async ({ stem, slide, router }: { stem: Stem, slide: Slide, route
   // default. The default only applies once every stem has conditions.
   const conditionlessStem = getConditionlessStems({ stem })[0];
 
-
   let targetStem: Stem | null = null;
 
   if (matchedItem) {
@@ -192,8 +191,6 @@ export default async ({ stem, slide, router }: { stem: Stem, slide: Slide, route
   } else if (stem.defaultBranchingStemRef) {
     targetStem = getStemByRef({ ref: stem.defaultBranchingStemRef });
   }
-
-  console.log(targetStem);
 
   if (!targetStem) return;
 

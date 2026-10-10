@@ -1,4 +1,4 @@
-import { ConditionPrompt } from '../triggers/triggers.types';
+import { ConditionPrompt } from '../slides/slides.types';
 
 export type BranchingOptionCondition = {
   _id: string,
@@ -52,3 +52,17 @@ export type Stem = {
   deletedAt: Date,
   deletedBy: string
 }
+
+export type Condition = {
+  _id?: string,
+  prompts?: ConditionPrompt[]
+};
+
+export type StemItem = {
+  elementRef: string,
+  conditions: Condition[]
+};
+
+export type OnEditPromptConditionClicked = (args: { elementRef: string, prompt: any, condition: any }) => void;
+
+export type OnRemoveConditionClicked = (args: { elementRef: string, conditionId?: string }) => void;
