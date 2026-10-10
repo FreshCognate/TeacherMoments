@@ -34,6 +34,30 @@ describe('updateStemById', () => {
     expect(result).toEqual({ _id: 'st1', scenario: 's1', name: 'Renamed' });
   });
 
+  it('converts an empty defaultBranchingStemRef to null so the field can be cleared', async () => {
+    const findByIdAndUpdate = vi.fn().mockResolvedValue({ _id: 'st1', scenario: 's1' });
+
+    await updateStemById(
+      { stemId: 'st1', update: { defaultBranchingStemRef: '' } },
+      {},
+      { models: { Stem: { findByIdAndUpdate } } }
+    );
+
+    expect(findByIdAndUpdate).toHaveBeenCalledWith('st1', { defaultBranchingStemRef: null }, { new: true });
+  });
+
+  it('leaves a real defaultBranchingStemRef untouched', async () => {
+    const findByIdAndUpdate = vi.fn().mockResolvedValue({ _id: 'st1', scenario: 's1' });
+
+    await updateStemById(
+      { stemId: 'st1', update: { defaultBranchingStemRef: 'stem-1' } },
+      {},
+      { models: { Stem: { findByIdAndUpdate } } }
+    );
+
+    expect(findByIdAndUpdate).toHaveBeenCalledWith('st1', { defaultBranchingStemRef: 'stem-1' }, { new: true });
+  });
+
   it('throws 404 when the stem does not exist', async () => {
     const findByIdAndUpdate = vi.fn().mockResolvedValue(null);
 
