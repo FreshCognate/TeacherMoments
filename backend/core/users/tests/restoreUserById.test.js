@@ -13,6 +13,8 @@ describe('restoreUserById', () => {
     vi.useRealTimers();
   });
 
+  const findById = vi.fn().mockResolvedValue({ _id: 'u1', role: 'PARTICIPANT' });
+
   it('restores a user when called by an ADMIN', async () => {
     const updated = { _id: 'u1', isDeleted: false };
     const findByIdAndUpdate = vi.fn().mockResolvedValue(updated);
@@ -20,7 +22,7 @@ describe('restoreUserById', () => {
     const result = await restoreUserById(
       { userId: 'u1' },
       {},
-      { user: { _id: 'admin-1', role: 'ADMIN' }, models: { User: { findByIdAndUpdate } } }
+      { user: { _id: 'admin-1', role: 'ADMIN' }, models: { User: { findById, findByIdAndUpdate } } }
     );
 
     expect(findByIdAndUpdate).toHaveBeenCalledWith('u1', {
@@ -39,7 +41,7 @@ describe('restoreUserById', () => {
     await expect(restoreUserById(
       { userId: 'u-other' },
       {},
-      { user: { _id: 'u-self', role: 'USER' }, models: { User: { findByIdAndUpdate } } }
+      { user: { _id: 'u-self', role: 'USER' }, models: { User: { findById, findByIdAndUpdate } } }
     )).rejects.toMatchObject({
       statusCode: 401,
       message: "User doesn't have correct permissions"
@@ -55,7 +57,7 @@ describe('restoreUserById', () => {
     const result = await restoreUserById(
       { userId: 'u-self' },
       {},
-      { user: { _id: 'u-self', role: 'USER' }, models: { User: { findByIdAndUpdate } } }
+      { user: { _id: 'u-self', role: 'USER' }, models: { User: { findById, findByIdAndUpdate } } }
     );
 
     expect(result).toBe(updated);
@@ -67,9 +69,35 @@ describe('restoreUserById', () => {
     await restoreUserById(
       { userId: 'u-other' },
       {},
-      { user: { _id: 'super', role: 'SUPER_ADMIN' }, models: { User: { findByIdAndUpdate } } }
+      { user: { _id: 'super', role: 'SUPER_ADMIN' }, models: { User: { findById, findByIdAndUpdate } } }
     );
 
     expect(findByIdAndUpdate).toHaveBeenCalled();
+  });
+
+  it('throws 404 when the user does not exist', async () => {
+    const findById = vi.fn().mockResolvedValue(null);
+    const findByIdAndUpdate = vi.fn();
+
+    await expect(restoreUserById(
+      { userId: 'missing' },
+      {},
+      { user: { _id: 'admin-1', role: 'ADMIN' }, models: { User: { findById, findByIdAndUpdate } } }
+    )).rejects.toMatchObject({ statusCode: 404 });
+
+    expect(findByIdAndUpdate).not.toHaveBeenCalled();
+  });
+
+  it('throws 401 when an ADMIN restores a SUPER_ADMIN', async () => {
+    const findById = vi.fn().mockResolvedValue({ _id: 'super', role: 'SUPER_ADMIN' });
+    const findByIdAndUpdate = vi.fn();
+
+    await expect(restoreUserById(
+      { userId: 'super' },
+      {},
+      { user: { _id: 'admin-1', role: 'ADMIN' }, models: { User: { findById, findByIdAndUpdate } } }
+    )).rejects.toMatchObject({ statusCode: 401 });
+
+    expect(findByIdAndUpdate).not.toHaveBeenCalled();
   });
 });

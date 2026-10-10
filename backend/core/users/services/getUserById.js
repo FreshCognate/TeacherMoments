@@ -1,8 +1,20 @@
-export default async (props, options, { models }) => {
+import canCurrentUserManageUser from '#core/authentication/helpers/canCurrentUserManageUser.js';
+
+export default async (props, options, context) => {
 
   const { userId } = props;
 
-  const user = await models.User.findById(userId).populate('teams');
+  const { models, user: currentUser } = context;
+
+  const user = await models.User.findById(userId);
+
+  if (!user) {
+    throw { message: 'User not found', statusCode: 404 };
+  }
+
+  if (!canCurrentUserManageUser({ currentUser, user })) {
+    throw { message: "User doesn't have correct permissions", statusCode: 401 };
+  }
 
   return user;
 

@@ -5,6 +5,7 @@ import getStemsByStemRef from '~/modules/stems/helpers/getStemsByStemRef';
 
 export default ({ stem }) => {
 
+  if (!stem) return [];
   const childStems = getStemsByStemRef({ stemRef: stem.ref });
 
   const conditionlessStems = filter(childStems, (childStem) => {
