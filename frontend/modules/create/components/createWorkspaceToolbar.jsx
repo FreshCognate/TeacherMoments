@@ -10,6 +10,7 @@ const CreateWorkspaceToolbar = ({
   displayMode,
   isStaticSlide,
   isOverviewVisible,
+  hasMultipleStems,
   onDisplayModeChanged,
   onAddBlockClicked,
   onSlideNameChanged,
@@ -53,13 +54,15 @@ const CreateWorkspaceToolbar = ({
         </div>
       </div>
       <div className="pr-2">
-        <div className="pr-2 pl-1 py-1 border border-lm-1 dark:border-dm-2 rounded-full flex">
-          <Switch
-            label="Overview"
-            value={isOverviewVisible}
-            size='sm'
-            onChange={onToggleOverviewClicked} />
-        </div>
+        {(hasMultipleStems) && (
+          <div className="pr-2 pl-1 py-1 border border-lm-1 dark:border-dm-2 rounded-full flex">
+            <Switch
+              label="Overview"
+              value={isOverviewVisible}
+              size='sm'
+              onChange={onToggleOverviewClicked} />
+          </div>
+        )}
       </div>
     </div >
   );

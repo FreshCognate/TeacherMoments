@@ -52,12 +52,14 @@ class CreateWorkspaceToolbarContainer extends Component {
   render() {
     const { displayMode, isOverviewVisible } = this.props.editor.data;
     const isStaticSlide = this.props.activeSlideId === 'CONSENT' || this.props.activeSlideId === 'SUMMARY';
+    const hasMultipleStems = this.props.stems.data.length > 1;
     return (
       <CreateWorkspaceToolbar
         slide={this.props.slide.data || {}}
         displayMode={displayMode}
         isStaticSlide={isStaticSlide}
         isOverviewVisible={isOverviewVisible}
+        hasMultipleStems={hasMultipleStems}
         onDisplayModeChanged={this.onDisplayModeChanged}
         onAddBlockClicked={this.onAddBlockClicked}
         onSlideNameChanged={this.onSlideNameChanged}
@@ -87,4 +89,4 @@ export default WithCache(CreateWorkspaceToolbarContainer, {
       return [props.activeSlideId && !props.isStaticSlide]
     }
   }
-}, ['editor']);
+}, ['editor', 'stems']);
