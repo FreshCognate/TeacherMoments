@@ -15,9 +15,12 @@ class CreateWorkspaceToolbarContainer extends Component {
       this.props.editor.set({ displayMode });
       document.getElementById("scenario-builder").scrollTo({ top: 0, behaviour: 'instant' });
     }
+    this.props.editor.set({ isOverviewVisible: false })
   }
 
   onAddBlockClicked = () => {
+    this.onDisplayModeChanged('EDITING');
+    this.props.editor.set({ isOverviewVisible: false })
     addModal({
       title: 'Choose a block type to add to your slide:',
       component: <BlockSelectorContainer />,
@@ -41,17 +44,26 @@ class CreateWorkspaceToolbarContainer extends Component {
     });
   }
 
+  onToggleOverviewClicked = () => {
+    const { isOverviewVisible } = this.props.editor.data;
+    this.props.editor.set({ isOverviewVisible: !isOverviewVisible })
+  }
+
   render() {
-    const { displayMode } = this.props.editor.data;
+    const { displayMode, isOverviewVisible } = this.props.editor.data;
     const isStaticSlide = this.props.activeSlideId === 'CONSENT' || this.props.activeSlideId === 'SUMMARY';
+    const hasMultipleStems = this.props.stems.data.length > 1;
     return (
       <CreateWorkspaceToolbar
         slide={this.props.slide.data || {}}
         displayMode={displayMode}
         isStaticSlide={isStaticSlide}
+        isOverviewVisible={isOverviewVisible}
+        hasMultipleStems={hasMultipleStems}
         onDisplayModeChanged={this.onDisplayModeChanged}
         onAddBlockClicked={this.onAddBlockClicked}
         onSlideNameChanged={this.onSlideNameChanged}
+        onToggleOverviewClicked={this.onToggleOverviewClicked}
       />
     );
   }
@@ -77,4 +89,4 @@ export default WithCache(CreateWorkspaceToolbarContainer, {
       return [props.activeSlideId && !props.isStaticSlide]
     }
   }
-}, ['editor']);
+}, ['editor', 'stems']);

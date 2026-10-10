@@ -12,7 +12,7 @@ export default function Button({
   color,
   className,
   style,
-  size,
+  size = 'rg',
   isDisabled,
   isFullWidth,
   onClick
@@ -26,13 +26,13 @@ export default function Button({
   color?: string,
   className?: string,
   style?: any,
-  size?: 'rg',
+  size?: 'rg' | 'sm',
   isDisabled?: boolean,
   isFullWidth?: boolean,
   onClick: (event: Event) => void
 }) {
 
-  const classes = classnames('rounded-md px-4 py-2 transition-colors text-sm', {
+  const classes = classnames('rounded-md transition-colors', {
     'bg-lm-3/60 dark:bg-dm-3/60': !color,
     'hover:bg-lm-3/30 hover:dark:bg-dm-3/30': !color && !isDisabled,
     'bg-black text-white dark:text-black dark:bg-white': (color === 'primary'),
@@ -40,7 +40,9 @@ export default function Button({
     'bg-lm-2 text-black dark:bg-dm-2 dark:text-white': (color === 'secondary'),
     'hover:bg-lm-3 hover:dark:bg-dm-1': (color === 'secondary') && !isDisabled,
     'bg-warning-regular text-white dark:text-black dark:bg-warning-light': (color === 'warning'),
-    'hover:bg-warning-dark hover:dark:bg-warning-regular': (color === 'warning') && !isDisabled
+    'hover:bg-warning-dark hover:dark:bg-warning-regular': (color === 'warning') && !isDisabled,
+    'px-4 py-2 text-sm': size === 'rg',
+    'px-2 py-1 text-xs': size === 'sm'
   }, className);
 
   return (

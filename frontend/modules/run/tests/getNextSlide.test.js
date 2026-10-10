@@ -50,14 +50,19 @@ describe('getNextSlide', () => {
     expect(getNextSlide()).toBe(slideByRef('root-2'));
   });
 
-  it('returns the SUMMARY sentinel on the last slide of the root stem', () => {
+  it('returns undefined on the last slide of the root stem', () => {
     getScenarioDetails.mockReturnValue({ activeSlideRef: 'root-3' });
-    expect(getNextSlide()).toEqual({ _id: 'SUMMARY', slideType: 'SUMMARY', ref: 'SUMMARY' });
+    expect(getNextSlide()).toBeUndefined();
   });
 
-  it('returns to the parent stem next slide after the last slide of a nested stem', () => {
+  it('returns the next slide within a nested stem', () => {
+    getScenarioDetails.mockReturnValue({ activeSlideRef: 'nested-1' });
+    expect(getNextSlide()).toBe(slideByRef('nested-2'));
+  });
+
+  it('does not return to the parent stem after the last slide of a nested stem', () => {
     getScenarioDetails.mockReturnValue({ activeSlideRef: 'nested-2' });
-    expect(getNextSlide()).toBe(slideByRef('root-2'));
+    expect(getNextSlide()).toBeUndefined();
   });
 
   it('returns undefined when a nested stem ends and the parent has no next slide', () => {

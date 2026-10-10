@@ -50,7 +50,7 @@ const EditBlock = ({
           </div>
         </div>
         <div className=" bg-lm-1 dark:bg-dm-1 w-96 min-w-96 rounded-r-lg">
-          <div className="sticky top-0">
+          <div className="sticky top-9">
 
             <div className="flex items-center justify-end px-6 h-14">
               <div className="flex items-center bg-lm-2 border border-lm-3 dark:border-none dark:bg-dm-2 rounded-lg mr-4">

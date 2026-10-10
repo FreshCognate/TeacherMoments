@@ -9,7 +9,7 @@ import CreateOverviewContainer from '../containers/createOverviewContainer';
 const CreateWorkspace = ({
   activeSlideId,
   displayMode,
-  navigationMode,
+  isOverviewVisible,
   isStaticSlide
 }) => {
 
@@ -21,43 +21,29 @@ const CreateWorkspace = ({
           isStaticSlide={isStaticSlide}
         />
       </div>
-      {(navigationMode === 'SLIDES') && (
-
+      {(displayMode === 'EDITING' && !isOverviewVisible) && (
         <>
-          {(displayMode === 'EDITING') && (
-            <>
-              {(isStaticSlide) && (
-                <CreateStaticSlideEditorContainer key={activeSlideId} type={activeSlideId} />
-              )}
-              {(!isStaticSlide && activeSlideId) && (
-                <BlocksEditorContainer
-                  slideId={activeSlideId}
-                />
-              )}
-              {(!isStaticSlide) && (
-                <SlideActionsContainer activeSlideId={activeSlideId} />
-              )}
-            </>
+          {(isStaticSlide) && (
+            <CreateStaticSlideEditorContainer key={activeSlideId} type={activeSlideId} />
           )}
-          {(displayMode === 'OVERVIEW') && (
-            <div>
-              <CreateOverviewContainer />
-            </div>
+          {(!isStaticSlide && activeSlideId) && (
+            <BlocksEditorContainer
+              slideId={activeSlideId}
+            />
           )}
-          {(displayMode === 'PREVIEW') && (
-            <div>
-              <PlayScenarioContainer />
-            </div>
+          {(!isStaticSlide) && (
+            <SlideActionsContainer activeSlideId={activeSlideId} />
           )}
         </>
       )}
-      {(navigationMode === 'STEM') && (
-        <div className="pt-14 w-full h-full overflow-y-auto">
-          <div className="w-full pt-4 pb-8 px-8 max-w-lg mx-auto">
-            <div className="text-center">
-              Navigation settings coming soon...
-            </div>
-          </div>
+      {(isOverviewVisible) && (
+        <div>
+          <CreateOverviewContainer />
+        </div>
+      )}
+      {(displayMode === 'PREVIEW' && !isOverviewVisible) && (
+        <div>
+          <PlayScenarioContainer />
         </div>
       )}
     </div>

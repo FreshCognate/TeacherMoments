@@ -14,6 +14,7 @@ const navigateToMock = vi.fn();
 const navigateBackMock = vi.fn();
 const navigateToNextSlideMock = vi.fn();
 const getSlideNavigationDetailsMock = vi.fn();
+const getStemNavigationDetailsMock = vi.fn();
 const setSlideToCompleteMock = vi.fn();
 const setScenarioConsentMock = vi.fn();
 const getNextSlideMock = vi.fn();
@@ -37,6 +38,7 @@ vi.mock('~/modules/run/helpers/navigateTo', () => ({ default: (args) => navigate
 vi.mock('~/modules/run/helpers/navigateBack', () => ({ default: (args) => navigateBackMock(args) }));
 vi.mock('~/modules/run/helpers/navigateToNextSlide', () => ({ default: (args) => navigateToNextSlideMock(args) }));
 vi.mock('~/modules/run/helpers/getSlideNavigationDetails', () => ({ default: () => getSlideNavigationDetailsMock() }));
+vi.mock('~/modules/run/helpers/getStemNavigationDetails', () => ({ default: () => getStemNavigationDetailsMock() }));
 vi.mock('~/modules/run/helpers/setSlideToComplete', () => ({ default: (args) => setSlideToCompleteMock(args) }));
 vi.mock('~/modules/run/helpers/setScenarioConsent', () => ({ default: (val) => setScenarioConsentMock(val) }));
 vi.mock('~/modules/run/helpers/getNextSlide', () => ({ default: () => getNextSlideMock() }));
@@ -93,6 +95,7 @@ describe('SlidePlayerContainer', () => {
     ensureCurrentStageMock.mockReturnValue({ shouldStopNavigation: false });
     getActiveSlideStemsMock.mockReturnValue([]);
     setNavigationDetails();
+    getStemNavigationDetailsMock.mockReturnValue({ hasChildStems: false, isLastSlideInStem: false });
     getNextSlideMock.mockReturnValue({ ref: 'next-slide' });
     getCohortFromSearchParamsMock.mockReturnValue(null);
   });
