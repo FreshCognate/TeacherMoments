@@ -15,7 +15,6 @@ class CreateNavigationContainer extends Component {
 
   state = {
     isCreating: false,
-    navigationType: 'SLIDES',
     deletingId: null
   }
 
@@ -58,10 +57,6 @@ class CreateNavigationContainer extends Component {
     })
   }
 
-  onToggleNavigationTypeClicked = () => {
-    this.props.editor.set({ navigationMode: this.props.editor.data.navigationMode === 'SLIDES' ? 'STEM' : 'SLIDES' })
-  }
-
   onBackToParentClicked = ({ parentStemSlideId }) => {
     if (parentStemSlideId) {
       const parentStemSlide = find(this.props.slides.data, { _id: parentStemSlideId });
@@ -83,7 +78,6 @@ class CreateNavigationContainer extends Component {
         isInRootStem={activeStem?.isRoot ?? true}
         onAddSlideClicked={this.onAddSlideClicked}
         onDuplicateSlideClicked={this.onDuplicateSlideClicked}
-        onToggleNavigationTypeClicked={this.onToggleNavigationTypeClicked}
         onBackToParentClicked={this.onBackToParentClicked}
       />
     );

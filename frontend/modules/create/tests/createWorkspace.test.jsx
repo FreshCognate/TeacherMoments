@@ -22,7 +22,6 @@ import CreateWorkspace from '../components/createWorkspace';
 const baseProps = {
   activeSlideId: 'slide-1',
   displayMode: 'EDITING',
-  navigationMode: 'SLIDES',
   isStaticSlide: false
 };
 
@@ -53,12 +52,6 @@ describe('CreateWorkspace', () => {
   it('renders the play scenario container in PREVIEW mode', () => {
     render(<CreateWorkspace {...baseProps} displayMode="PREVIEW" />);
     expect(screen.getByTestId('play-scenario-stub')).toBeInTheDocument();
-    expect(screen.queryByTestId('blocks-editor-stub')).not.toBeInTheDocument();
-  });
-
-  it('renders the navigation-settings placeholder when navigationMode is STEM', () => {
-    render(<CreateWorkspace {...baseProps} navigationMode="STEM" />);
-    expect(screen.getByText('Navigation settings coming soon...')).toBeInTheDocument();
     expect(screen.queryByTestId('blocks-editor-stub')).not.toBeInTheDocument();
   });
 });

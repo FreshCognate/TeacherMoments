@@ -41,17 +41,24 @@ class CreateWorkspaceToolbarContainer extends Component {
     });
   }
 
+  onToggleOverviewClicked = () => {
+    const { isOverviewVisible } = this.props.editor.data;
+    this.props.editor.set({ isOverviewVisible: !isOverviewVisible })
+  }
+
   render() {
-    const { displayMode } = this.props.editor.data;
+    const { displayMode, isOverviewVisible } = this.props.editor.data;
     const isStaticSlide = this.props.activeSlideId === 'CONSENT' || this.props.activeSlideId === 'SUMMARY';
     return (
       <CreateWorkspaceToolbar
         slide={this.props.slide.data || {}}
         displayMode={displayMode}
         isStaticSlide={isStaticSlide}
+        isOverviewVisible={isOverviewVisible}
         onDisplayModeChanged={this.onDisplayModeChanged}
         onAddBlockClicked={this.onAddBlockClicked}
         onSlideNameChanged={this.onSlideNameChanged}
+        onToggleOverviewClicked={this.onToggleOverviewClicked}
       />
     );
   }
