@@ -2,13 +2,25 @@ import React, { Component } from 'react';
 import CreateOverview from '../components/createOverview';
 import WithCache from '~/core/cache/containers/withCache';
 import { Stem } from '~/modules/stems/stems.types';
+import { Slide } from '~/modules/slides/slides.types';
+import { Scenario } from '~/modules/scenarios/scenarios.types';
 import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
 import filter from 'lodash/filter';
+import map from 'lodash/map';
+import each from 'lodash/each';
 import { OverviewSlide, OverviewStem, PositionedStem, Edge } from '../create.types';
+import WithRouter from '~/core/app/components/withRouter';
+import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
 
 type Props = {
+  editor: {
+    data: { activeStemRef?: string };
+    set: (data: { activeStemRef: string }) => void;
+  };
+  scenario: { data: Scenario };
   stems: { data: Stem[] };
-  slides: { data: OverviewSlide[] };
+  slides: { data: Slide[] };
 };
 
 const GAP_X = 120;
@@ -27,76 +39,81 @@ class CreateOverviewContainer extends Component<Props> {
 
     if (!rootStem) return null;
 
-    const stemSlides = filter(this.props.slides.data, { stemRef: rootStem.ref });
+    const buildStem = (stem: Stem): OverviewStem => {
+      const childStems = filter(this.props.stems.data, { stemRef: stem.ref });
 
-    return {
-      _id: rootStem._id,
-      name: 'A',
-      slides: stemSlides,
-      stems: [{
-        _id: "stem-b1",
-        name: "B1",
-        slides: [{
-          _id: "b1-12345",
-          stemRef: "a1-12345",
-          sortOrder: 0
-        }, {
-          _id: "b1-23456",
-          stemRef: "a1-12345",
-          sortOrder: 1
-        }],
-        stems: [{
-          _id: "stem-b1-c1",
-          name: "B1-C1",
-          slides: [{
-            _id: "c1-12345",
-            stemRef: "stem-c1",
-            sortOrder: 0
-          }, {
-            _id: "c1-23456",
-            stemRef: "stem-c1",
-            sortOrder: 1
-          }, {
-            _id: "c1-34567",
-            stemRef: "stem-c1",
-            sortOrder: 2
-          }]
-        }, {
-          _id: "stem-b1-c2",
-          name: "B1-C2",
-          slides: [{
-            _id: "c2-12345",
-            stemRef: "stem-c2",
-            sortOrder: 0
-          }, {
-            _id: "c2-23456",
-            stemRef: "stem-c2",
-            sortOrder: 1
-          }]
-        }]
-      }, {
-        _id: "a2-12345",
-        name: "B2",
-        slides: [{
-          _id: "b1-12345",
-          stemRef: "a1-12345",
-          sortOrder: 0
-        }, {
-          _id: "b1-23456",
-          stemRef: "a1-12345",
-          sortOrder: 1
-        }],
-        stems: [{
-          _id: "stem-b2-c1",
-          name: "B2-C1",
-          slides: [{
-            _id: "c1-12345",
-            stemRef: "stem-c1",
-            sortOrder: 0
-          }]
-        }]
-      }]
+      const positions: number[] = [];
+      let currentStem = stem;
+      let parentStem = find(this.props.stems.data, { ref: currentStem.stemRef });
+
+      while (parentStem) {
+        const siblingStems = filter(this.props.stems.data, { stemRef: parentStem.ref });
+        positions.unshift(findIndex(siblingStems, { _id: currentStem._id }) + 1);
+        currentStem = parentStem;
+        parentStem = find(this.props.stems.data, { ref: currentStem.stemRef });
+      }
+
+      const label = positions.length === 0
+        ? 'A'
+        : map(positions, (position, depth) => `${String.fromCharCode(66 + depth)}${position}`).join('-');
+      const stemSlides: OverviewSlide[] = [];
+
+      const { activeSlideId } = getScenarioDetails();
+
+      each(this.props.slides.data, (slide) => {
+        if (slide.stemRef === stem.ref) {
+          let isSelected = false;
+          if (slide._id === activeSlideId) {
+            isSelected = true;
+          }
+          stemSlides.push({ ...slide, to: `/scenarios/${this.props.scenario.data._id}/create?slide=${slide._id}`, isSelected });
+        }
+      });
+
+      const firstSlide = stemSlides[0];
+
+      if (stem.isRoot) {
+        let isSelected = false;
+        if (activeSlideId === 'CONSENT') {
+          isSelected = true;
+        }
+        stemSlides.unshift({
+          _id: 'CONSENT_SLIDE',
+          stemRef: stem.ref,
+          slideType: 'CONSENT',
+          sortOrder: -1,
+          to: `/scenarios/${this.props.scenario.data._id}/create?slide=CONSENT`,
+          isSelected
+        });
+      }
+
+      if (childStems.length === 0) {
+        let isSelected = false;
+        if (activeSlideId === 'SUMMARY' && stem.ref === this.props.editor.data.activeStemRef) {
+          isSelected = true;
+        }
+        stemSlides.push({
+          _id: 'SUMMARY_SLIDE',
+          stemRef: stem.ref,
+          slideType: 'SUMMARY',
+          sortOrder: stemSlides.length,
+          to: `/scenarios/${this.props.scenario.data._id}/create?slide=SUMMARY`,
+          isSelected
+        });
+      }
+
+      return {
+        _id: stem._id,
+        ref: stem.ref,
+        name: stem.name,
+        to: `/scenarios/${this.props.scenario.data._id}/create?slide=${firstSlide._id}`,
+        label,
+        slides: stemSlides,
+        stems: map(childStems, buildStem)
+      };
     };
+
+    return buildStem(rootStem);
   }
 
   parseTree = (stem: PositionedStem, offsetX = 0): PositionedStem => {
@@ -140,6 +157,10 @@ class CreateOverviewContainer extends Component<Props> {
 
   }
 
+  onStemClicked = ({ stemRef }: { stemRef: string }) => {
+    this.props.editor.set({ activeStemRef: stemRef });
+  }
+
   render() {
     this.maxWidth = 0;
     this.maxHeight = 0;
@@ -158,9 +179,10 @@ class CreateOverviewContainer extends Component<Props> {
         maxWidth={this.maxWidth}
         maxHeight={this.maxHeight}
         edges={this.edges}
+        onStemClicked={this.onStemClicked}
       />
     );
   }
 };
 
-export default WithCache(CreateOverviewContainer, {}, ['stems', 'slides']);
+export default WithRouter(WithCache(CreateOverviewContainer, {}, ['editor', 'scenario', 'stems', 'slides']));

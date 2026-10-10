@@ -3,6 +3,7 @@ import Create from '../components/create';
 import sortSlides from '../helpers/sortSlides';
 import WithCache from '~/core/cache/containers/withCache';
 import WithRouter from '~/core/app/components/withRouter';
+import getCurrentStemSlides from '~/modules/stems/helpers/getCurrentStemSlides';
 
 class CreateContainer extends Component {
 
@@ -13,7 +14,8 @@ class CreateContainer extends Component {
 
     if (!slideId && this.props.scenario.data?._id) {
 
-      const firstSlide = this.props.slides.data[0];
+      const currentStemSlides = getCurrentStemSlides();
+      const firstSlide = currentStemSlides[0];
 
       setTimeout(() => {
         this.props.router.navigate(`/scenarios/${this.props.scenario.data._id}/create?slide=${firstSlide._id}`, {

@@ -18,7 +18,7 @@ export default [{
   create: {
     body: {
       emails: Joi.array().items(Joi.string().email({ minDomainSegments: 2 })).min(1).required(),
-      role: Joi.string().allow('ADMIN', 'FACILITATOR', 'RESEARCHER', 'PARTICIPANT').default('user').required(),
+      role: Joi.string().valid('ADMIN', 'FACILITATOR', 'RESEARCHER', 'PARTICIPANT').required(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],
   },
@@ -32,8 +32,8 @@ export default [{
       firstName: Joi.string(),
       lastName: Joi.string(),
       email: Joi.string().email({ minDomainSegments: 2 }),
-      role: Joi.string().allow('ADMIN', 'FACILITATOR', 'RESEARCHER', 'PARTICIPANT').default('user'),
-      selectedLanguage: Joi.string().allow(...Object.keys(languages)),
+      role: Joi.string().valid('ADMIN', 'FACILITATOR', 'RESEARCHER', 'PARTICIPANT'),
+      selectedLanguage: Joi.string().valid(...Object.keys(languages)),
       isDeleted: Joi.boolean().invalid(true),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN'])],

@@ -29,6 +29,32 @@ describe('registerAuthoringUser (in-memory mongo)', () => {
     expect(stored.registrationId).toBeUndefined();
   });
 
+  it('throws 401 when an admin tries to create a SUPER_ADMIN', async () => {
+    await expect(
+      registerAuthoringUser(
+        { email: 'new@example.com', role: 'SUPER_ADMIN' }, {}, { models: db.models, user: { role: 'ADMIN' } }
+      )
+    ).rejects.toMatchObject({ statusCode: 401 });
+
+    const stored = await db.models.User.findOne({ email: 'new@example.com' }).lean();
+    expect(stored).toBeNull();
+  });
+
+  it('throws 401 when there is no calling user and the role is SUPER_ADMIN', async () => {
+    await expect(
+      registerAuthoringUser({ email: 'new@example.com', role: 'SUPER_ADMIN' }, {}, { models: db.models })
+    ).rejects.toMatchObject({ statusCode: 401 });
+  });
+
+  it('allows a super admin to create a SUPER_ADMIN', async () => {
+    const result = await registerAuthoringUser(
+      { email: 'new@example.com', role: 'SUPER_ADMIN' }, {}, { models: db.models, user: { role: 'SUPER_ADMIN' } }
+    );
+
+    const stored = await db.models.User.findById(result._id).lean();
+    expect(stored.role).toBe('SUPER_ADMIN');
+  });
+
   it('returns the created user', async () => {
     const result = await registerAuthoringUser(
       { email: 'new@example.com', role: 'ADMIN' }, {}, { models: db.models }

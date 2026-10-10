@@ -1,11 +1,6 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import CreateStemsContainer from '../containers/createStemsContainer';
-import Flag from '~/modules/flags/components/flag';
-import CreateNavigationSlideIcon from './createNavigationSlideIcon';
 import CreateNavigationSlidePreview from './createNavigationSlidePreview';
-
-const TRANSITION = { duration: 0.25, ease: 'easeInOut' };
 
 const CreateNavigationSlide = ({
   scenarioId,
@@ -17,15 +12,11 @@ const CreateNavigationSlide = ({
   isDeleting,
   isDuplicating,
   isInRootStem,
-  isNestedStem,
   canDeleteSlides,
   hasChildStems,
   onDuplicateSlideClicked,
   onDeleteSlideClicked,
-  onCreateStemClicked
 }) => {
-
-  const shouldShowIcon = !isInRootStem && !isNestedStem;
 
   return (
     <div className="mb-2">
@@ -40,17 +31,10 @@ const CreateNavigationSlide = ({
         isSelected={isSelected}
         isDeleting={isDeleting}
         isDuplicating={isDuplicating}
-        isAnimating={shouldShowIcon}
         draggingOptions={draggingOptions}
         onDuplicateSlideClicked={onDuplicateSlideClicked}
         onDeleteSlideClicked={onDeleteSlideClicked}
-        onCreateStemClicked={onCreateStemClicked}
       />
-
-
-      <CreateStemsContainer slideRef={slide.ref} isInRootStem={isInRootStem} />
-
-
     </div>
   );
 };

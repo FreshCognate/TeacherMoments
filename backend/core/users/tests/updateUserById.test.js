@@ -31,6 +31,70 @@ describe('updateUserById (in-memory mongo)', () => {
     expect(result.firstName).toBe('Sam');
   });
 
+  it('throws 401 when an admin tries to assign the SUPER_ADMIN role', async () => {
+    const target = await db.models.User.create({ email: 'target@x.com', role: 'ADMIN' });
+
+    await expect(
+      updateUserById(
+        { userId: target._id, update: { role: 'SUPER_ADMIN' } },
+        {},
+        { user: { _id: new mongoose.Types.ObjectId(), role: 'ADMIN' }, models: db.models }
+      )
+    ).rejects.toMatchObject({ statusCode: 401 });
+
+    const stored = await db.models.User.findById(target._id).lean();
+    expect(stored.role).toBe('ADMIN');
+  });
+
+  it('allows a super admin to assign the SUPER_ADMIN role', async () => {
+    const target = await db.models.User.create({ email: 'target@x.com', role: 'ADMIN' });
+
+    const result = await updateUserById(
+      { userId: target._id, update: { role: 'SUPER_ADMIN' } },
+      {},
+      { user: { _id: new mongoose.Types.ObjectId(), role: 'SUPER_ADMIN' }, models: db.models }
+    );
+
+    expect(result.role).toBe('SUPER_ADMIN');
+  });
+
+  it('throws 404 when the user does not exist', async () => {
+    await expect(
+      updateUserById(
+        { userId: new mongoose.Types.ObjectId(), update: { firstName: 'Sam' } },
+        {},
+        { user: { _id: new mongoose.Types.ObjectId(), role: 'ADMIN' }, models: db.models }
+      )
+    ).rejects.toMatchObject({ statusCode: 404 });
+  });
+
+  it('throws 401 when an admin tries to update a SUPER_ADMIN', async () => {
+    const target = await db.models.User.create({ email: 'super@x.com', role: 'SUPER_ADMIN' });
+
+    await expect(
+      updateUserById(
+        { userId: target._id, update: { email: 'attacker@x.com' } },
+        {},
+        { user: { _id: new mongoose.Types.ObjectId(), role: 'ADMIN' }, models: db.models }
+      )
+    ).rejects.toMatchObject({ statusCode: 401 });
+
+    const stored = await db.models.User.findById(target._id).lean();
+    expect(stored.email).toBe('super@x.com');
+  });
+
+  it('allows a super admin to update a SUPER_ADMIN', async () => {
+    const target = await db.models.User.create({ email: 'super@x.com', role: 'SUPER_ADMIN' });
+
+    const result = await updateUserById(
+      { userId: target._id, update: { firstName: 'Sam' } },
+      {},
+      { user: { _id: new mongoose.Types.ObjectId(), role: 'SUPER_ADMIN' }, models: db.models }
+    );
+
+    expect(result.firstName).toBe('Sam');
+  });
+
   it('lowercases an email when set in the update', async () => {
     const target = await db.models.User.create({ email: 'target@x.com' });
 

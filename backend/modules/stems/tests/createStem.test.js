@@ -52,16 +52,17 @@ describe('createStem', () => {
     };
 
     const result = await createStem(
-      { scenario: 's1', slideRef: 'slideRef', sortOrder: 2, name: 'Branch', isRoot: false },
+      { scenario: 's1', stemRef: 'parentStemRef', sortOrder: 2, name: 'Branch', isRoot: false },
       {},
       context
     );
 
     expect(checkAccessMock).toHaveBeenCalledWith({ modelId: 's1', modelType: 'Scenario' }, context);
+    expect(find).toHaveBeenCalledWith({ stemRef: 'parentStemRef', isDeleted: false });
     expect(create).toHaveBeenCalledTimes(1);
     expect(create).toHaveBeenCalledWith({
       scenario: 's1',
-      slideRef: 'slideRef',
+      stemRef: 'parentStemRef',
       sortOrder: 2,
       name: 'Branch',
       isRoot: false,
@@ -77,7 +78,7 @@ describe('createStem', () => {
     expect(result).toEqual({ _id: 'st1', ref: 'stRef1' });
   });
 
-  it('seeds a second stem and slide for the first stem on a slide', async () => {
+  it('seeds a second stem and slide for the first child stem of a parent stem', async () => {
     const findById = vi.fn().mockResolvedValue({ _id: 's1' });
     const create = vi.fn()
       .mockResolvedValueOnce({ _id: 'st1', ref: 'stRef1' })
@@ -90,7 +91,7 @@ describe('createStem', () => {
     };
 
     await createStem(
-      { scenario: 's1', slideRef: 'slideRef', isRoot: false },
+      { scenario: 's1', stemRef: 'parentStemRef', isRoot: false },
       {},
       context
     );
@@ -98,7 +99,7 @@ describe('createStem', () => {
     expect(create).toHaveBeenCalledTimes(2);
     expect(create).toHaveBeenNthCalledWith(1, {
       scenario: 's1',
-      slideRef: 'slideRef',
+      stemRef: 'parentStemRef',
       sortOrder: 0,
       name: 'Stem 1',
       isRoot: false,
@@ -106,7 +107,7 @@ describe('createStem', () => {
     });
     expect(create).toHaveBeenNthCalledWith(2, {
       scenario: 's1',
-      slideRef: 'slideRef',
+      stemRef: 'parentStemRef',
       sortOrder: 1,
       name: 'Stem 2',
       isRoot: false,

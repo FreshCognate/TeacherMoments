@@ -43,6 +43,7 @@ export type Slide = {
 export type StaticSlide = {
   _id: 'CONSENT_SLIDE' | 'SUMMARY_SLIDE',
   slideType: 'CONSENT' | 'SUMMARY',
+  stemRef: string,
   ref?: string,
   name?: string,
   hasFeedback?: false

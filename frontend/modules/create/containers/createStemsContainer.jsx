@@ -6,6 +6,7 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import addModal from '~/core/dialogs/helpers/addModal';
 import filter from 'lodash/filter';
 import WithRouter from '~/core/app/components/withRouter';
+import getCache from '~/core/cache/helpers/getCache';
 
 class CreateStemsContainer extends Component {
 
@@ -21,7 +22,7 @@ class CreateStemsContainer extends Component {
   getChildStems = () => {
     const activeStemRef = this.getActiveStemRef();
     if (!activeStemRef) return [];
-    return filter(this.props.stems.data, { slideRef: this.props.slideRef });
+    return filter(this.props.stems.data, { stemRef: this.props.stemRef });
   }
 
   onStemClicked = (stemRef) => {
@@ -101,6 +102,27 @@ class CreateStemsContainer extends Component {
     });
   }
 
+  onCreateStemClicked = () => {
+    this.setState({ isCreating: true });
+    const scenarioId = this.props.scenario.data._id;
+
+    axios.post('/api/stems', {
+      scenarioId,
+      stemRef: this.props.editor.data.activeStemRef,
+    }).then((response) => {
+      const newStem = response.data.stem;
+      Promise.all([
+        this.props.stems.fetch(),
+        this.props.slides.fetch()
+      ]).then(() => {
+        this.setState({ isCreating: false });
+      });
+    }).catch((error) => {
+      this.setState({ isCreating: false });
+      handleRequestError(error);
+    });
+  }
+
   render() {
     const { isCreating, deletingId } = this.state;
     const childStems = this.getChildStems();
@@ -110,11 +132,11 @@ class CreateStemsContainer extends Component {
         activeStemRef={activeStemRef}
         childStems={childStems}
         isCreating={isCreating}
-        isInRootStem={this.props.isInRootStem}
         deletingId={deletingId}
         onEditStemClicked={this.onEditStemClicked}
         onDeleteStemClicked={this.onDeleteStemClicked}
         onStemClicked={this.onStemClicked}
+        onCreateStemClicked={this.onCreateStemClicked}
       />
     );
   }

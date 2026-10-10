@@ -10,6 +10,7 @@ type Props = {
   maxWidth: number;
   maxHeight: number;
   edges: Edge[];
+  onStemClicked: ({ stemRef }: { stemRef: string }) => void;
 };
 
 const CreateOverview = ({
@@ -17,6 +18,7 @@ const CreateOverview = ({
   maxWidth,
   maxHeight,
   edges,
+  onStemClicked,
 }: Props) => {
   return (
     <div className="">
@@ -42,7 +44,7 @@ const CreateOverview = ({
             );
           })}
         </svg>
-        <CreateOverviewStem stem={tree} />
+        <CreateOverviewStem stem={tree} onStemClicked={onStemClicked} />
       </div>
     </div>
   );

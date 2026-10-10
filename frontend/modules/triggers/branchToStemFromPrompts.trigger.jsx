@@ -5,7 +5,7 @@ import getBlockTracking from "../run/helpers/getBlockTracking";
 import getScenarioDetails from "../run/helpers/getScenarioDetails";
 import setSlideStatus from "../run/helpers/setSlideStatus";
 import setSlideTrigger from "../run/helpers/setSlideTrigger";
-import getStemsByRef from "../stems/helpers/getStemsByRef";
+import getStemByRef from "../stems/helpers/getStemByRef";
 import getStemsBySlideRef from "../stems/helpers/getStemsBySlideRef";
 import registerTrigger from "./helpers/registerTrigger";
 import getConditionlessStems from "./helpers/getConditionlessStems";
@@ -179,11 +179,11 @@ const BranchToStemFromPrompts = {
       let targetStem = null;
 
       if (matchedItem) {
-        targetStem = getStemsByRef({ ref: matchedItem.elementRef });
+        targetStem = getStemByRef({ ref: matchedItem.elementRef });
       } else if (conditionlessStem) {
         targetStem = conditionlessStem;
       } else if (trigger.defaultStemRef) {
-        targetStem = getStemsByRef({ ref: trigger.defaultStemRef });
+        targetStem = getStemByRef({ ref: trigger.defaultStemRef });
       }
 
       if (!targetStem) return resolve();

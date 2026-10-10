@@ -17,7 +17,6 @@ export default {
     body: {
       scenarioId: Joi.string().required(),
       stemRef: Joi.string(),
-      slideRef: Joi.string(),
       sortOrder: Joi.number(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
