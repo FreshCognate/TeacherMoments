@@ -14,7 +14,7 @@ const CreateOverviewStem = ({
   return (
     <>
       <div
-        className="absolute flex p-2 border-2 border-lm-2 dark:border-dm-2 rounded-full gap-x-2 items-center"
+        className="absolute flex p-2 border-2 border-lm-3 dark:border-dm-2 rounded-full gap-x-2 items-center"
         style={{ left: stem.x, top: stem.y }}
       >
         <div className="absolute -top-6 text-sm whitespace-nowrap">

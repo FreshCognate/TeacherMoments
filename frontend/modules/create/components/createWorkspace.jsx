@@ -9,6 +9,7 @@ import CreateOverviewContainer from '../containers/createOverviewContainer';
 const CreateWorkspace = ({
   activeSlideId,
   displayMode,
+  isOverviewVisible,
   isStaticSlide
 }) => {
 
@@ -20,7 +21,7 @@ const CreateWorkspace = ({
           isStaticSlide={isStaticSlide}
         />
       </div>
-      {(displayMode === 'EDITING') && (
+      {(displayMode === 'EDITING' && !isOverviewVisible) && (
         <>
           {(isStaticSlide) && (
             <CreateStaticSlideEditorContainer key={activeSlideId} type={activeSlideId} />
@@ -35,12 +36,12 @@ const CreateWorkspace = ({
           )}
         </>
       )}
-      {(displayMode === 'OVERVIEW') && (
+      {(isOverviewVisible) && (
         <div>
           <CreateOverviewContainer />
         </div>
       )}
-      {(displayMode === 'PREVIEW') && (
+      {(displayMode === 'PREVIEW' && !isOverviewVisible) && (
         <div>
           <PlayScenarioContainer />
         </div>

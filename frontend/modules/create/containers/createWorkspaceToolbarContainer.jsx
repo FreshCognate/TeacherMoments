@@ -15,9 +15,12 @@ class CreateWorkspaceToolbarContainer extends Component {
       this.props.editor.set({ displayMode });
       document.getElementById("scenario-builder").scrollTo({ top: 0, behaviour: 'instant' });
     }
+    this.props.editor.set({ isOverviewVisible: false })
   }
 
   onAddBlockClicked = () => {
+    this.onDisplayModeChanged('EDITING');
+    this.props.editor.set({ isOverviewVisible: false })
     addModal({
       title: 'Choose a block type to add to your slide:',
       component: <BlockSelectorContainer />,

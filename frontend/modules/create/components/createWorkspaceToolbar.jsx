@@ -2,6 +2,7 @@ import React from 'react';
 import hasFlag from '~/modules/flags/helpers/hasFlag';
 import Button from '~/uikit/buttons/components/button';
 import FlatButton from '~/uikit/buttons/components/flatButton';
+import Switch from '~/uikit/toggles/components/switch';
 import Toggle from '~/uikit/toggles/components/toggle';
 
 const CreateWorkspaceToolbar = ({
@@ -22,7 +23,7 @@ const CreateWorkspaceToolbar = ({
     text: 'Preview'
   }];
   return (
-    <div className="sticky w-full top-0 flex items-center justify-between z-40 border-b bg-lm-0 dark:bg-dm-1 text-xs">
+    <div className="sticky w-full top-0 flex items-center justify-between z-40 border-b border-b-lm-2 dark:border-b-dm-2 bg-lm-0 dark:bg-dm-1 text-xs">
       <div className="flex items-center">
         {(!isStaticSlide) && (
           <>
@@ -39,9 +40,9 @@ const CreateWorkspaceToolbar = ({
             <div className="pl-3 pr-3">
               <FlatButton text="Add block" icon="create" size="sm" onClick={onAddBlockClicked} />
             </div>
+            <div className="border-l border-lm-2 dark:border-dm-2" style={{ width: '2px', height: '24px' }} />
           </>
         )}
-        <div className="border-l border-lm-2 dark:border-dm-2" style={{ width: '2px', height: '24px' }} />
         <div className="pl-3 pr-3 py-1 ">
           <Toggle
             size="sm"
@@ -52,7 +53,13 @@ const CreateWorkspaceToolbar = ({
         </div>
       </div>
       <div className="pr-2">
-        <Button text={isOverviewVisible ? "Hide overview" : "Show overview"} size="sm" onClick={onToggleOverviewClicked} />
+        <div className="pr-2 pl-1 py-1 border border-lm-1 dark:border-dm-2 rounded-full flex">
+          <Switch
+            label="Overview"
+            value={isOverviewVisible}
+            size='sm'
+            onChange={onToggleOverviewClicked} />
+        </div>
       </div>
     </div >
   );

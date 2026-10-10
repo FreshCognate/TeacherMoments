@@ -7,13 +7,14 @@ import getScenarioDetails from '../../run/helpers/getScenarioDetails';
 class CreateWorkspaceContainer extends Component {
 
   render() {
-    const { displayMode } = this.props.editor.data;
+    const { displayMode, isOverviewVisible } = this.props.editor.data;
     const { activeSlideId } = getScenarioDetails();
     const isStaticSlide = activeSlideId === 'CONSENT' || activeSlideId === 'SUMMARY';
     return (
       <CreateWorkspace
         activeSlideId={activeSlideId}
         displayMode={displayMode}
+        isOverviewVisible={isOverviewVisible}
         isStaticSlide={isStaticSlide}
       />
     );

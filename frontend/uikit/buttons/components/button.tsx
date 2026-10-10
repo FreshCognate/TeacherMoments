@@ -12,7 +12,7 @@ export default function Button({
   color,
   className,
   style,
-  size,
+  size = 'rg',
   isDisabled,
   isFullWidth,
   onClick
