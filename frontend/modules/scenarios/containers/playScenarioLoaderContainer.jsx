@@ -5,6 +5,7 @@ import WithCache from '~/core/cache/containers/withCache';
 import getCache from '~/core/cache/helpers/getCache';
 import getCohortFromSearchParams from '~/modules/cohorts/helpers/getCohortFromSearchParams';
 import Loading from '~/uikit/loaders/components/loading';
+import find from 'lodash/find';
 
 class PlayScenarioLoaderContainer extends Component {
   render() {
