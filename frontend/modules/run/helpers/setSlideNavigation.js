@@ -13,13 +13,14 @@ export default ({ slideRef, stemRef }) => {
 
   currentStage.navigateToSlide = slideRef;
 
-  const editor = getCache('editor');
-  editor.set({ activeStemRef: stemRef })
 
   if (isScenarioInPlay()) {
     return run.mutate({ stages }, { method: 'put' });
+  } else {
+    const editor = getCache('editor');
+    editor.set({ activeStemRef: stemRef })
+    return run.set({ stages });
   }
 
-  return run.set({ stages });
 
 }

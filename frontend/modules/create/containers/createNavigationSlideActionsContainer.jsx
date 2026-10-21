@@ -16,16 +16,6 @@ class CreateNavigationSlideActionsContainer extends Component {
       color: 'primary',
       action: 'DUPLICATE'
     }];
-    if (this.props.isInRootStem) {
-      const stems = getStemsBySlideRef({ slideRef: this.props.slide.ref });
-      let text = stems.length > 0 ? 'Create stem' : 'Create stems';
-      options.unshift({
-        icon: 'branching',
-        text,
-        color: 'primary',
-        action: 'CREATE_STEM'
-      })
-    }
     if (this.props.canDeleteSlides) {
       options.push({
         icon: 'delete',
