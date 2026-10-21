@@ -2,6 +2,7 @@ import getCache from "~/core/cache/helpers/getCache";
 import find from 'lodash/find';
 import getScenarioDetails from "./getScenarioDetails";
 import getRootStem from "~/modules/stems/helpers/getRootStem";
+import getStemsByStemRef from "~/modules/stems/helpers/getStemsByStemRef";
 
 export default () => {
 
@@ -23,6 +24,10 @@ export default () => {
       const nextSlide = find(getCache('slides').data, { stemRef: currentStem.ref, sortOrder: currentSlide.sortOrder + 1 });
       if (nextSlide) {
         return nextSlide;
+      }
+      const childStems = getStemsByStemRef({ stemRef: currentStem.ref });
+      if (childStems.length === 0) {
+        return { _id: 'SUMMARY', slideType: 'SUMMARY', ref: 'SUMMARY' };
       }
     }
   }
