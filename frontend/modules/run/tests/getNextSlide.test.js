@@ -19,8 +19,8 @@ const seed = (key, data) => {
 
 const stems = [
   { ref: 'stem-root', isRoot: true },
-  { ref: 'stem-nested', isRoot: false, slideRef: 'root-1' },
-  { ref: 'stem-tail', isRoot: false, slideRef: 'root-3' }
+  { ref: 'stem-nested', isRoot: false, slideRef: 'root-1', stemRef: 'stem-root' },
+  { ref: 'stem-tail', isRoot: false, slideRef: 'root-3', stemRef: 'stem-root' }
 ];
 
 const slides = [
@@ -50,7 +50,7 @@ describe('getNextSlide', () => {
     expect(getNextSlide()).toBe(slideByRef('root-2'));
   });
 
-  it('returns undefined on the last slide of the root stem', () => {
+  it('returns undefined on the last slide of a stem that has child stems', () => {
     getScenarioDetails.mockReturnValue({ activeSlideRef: 'root-3' });
     expect(getNextSlide()).toBeUndefined();
   });
@@ -60,13 +60,13 @@ describe('getNextSlide', () => {
     expect(getNextSlide()).toBe(slideByRef('nested-2'));
   });
 
-  it('does not return to the parent stem after the last slide of a nested stem', () => {
+  it('returns the SUMMARY sentinel on the last slide of a stem without child stems', () => {
     getScenarioDetails.mockReturnValue({ activeSlideRef: 'nested-2' });
-    expect(getNextSlide()).toBeUndefined();
+    expect(getNextSlide()).toEqual({ _id: 'SUMMARY', slideType: 'SUMMARY', ref: 'SUMMARY' });
   });
 
-  it('returns undefined when a nested stem ends and the parent has no next slide', () => {
-    getScenarioDetails.mockReturnValue({ activeSlideRef: 'tail-1' });
+  it('returns undefined when the active ref is SUMMARY', () => {
+    getScenarioDetails.mockReturnValue({ activeSlideRef: 'SUMMARY' });
     expect(getNextSlide()).toBeUndefined();
   });
 
