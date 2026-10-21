@@ -3,6 +3,7 @@ import '../../backend/modules/exports/index.js';
 import '../../backend/modules/responses/index.js';
 import '../../backend/modules/scenarios/index.js';
 import '../../backend/modules/slides/index.js';
+import '../../backend/modules/stems/index.js';
 import '../../backend/modules/blocks/index.js';
 import '../../backend/modules/runs/index.js';
 import '../../backend/modules/assets/index.js';

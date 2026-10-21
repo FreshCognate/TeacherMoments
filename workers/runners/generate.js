@@ -1,5 +1,6 @@
 import '../../backend/core/users/index.js';
 import '../../backend/modules/slides/index.js';
+import '../../backend/modules/stems/index.js';
 import '../../backend/modules/blocks/index.js';
 import '../../backend/modules/runs/index.js';
 import '../../backend/modules/assets/index.js';
