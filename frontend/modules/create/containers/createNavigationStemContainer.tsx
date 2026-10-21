@@ -8,11 +8,11 @@ import WithCache from '~/core/cache/containers/withCache';
 import getCurrentStemSlides from '~/modules/stems/helpers/getCurrentStemSlides';
 import getActiveStem from '~/modules/stems/helpers/getActiveStem';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
+import addModal from '~/core/dialogs/helpers/addModal';
 import setEditingMode from '../helpers/setEditingMode';
 import axios from 'axios';
 import getSelectedSlideSortOrder from '~/modules/stems/helpers/getSelectedSlideSortOrder';
 import find from 'lodash/find';
-import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
 import getStemsByStemRef from '~/modules/stems/helpers/getStemsByStemRef';
 
 type Props = {
@@ -43,37 +43,54 @@ class CreateNavigationStemContainer extends Component<Props, State> {
   };
 
   onDeleteSlideClicked = (slideId: string) => {
-    const selectedSlideSortOrder = getSelectedSlideSortOrder();
-    this.setState({ deletingId: slideId });
-    axios.delete(`/api/slides/${slideId}`).then(() => {
+    const slide = find(this.props.slides.data, { _id: slideId });
+    const slideName = slide?.name || `${(slide?.sortOrder ?? 0) + 1}`;
+    addModal({
+      title: `Delete slide: ${slideName}`,
+      body: 'Are you sure you want to delete this slide?',
+      actions: [{
+        type: 'CANCEL',
+        text: 'Cancel'
+      }, {
+        type: 'DELETE',
+        text: 'Delete',
+        color: 'danger'
+      }]
+    }, (state: string, { type }: { type: string }) => {
+      if (state === 'ACTION' && type === 'DELETE') {
+        const selectedSlideSortOrder = getSelectedSlideSortOrder();
+        this.setState({ deletingId: slideId });
+        axios.delete(`/api/slides/${slideId}`).then(() => {
 
-      this.props.slides.fetch().then(() => {
+          this.props.slides.fetch().then(() => {
 
-        this.setState({ deletingId: null }, () => {
-          const scenarioId = this.props.scenarioId;
-          const slideWithSameSortOrderAsDeleted = find(this.props.slides.data, { sortOrder: selectedSlideSortOrder });
+            this.setState({ deletingId: null }, () => {
+              const scenarioId = this.props.scenarioId;
+              const slideWithSameSortOrderAsDeleted = find(this.props.slides.data, { sortOrder: selectedSlideSortOrder });
 
-          if (slideWithSameSortOrderAsDeleted) {
-            this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideWithSameSortOrderAsDeleted._id}`, {
-              replace: true
-            })
-          } else {
-            const slideBeforeDeletedSlide = find(this.props.slides.data, { sortOrder: selectedSlideSortOrder - 1 });
-            if (slideBeforeDeletedSlide) {
-              this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideBeforeDeletedSlide._id}`, {
-                replace: true
-              })
-            }
-          }
+              if (slideWithSameSortOrderAsDeleted) {
+                this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideWithSameSortOrderAsDeleted._id}`, {
+                  replace: true
+                })
+              } else {
+                const slideBeforeDeletedSlide = find(this.props.slides.data, { sortOrder: selectedSlideSortOrder - 1 });
+                if (slideBeforeDeletedSlide) {
+                  this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${slideBeforeDeletedSlide._id}`, {
+                    replace: true
+                  })
+                }
+              }
 
-        });
-      });
+            });
+          });
 
-    }).catch((error) => {
-      this.props.slides.fetch();
-      this.setState({ deletingId: null });
-      handleRequestError(error);
-    })
+        }).catch((error) => {
+          this.props.slides.fetch();
+          this.setState({ deletingId: null });
+          handleRequestError(error);
+        })
+      }
+    });
   }
 
   onDuplicateSlideClicked = (slideId: string) => {

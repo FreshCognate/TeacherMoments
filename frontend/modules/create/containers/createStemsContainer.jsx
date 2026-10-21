@@ -5,6 +5,7 @@ import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import addModal from '~/core/dialogs/helpers/addModal';
 import filter from 'lodash/filter';
+import find from 'lodash/find';
 import WithRouter from '~/core/app/components/withRouter';
 import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
 import EditStemNavigationContainer from '~/modules/stems/containers/editStemNavigationContainer';
@@ -75,9 +76,10 @@ class CreateStemsContainer extends Component {
   }
 
   onDeleteStemClicked = (stemId) => {
+    const stem = find(this.props.stems.data, { _id: stemId });
     addModal({
-      title: 'Delete stem',
-      description: 'Are you sure you want to delete this stem? All slides in this stem and child stems will be removed.',
+      title: `Delete stem: ${stem?.name}`,
+      body: 'Are you sure you want to delete this stem? All slides in this stem and child stems will be removed.',
       actions: [{
         type: 'CANCEL',
         text: 'Cancel'
