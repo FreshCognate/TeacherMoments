@@ -1,4 +1,6 @@
-import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import createJob from '#core/queues/helpers/createJob.js';
+
+const DELETE_DELAY_MS = 30 * 60 * 1000;
 
 export default async (props, options, context) => {
 
@@ -8,33 +10,20 @@ export default async (props, options, context) => {
   const exportRecord = await models.Export.findOne({
     _id: exportId,
     createdBy: user._id
-  });
+  }).lean();
 
   if (!exportRecord) {
     throw { message: 'Export not found', statusCode: 404 };
   }
 
-  if (exportRecord.filePath) {
-    const region = process.env.STORAGE_ENDPOINT.split('.')[0];
-
-    const s3Client = new S3Client({
-      endpoint: `https://${process.env.STORAGE_ENDPOINT}`,
-      region,
-      credentials: {
-        accessKeyId: process.env.STORAGE_KEY,
-        secretAccessKey: process.env.STORAGE_SECRET
-      }
-    });
-
-    const command = new DeleteObjectCommand({
-      Bucket: process.env.STORAGE_NAME,
-      Key: exportRecord.filePath
-    });
-
-    await s3Client.send(command);
-  }
-
-  await models.Export.deleteOne({ _id: exportId });
+  await createJob({
+    queue: 'exports',
+    name: 'DELETE_GENERATED_EXPORT',
+    delay: DELETE_DELAY_MS,
+    job: {
+      exportId: String(exportRecord._id)
+    }
+  });
 
   return { success: true };
 

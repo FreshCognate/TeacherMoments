@@ -6,7 +6,7 @@ import QUEUES from '../queues.js';
 
 
 
-export default async ({ queue, name, repeat, job, children }) => {
+export default async ({ queue, name, repeat, delay, job, children }) => {
 
   if (children) {
     const urlRedis = new Redis(process.env.REDIS_URL, {
@@ -36,6 +36,7 @@ export default async ({ queue, name, repeat, job, children }) => {
     });
   }
   return queueItem.add(name, job, {
+    delay,
     removeOnComplete: {
       age: 72 * 3600, // keep up to 1 hour
       count: 2000, // keep up to 2000 jobs

@@ -5,6 +5,7 @@ const {
   emitMock,
   generateScenarioExportMock,
   generateMultiScenarioExportMock,
+  deleteGeneratedExportMock,
   connectDatabaseMock,
   exportFindByIdAndUpdateMock
 } = vi.hoisted(() => ({
@@ -12,6 +13,7 @@ const {
   emitMock: vi.fn(),
   generateScenarioExportMock: vi.fn(),
   generateMultiScenarioExportMock: vi.fn(),
+  deleteGeneratedExportMock: vi.fn(),
   connectDatabaseMock: vi.fn(),
   exportFindByIdAndUpdateMock: vi.fn()
 }));
@@ -31,6 +33,9 @@ vi.mock('../../tasks/generateScenarioExport.js', () => ({
 }));
 vi.mock('../../tasks/generateMultiScenarioExport.js', () => ({
   default: (...args) => generateMultiScenarioExportMock(...args)
+}));
+vi.mock('../../tasks/deleteGeneratedExport.js', () => ({
+  default: (...args) => deleteGeneratedExportMock(...args)
 }));
 vi.mock('../../getSockets.js', () => ({
   default: (...args) => getSocketsMock(...args)
@@ -115,6 +120,19 @@ describe('exports runner', () => {
 
     expect(exportFindByIdAndUpdateMock).toHaveBeenCalledWith('e1', { status: 'FAILED' });
     expect(emitMock).toHaveBeenCalledWith('workers:exports:j1', { event: 'EXPORT_FAILED' });
+  });
+
+  it('routes DELETE_GENERATED_EXPORT to deleteGeneratedExport without emitting events', async () => {
+    await exportsRunner({
+      id: 'j1',
+      name: 'DELETE_GENERATED_EXPORT',
+      data: { exportId: 'e1' }
+    });
+
+    expect(deleteGeneratedExportMock).toHaveBeenCalledWith({ exportId: 'e1' });
+    expect(generateScenarioExportMock).not.toHaveBeenCalled();
+    expect(generateMultiScenarioExportMock).not.toHaveBeenCalled();
+    expect(emitMock).not.toHaveBeenCalled();
   });
 
   it('does nothing for unknown job names', async () => {
