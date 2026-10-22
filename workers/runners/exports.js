@@ -9,6 +9,7 @@ import '../../backend/modules/runs/index.js';
 import '../../backend/modules/assets/index.js';
 import generateScenarioExport from '../tasks/generateScenarioExport.js';
 import generateMultiScenarioExport from '../tasks/generateMultiScenarioExport.js';
+import deleteGeneratedExport from '../tasks/deleteGeneratedExport.js';
 import withConnection from '../../backend/core/databases/helpers/withConnection.js';
 import getSockets from '../getSockets.js';
 
@@ -42,6 +43,13 @@ export default async (job) => {
           event: 'EXPORT_COMPLETED',
           exportId: job.data.exportId
         });
+
+        break;
+      }
+
+      case 'DELETE_GENERATED_EXPORT': {
+
+        await deleteGeneratedExport({ exportId: job.data.exportId });
 
         break;
       }

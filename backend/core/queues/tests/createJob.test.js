@@ -94,5 +94,18 @@ describe('createJob', () => {
         removeOnFail: { age: 72 * 3600, count: 2000 }
       });
     });
+
+    it('passes the delay option through to the queue', async () => {
+      const addMock = vi.fn().mockResolvedValue({ id: 'job-1' });
+      getQueueMock.mockReturnValue({ add: addMock });
+
+      await createJob({ queue: 'exports', name: 'work', job: { foo: 'bar' }, delay: 1800000 });
+
+      expect(addMock).toHaveBeenCalledWith('work', { foo: 'bar' }, {
+        delay: 1800000,
+        removeOnComplete: { age: 72 * 3600, count: 2000 },
+        removeOnFail: { age: 72 * 3600, count: 2000 }
+      });
+    });
   });
 });
