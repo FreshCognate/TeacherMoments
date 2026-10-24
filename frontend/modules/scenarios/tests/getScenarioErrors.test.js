@@ -4,22 +4,33 @@ vi.mock('~/modules/slides/helpers/getSlideErrors', () => ({
   default: vi.fn()
 }));
 
+vi.mock('~/modules/stems/helpers/getStemErrors', () => ({
+  default: vi.fn()
+}));
+
 import getScenarioErrors from '../helpers/getScenarioErrors';
 import getSlideErrors from '~/modules/slides/helpers/getSlideErrors';
+import getStemErrors from '~/modules/stems/helpers/getStemErrors';
 import { createCache, resetCache } from '~/core/cache/helpers/cacheManager';
 
-const seedSlides = (data) => {
-  resetCache('slides');
+const seedCache = (key, data) => {
+  resetCache(key);
   createCache({
-    key: 'slides',
+    key,
     cache: { getInitialData: () => data },
     container: { props: {} }
   });
 };
 
+const seedSlides = (data) => seedCache('slides', data);
+
+const seedStems = (data) => seedCache('stems', data);
+
 describe('getScenarioErrors', () => {
   beforeEach(() => {
     getSlideErrors.mockReset().mockReturnValue([]);
+    getStemErrors.mockReset().mockReturnValue([]);
+    seedStems([]);
   });
 
   it('returns an empty array when there are no slides', () => {
@@ -42,4 +53,30 @@ describe('getScenarioErrors', () => {
     ]);
   });
 
+  it('checks each stem', () => {
+    const stems = [
+      { _id: 'st-1', ref: 'stem-1' },
+      { _id: 'st-2', ref: 'stem-2' }
+    ];
+    seedStems(stems);
+    seedSlides([]);
+
+    getScenarioErrors();
+
+    expect(getStemErrors).toHaveBeenCalledTimes(2);
+    expect(getStemErrors).toHaveBeenCalledWith(stems[0]);
+    expect(getStemErrors).toHaveBeenCalledWith(stems[1]);
+  });
+
+  it('lists stem errors before slide errors', () => {
+    seedStems([{ _id: 'st-1', ref: 'stem-1' }]);
+    seedSlides([{ _id: 's-1', ref: 'ref-1' }]);
+    getStemErrors.mockReturnValue([{ message: 'stem issue' }]);
+    getSlideErrors.mockReturnValue([{ message: 'slide issue' }]);
+
+    expect(getScenarioErrors()).toEqual([
+      { message: 'stem issue' },
+      { message: 'slide issue' }
+    ]);
+  });
 });

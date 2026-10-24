@@ -14,7 +14,7 @@ type SlideFeedbackError = {
 
 export default (slide: Slide) => {
   const errors: SlideFeedbackError[] = [];
-  const defaultError = { elementType: 'SLIDE', elementId: slide._id };
+  const defaultError = { elementType: 'SLIDE_FEEDBACK', elementId: slide._id };
 
   const blocks = getBlocksBySlideRef({ slideRef: slide.ref });
   const promptBlocks = filter(blocks, block => getBlockDisplayType(block) === 'PROMPT');

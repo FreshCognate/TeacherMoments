@@ -8,6 +8,7 @@ import getCache from '~/core/cache/helpers/getCache';
 import getStemSlidesByStemId from '~/modules/stems/helpers/getStemSlidesByStemId';
 import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
 import EditStemNavigationContainer from '~/modules/stems/containers/editStemNavigationContainer';
+import EditSlideFeedbackContainer from '~/modules/slides/containers/editSlideFeedbackContainer';
 
 interface Props {
   errors?: any;
@@ -47,6 +48,22 @@ class ValidationIndicatorContainer extends Component<Props> {
           const editor = getCache('editor');
           editor.set({ activeStemRef: currentSlide.stemRef });
           this.props.onClose();
+        }
+        break;
+      }
+      case 'SLIDE_FEEDBACK': {
+        const currentSlide = find(this.props.slides.data, { _id: error.elementId });
+        if (currentSlide) {
+          this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${error.elementId}`);
+          const editor = getCache('editor');
+          editor.set({ activeStemRef: currentSlide.stemRef });
+          this.props.onClose();
+          addSidePanel({
+            size: 'lg',
+            icon: 'feedback',
+            title: 'Slide feedback',
+            component: <EditSlideFeedbackContainer />
+          });
         }
         break;
       }
