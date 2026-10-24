@@ -15,14 +15,15 @@ import setSlideNavigation from "~/modules/run/helpers/setSlideNavigation";
 import navigateTo from "~/modules/run/helpers/navigateTo";
 import getStemByRef from "./getStemByRef";
 import getConditionlessStems from "./getConditionlessStems";
+import getStemErrors from "./getStemErrors";
 
 
 export default async ({ stem, slide, router }: { stem: Stem, slide: Slide, router: any }) => {
-  // const errors = getStemBranchingErrors(slide);
+  const errors = getStemErrors(stem);
 
-  // if (errors.length) {
-  //   return console.warn(`Skipping invalid stem branching: ${stem.name || stem.sortOrder}`, errors);
-  // }
+  if (errors.length) {
+    return console.warn(`Skipping invalid stem branching: ${stem.name || stem.sortOrder}`, errors);
+  }
 
   const blocks = getBlocksBySlideRef({ slideRef: slide.ref });
 

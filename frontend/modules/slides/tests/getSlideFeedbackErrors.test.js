@@ -51,7 +51,7 @@ describe('getSlideFeedbackErrors', () => {
 
     const errors = getSlideFeedbackErrors(baseSlide());
     expect(errors).toContainEqual({
-      elementType: 'SLIDE',
+      elementType: 'SLIDE_FEEDBACK',
       elementId: 'slide-1',
       message: 'Slide has no prompt blocks to base conditions on'
     });

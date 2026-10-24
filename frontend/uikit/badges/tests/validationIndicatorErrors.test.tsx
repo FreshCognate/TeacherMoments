@@ -6,7 +6,8 @@ import ValidationIndicatorErrors from '../components/validationIndicatorErrors';
 const errors = [
   { message: 'Block is missing a prompt', elementType: 'BLOCK', elementId: 'b1' },
   { message: 'Slide has no title', elementType: 'SLIDE', elementId: 's1' },
-  { message: 'Stem has child stems but no prompt conditions set up', elementType: 'STEM', elementId: 'st1' }
+  { message: 'Stem has child stems but no prompt conditions set up', elementType: 'STEM', elementId: 'st1' },
+  { message: 'Feedback item 1 has no content', elementType: 'SLIDE_FEEDBACK', elementId: 's1' }
 ];
 
 describe('ValidationIndicatorErrors', () => {
@@ -23,6 +24,7 @@ describe('ValidationIndicatorErrors', () => {
     expect(screen.getByText('Element: Block')).toBeInTheDocument();
     expect(screen.getByText('Element: Slide')).toBeInTheDocument();
     expect(screen.getByText('Element: Stem')).toBeInTheDocument();
+    expect(screen.getByText('Element: Slide feedback')).toBeInTheDocument();
   });
 
   it('fires onErrorClicked with the clicked error', async () => {
