@@ -29,6 +29,7 @@ const isScenarioInPlayMock = vi.fn();
 const getCohortFromSearchParamsMock = vi.fn();
 const addModalMock = vi.fn();
 const getCacheMock = vi.fn();
+const getRootStemMock = vi.fn();
 
 vi.mock('~/modules/run/helpers/updateRun', () => ({ default: (args) => updateRunMock(args) }));
 vi.mock('~/modules/run/helpers/navigateTo', () => ({ default: (args) => navigateToMock(args) }));
@@ -47,6 +48,7 @@ vi.mock('~/modules/run/helpers/getCurrentStage', () => ({ default: () => getCurr
 vi.mock('~/modules/run/helpers/ensureCurrentStage', () => ({ default: () => ensureCurrentStageMock() }));
 vi.mock('~/modules/scenarios/helpers/isScenarioInPlay', () => ({ default: () => isScenarioInPlayMock() }));
 vi.mock('~/modules/cohorts/helpers/getCohortFromSearchParams', () => ({ default: (router) => getCohortFromSearchParamsMock(router) }));
+vi.mock('~/modules/stems/helpers/getRootStem', () => ({ default: () => getRootStemMock() }));
 vi.mock('~/core/dialogs/helpers/addModal', () => ({ default: (config, callback) => addModalMock(config, callback) }));
 vi.mock('~/core/cache/helpers/getCache', () => ({ default: (key) => getCacheMock(key) }));
 vi.mock('~/modules/slides/helpers/getActiveSlideStems', () => ({ default: (args) => getActiveSlideStemsMock(args) }));
@@ -230,6 +232,7 @@ describe('SlidePlayerContainer', () => {
       isScenarioInPlayMock.mockReturnValue(false);
       const setMock = vi.fn();
       getCacheMock.mockReturnValue({ set: setMock });
+      getRootStemMock.mockReturnValue({ ref: 'root-stem' });
 
       render(<SlidePlayerContainer {...buildProps()} />);
       capturedProps.onActionClicked('RERUN_SCENARIO');

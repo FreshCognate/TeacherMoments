@@ -4,8 +4,6 @@ import { ValidationError } from '../components/validationIndicator';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 import find from 'lodash/find';
-import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
-import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
 import getCache from '~/core/cache/helpers/getCache';
 
 interface Props {
@@ -21,22 +19,6 @@ class ValidationIndicatorContainer extends Component<Props> {
   onErrorClicked = (error: ValidationError) => {
     const { id: scenarioId } = this.props.router.params;
     switch (error.elementType) {
-      case 'SLIDE_TRIGGER': {
-        const currentSlide = find(this.props.slides.data, { _id: error.elementId });
-        if (currentSlide) {
-          this.props.onClose();
-          this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${currentSlide._id}`);
-          const editor = getCache('editor');
-          editor.set({ activeStemRef: currentSlide.stemRef });
-          addSidePanel({
-            size: 'lg',
-            icon: 'trigger',
-            title: 'Triggers',
-            component: <TriggerDisplayContainer />
-          })
-        }
-        break;
-      }
       case 'SLIDE': {
         const currentSlide = find(this.props.slides.data, { _id: error.elementId });
         if (currentSlide) {

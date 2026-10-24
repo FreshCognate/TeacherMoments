@@ -11,6 +11,11 @@ vi.mock('~/modules/blocks/helpers/getBlockErrors', () => ({
   default: (block) => getBlockErrorsMock(block)
 }));
 
+const getStemErrorsMock = vi.fn();
+vi.mock('~/modules/stems/helpers/getStemErrors', () => ({
+  default: (stem) => getStemErrorsMock(stem)
+}));
+
 const getSlideFeedbackErrorsMock = vi.fn();
 vi.mock('../helpers/getSlideFeedbackErrors', () => ({
   default: (slide) => getSlideFeedbackErrorsMock(slide)
@@ -32,8 +37,8 @@ describe('getSlideErrors', () => {
     getBlocksBySlideRefMock.mockReset();
     getBlockErrorsMock.mockReset();
     getSlideFeedbackErrorsMock.mockReset().mockReturnValue([]);
+    getStemErrorsMock.mockReset().mockReturnValue([]);
     resetCache('stems');
-    resetCache('triggers');
   });
 
   it('returns "Slide has no blocks" when the slide has no blocks', () => {
@@ -72,54 +77,40 @@ describe('getSlideErrors', () => {
     getBlockErrorsMock.mockReturnValue([]);
     expect(getSlideErrors({ _id: 's1', ref: 'slide-1' })).toEqual([]);
   });
-  it('flags a slide that has stems but no triggers to branch with', () => {
+
+  it('checks each stem that belongs to the slide', () => {
     getBlocksBySlideRefMock.mockReturnValue([{ _id: 'b1' }]);
     getBlockErrorsMock.mockReturnValue([]);
-    seedCache('stems', [{ ref: 'stem-1', slideRef: 'slide-1' }]);
-    seedCache('triggers', []);
+    const stemOne = { ref: 'stem-1', slideRef: 'slide-1' };
+    const stemTwo = { ref: 'stem-2', slideRef: 'slide-1' };
+    seedCache('stems', [stemOne, stemTwo, { ref: 'stem-3', slideRef: 'another-slide' }]);
 
-    const errors = getSlideErrors({ _id: 's1', ref: 'slide-1' });
+    getSlideErrors({ _id: 's1', ref: 'slide-1' });
 
-    expect(errors).toEqual([
-      { message: 'Slide with stems has no branching trigger', elementType: 'SLIDE_TRIGGER', elementId: 's1' }
+    expect(getStemErrorsMock).toHaveBeenCalledTimes(2);
+    expect(getStemErrorsMock).toHaveBeenCalledWith(stemOne);
+    expect(getStemErrorsMock).toHaveBeenCalledWith(stemTwo);
+  });
+
+  it('aggregates stem errors after block errors', () => {
+    getBlocksBySlideRefMock.mockReturnValue([{ _id: 'b1' }]);
+    getBlockErrorsMock.mockReturnValue([{ message: 'Missing title', elementType: 'BLOCK', elementId: 'b1' }]);
+    seedCache('stems', [{ _id: 'st1', ref: 'stem-1', slideRef: 'slide-1' }]);
+    getStemErrorsMock.mockReturnValue([{ message: 'Stem error', elementType: 'STEM', elementId: 'st1' }]);
+
+    expect(getSlideErrors({ _id: 's1', ref: 'slide-1' })).toEqual([
+      { message: 'Missing title', elementType: 'BLOCK', elementId: 'b1' },
+      { message: 'Stem error', elementType: 'STEM', elementId: 'st1' }
     ]);
   });
 
-  it('does not flag a slide whose stems have a branching trigger', () => {
-    getBlocksBySlideRefMock.mockReturnValue([{ _id: 'b1' }]);
-    getBlockErrorsMock.mockReturnValue([]);
-    seedCache('stems', [{ ref: 'stem-1', slideRef: 'slide-1' }]);
-    seedCache('triggers', [{ _id: 't1', elementRef: 'slide-1', action: 'BRANCH_TO_STEM_FROM_PROMPTS' }]);
-
-    expect(getSlideErrors({ _id: 's1', ref: 'slide-1' })).toEqual([]);
-  });
-
-  it('does not flag a slide with no stems, whether or not it has triggers', () => {
+  it('does not check stems when the slide has none', () => {
     getBlocksBySlideRefMock.mockReturnValue([{ _id: 'b1' }]);
     getBlockErrorsMock.mockReturnValue([]);
     seedCache('stems', [{ ref: 'stem-1', slideRef: 'another-slide' }]);
-    seedCache('triggers', []);
 
     expect(getSlideErrors({ _id: 's1', ref: 'slide-1' })).toEqual([]);
-  });
-
-  it('ignores triggers that belong to a different slide', () => {
-    getBlocksBySlideRefMock.mockReturnValue([{ _id: 'b1' }]);
-    getBlockErrorsMock.mockReturnValue([]);
-    seedCache('stems', [{ ref: 'stem-1', slideRef: 'slide-1' }]);
-    seedCache('triggers', [{ _id: 't1', elementRef: 'another-slide', action: 'BRANCH_TO_STEM_FROM_PROMPTS' }]);
-
-    expect(getSlideErrors({ _id: 's1', ref: 'slide-1' })[0].elementType).toBe('SLIDE_TRIGGER');
-  });
-  it('flags a slide whose only trigger shows feedback rather than branching', () => {
-    getBlocksBySlideRefMock.mockReturnValue([{ _id: 'b1' }]);
-    getBlockErrorsMock.mockReturnValue([]);
-    seedCache('stems', [{ ref: 'stem-1', slideRef: 'slide-1' }]);
-    seedCache('triggers', [{ _id: 't1', elementRef: 'slide-1', action: 'SHOW_FEEDBACK_FROM_PROMPTS' }]);
-
-    expect(getSlideErrors({ _id: 's1', ref: 'slide-1' })).toEqual([
-      { message: 'Slide with stems has no branching trigger', elementType: 'SLIDE_TRIGGER', elementId: 's1' }
-    ]);
+    expect(getStemErrorsMock).not.toHaveBeenCalled();
   });
 
   it('includes feedback errors when the slide has feedback turned on', () => {

@@ -1,9 +1,8 @@
 import each from 'lodash/each';
-import filter from 'lodash/filter';
 import getBlocksBySlideRef from '~/modules/blocks/helpers/getBlocksBySlideRef';
 import getBlockErrors from '~/modules/blocks/helpers/getBlockErrors';
 import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
-import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlideRef';
+import getStemErrors from '~/modules/stems/helpers/getStemErrors';
 import getSlideFeedbackErrors from './getSlideFeedbackErrors';
 import { Slide } from '../slides.types';
 
@@ -21,16 +20,6 @@ export default (slide: Slide) => {
     errors.push({ message: 'Slide has no blocks', elementType: 'SLIDE', elementId: slide._id });
   }
 
-  const stems = getStemsBySlideRef({ slideRef: slide.ref });
-
-  if (stems.length > 0) {
-    const triggers = getTriggersBySlideRef({ slideRef: slide.ref });
-    const branchingTriggers = filter(triggers, { action: 'BRANCH_TO_STEM_FROM_PROMPTS' });
-    if (branchingTriggers.length === 0) {
-      errors.push({ message: 'Slide with stems has no branching trigger', elementType: 'SLIDE_TRIGGER', elementId: slide._id });
-    }
-  }
-
   if (slide.hasFeedback) {
     errors.push(...getSlideFeedbackErrors(slide));
   }
@@ -38,6 +27,13 @@ export default (slide: Slide) => {
   each(blocks, block => {
     const blockErrors = getBlockErrors(block);
     errors.push(...blockErrors);
+  });
+
+  const stems = getStemsBySlideRef({ slideRef: slide.ref });
+
+  each(stems, stem => {
+    const stemErrors = getStemErrors(stem);
+    errors.push(...stemErrors);
   });
 
   return errors;

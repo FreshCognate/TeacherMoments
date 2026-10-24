@@ -169,10 +169,7 @@ export default async ({ stem, slide, router }: { stem: Stem, slide: Slide, route
     }
   });
 
-  console.log(branchingOptions, matchedItems);
-
-  // TODO - we need to do something here
-  //setSlideTrigger({ triggerRef: trigger.ref, triggerItems });
+  // TODO - we need to set the slide stem navigation
 
   const matchedItem = orderBy(matchedItems, 'score', 'desc')[0];
 

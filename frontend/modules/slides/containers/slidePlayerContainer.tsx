@@ -284,7 +284,7 @@ class SlidePlayerContainer extends Component<SlidePlayerContainerProps, SlidePla
           const run = getCache('run');
           run.set({}, { setType: 'replace' });
           navigateTo({ slideRef: 'CONSENT', router: this.props.router });
-          getCache('editor').set({ activeStemRef: getRootStem()._id });
+          getCache('editor').set({ activeStemRef: getRootStem().ref });
         } else {
           setScenarioToArchived().then(() => {
             window.location.href = window.location.pathname;
