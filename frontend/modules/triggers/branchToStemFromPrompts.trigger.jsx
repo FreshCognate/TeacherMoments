@@ -8,7 +8,7 @@ import setSlideTrigger from "../run/helpers/setSlideTrigger";
 import getStemByRef from "../stems/helpers/getStemByRef";
 import getStemsBySlideRef from "../stems/helpers/getStemsBySlideRef";
 import registerTrigger from "./helpers/registerTrigger";
-import getConditionlessStems from "./helpers/getConditionlessStems";
+import getConditionlessStems from "~/modules/stems/helpers/getConditionlessStems";
 import find from 'lodash/find';
 import xor from 'lodash/xor';
 import map from 'lodash/map';

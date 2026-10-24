@@ -57,7 +57,6 @@ const BlocksEditor = ({
                   <Body body="Teacher Moments is a practice space for teachers to rehearse responses to real-life scenarios. To build your simulation, you will use three main elements:" size="sm" className="text-black/60 dark:text-white/60 mb-2" />
                   <Body body="📰 Slides: Think of these as the scenes in your scenario. They are the largest containers that hold everything else." size="sm" className="text-black/60 dark:text-white/60 mb-2" />
                   <Body body="📦 Blocks: These are the individual pieces of content that make up a scene. You can add text, images, or input prompts for the user to interact with. (Tip: Max. 3-4 blocks per slide)" size="sm" className="text-black/60 dark:text-white/60 mb-2" />
-                  <Body body="⚡ Triggers: These define the logic. You can add triggers to input prompts to give specific feedback or determine what happens next." size="sm" className="text-black/60 dark:text-white/60 mb-2" />
                 </>
               )}
               <Title title="This slide has no blocks" className="text-black dark:text-white/80 mb-2" />

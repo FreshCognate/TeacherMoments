@@ -11,14 +11,10 @@ import find from 'lodash/find';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import getCache from '~/core/cache/helpers/getCache';
 import addModal from '~/core/dialogs/helpers/addModal';
-import BlockSelectorContainer from './blockSelectorContainer';
 import getIsCurrentUser from '~/modules/authentication/helpers/getIsCurrentUser';
 import ScenarioRequestAccessTimer from '~/modules/create/components/scenarioRequestAccessTimer';
 import getSockets from '~/core/sockets/helpers/getSockets';
 import addToast from '~/core/dialogs/helpers/addToast';
-import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
-import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
-import getTriggersBySlideRef from '~/modules/triggers/helpers/getTriggersBySlideRef';
 
 class BlocksEditorContainer extends Component {
 
@@ -68,26 +64,6 @@ class BlocksEditorContainer extends Component {
       return [];
 
     }
-  }
-
-  getTriggersBySlide = () => {
-    const slides = getCache('slides');
-    if (slides.data) {
-      const searchParams = new URLSearchParams(this.props.router.location.search);
-      const slideId = searchParams.get('slide');
-
-      const slide = find(slides.data, { _id: slideId })
-      if (slide) {
-        const slideRef = slide.ref;
-
-        return getTriggersBySlideRef({ slideRef });
-
-      }
-
-      return [];
-
-    }
-    return [];
   }
 
   getIsLockedFromEditing = () => {
@@ -232,7 +208,6 @@ class BlocksEditorContainer extends Component {
       <BlocksEditor
         slides={getCache('slides').data}
         blocks={this.getBlocksBySlide()}
-        triggers={this.getTriggersBySlide()}
         isLockedFromEditing={isLockedFromEditing}
         onSortUpClicked={this.onSortUpClicked}
         onSortDownClicked={this.onSortDownClicked}
@@ -242,4 +217,4 @@ class BlocksEditorContainer extends Component {
   }
 };
 
-export default WithRouter(WithCache(BlocksEditorContainer, null, ['blocks', 'slide', 'triggers']));
+export default WithRouter(WithCache(BlocksEditorContainer, null, ['blocks', 'slide']));

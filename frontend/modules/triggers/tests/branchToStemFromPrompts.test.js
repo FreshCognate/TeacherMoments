@@ -17,7 +17,7 @@ vi.mock('../../generate/helpers/generate', () => ({ default: (...args) => genera
 
 import TRIGGERS from '../triggers';
 import testConditions from '~/core/forms/helpers/testConditions';
-import '../helpers/hasConditionlessStem.condition';
+import '~/modules/stems/helpers/hasConditionlessStem.condition';
 import '../branchToStemFromPrompts.trigger.jsx';
 
 const BranchToStemFromPrompts = TRIGGERS['BRANCH_TO_STEM_FROM_PROMPTS'];

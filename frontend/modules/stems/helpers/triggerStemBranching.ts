@@ -14,7 +14,7 @@ import getCache from "~/core/cache/helpers/getCache";
 import setSlideNavigation from "~/modules/run/helpers/setSlideNavigation";
 import navigateTo from "~/modules/run/helpers/navigateTo";
 import getStemByRef from "./getStemByRef";
-import getConditionlessStems from "~/modules/triggers/helpers/getConditionlessStems";
+import getConditionlessStems from "./getConditionlessStems";
 
 
 export default async ({ stem, slide, router }: { stem: Stem, slide: Slide, router: any }) => {

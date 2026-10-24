@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import getEditStemNavigationSchema from '../schemas/getEditStemNavigationSchema';
 import testConditions from '~/core/forms/helpers/testConditions';
 import { createCache, resetCache } from '~/core/cache/helpers/cacheManager';
-import '~/modules/triggers/helpers/hasConditionlessStem.condition';
+import '~/modules/stems/helpers/hasConditionlessStem.condition';
 
 const childStemA = { ref: 'stem-a', name: 'A', stemRef: 'parent', sortOrder: 0 };
 const childStemB = { ref: 'stem-b', name: 'B', stemRef: 'parent', sortOrder: 1 };

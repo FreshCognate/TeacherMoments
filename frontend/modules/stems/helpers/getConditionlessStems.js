@@ -1,7 +1,7 @@
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import sortBy from 'lodash/sortBy';
-import getStemsByStemRef from '~/modules/stems/helpers/getStemsByStemRef';
+import getStemsByStemRef from './getStemsByStemRef';
 
 export default ({ stem }) => {
 

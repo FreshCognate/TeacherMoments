@@ -8,7 +8,7 @@ import uniq from 'lodash/uniq';
 import getBlockDisplayType from '~/modules/blocks/helpers/getBlockDisplayType';
 import getBlocksBySlideRef from '~/modules/blocks/helpers/getBlocksBySlideRef';
 import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
-import getConditionlessStems from './getConditionlessStems';
+import getConditionlessStems from '~/modules/stems/helpers/getConditionlessStems';
 import hasContent from '~/modules/ls/helpers/hasContent';
 
 const getConditionKey = (condition) => {

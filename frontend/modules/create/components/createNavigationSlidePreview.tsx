@@ -35,7 +35,6 @@ type Props = {
   scenarioId: string;
   slide: Slide;
   slideBlocks: SlideBlock[];
-  slideTrigger: SlideTrigger;
   draggingOptions: DraggingOptions;
   canDeleteSlides: boolean;
   isInRootStem: boolean;
@@ -51,7 +50,6 @@ const CreateNavigationSlidePreview = ({
   scenarioId,
   slide,
   slideBlocks,
-  slideTrigger,
   draggingOptions,
   canDeleteSlides,
   isInRootStem,
@@ -115,16 +113,8 @@ const CreateNavigationSlidePreview = ({
             </div>
             <div className="absolute bottom-1 w-full flex justify-between">
               <span>
-                {(slideTrigger) && (
-                  <Badge icon="trigger" size='sm' />
-                )}
-              </span>
-              <span>
                 {(hasChildStems) && (
                   <Badge icon="branching" />
-                )}
-                {(slideTrigger && slideTrigger.action === 'SHOW_FEEDBACK_FROM_PROMPTS') && (
-                  <Badge icon="feedback" />
                 )}
               </span>
             </div>

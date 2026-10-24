@@ -73,7 +73,6 @@ const CreateNavigationStem = ({
           if (item._id === deletingId) isDeletingSlide = true;
           const slideBlocks = filter(blocks, { slideRef: item.ref });
 
-          const slideTrigger = getTriggerBySlideRef({ slideRef: item.ref });
           const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
           return (
             <CreateNavigationSlide
@@ -81,7 +80,6 @@ const CreateNavigationStem = ({
               scenarioId={scenarioId}
               slide={item}
               slideBlocks={slideBlocks}
-              slideTrigger={slideTrigger}
               draggingOptions={draggingOptions}
               isSelected={isSelected}
               isDeleting={isDeletingSlide}
