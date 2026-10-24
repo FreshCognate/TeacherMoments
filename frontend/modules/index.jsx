@@ -6,17 +6,14 @@ import '~/core/app/components/text.formField';
 import '~/core/app/components/toggle.formField';
 import '~/core/app/components/select.formField';
 import '~/core/app/components/alert.formField';
-import '~/modules/triggers/containers/triggerBlocksSelectorContainer.formField';
 import '~/modules/assets/containers/assetSelectorContainer.formField';
 import '~/modules/blocks/containers/responseSelectorContainer.formField';
 import '~/modules/slides/containers/slideNavigationContainer.formField';
 import '~/core/app/conditions/modelValueIs';
 import '~/modules/slides/helpers/isRootSlide.condition';
-import '~/modules/triggers/helpers/hasConditionlessStem.condition';
+import '~/modules/stems/helpers/hasConditionlessStem.condition';
 import '~/modules/ls/helpers/ls.condition'
-import '~/modules/triggers/showFeedbackFromPrompts.trigger';
-import '~/modules/triggers/branchToStemFromPrompts.trigger';
-import '~/modules/triggers/containers/feedbackItemConditionsContainer.formField';
+import '~/modules/slides/containers/feedbackItemConditionsContainer.formField';
 import '~/modules/authentication/containers/usernameContainer.formField';
 import '~/modules/stems/containers/triggerStemsContainer.formField';
 

@@ -6,7 +6,7 @@ import ValidationIndicatorErrors from '../components/validationIndicatorErrors';
 const errors = [
   { message: 'Block is missing a prompt', elementType: 'BLOCK', elementId: 'b1' },
   { message: 'Slide has no title', elementType: 'SLIDE', elementId: 's1' },
-  { message: 'Trigger has no target', elementType: 'TRIGGER', elementId: 't1' }
+  { message: 'Stem has child stems but no prompt conditions set up', elementType: 'STEM', elementId: 'st1' }
 ];
 
 describe('ValidationIndicatorErrors', () => {
@@ -15,7 +15,6 @@ describe('ValidationIndicatorErrors', () => {
 
     expect(screen.getByText('Block is missing a prompt')).toBeInTheDocument();
     expect(screen.getByText('Slide has no title')).toBeInTheDocument();
-    expect(screen.getByText('Trigger has no target')).toBeInTheDocument();
   });
 
   it('renders a human-readable element label for each error', () => {
@@ -23,7 +22,7 @@ describe('ValidationIndicatorErrors', () => {
 
     expect(screen.getByText('Element: Block')).toBeInTheDocument();
     expect(screen.getByText('Element: Slide')).toBeInTheDocument();
-    expect(screen.getByText('Element: Trigger')).toBeInTheDocument();
+    expect(screen.getByText('Element: Stem')).toBeInTheDocument();
   });
 
   it('fires onErrorClicked with the clicked error', async () => {

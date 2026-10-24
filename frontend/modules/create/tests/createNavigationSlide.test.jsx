@@ -35,14 +35,13 @@ const baseProps = {
   scenarioId: 'scenario-1',
   slide,
   slideBlocks: [{ _id: 'block-1', blockType: 'TEXT' }],
-  slideTriggers: [],
   isSelected: false,
   isDeleting: false,
   isDuplicating: false,
   isInRootStem: true,
   canDeleteSlides: true,
-  onDuplicateSlideClicked: () => {},
-  onDeleteSlideClicked: () => {}
+  onDuplicateSlideClicked: () => { },
+  onDeleteSlideClicked: () => { }
 };
 
 describe('CreateNavigationSlide', () => {

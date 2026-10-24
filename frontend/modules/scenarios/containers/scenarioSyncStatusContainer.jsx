@@ -21,13 +21,7 @@ class ScenarioSyncStatusContainer extends Component {
   }
 
   getSyncStatus = () => {
-    const { scenario, slides, slide, blocks, block, triggers } = this.props;
-    if (triggers.status === 'syncing') {
-      return {
-        syncType: 'triggers',
-        isSyncing: true
-      }
-    }
+    const { scenario, slides, slide, blocks, block } = this.props;
     if (slide.status === 'syncing') {
       return {
         syncType: 'slide',
@@ -70,4 +64,4 @@ class ScenarioSyncStatusContainer extends Component {
   }
 };
 
-export default WithCache(ScenarioSyncStatusContainer, null, ['scenario', 'slides', 'slide', 'blocks', 'block', 'triggers']);
+export default WithCache(ScenarioSyncStatusContainer, null, ['scenario', 'slides', 'slide', 'blocks', 'block']);

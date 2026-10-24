@@ -14,7 +14,7 @@ import getCache from "~/core/cache/helpers/getCache";
 import setSlideNavigation from "~/modules/run/helpers/setSlideNavigation";
 import navigateTo from "~/modules/run/helpers/navigateTo";
 import getStemByRef from "./getStemByRef";
-import getConditionlessStems from "~/modules/triggers/helpers/getConditionlessStems";
+import getConditionlessStems from "./getConditionlessStems";
 
 
 export default async ({ stem, slide, router }: { stem: Stem, slide: Slide, router: any }) => {
@@ -169,10 +169,7 @@ export default async ({ stem, slide, router }: { stem: Stem, slide: Slide, route
     }
   });
 
-  console.log(branchingOptions, matchedItems);
-
-  // TODO - we need to do something here
-  //setSlideTrigger({ triggerRef: trigger.ref, triggerItems });
+  // TODO - we need to set the slide stem navigation
 
   const matchedItem = orderBy(matchedItems, 'score', 'desc')[0];
 

@@ -97,7 +97,6 @@ class CreateStemsContainer extends Component {
           });
           this.props.slides.fetch();
           this.props.blocks.fetch();
-          this.props.triggers.fetch();
         }).catch((error) => {
           this.setState({ deletingId: null });
           handleRequestError(error);
@@ -157,4 +156,4 @@ class CreateStemsContainer extends Component {
   }
 }
 
-export default WithRouter(WithCache(CreateStemsContainer, null, ['stems', 'scenario', 'slides', 'blocks', 'editor', 'triggers']));
+export default WithRouter(WithCache(CreateStemsContainer, null, ['stems', 'scenario', 'slides', 'blocks', 'editor']));

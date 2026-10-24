@@ -1,6 +1,5 @@
 import React from 'react';
 import CreateNavigationStaticSlide from './createNavigationStaticSlide';
-import getTriggerBySlideRef from '~/modules/triggers/helpers/getTriggerBySlideRef';
 import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
 import filter from 'lodash/filter';
 import CreateNavigationSlide from './createNavigationSlide';
@@ -73,7 +72,6 @@ const CreateNavigationStem = ({
           if (item._id === deletingId) isDeletingSlide = true;
           const slideBlocks = filter(blocks, { slideRef: item.ref });
 
-          const slideTrigger = getTriggerBySlideRef({ slideRef: item.ref });
           const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
           return (
             <CreateNavigationSlide
@@ -81,7 +79,6 @@ const CreateNavigationStem = ({
               scenarioId={scenarioId}
               slide={item}
               slideBlocks={slideBlocks}
-              slideTrigger={slideTrigger}
               draggingOptions={draggingOptions}
               isSelected={isSelected}
               isDeleting={isDeletingSlide}

@@ -4,14 +4,15 @@ import { ValidationError } from '../components/validationIndicator';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 import find from 'lodash/find';
+import getCache from '~/core/cache/helpers/getCache';
+import getStemSlidesByStemId from '~/modules/stems/helpers/getStemSlidesByStemId';
 import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
-import TriggerDisplayContainer from '~/modules/triggers/containers/triggerDisplayContainer';
+import EditStemNavigationContainer from '~/modules/stems/containers/editStemNavigationContainer';
 
 interface Props {
   errors?: any;
   slides: any;
   blocks: any;
-  triggers: any;
   router: any;
   onClose: () => void;
 }
@@ -21,17 +22,21 @@ class ValidationIndicatorContainer extends Component<Props> {
   onErrorClicked = (error: ValidationError) => {
     const { id: scenarioId } = this.props.router.params;
     switch (error.elementType) {
-      case 'SLIDE_TRIGGER': {
-        const currentSlide = find(this.props.slides.data, { _id: error.elementId });
-        if (currentSlide) {
+      case 'STEM': {
+        const stemSlides = getStemSlidesByStemId({ stemId: error.elementId });
+        const lastStemSlide = stemSlides[stemSlides.length - 1];
+        if (lastStemSlide) {
+          this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${lastStemSlide._id}`);
+          const editor = getCache('editor');
+          editor.set({ activeStemRef: lastStemSlide.stemRef });
           this.props.onClose();
-          this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${currentSlide._id}`);
+          const stem = find(getCache('stems').data, { _id: error.elementId });
           addSidePanel({
             size: 'lg',
-            icon: 'trigger',
-            title: 'Triggers',
-            component: <TriggerDisplayContainer />
-          })
+            icon: 'branching',
+            title: 'Navigation',
+            component: <EditStemNavigationContainer stem={stem} />
+          });
         }
         break;
       }
@@ -39,6 +44,8 @@ class ValidationIndicatorContainer extends Component<Props> {
         const currentSlide = find(this.props.slides.data, { _id: error.elementId });
         if (currentSlide) {
           this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${error.elementId}`);
+          const editor = getCache('editor');
+          editor.set({ activeStemRef: currentSlide.stemRef });
           this.props.onClose();
         }
         break;
@@ -49,6 +56,8 @@ class ValidationIndicatorContainer extends Component<Props> {
           const currentSlide = find(this.props.slides.data, { ref: currentBlock.slideRef });
           if (currentSlide) {
             this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${currentSlide._id}`);
+            const editor = getCache('editor');
+            editor.set({ activeStemRef: currentSlide.stemRef });
             this.props.onClose();
             setTimeout(() => {
               const blockElement = document.getElementById(`block-${currentBlock._id}`);
@@ -68,25 +77,6 @@ class ValidationIndicatorContainer extends Component<Props> {
         }
         break;
       }
-      case 'TRIGGER': {
-        const currentTrigger = find(this.props.triggers.data, { _id: error.elementId });
-        if (currentTrigger) {
-          if (currentTrigger.triggerType === 'SLIDE') {
-            const currentSlide = find(this.props.slides.data, { ref: currentTrigger.elementRef });
-            if (currentSlide) {
-              this.props.onClose();
-              this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${currentSlide._id}`);
-              addSidePanel({
-                size: 'lg',
-                icon: 'trigger',
-                title: 'Triggers',
-                component: <TriggerDisplayContainer />
-              })
-            }
-          }
-        }
-        break;
-      }
     }
   }
 
@@ -100,4 +90,4 @@ class ValidationIndicatorContainer extends Component<Props> {
   }
 };
 
-export default WithRouter(WithCache(ValidationIndicatorContainer, {}, ['blocks', 'slides', 'triggers']));
+export default WithRouter(WithCache(ValidationIndicatorContainer, {}, ['blocks', 'slides']));

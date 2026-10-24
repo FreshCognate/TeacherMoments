@@ -181,20 +181,5 @@ export default WithRouter(WithCache(ScenarioEditorContainer, {
     },
     lifeTime: 0,
     staleTime: 0
-  },
-  triggers: {
-    url: '/api/triggers',
-    getInitialData: () => ([]),
-    transform: ({ data }) => data.triggers,
-    getParams: ({ props }) => {
-      return {
-        scenario: props.router.params.id
-      }
-    },
-    getQuery: ({ props }) => {
-      return {
-        scenario: props.router.params.id
-      }
-    }
   }
 }));

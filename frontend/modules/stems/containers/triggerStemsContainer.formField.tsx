@@ -7,7 +7,7 @@ import find from 'lodash/find';
 import cloneDeep from 'lodash/cloneDeep';
 import remove from 'lodash/remove';
 import addModal from '~/core/dialogs/helpers/addModal';
-import EditPromptConditionContainer from '../../triggers/containers/editPromptConditionContainer';
+import EditPromptConditionContainer from '~/modules/slides/containers/editPromptConditionContainer';
 import { ConditionPrompt } from '../../slides/slides.types';
 import { Condition, StemItem } from '../stems.types';
 import getStemsByStemRef from '../helpers/getStemsByStemRef';

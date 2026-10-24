@@ -5,8 +5,7 @@ import { ValidationError } from './validationIndicator';
 const ELEMENT_TYPE_MAPPINGS: Record<string, string> = {
   BLOCK: 'Block',
   SLIDE: 'Slide',
-  TRIGGER: 'Trigger',
-  SLIDE_TRIGGER: 'Slide trigger'
+  STEM: 'Stem'
 }
 
 const ValidationIndicatorErrors = ({
