@@ -14,7 +14,12 @@ export default async (props, options, context) => {
   const scenarios = await models.Scenario.find({ 'cohorts.cohort': cohortId, isDeleted: false }).lean();
   const scenarioIds = map(scenarios, '_id');
 
-  const totalUsers = await models.User.countDocuments({ 'cohorts.cohort': mongoose.Types.ObjectId.createFromHexString(cohortId), isDeleted: false });
+  const cohortUsers = await models.User.find({
+    'cohorts.cohort': mongoose.Types.ObjectId.createFromHexString(cohortId),
+    isDeleted: false
+  }).select('_id').lean();
+  const cohortUserIds = map(cohortUsers, '_id');
+  const totalUsers = cohortUserIds.length;
 
   if (scenarioIds.length === 0) {
     return {
@@ -28,6 +33,7 @@ export default async (props, options, context) => {
     {
       $match: {
         scenario: { $in: scenarioIds },
+        user: { $in: cohortUserIds },
         isComplete: true,
         isDeleted: false
       }

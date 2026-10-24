@@ -60,6 +60,30 @@ describe('getCohortCompletionStatsByCohortId (in-memory mongo)', () => {
     expect(result.cohortCompletionCount).toBe(2);
   });
 
+  it('ignores completed runs from users who are not in the cohort', async () => {
+    const [u1] = await seedUsersInCohort(1);
+    const admin = await db.models.User.create({ email: 'admin@example.com' });
+    const otherCohortUser = await db.models.User.create({
+      email: 'other@example.com',
+      cohorts: [{ cohort: new mongoose.Types.ObjectId() }]
+    });
+    const s1 = await db.models.Scenario.create({ name: 'S1', cohorts: [{ cohort: cohortId }] });
+
+    await db.models.Run.create([
+      { scenario: s1._id, user: u1._id, isComplete: true },
+      { scenario: s1._id, user: admin._id, isComplete: true },
+      { scenario: s1._id, user: otherCohortUser._id, isComplete: true }
+    ]);
+
+    const result = await getCohortCompletionStatsByCohortId(
+      { cohortId: String(cohortId) }, {}, { models: db.models }
+    );
+
+    expect(result.totalUsers).toBe(1);
+    expect(find(result.scenarioCompletions, { scenarioId: String(s1._id) }).completedCount).toBe(1);
+    expect(result.cohortCompletionCount).toBe(1);
+  });
+
   it('returns cohortCompletionCount=0 when not every scenario has completion data', async () => {
     const [u1, u2, u3] = await seedUsersInCohort(3);
     const s1 = await db.models.Scenario.create({ name: 'S1', cohorts: [{ cohort: cohortId }] });
