@@ -1,6 +1,5 @@
 import React from 'react';
 import CreateNavigationStaticSlide from './createNavigationStaticSlide';
-import getTriggerBySlideRef from '~/modules/triggers/helpers/getTriggerBySlideRef';
 import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
 import filter from 'lodash/filter';
 import CreateNavigationSlide from './createNavigationSlide';

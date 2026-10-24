@@ -5,8 +5,6 @@ import getBlockComponent from '~/modules/blocks/helpers/getBlockComponent';
 import map from 'lodash/map';
 import Badge from '~/uikit/badges/components/badge';
 import classnames from 'classnames';
-import { motion } from 'framer-motion';
-import Icon from '~/uikit/icons/components/icon';
 
 type Slide = {
   _id: string;
@@ -16,11 +14,6 @@ type Slide = {
 type SlideBlock = {
   _id: string;
   blockType: string;
-};
-
-type SlideTrigger = {
-  _id: string;
-  action: 'SHOW_FEEDBACK_FROM_PROMPTS' | 'BRANCH_TO_STEM_FROM_PROMPTS';
 };
 
 type DraggingOptions = {

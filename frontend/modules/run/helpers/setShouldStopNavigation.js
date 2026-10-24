@@ -1,6 +1,5 @@
 import getCache from "~/core/cache/helpers/getCache";
 import cloneDeep from 'lodash/cloneDeep';
-import trigger from "~/modules/triggers/helpers/trigger";
 import find from 'lodash/find';
 import getScenarioDetails from "./getScenarioDetails";
 import isScenarioInPlay from "~/modules/scenarios/helpers/isScenarioInPlay";

@@ -9,8 +9,8 @@ import find from 'lodash/find';
 
 class PlayScenarioLoaderContainer extends Component {
   render() {
-    const { scenario, slides, blocks, triggers, stems, run } = this.props;
-    if (scenario.data && slides.data && blocks.data && triggers.data && stems.data && run.data) {
+    const { scenario, slides, blocks, stems, run } = this.props;
+    if (scenario.data && slides.data && blocks.data && stems.data && run.data) {
       return (
         <PlayScenarioContainer />
       );
@@ -72,24 +72,6 @@ export default WithRouter(WithCache(PlayScenarioLoaderContainer, {
       };
     },
     transform: ({ data }) => data.blocks,
-    getDependencies: ({ props }) => {
-      const scenario = getCache('scenario');
-      return [scenario?.data?._id]
-    }
-  },
-  triggers: {
-    url: '/api/play/triggers',
-    getQuery: () => {
-      return {
-        scenario: getCache('scenario').data._id
-      }
-    },
-    getParams: ({ props }) => {
-      return {
-        publishLink: props.router.params.publishLink
-      };
-    },
-    transform: ({ data }) => data.triggers,
     getDependencies: ({ props }) => {
       const scenario = getCache('scenario');
       return [scenario?.data?._id]

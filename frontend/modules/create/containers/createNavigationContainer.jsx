@@ -84,4 +84,4 @@ class CreateNavigationContainer extends Component {
   }
 };
 
-export default WithRouter(WithCache(CreateNavigationContainer, null, ['slides', 'blocks', 'scenario', 'editor', 'stems', 'triggers']));
+export default WithRouter(WithCache(CreateNavigationContainer, null, ['slides', 'blocks', 'scenario', 'editor', 'stems']));
