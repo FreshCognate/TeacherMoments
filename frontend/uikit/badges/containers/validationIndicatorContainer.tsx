@@ -6,6 +6,8 @@ import WithCache from '~/core/cache/containers/withCache';
 import find from 'lodash/find';
 import getCache from '~/core/cache/helpers/getCache';
 import getStemSlidesByStemId from '~/modules/stems/helpers/getStemSlidesByStemId';
+import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
+import EditStemNavigationContainer from '~/modules/stems/containers/editStemNavigationContainer';
 
 interface Props {
   errors?: any;
@@ -28,6 +30,13 @@ class ValidationIndicatorContainer extends Component<Props> {
           const editor = getCache('editor');
           editor.set({ activeStemRef: lastStemSlide.stemRef });
           this.props.onClose();
+          const stem = find(getCache('stems').data, { _id: error.elementId });
+          addSidePanel({
+            size: 'lg',
+            icon: 'branching',
+            title: 'Navigation',
+            component: <EditStemNavigationContainer stem={stem} />
+          });
         }
         break;
       }

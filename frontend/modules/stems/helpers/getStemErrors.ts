@@ -1,3 +1,5 @@
+import each from 'lodash/each';
+import find from 'lodash/find';
 import some from 'lodash/some';
 import getStemsByStemRef from './getStemsByStemRef';
 import { Stem } from '../stems.types';
@@ -22,6 +24,17 @@ export default (stem: Stem) => {
     if (!hasPromptConditions) {
       errors.push({ ...defaultError, message: 'Stem has child stems but no prompt conditions set up' });
     }
+
+    each(childStems, (childStem: Stem) => {
+      if (childStem.ref === stem.defaultBranchingStemRef) return;
+
+      const branchingOption = find(stem.branchingOptions, { elementRef: childStem.ref });
+      const hasPromptCondition = some(branchingOption?.conditions, condition => condition.prompts?.length > 0);
+
+      if (!hasPromptCondition) {
+        errors.push({ ...defaultError, message: `Stem "${childStem.name}" cannot be navigated to` });
+      }
+    });
   }
 
   return errors;
