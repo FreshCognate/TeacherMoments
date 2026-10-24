@@ -1,7 +1,10 @@
 import each from 'lodash/each';
+import filter from 'lodash/filter';
+import maxBy from 'lodash/maxBy';
+import getCache from '~/core/cache/helpers/getCache';
 import getBlocksBySlideRef from '~/modules/blocks/helpers/getBlocksBySlideRef';
 import getBlockErrors from '~/modules/blocks/helpers/getBlockErrors';
-import getStemsBySlideRef from '~/modules/stems/helpers/getStemsBySlideRef';
+import getStemByRef from '~/modules/stems/helpers/getStemByRef';
 import getStemErrors from '~/modules/stems/helpers/getStemErrors';
 import getSlideFeedbackErrors from './getSlideFeedbackErrors';
 import { Slide } from '../slides.types';
@@ -29,12 +32,15 @@ export default (slide: Slide) => {
     errors.push(...blockErrors);
   });
 
-  const stems = getStemsBySlideRef({ slideRef: slide.ref });
+  const stemSlides = filter(getCache('slides').data, { stemRef: slide.stemRef });
+  const lastStemSlide = maxBy(stemSlides, 'sortOrder');
 
-  each(stems, stem => {
-    const stemErrors = getStemErrors(stem);
-    errors.push(...stemErrors);
-  });
+  if (lastStemSlide?._id === slide._id) {
+    const stem = getStemByRef({ ref: slide.stemRef });
+    if (stem) {
+      errors.push(...getStemErrors(stem));
+    }
+  }
 
   return errors;
 };

@@ -4,7 +4,8 @@ import { ValidationError } from './validationIndicator';
 
 const ELEMENT_TYPE_MAPPINGS: Record<string, string> = {
   BLOCK: 'Block',
-  SLIDE: 'Slide'
+  SLIDE: 'Slide',
+  STEM: 'Stem'
 }
 
 const ValidationIndicatorErrors = ({

@@ -39,6 +39,7 @@ describe('getSlideErrors', () => {
     getSlideFeedbackErrorsMock.mockReset().mockReturnValue([]);
     getStemErrorsMock.mockReset().mockReturnValue([]);
     resetCache('stems');
+    resetCache('slides');
   });
 
   it('returns "Slide has no blocks" when the slide has no blocks', () => {
@@ -78,39 +79,47 @@ describe('getSlideErrors', () => {
     expect(getSlideErrors({ _id: 's1', ref: 'slide-1' })).toEqual([]);
   });
 
-  it('checks each stem that belongs to the slide', () => {
+  it('checks the stem when the slide is the last slide in its stem', () => {
     getBlocksBySlideRefMock.mockReturnValue([{ _id: 'b1' }]);
     getBlockErrorsMock.mockReturnValue([]);
-    const stemOne = { ref: 'stem-1', slideRef: 'slide-1' };
-    const stemTwo = { ref: 'stem-2', slideRef: 'slide-1' };
-    seedCache('stems', [stemOne, stemTwo, { ref: 'stem-3', slideRef: 'another-slide' }]);
+    const stem = { _id: 'st1', ref: 'stem-1' };
+    seedCache('stems', [stem]);
+    seedCache('slides', [
+      { _id: 's1', ref: 'slide-1', stemRef: 'stem-1', sortOrder: 0 },
+      { _id: 's2', ref: 'slide-2', stemRef: 'stem-1', sortOrder: 1 }
+    ]);
 
-    getSlideErrors({ _id: 's1', ref: 'slide-1' });
+    getSlideErrors({ _id: 's2', ref: 'slide-2', stemRef: 'stem-1', sortOrder: 1 });
 
-    expect(getStemErrorsMock).toHaveBeenCalledTimes(2);
-    expect(getStemErrorsMock).toHaveBeenCalledWith(stemOne);
-    expect(getStemErrorsMock).toHaveBeenCalledWith(stemTwo);
+    expect(getStemErrorsMock).toHaveBeenCalledTimes(1);
+    expect(getStemErrorsMock).toHaveBeenCalledWith(stem);
+  });
+
+  it('does not check the stem when the slide is not the last slide in its stem', () => {
+    getBlocksBySlideRefMock.mockReturnValue([{ _id: 'b1' }]);
+    getBlockErrorsMock.mockReturnValue([]);
+    seedCache('stems', [{ _id: 'st1', ref: 'stem-1' }]);
+    seedCache('slides', [
+      { _id: 's1', ref: 'slide-1', stemRef: 'stem-1', sortOrder: 0 },
+      { _id: 's2', ref: 'slide-2', stemRef: 'stem-1', sortOrder: 1 }
+    ]);
+
+    getSlideErrors({ _id: 's1', ref: 'slide-1', stemRef: 'stem-1', sortOrder: 0 });
+
+    expect(getStemErrorsMock).not.toHaveBeenCalled();
   });
 
   it('aggregates stem errors after block errors', () => {
     getBlocksBySlideRefMock.mockReturnValue([{ _id: 'b1' }]);
     getBlockErrorsMock.mockReturnValue([{ message: 'Missing title', elementType: 'BLOCK', elementId: 'b1' }]);
-    seedCache('stems', [{ _id: 'st1', ref: 'stem-1', slideRef: 'slide-1' }]);
+    seedCache('stems', [{ _id: 'st1', ref: 'stem-1' }]);
+    seedCache('slides', [{ _id: 's1', ref: 'slide-1', stemRef: 'stem-1', sortOrder: 0 }]);
     getStemErrorsMock.mockReturnValue([{ message: 'Stem error', elementType: 'STEM', elementId: 'st1' }]);
 
-    expect(getSlideErrors({ _id: 's1', ref: 'slide-1' })).toEqual([
+    expect(getSlideErrors({ _id: 's1', ref: 'slide-1', stemRef: 'stem-1', sortOrder: 0 })).toEqual([
       { message: 'Missing title', elementType: 'BLOCK', elementId: 'b1' },
       { message: 'Stem error', elementType: 'STEM', elementId: 'st1' }
     ]);
-  });
-
-  it('does not check stems when the slide has none', () => {
-    getBlocksBySlideRefMock.mockReturnValue([{ _id: 'b1' }]);
-    getBlockErrorsMock.mockReturnValue([]);
-    seedCache('stems', [{ ref: 'stem-1', slideRef: 'another-slide' }]);
-
-    expect(getSlideErrors({ _id: 's1', ref: 'slide-1' })).toEqual([]);
-    expect(getStemErrorsMock).not.toHaveBeenCalled();
   });
 
   it('includes feedback errors when the slide has feedback turned on', () => {

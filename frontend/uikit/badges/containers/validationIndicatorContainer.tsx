@@ -5,6 +5,7 @@ import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 import find from 'lodash/find';
 import getCache from '~/core/cache/helpers/getCache';
+import getStemSlidesByStemId from '~/modules/stems/helpers/getStemSlidesByStemId';
 
 interface Props {
   errors?: any;
@@ -19,6 +20,17 @@ class ValidationIndicatorContainer extends Component<Props> {
   onErrorClicked = (error: ValidationError) => {
     const { id: scenarioId } = this.props.router.params;
     switch (error.elementType) {
+      case 'STEM': {
+        const stemSlides = getStemSlidesByStemId({ stemId: error.elementId });
+        const lastStemSlide = stemSlides[stemSlides.length - 1];
+        if (lastStemSlide) {
+          this.props.router.navigate(`/scenarios/${scenarioId}/create?slide=${lastStemSlide._id}`);
+          const editor = getCache('editor');
+          editor.set({ activeStemRef: lastStemSlide.stemRef });
+          this.props.onClose();
+        }
+        break;
+      }
       case 'SLIDE': {
         const currentSlide = find(this.props.slides.data, { _id: error.elementId });
         if (currentSlide) {
