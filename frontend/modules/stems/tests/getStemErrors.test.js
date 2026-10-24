@@ -2,133 +2,131 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createCache, resetCache } from '~/core/cache/helpers/cacheManager.js';
 import getStemErrors from '../helpers/getStemErrors';
 
-const seedStems = (stems) => {
+const seedCache = (key, data) => {
   createCache({
-    key: 'stems',
-    cache: { getInitialData: () => stems },
+    key,
+    cache: { getInitialData: () => data },
     container: { props: {} }
   });
 };
 
-const buildStem = (branchingOptions, defaultBranchingStemRef = null) => ({
-  _id: 'st1',
-  ref: 'stem-1',
-  branchingOptions,
-  defaultBranchingStemRef
-});
+const buildStem = (branchingOptions) => ({ _id: 'st1', ref: 'stem-1', branchingOptions });
 
-const childStem = { ref: 'child-1', stemRef: 'stem-1', name: 'Child 1' };
+const stemOne = { ref: 'child-1', stemRef: 'stem-1', name: 'Stem 1', sortOrder: 0 };
+const stemTwo = { ref: 'child-2', stemRef: 'stem-1', name: 'Stem 2', sortOrder: 1 };
+const stemThree = { ref: 'child-3', stemRef: 'stem-1', name: 'Stem 3', sortOrder: 2 };
 
-const promptCondition = { _id: 'c1', prompts: [{ ref: 'block-1', text: 'yes' }] };
-
-const noPromptConditionsError = {
-  message: 'Stem has child stems but no prompt conditions set up',
-  elementType: 'STEM',
-  elementId: 'st1'
+const multipleChoiceBlock = {
+  ref: 'block-mc',
+  blockType: 'MULTIPLE_CHOICE_PROMPT',
+  options: [{ _id: 'option-a' }, { _id: 'option-b' }]
 };
 
-const buildUnreachableError = (name) => ({
-  message: `Stem "${name}" cannot be navigated to`,
-  elementType: 'STEM',
-  elementId: 'st1'
+const inputBlock = { ref: 'block-input', blockType: 'INPUT_PROMPT' };
+
+const withPrompts = (elementRef, prompts) => ({
+  elementRef,
+  conditions: [{ _id: 'c1', prompts }]
 });
+
+const buildError = (message) => ({ message, elementType: 'STEM', elementId: 'st1' });
+
+const buildUnreachableError = (name) => buildError(`Stem "${name}" cannot be navigated to`);
+
+const buildInvalidAnswerError = (name) => buildError(`Stem "${name}" has a condition without a valid answer selected`);
 
 describe('getStemErrors', () => {
   beforeEach(() => {
     resetCache('stems');
+    resetCache('blocks');
+    seedCache('blocks', [multipleChoiceBlock, inputBlock]);
   });
 
   it('returns no errors when the stem has no child stems', () => {
-    seedStems([]);
+    seedCache('stems', []);
 
     expect(getStemErrors(buildStem([]))).toEqual([]);
   });
 
-  it('flags a stem with child stems and no branching options', () => {
-    seedStems([childStem]);
+  it('returns no errors when a single child stem has no conditions', () => {
+    seedCache('stems', [stemOne, stemTwo]);
+
+    const stem = buildStem([withPrompts('child-1', [{ ref: 'block-input', text: 'yes' }])]);
+
+    expect(getStemErrors(stem)).toEqual([]);
+  });
+
+  it('flags every child stem with no conditions after the first', () => {
+    seedCache('stems', [stemOne, stemTwo, stemThree]);
 
     expect(getStemErrors(buildStem([]))).toEqual([
-      noPromptConditionsError,
-      buildUnreachableError('Child 1')
+      buildUnreachableError('Stem 2'),
+      buildUnreachableError('Stem 3')
     ]);
   });
 
-  it('flags a stem whose branching options have no conditions', () => {
-    seedStems([childStem]);
+  it('returns no errors when every prompt has a valid answer', () => {
+    seedCache('stems', [stemOne]);
 
-    const stem = buildStem([{ elementRef: 'child-1', conditions: [] }]);
-
-    expect(getStemErrors(stem)).toEqual([
-      noPromptConditionsError,
-      buildUnreachableError('Child 1')
-    ]);
-  });
-
-  it('flags a stem whose conditions have no prompts', () => {
-    seedStems([childStem]);
-
-    const stem = buildStem([{ elementRef: 'child-1', conditions: [{ _id: 'c1', prompts: [] }] }]);
-
-    expect(getStemErrors(stem)).toEqual([
-      noPromptConditionsError,
-      buildUnreachableError('Child 1')
-    ]);
-  });
-
-  it('returns no errors when every child stem has a prompt condition', () => {
-    seedStems([childStem, { ref: 'child-2', stemRef: 'stem-1', name: 'Child 2' }]);
-
-    const stem = buildStem([
-      { elementRef: 'child-1', conditions: [promptCondition] },
-      { elementRef: 'child-2', conditions: [promptCondition] }
-    ]);
+    const stem = buildStem([withPrompts('child-1', [
+      { ref: 'block-mc', options: ['option-a'] },
+      { ref: 'block-input', text: 'yes' }
+    ])]);
 
     expect(getStemErrors(stem)).toEqual([]);
   });
 
-  it('returns no errors when child stems are reached by a condition or the default', () => {
-    seedStems([childStem, { ref: 'child-2', stemRef: 'stem-1', name: 'Child 2' }]);
+  it('returns no errors when only one prompt in a condition has a valid answer', () => {
+    seedCache('stems', [stemOne]);
 
-    const stem = buildStem([
-      { elementRef: 'child-1', conditions: [promptCondition] }
-    ], 'child-2');
+    const stem = buildStem([withPrompts('child-1', [
+      { ref: 'block-mc', options: [] },
+      { ref: 'block-input', text: 'yes' }
+    ])]);
 
     expect(getStemErrors(stem)).toEqual([]);
   });
 
-  it('flags a child stem that has no condition and is not the default', () => {
-    seedStems([
-      childStem,
-      { ref: 'child-2', stemRef: 'stem-1', name: 'Child 2' },
-      { ref: 'child-3', stemRef: 'stem-1', name: 'Child 3' }
-    ]);
+  it('flags a condition where no prompt has a valid answer', () => {
+    seedCache('stems', [stemOne]);
 
-    const stem = buildStem([
-      { elementRef: 'child-1', conditions: [promptCondition] },
-      { elementRef: 'child-3', conditions: [] }
-    ], 'child-2');
+    const stem = buildStem([withPrompts('child-1', [
+      { ref: 'block-mc', options: [] },
+      { ref: 'block-input', text: '' }
+    ])]);
 
-    expect(getStemErrors(stem)).toEqual([buildUnreachableError('Child 3')]);
+    expect(getStemErrors(stem)).toEqual([buildInvalidAnswerError('Stem 1')]);
   });
 
-  it('flags each child stem that cannot be navigated to', () => {
-    seedStems([
-      childStem,
-      { ref: 'child-2', stemRef: 'stem-1', name: 'Child 2' },
-      { ref: 'child-3', stemRef: 'stem-1', name: 'Child 3' }
-    ]);
+  it('flags a multiple choice prompt with no options selected', () => {
+    seedCache('stems', [stemOne]);
 
-    const stem = buildStem([{ elementRef: 'child-1', conditions: [promptCondition] }]);
+    const stem = buildStem([withPrompts('child-1', [{ ref: 'block-mc', options: [] }])]);
 
-    expect(getStemErrors(stem)).toEqual([
-      buildUnreachableError('Child 2'),
-      buildUnreachableError('Child 3')
-    ]);
+    expect(getStemErrors(stem)).toEqual([buildInvalidAnswerError('Stem 1')]);
   });
 
-  it('ignores stems that belong to another parent stem', () => {
-    seedStems([{ ref: 'child-x', stemRef: 'other-stem', name: 'Child X' }]);
+  it('flags a multiple choice prompt with an option that no longer exists', () => {
+    seedCache('stems', [stemOne]);
 
-    expect(getStemErrors(buildStem([]))).toEqual([]);
+    const stem = buildStem([withPrompts('child-1', [{ ref: 'block-mc', options: ['option-a', 'option-z'] }])]);
+
+    expect(getStemErrors(stem)).toEqual([buildInvalidAnswerError('Stem 1')]);
+  });
+
+  it('flags an input prompt with no text', () => {
+    seedCache('stems', [stemOne]);
+
+    const stem = buildStem([withPrompts('child-1', [{ ref: 'block-input', text: '  ' }])]);
+
+    expect(getStemErrors(stem)).toEqual([buildInvalidAnswerError('Stem 1')]);
+  });
+
+  it('flags a prompt whose block no longer exists', () => {
+    seedCache('stems', [stemOne]);
+
+    const stem = buildStem([withPrompts('child-1', [{ ref: 'block-missing', text: 'yes' }])]);
+
+    expect(getStemErrors(stem)).toEqual([buildInvalidAnswerError('Stem 1')]);
   });
 });
