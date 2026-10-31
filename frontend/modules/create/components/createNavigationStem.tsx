@@ -37,75 +37,82 @@ const CreateNavigationStem = ({
   onDeleteSlideClicked,
 }: Props) => {
   return (
-    <div className="p-2 overflow-y-auto no-scrollbar flex-grow">
+    <>
       {(isInRootStem) && (
-        <CreateNavigationStaticSlide
-          label="Consent"
-          slideId="CONSENT"
-          icon="consent"
-          scenarioId={scenarioId}
-          isSelected={activeSlideId === 'CONSENT'}
-        />
+        <div className="px-2 mt-2">
+          <CreateNavigationStaticSlide
+            label="Consent"
+            slideId="CONSENT"
+            icon="consent"
+            scenarioId={scenarioId}
+            isSelected={activeSlideId === 'CONSENT'}
+          />
+        </div>
       )}
-      <CreateDroppableContainer
-        id={`slides`}
-        items={stemSlides}
-        data={{
-          type: 'SLIDES'
-        }}
-        renderItem={({
-          item,
-          index,
-          items,
-          draggingOptions
-        }: {
-          item: Slide,
-          index: number,
-          items: Slide[],
-          draggingOptions: object
-        }) => {
+      <div className="px-2 pt-2 overflow-y-auto no-scrollbar flex-grow flex-1">
+        <CreateDroppableContainer
+          id={`slides`}
+          items={stemSlides}
+          data={{
+            type: 'SLIDES'
+          }}
+          renderItem={({
+            item,
+            index,
+            items,
+            draggingOptions
+          }: {
+            item: Slide,
+            index: number,
+            items: Slide[],
+            draggingOptions: object
+          }) => {
 
-          const canDeleteSlides = items.length > 1;
-          let isSelected = false;
-          let isDeletingSlide = false;
-          if (item._id === activeSlideId) isSelected = true;
-          if (item._id === deletingId) isDeletingSlide = true;
-          const slideBlocks = filter(blocks, { slideRef: item.ref });
+            const canDeleteSlides = items.length > 1;
+            let isSelected = false;
+            let isDeletingSlide = false;
+            if (item._id === activeSlideId) isSelected = true;
+            if (item._id === deletingId) isDeletingSlide = true;
+            const slideBlocks = filter(blocks, { slideRef: item.ref });
 
-          const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
-          return (
-            <CreateNavigationSlide
-              key={item._id}
-              scenarioId={scenarioId}
-              slide={item}
-              slideBlocks={slideBlocks}
-              draggingOptions={draggingOptions}
-              isSelected={isSelected}
-              isDeleting={isDeletingSlide}
-              isDuplicating={isDuplicating}
-              isInRootStem={isInRootStem}
-              canDeleteSlides={canDeleteSlides}
-              hasChildStems={hasChildStems}
-              onDuplicateSlideClicked={onDuplicateSlideClicked}
-              onDeleteSlideClicked={onDeleteSlideClicked}
-            />
-          );
+            const hasChildStems = getStemsBySlideRef({ slideRef: item.ref }).length > 0;
+            return (
+              <CreateNavigationSlide
+                key={item._id}
+                scenarioId={scenarioId}
+                slide={item}
+                slideBlocks={slideBlocks}
+                draggingOptions={draggingOptions}
+                isSelected={isSelected}
+                isDeleting={isDeletingSlide}
+                isDuplicating={isDuplicating}
+                isInRootStem={isInRootStem}
+                canDeleteSlides={canDeleteSlides}
+                hasChildStems={hasChildStems}
+                onDuplicateSlideClicked={onDuplicateSlideClicked}
+                onDeleteSlideClicked={onDeleteSlideClicked}
+              />
+            );
 
-        }}
-      />
-      <div className="my-4">
+          }}
+        />
+      </div>
+      <div className="px-2 mb-2 pt-2">
         <CreateStemsContainer stemRef={activeStem.ref} />
       </div>
       {(activeStemChildrenCount === 0) && (
-        <CreateNavigationStaticSlide
-          label="Summary"
-          slideId="SUMMARY"
-          icon="summary"
-          scenarioId={scenarioId}
-          isSelected={activeSlideId === 'SUMMARY'}
-        />
+        <div className='px-2 mb-2'>
+
+          <CreateNavigationStaticSlide
+            label="Summary"
+            slideId="SUMMARY"
+            icon="summary"
+            scenarioId={scenarioId}
+            isSelected={activeSlideId === 'SUMMARY'}
+          />
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
