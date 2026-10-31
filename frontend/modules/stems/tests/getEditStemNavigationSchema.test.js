@@ -42,22 +42,22 @@ describe('getEditStemNavigationSchema', () => {
   });
 
   it('hides the default stem while a child stem has no branching option', () => {
-    const stem = buildStem([{ elementRef: 'stem-a', conditions: [condition] }]);
+    const stem = buildStem([{ stemRef: 'stem-a', conditions: [condition] }]);
     expect(isDefaultHidden(stem)).toBe(true);
   });
 
   it('hides the default stem when a branching option has had its conditions removed', () => {
     const stem = buildStem([
-      { elementRef: 'stem-a', conditions: [condition] },
-      { elementRef: 'stem-b', conditions: [] }
+      { stemRef: 'stem-a', conditions: [condition] },
+      { stemRef: 'stem-b', conditions: [] }
     ]);
     expect(isDefaultHidden(stem)).toBe(true);
   });
 
   it('shows the default stem once every child stem has conditions', () => {
     const stem = buildStem([
-      { elementRef: 'stem-a', conditions: [condition] },
-      { elementRef: 'stem-b', conditions: [condition] }
+      { stemRef: 'stem-a', conditions: [condition] },
+      { stemRef: 'stem-b', conditions: [condition] }
     ]);
     expect(isDefaultHidden(stem)).toBe(false);
   });

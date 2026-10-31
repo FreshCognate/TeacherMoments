@@ -34,7 +34,7 @@ export default {
       branchingOptions: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('body', Joi.array()),
-        elementRef: Joi.string(),
+        stemRef: Joi.string(),
         conditions: Joi.array().items({
           _id: Joi.string(),
           prompts: Joi.array().items({

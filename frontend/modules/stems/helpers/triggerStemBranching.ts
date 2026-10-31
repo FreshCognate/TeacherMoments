@@ -183,7 +183,7 @@ export default async ({ stem, slide, router }: { stem: Stem, slide: Slide, route
   let targetStem: Stem | null = null;
 
   if (matchedItem) {
-    targetStem = getStemByRef({ ref: matchedItem.elementRef });
+    targetStem = getStemByRef({ ref: matchedItem.stemRef });
   } else if (conditionlessStem) {
     targetStem = conditionlessStem;
   } else if (stem.defaultBranchingStemRef) {

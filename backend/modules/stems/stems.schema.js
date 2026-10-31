@@ -5,7 +5,7 @@ const body = buildLanguageSchema('body', textAreaSchema);
 
 const branchingOptionSchema = new Schema({
   ...body,
-  elementRef: { type: mongoose.Schema.Types.ObjectId },
+  stemRef: { type: mongoose.Schema.Types.ObjectId },
   conditions: [{
     prompts: [{
       ref: mongoose.Schema.Types.ObjectId,

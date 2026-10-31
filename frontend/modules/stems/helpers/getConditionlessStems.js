@@ -9,7 +9,7 @@ export default ({ stem }) => {
   const childStems = getStemsByStemRef({ stemRef: stem.ref });
 
   const conditionlessStems = filter(childStems, (childStem) => {
-    const branchingOption = find(stem.branchingOptions, { elementRef: childStem.ref });
+    const branchingOption = find(stem.branchingOptions, { stemRef: childStem.ref });
     return !branchingOption || !branchingOption.conditions?.length;
   });
 

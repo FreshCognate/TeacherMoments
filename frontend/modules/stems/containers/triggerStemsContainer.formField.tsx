@@ -29,19 +29,19 @@ class TriggerStemsContainer extends Component<TriggerStemsContainerProps> {
     return prompts;
   }
 
-  onAddConditionClicked = ({ elementRef }: { elementRef: string }) => {
+  onAddConditionClicked = ({ stemRef }: { stemRef: string }) => {
     const clonedValue = cloneDeep(this.props.value);
-    const currentItem = find(clonedValue, { elementRef });
+    const currentItem = find(clonedValue, { stemRef });
     if (currentItem) {
       currentItem.conditions.push({});
       this.props.updateField(clonedValue);
     } else {
-      clonedValue.push({ elementRef: elementRef, conditions: [{}] });
+      clonedValue.push({ stemRef, conditions: [{}] });
       this.props.updateField(clonedValue);
     }
   }
 
-  onEditPromptConditionClicked = ({ elementRef, prompt, condition }: { elementRef: string, prompt: any, condition: Condition }) => {
+  onEditPromptConditionClicked = ({ stemRef, prompt, condition }: { stemRef: string, prompt: any, condition: Condition }) => {
 
     const conditionPrompt: ConditionPrompt | {} = find(condition.prompts, { ref: prompt.ref }) || {};
 
@@ -64,7 +64,7 @@ class TriggerStemsContainer extends Component<TriggerStemsContainerProps> {
       if (state === 'ACTION' && type === 'SAVE') {
         if (prompt.blockType === 'MULTIPLE_CHOICE_PROMPT') {
           this.onPromptConditionValueChanged({
-            elementRef,
+            stemRef,
             key: 'options',
             value: modal.selectedOptions,
             blockRef: prompt.ref,
@@ -73,7 +73,7 @@ class TriggerStemsContainer extends Component<TriggerStemsContainerProps> {
         }
         if (prompt.blockType === 'INPUT_PROMPT') {
           this.onPromptConditionValueChanged({
-            elementRef,
+            stemRef,
             key: 'text',
             value: modal.textValue,
             blockRef: prompt.ref,
@@ -84,9 +84,9 @@ class TriggerStemsContainer extends Component<TriggerStemsContainerProps> {
     })
   }
 
-  onPromptConditionValueChanged = ({ elementRef, key, value, blockRef, conditionId }: { elementRef: string, key: 'options' | 'text', value: any, blockRef: string, conditionId?: string }) => {
+  onPromptConditionValueChanged = ({ stemRef, key, value, blockRef, conditionId }: { stemRef: string, key: 'options' | 'text', value: any, blockRef: string, conditionId?: string }) => {
     const clonedValue = cloneDeep(this.props.value);
-    const currentItem = find(clonedValue, { elementRef });
+    const currentItem = find(clonedValue, { stemRef });
     const condition = currentItem && find(currentItem.conditions, { _id: conditionId });
 
     if (!condition) return;
@@ -107,9 +107,9 @@ class TriggerStemsContainer extends Component<TriggerStemsContainerProps> {
     this.props.updateField(clonedValue);
   }
 
-  onRemoveConditionClicked = ({ elementRef, conditionId }: { elementRef: string, conditionId?: string }) => {
+  onRemoveConditionClicked = ({ stemRef, conditionId }: { stemRef: string, conditionId?: string }) => {
     const clonedValue = cloneDeep(this.props.value);
-    const currentItem = find(clonedValue, { elementRef });
+    const currentItem = find(clonedValue, { stemRef });
     if (!currentItem) return;
     remove(currentItem.conditions, { _id: conditionId });
     this.props.updateField(clonedValue);

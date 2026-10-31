@@ -91,7 +91,7 @@ const TriggerStemsItem = ({
                               <FlatButton
                                 icon="edit"
                                 className="shrink-0"
-                                onClick={() => onEditPromptConditionClicked({ elementRef: slideStemItem.elementRef, prompt, condition })}
+                                onClick={() => onEditPromptConditionClicked({ stemRef: slideStemItem.stemRef, prompt, condition })}
                               />
                             </div>
                           </div>
@@ -100,7 +100,7 @@ const TriggerStemsItem = ({
                     })}
                   </div>
                   <div className="min-w-10 flex justify-end p-2 bg-lm-2 dark:bg-dm-2">
-                    <FlatButton title="Delete condition" icon="delete" onClick={() => onRemoveConditionClicked({ elementRef: slideStemItem.elementRef, conditionId: condition._id })} />
+                    <FlatButton title="Delete condition" icon="delete" onClick={() => onRemoveConditionClicked({ stemRef: slideStemItem.stemRef, conditionId: condition._id })} />
                   </div>
                 </div>
               </Fragment>

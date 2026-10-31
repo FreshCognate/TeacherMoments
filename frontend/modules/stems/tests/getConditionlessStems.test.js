@@ -17,8 +17,8 @@ const stemA = { ref: 'stem-a', name: 'A', stemRef: 'parent-stem', sortOrder: 0 }
 const stemB = { ref: 'stem-b', name: 'B', stemRef: 'parent-stem', sortOrder: 1 };
 const stemC = { ref: 'stem-c', name: 'C', stemRef: 'parent-stem', sortOrder: 2 };
 
-const withCondition = (elementRef) => ({
-  elementRef,
+const withCondition = (stemRef) => ({
+  stemRef,
   conditions: [{ prompts: [{ ref: 'block-1', text: 'yes' }] }]
 });
 
@@ -39,7 +39,7 @@ describe('getConditionlessStems', () => {
   it('treats a child stem whose branching option has an empty conditions array as conditionless', () => {
     seedStems([stemA, stemB]);
 
-    const stem = buildStem([withCondition('stem-a'), { elementRef: 'stem-b', conditions: [] }]);
+    const stem = buildStem([withCondition('stem-a'), { stemRef: 'stem-b', conditions: [] }]);
 
     expect(getConditionlessStems({ stem }).map((childStem) => childStem.ref)).toEqual(['stem-b']);
   });

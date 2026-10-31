@@ -24,8 +24,8 @@ const multipleChoiceBlock = {
 
 const inputBlock = { ref: 'block-input', blockType: 'INPUT_PROMPT' };
 
-const withPrompts = (elementRef, prompts) => ({
-  elementRef,
+const withPrompts = (stemRef, prompts) => ({
+  stemRef,
   conditions: [{ _id: 'c1', prompts }]
 });
 
