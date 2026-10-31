@@ -5,7 +5,6 @@ const body = buildLanguageSchema('body', textAreaSchema);
 
 const feedbackItemSchema = new Schema({
   ...body,
-  elementRef: { type: mongoose.Schema.Types.ObjectId },
   conditions: [{
     prompts: [{
       ref: mongoose.Schema.Types.ObjectId,
