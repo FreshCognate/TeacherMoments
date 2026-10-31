@@ -38,7 +38,6 @@ export type Stem = {
   scenario: string,
   name: string,
   description: string,
-  stemRef: string,
   slideRef: string,
   isRoot: boolean,
   branchingOptions: BranchingOption[],

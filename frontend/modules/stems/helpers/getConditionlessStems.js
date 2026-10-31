@@ -1,17 +1,14 @@
 import filter from 'lodash/filter';
 import find from 'lodash/find';
-import sortBy from 'lodash/sortBy';
-import getStemsByStemRef from './getStemsByStemRef';
+import getChildStems from './getChildStems';
 
 export default ({ stem }) => {
 
   if (!stem) return [];
-  const childStems = getStemsByStemRef({ stemRef: stem.ref });
+  const childStems = getChildStems({ stem });
 
-  const conditionlessStems = filter(childStems, (childStem) => {
+  return filter(childStems, (childStem) => {
     const branchingOption = find(stem.branchingOptions, { stemRef: childStem.ref });
-    return !branchingOption || !branchingOption.conditions?.length;
+    return !branchingOption?.conditions?.length;
   });
-
-  return sortBy(conditionlessStems, 'sortOrder');
 };

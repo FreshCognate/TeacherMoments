@@ -10,7 +10,8 @@ import addModal from '~/core/dialogs/helpers/addModal';
 import EditPromptConditionContainer from '~/modules/slides/containers/editPromptConditionContainer';
 import { ConditionPrompt } from '../../slides/slides.types';
 import { Condition, StemItem } from '../stems.types';
-import getStemsByStemRef from '../helpers/getStemsByStemRef';
+import getChildStems from '../helpers/getChildStems';
+import getStemByRef from '../helpers/getStemByRef';
 import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
 import getLastStemSlide from '~/modules/slides/helpers/getLastStemSlide';
 
@@ -117,7 +118,7 @@ class TriggerStemsContainer extends Component<TriggerStemsContainerProps> {
 
   render() {
 
-    const childStems = getStemsByStemRef({ stemRef: this.props.model.ref })
+    const childStems = getChildStems({ stem: getStemByRef({ ref: this.props.model.ref }) })
 
     return (
       <TriggerStems

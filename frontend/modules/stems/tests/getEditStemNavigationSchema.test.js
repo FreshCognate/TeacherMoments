@@ -4,9 +4,9 @@ import testConditions from '~/core/forms/helpers/testConditions';
 import { createCache, resetCache } from '~/core/cache/helpers/cacheManager';
 import '~/modules/stems/helpers/hasConditionlessStem.condition';
 
-const childStemA = { ref: 'stem-a', name: 'A', stemRef: 'parent', sortOrder: 0 };
-const childStemB = { ref: 'stem-b', name: 'B', stemRef: 'parent', sortOrder: 1 };
-const otherStem = { ref: 'stem-c', name: 'C', stemRef: 'another-parent', sortOrder: 0 };
+const childStemA = { ref: 'stem-a', name: 'A', sortOrder: 0 };
+const childStemB = { ref: 'stem-b', name: 'B', sortOrder: 1 };
+const otherStem = { ref: 'stem-c', name: 'C', sortOrder: 0 };
 
 const condition = { prompts: [{ ref: 'block-1', options: ['option-1'] }] };
 
@@ -33,17 +33,16 @@ describe('getEditStemNavigationSchema', () => {
   });
 
   it('offers None plus only the child stems as the default stem', () => {
-    const schema = getEditStemNavigationSchema({ stem: buildStem([]) });
+    const stem = buildStem([
+      { stemRef: 'stem-a', conditions: [] },
+      { stemRef: 'stem-b', conditions: [] }
+    ]);
+    const schema = getEditStemNavigationSchema({ stem });
     expect(schema.defaultBranchingStemRef.options).toEqual([
       { value: '', text: 'None' },
       { value: 'stem-a', text: 'A' },
       { value: 'stem-b', text: 'B' }
     ]);
-  });
-
-  it('hides the default stem while a child stem has no branching option', () => {
-    const stem = buildStem([{ stemRef: 'stem-a', conditions: [condition] }]);
-    expect(isDefaultHidden(stem)).toBe(true);
   });
 
   it('hides the default stem when a branching option has had its conditions removed', () => {

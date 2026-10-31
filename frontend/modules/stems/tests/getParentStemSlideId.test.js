@@ -14,8 +14,8 @@ const seed = (key, data) => {
 describe('getParentStemSlideId', () => {
   beforeEach(() => {
     seed('stems', [
-      { ref: 'root-stem', isRoot: true },
-      { ref: 'child-stem', stemRef: 'root-stem' }
+      { ref: 'root-stem', isRoot: true, branchingOptions: [{ stemRef: 'child-stem', conditions: [] }] },
+      { ref: 'child-stem' }
     ]);
     seed('slides', [
       { _id: 'root-slide-1', stemRef: 'root-stem' },

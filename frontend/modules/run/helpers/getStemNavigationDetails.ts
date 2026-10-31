@@ -1,4 +1,5 @@
-import getStemsByStemRef from "~/modules/stems/helpers/getStemsByStemRef";
+import getChildStems from "~/modules/stems/helpers/getChildStems";
+import getStemByRef from "~/modules/stems/helpers/getStemByRef";
 import findIndex from 'lodash/findIndex';
 import getCache from "~/core/cache/helpers/getCache";
 import getCurrentStemSlides from "~/modules/stems/helpers/getCurrentStemSlides";
@@ -9,7 +10,7 @@ export default () => {
   const activeSlide = getCache('slides').get('active');
 
   if (activeSlide) {
-    const childStems = getStemsByStemRef({ stemRef: activeSlide.stemRef })
+    const childStems = getChildStems({ stem: getStemByRef({ ref: activeSlide.stemRef }) })
     hasChildStems = childStems.length > 0;
     const currentStemSlides = getCurrentStemSlides();
     const currentSlideStemIndex = findIndex(currentStemSlides, { _id: activeSlide._id })

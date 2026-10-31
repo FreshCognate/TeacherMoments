@@ -10,6 +10,7 @@ import WithRouter from '~/core/app/components/withRouter';
 import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
 import EditStemNavigationContainer from '~/modules/stems/containers/editStemNavigationContainer';
 import getStemByRef from '~/modules/stems/helpers/getStemByRef';
+import getChildStems from '~/modules/stems/helpers/getChildStems';
 
 class CreateStemsContainer extends Component {
 
@@ -25,7 +26,7 @@ class CreateStemsContainer extends Component {
   getChildStems = () => {
     const activeStemRef = this.getActiveStemRef();
     if (!activeStemRef) return [];
-    return filter(this.props.stems.data, { stemRef: this.props.stemRef });
+    return getChildStems({ stem: getStemByRef({ ref: this.props.stemRef }) });
   }
 
   onStemClicked = (stemRef) => {
@@ -111,7 +112,7 @@ class CreateStemsContainer extends Component {
 
     axios.post('/api/stems', {
       scenarioId,
-      stemRef: this.props.editor.data.activeStemRef,
+      parentStemRef: this.props.editor.data.activeStemRef,
     }).then((response) => {
       const newStem = response.data.stem;
       Promise.all([

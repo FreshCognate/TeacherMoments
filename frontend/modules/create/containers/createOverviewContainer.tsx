@@ -5,10 +5,9 @@ import { Stem } from '~/modules/stems/stems.types';
 import { Slide } from '~/modules/slides/slides.types';
 import { Scenario } from '~/modules/scenarios/scenarios.types';
 import find from 'lodash/find';
-import findIndex from 'lodash/findIndex';
-import filter from 'lodash/filter';
 import map from 'lodash/map';
 import each from 'lodash/each';
+import getChildStems from '~/modules/stems/helpers/getChildStems';
 import { OverviewSlide, OverviewStem, PositionedStem, Edge } from '../create.types';
 import WithRouter from '~/core/app/components/withRouter';
 import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
@@ -39,19 +38,8 @@ class CreateOverviewContainer extends Component<Props> {
 
     if (!rootStem) return null;
 
-    const buildStem = (stem: Stem): OverviewStem => {
-      const childStems = filter(this.props.stems.data, { stemRef: stem.ref });
-
-      const positions: number[] = [];
-      let currentStem = stem;
-      let parentStem = find(this.props.stems.data, { ref: currentStem.stemRef });
-
-      while (parentStem) {
-        const siblingStems = filter(this.props.stems.data, { stemRef: parentStem.ref });
-        positions.unshift(findIndex(siblingStems, { _id: currentStem._id }) + 1);
-        currentStem = parentStem;
-        parentStem = find(this.props.stems.data, { ref: currentStem.stemRef });
-      }
+    const buildStem = (stem: Stem, positions: number[] = []): OverviewStem => {
+      const childStems = getChildStems({ stem });
 
       const label = positions.length === 0
         ? 'A'
@@ -109,7 +97,7 @@ class CreateOverviewContainer extends Component<Props> {
         to: `/scenarios/${this.props.scenario.data._id}/create?slide=${firstSlide._id}`,
         label,
         slides: stemSlides,
-        stems: map(childStems, buildStem)
+        stems: map(childStems, (childStem, index) => buildStem(childStem, [...positions, index + 1]))
       };
     };
 
