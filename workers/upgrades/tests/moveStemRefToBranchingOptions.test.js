@@ -22,6 +22,12 @@ const setLegacyBranchingOptions = (Model, stem, branchingOptions) => Model.colle
   { $set: { branchingOptions } }
 );
 
+const createChildStem = async (Model, parentStem, fields) => {
+  const childStem = await Model.create(fields);
+  await Model.collection.updateOne({ _id: childStem._id }, { $set: { stemRef: parentStem.ref } });
+  return childStem;
+};
+
 describe('moveStemRefToBranchingOptions (in-memory mongo)', () => {
 
   beforeEach(() => {
@@ -34,8 +40,8 @@ describe('moveStemRefToBranchingOptions (in-memory mongo)', () => {
     const scenario = await Scenario.create({ name: 'Children' });
 
     const rootStem = await Stem.create({ scenario: scenario._id, isRoot: true });
-    const secondChildStem = await Stem.create({ scenario: scenario._id, stemRef: rootStem.ref, sortOrder: 1 });
-    const firstChildStem = await Stem.create({ scenario: scenario._id, stemRef: rootStem.ref, sortOrder: 0 });
+    const secondChildStem = await createChildStem(Stem, rootStem, { scenario: scenario._id, sortOrder: 1 });
+    const firstChildStem = await createChildStem(Stem, rootStem, { scenario: scenario._id, sortOrder: 0 });
 
     await moveStemRefToBranchingOptions();
 
@@ -50,8 +56,8 @@ describe('moveStemRefToBranchingOptions (in-memory mongo)', () => {
     const scenario = await Scenario.create({ name: 'Conditions' });
 
     const rootStem = await Stem.create({ scenario: scenario._id, isRoot: true });
-    const conditionedStem = await Stem.create({ scenario: scenario._id, stemRef: rootStem.ref, sortOrder: 0 });
-    const conditionlessStem = await Stem.create({ scenario: scenario._id, stemRef: rootStem.ref, sortOrder: 1 });
+    const conditionedStem = await createChildStem(Stem, rootStem, { scenario: scenario._id, sortOrder: 0 });
+    const conditionlessStem = await createChildStem(Stem, rootStem, { scenario: scenario._id, sortOrder: 1 });
 
     const promptRef = new mongoose.Types.ObjectId();
     const existingBranchingOptionId = new mongoose.Types.ObjectId();
@@ -80,8 +86,8 @@ describe('moveStemRefToBranchingOptions (in-memory mongo)', () => {
     const scenario = await Scenario.create({ name: 'Stale' });
 
     const rootStem = await Stem.create({ scenario: scenario._id, isRoot: true });
-    const childStem = await Stem.create({ scenario: scenario._id, stemRef: rootStem.ref, sortOrder: 0 });
-    const deletedChildStem = await Stem.create({ scenario: scenario._id, stemRef: rootStem.ref, sortOrder: 1, isDeleted: true });
+    const childStem = await createChildStem(Stem, rootStem, { scenario: scenario._id, sortOrder: 0 });
+    const deletedChildStem = await createChildStem(Stem, rootStem, { scenario: scenario._id, sortOrder: 1, isDeleted: true });
 
     rootStem.branchingOptions = [{}, { stemRef: deletedChildStem.ref, conditions: [] }];
     await rootStem.save();
@@ -100,8 +106,8 @@ describe('moveStemRefToBranchingOptions (in-memory mongo)', () => {
     const scenario = await Scenario.create({ name: 'Defaults' });
 
     const rootStem = await Stem.create({ scenario: scenario._id, isRoot: true });
-    const childStem = await Stem.create({ scenario: scenario._id, stemRef: rootStem.ref, sortOrder: 0 });
-    const grandchildStem = await Stem.create({ scenario: scenario._id, stemRef: childStem.ref, sortOrder: 0 });
+    const childStem = await createChildStem(Stem, rootStem, { scenario: scenario._id, sortOrder: 0 });
+    const grandchildStem = await createChildStem(Stem, childStem, { scenario: scenario._id, sortOrder: 0 });
 
     rootStem.defaultBranchingStemRef = childStem.ref;
     await rootStem.save();
@@ -124,7 +130,7 @@ describe('moveStemRefToBranchingOptions (in-memory mongo)', () => {
     const scenario = await Scenario.create({ name: 'Keep stemRef' });
 
     const rootStem = await Stem.create({ scenario: scenario._id, isRoot: true });
-    const childStem = await Stem.create({ scenario: scenario._id, stemRef: rootStem.ref, sortOrder: 0 });
+    const childStem = await createChildStem(Stem, rootStem, { scenario: scenario._id, sortOrder: 0 });
 
     await moveStemRefToBranchingOptions();
 
@@ -138,8 +144,8 @@ describe('moveStemRefToBranchingOptions (in-memory mongo)', () => {
     const scenario = await Scenario.create({ name: 'Idempotent' });
 
     const rootStem = await Stem.create({ scenario: scenario._id, isRoot: true });
-    await Stem.create({ scenario: scenario._id, stemRef: rootStem.ref, sortOrder: 0 });
-    await Stem.create({ scenario: scenario._id, stemRef: rootStem.ref, sortOrder: 0 });
+    await createChildStem(Stem, rootStem, { scenario: scenario._id, sortOrder: 0 });
+    await createChildStem(Stem, rootStem, { scenario: scenario._id, sortOrder: 0 });
 
     await moveStemRefToBranchingOptions();
     const stemsAfterFirstRun = await Stem.find({}).sort({ _id: 1 }).lean();
@@ -155,7 +161,7 @@ describe('moveStemRefToBranchingOptions (in-memory mongo)', () => {
     const scenario = await Published_Scenario.create({ name: 'Published' });
 
     const rootStem = await Published_Stem.create({ scenario: scenario._id, isRoot: true });
-    const childStem = await Published_Stem.create({ scenario: scenario._id, stemRef: rootStem.ref, sortOrder: 0 });
+    const childStem = await createChildStem(Published_Stem, rootStem, { scenario: scenario._id, sortOrder: 0 });
 
     await moveStemRefToBranchingOptions();
 

@@ -23,13 +23,12 @@ const schema = {
   originalScenario: { type: mongoose.Schema.Types.ObjectId, ref: 'Scenario' },
   name: { type: String, default: '' },
   description: textAreaSchema,
-  stemRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Stem' },
-  // @todo : Need to remove this once triggers are removed
+  // @todo : Remove once the convertTriggersToStemAndSlides upgrade has run
   slideRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Slide' },
   isRoot: { type: Boolean, default: false },
   branchingOptions: {
     type: [branchingOptionSchema],
-    default: [{}]
+    default: []
   },
   defaultBranchingStemRef: {
     type: mongoose.Schema.Types.ObjectId,

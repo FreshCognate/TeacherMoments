@@ -17,8 +17,7 @@ export default {
   create: {
     body: {
       scenarioId: Joi.string().required(),
-      stemRef: Joi.string(),
-      sortOrder: Joi.number(),
+      parentStemRef: Joi.string(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
