@@ -18,7 +18,8 @@ export default ({ slideRef, stemRef }) => {
     return run.mutate({ stages }, { method: 'put' });
   } else {
     const editor = getCache('editor');
-    editor.set({ activeStemRef: stemRef })
+    const { activeStemRef, stemPath = [] } = editor.data;
+    editor.set({ activeStemRef: stemRef, stemPath: [...stemPath, activeStemRef] })
     return run.set({ stages });
   }
 

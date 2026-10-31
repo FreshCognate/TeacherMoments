@@ -30,7 +30,8 @@ class CreateStemsContainer extends Component {
   }
 
   onStemClicked = (stemRef) => {
-    this.props.editor.set({ activeStemRef: stemRef });
+    const stemPath = this.props.editor.data.stemPath || [];
+    this.props.editor.set({ activeStemRef: stemRef, stemPath: [...stemPath, this.getActiveStemRef()] });
     const stemSlides = filter(this.props.slides.data, { stemRef });
     if (stemSlides.length > 0) {
       const scenarioId = this.props.scenario.data._id;

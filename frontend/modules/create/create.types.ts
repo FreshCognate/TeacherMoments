@@ -14,6 +14,7 @@ export type OverviewStem = {
   to: string;
   label: string;
   slides: OverviewSlide[];
+  childStemRefs: string[];
   stems?: OverviewStem[];
 };
 

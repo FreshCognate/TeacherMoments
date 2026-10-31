@@ -6,6 +6,8 @@ import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import setEditingMode from '../helpers/setEditingMode';
 import find from 'lodash/find';
+import last from 'lodash/last';
+import dropRight from 'lodash/dropRight';
 import getActiveStem from '~/modules/stems/helpers/getActiveStem';
 import getActiveStemRef from '~/modules/stems/helpers/getActiveStemRef';
 import getNewSlideSortOrder from '~/modules/stems/helpers/getNewSlideSortOrder';
@@ -60,7 +62,11 @@ class CreateNavigationContainer extends Component {
   onBackToParentClicked = ({ parentStemSlideId }) => {
     if (parentStemSlideId) {
       const parentStemSlide = find(this.props.slides.data, { _id: parentStemSlideId });
-      this.props.editor.set({ activeStemRef: parentStemSlide.stemRef });
+      const stemPath = this.props.editor.data.stemPath || [];
+      this.props.editor.set({
+        activeStemRef: parentStemSlide.stemRef,
+        stemPath: last(stemPath) === parentStemSlide.stemRef ? dropRight(stemPath) : []
+      });
     }
   }
 

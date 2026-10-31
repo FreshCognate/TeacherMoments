@@ -4,6 +4,7 @@ import findIndex from 'lodash/findIndex';
 import filter from 'lodash/filter';
 import getScenarioDetails from "./getScenarioDetails";
 import navigateTo from "./navigateTo";
+import getParentStemSlide from "./getParentStemSlide";
 
 export default async ({ router }) => {
 
@@ -30,8 +31,10 @@ export default async ({ router }) => {
         navigateTo({ slideRef: 'CONSENT', router });
         return;
       }
-      // If in nested stem - we should find the parent slide in the root stem
-      navigateTo({ slideRef: currentStem.slideRef, router });
+      const parentStemSlide = getParentStemSlide({ stem: currentStem });
+      if (parentStemSlide) {
+        navigateTo({ slideRef: parentStemSlide.ref, router });
+      }
       return;
     }
 

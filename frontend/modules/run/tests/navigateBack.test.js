@@ -22,8 +22,8 @@ const seed = (key, data) => {
 };
 
 const stems = [
-  { ref: 'stem-root', isRoot: true },
-  { ref: 'stem-nested', isRoot: false, slideRef: 'root-2' }
+  { ref: 'stem-root', isRoot: true, branchingOptions: [{ stemRef: 'stem-nested', conditions: [] }] },
+  { ref: 'stem-nested', isRoot: false }
 ];
 
 const slides = [
@@ -69,10 +69,10 @@ describe('navigateBack', () => {
     expect(navigateTo).toHaveBeenCalledWith({ slideRef: 'CONSENT', router });
   });
 
-  it('navigates to the parent slide from the first slide of a nested stem', async () => {
+  it('navigates to the last slide of the parent stem from the first slide of a nested stem', async () => {
     getScenarioDetails.mockReturnValue({ activeSlideRef: 'nested-1' });
     await navigateBack({ router });
-    expect(navigateTo).toHaveBeenCalledWith({ slideRef: 'root-2', router });
+    expect(navigateTo).toHaveBeenCalledWith({ slideRef: 'root-3', router });
     expect(navigateTo).toHaveBeenCalledTimes(1);
   });
 
@@ -85,8 +85,31 @@ describe('navigateBack', () => {
     });
     getScenarioDetails.mockReturnValue({ activeSlideRef: 'nested-1' });
     await navigateBack({ router });
-    expect(navigateTo).toHaveBeenCalledWith({ slideRef: 'root-2', router });
+    expect(navigateTo).toHaveBeenCalledWith({ slideRef: 'root-3', router });
     expect(navigateTo).toHaveBeenCalledTimes(1);
+  });
+
+  it('navigates to the parent stem the learner came through when a stem is shared', async () => {
+    seed('stems', [
+      { ref: 'stem-root', isRoot: true },
+      { ref: 'stem-first-branch', branchingOptions: [{ stemRef: 'stem-shared', conditions: [] }] },
+      { ref: 'stem-second-branch', branchingOptions: [{ stemRef: 'stem-shared', conditions: [] }] },
+      { ref: 'stem-shared' }
+    ]);
+    seed('slides', [
+      { _id: '1', ref: 'first-branch-1', sortOrder: 0, stemRef: 'stem-first-branch' },
+      { _id: '2', ref: 'second-branch-1', sortOrder: 0, stemRef: 'stem-second-branch' },
+      { _id: '3', ref: 'shared-1', sortOrder: 0, stemRef: 'stem-shared' }
+    ]);
+    seed('run', {
+      stages: [
+        { slideRef: 'second-branch-1' },
+        { slideRef: 'shared-1' }
+      ]
+    });
+    getScenarioDetails.mockReturnValue({ activeSlideRef: 'shared-1' });
+    await navigateBack({ router });
+    expect(navigateTo).toHaveBeenCalledWith({ slideRef: 'second-branch-1', router });
   });
 
   it('navigates to the previous stage in the run history when one exists', async () => {
