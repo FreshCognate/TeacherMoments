@@ -13,7 +13,7 @@ import setEditingMode from '../helpers/setEditingMode';
 import axios from 'axios';
 import getSelectedSlideSortOrder from '~/modules/stems/helpers/getSelectedSlideSortOrder';
 import find from 'lodash/find';
-import getStemsByStemRef from '~/modules/stems/helpers/getStemsByStemRef';
+import getChildStems from '~/modules/stems/helpers/getChildStems';
 
 type Props = {
   scenarioId: string;
@@ -126,7 +126,7 @@ class CreateNavigationStemContainer extends Component<Props, State> {
     const { activeSlideId } = getScenarioDetails();
     const activeStem = getActiveStem();
     if (!activeStem) return null;
-    const activeStemChildren = getStemsByStemRef({ stemRef: activeStem.ref });
+    const activeStemChildren = getChildStems({ stem: activeStem });
     const activeStemChildrenCount = activeStemChildren.length;
     return (
       <CreateNavigationStem

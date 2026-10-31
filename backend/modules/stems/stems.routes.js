@@ -17,8 +17,7 @@ export default {
   create: {
     body: {
       scenarioId: Joi.string().required(),
-      stemRef: Joi.string(),
-      sortOrder: Joi.number(),
+      parentStemRef: Joi.string(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
@@ -34,7 +33,7 @@ export default {
       branchingOptions: Joi.array().items({
         _id: Joi.string(),
         ...buildLanguageValidation('body', Joi.array()),
-        elementRef: Joi.string(),
+        stemRef: Joi.string(),
         conditions: Joi.array().items({
           _id: Joi.string(),
           prompts: Joi.array().items({

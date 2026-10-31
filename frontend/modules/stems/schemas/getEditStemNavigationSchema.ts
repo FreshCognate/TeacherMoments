@@ -1,9 +1,9 @@
-import getStemsByStemRef from "../helpers/getStemsByStemRef";
+import getChildStems from "../helpers/getChildStems";
 import map from 'lodash/map';
 import { Stem } from "../stems.types";
 
 export default ({ stem }: { stem: Stem }) => {
-  const childStems = getStemsByStemRef({ stemRef: stem.ref });
+  const childStems = getChildStems({ stem });
   return {
     branchingOptions: {
       type: 'TriggerStems',

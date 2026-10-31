@@ -12,9 +12,9 @@ const seedCache = (key, data) => {
 
 const buildStem = (branchingOptions) => ({ _id: 'st1', ref: 'stem-1', branchingOptions });
 
-const stemOne = { ref: 'child-1', stemRef: 'stem-1', name: 'Stem 1', sortOrder: 0 };
-const stemTwo = { ref: 'child-2', stemRef: 'stem-1', name: 'Stem 2', sortOrder: 1 };
-const stemThree = { ref: 'child-3', stemRef: 'stem-1', name: 'Stem 3', sortOrder: 2 };
+const stemOne = { ref: 'child-1', name: 'Stem 1', sortOrder: 0 };
+const stemTwo = { ref: 'child-2', name: 'Stem 2', sortOrder: 1 };
+const stemThree = { ref: 'child-3', name: 'Stem 3', sortOrder: 2 };
 
 const multipleChoiceBlock = {
   ref: 'block-mc',
@@ -24,8 +24,8 @@ const multipleChoiceBlock = {
 
 const inputBlock = { ref: 'block-input', blockType: 'INPUT_PROMPT' };
 
-const withPrompts = (elementRef, prompts) => ({
-  elementRef,
+const withPrompts = (stemRef, prompts) => ({
+  stemRef,
   conditions: [{ _id: 'c1', prompts }]
 });
 
@@ -59,7 +59,13 @@ describe('getStemErrors', () => {
   it('flags every child stem with no conditions after the first', () => {
     seedCache('stems', [stemOne, stemTwo, stemThree]);
 
-    expect(getStemErrors(buildStem([]))).toEqual([
+    const stem = buildStem([
+      { stemRef: 'child-1', conditions: [] },
+      { stemRef: 'child-2', conditions: [] },
+      { stemRef: 'child-3', conditions: [] }
+    ]);
+
+    expect(getStemErrors(stem)).toEqual([
       buildUnreachableError('Stem 2'),
       buildUnreachableError('Stem 3')
     ]);

@@ -11,7 +11,6 @@ export type FeedbackItemCondition = {
 
 export type FeedbackItem = {
   _id: string,
-  elementRef: string,
   conditions: FeedbackItemCondition[],
   [languageBody: `${string}-body`]: any[]
 }

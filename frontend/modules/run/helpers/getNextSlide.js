@@ -2,7 +2,7 @@ import getCache from "~/core/cache/helpers/getCache";
 import find from 'lodash/find';
 import getScenarioDetails from "./getScenarioDetails";
 import getRootStem from "~/modules/stems/helpers/getRootStem";
-import getStemsByStemRef from "~/modules/stems/helpers/getStemsByStemRef";
+import getChildStems from "~/modules/stems/helpers/getChildStems";
 
 export default () => {
 
@@ -25,7 +25,7 @@ export default () => {
       if (nextSlide) {
         return nextSlide;
       }
-      const childStems = getStemsByStemRef({ stemRef: currentStem.ref });
+      const childStems = getChildStems({ stem: currentStem });
       if (childStems.length === 0) {
         return { _id: 'SUMMARY', slideType: 'SUMMARY', ref: 'SUMMARY' };
       }

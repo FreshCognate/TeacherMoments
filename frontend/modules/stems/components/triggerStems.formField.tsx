@@ -18,14 +18,14 @@ const TriggerStems = ({
   childStems: Stem[],
   items: StemItem[],
   prompts: any[],
-  onAddConditionClicked: ({ elementRef }: { elementRef: string }) => void,
+  onAddConditionClicked: ({ stemRef }: { stemRef: string }) => void,
   onEditPromptConditionClicked: OnEditPromptConditionClicked,
   onRemoveConditionClicked: OnRemoveConditionClicked
 }) => {
   return (
     <div className="bg-lm-2 dark:bg-dm-2 rounded-md p-2">
       {map(childStems, (slideStem) => {
-        const slideStemItem = find(items, { elementRef: slideStem.ref });
+        const slideStemItem = find(items, { stemRef: slideStem.ref });
         return (
           <div key={slideStem._id} className="bg-lm-1 dark:bg-dm-1 rounded-md p-2 mb-2 last:mb-0">
             <div>
@@ -39,7 +39,7 @@ const TriggerStems = ({
               <TriggerStemsItem
                 prompts={prompts}
                 slideStemItem={slideStemItem}
-                onAddConditionClicked={() => onAddConditionClicked({ elementRef: slideStem.ref })}
+                onAddConditionClicked={() => onAddConditionClicked({ stemRef: slideStem.ref })}
                 onEditPromptConditionClicked={onEditPromptConditionClicked}
                 onRemoveConditionClicked={onRemoveConditionClicked}
               />

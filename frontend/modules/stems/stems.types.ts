@@ -7,7 +7,7 @@ export type BranchingOptionCondition = {
 
 export type BranchingOption = {
   _id: string,
-  elementRef: string,
+  stemRef: string,
   conditions: BranchingOptionCondition[],
   [languageBody: `${string}-body`]: any[],
   score: number,
@@ -38,7 +38,6 @@ export type Stem = {
   scenario: string,
   name: string,
   description: string,
-  stemRef: string,
   slideRef: string,
   isRoot: boolean,
   branchingOptions: BranchingOption[],
@@ -59,10 +58,10 @@ export type Condition = {
 };
 
 export type StemItem = {
-  elementRef: string,
+  stemRef: string,
   conditions: Condition[]
 };
 
-export type OnEditPromptConditionClicked = (args: { elementRef: string, prompt: any, condition: any }) => void;
+export type OnEditPromptConditionClicked = (args: { stemRef: string, prompt: any, condition: any }) => void;
 
-export type OnRemoveConditionClicked = (args: { elementRef: string, conditionId?: string }) => void;
+export type OnRemoveConditionClicked = (args: { stemRef: string, conditionId?: string }) => void;

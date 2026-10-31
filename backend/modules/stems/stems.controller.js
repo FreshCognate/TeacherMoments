@@ -15,9 +15,9 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { scenarioId, stemRef, sortOrder } = body;
+    const { scenarioId, parentStemRef } = body;
 
-    const newStem = await createStem({ scenario: scenarioId, stemRef, sortOrder }, {}, context);
+    const newStem = await createStem({ scenario: scenarioId, parentStemRef }, {}, context);
 
     return { stem: newStem };
 

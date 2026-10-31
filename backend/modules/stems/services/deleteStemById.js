@@ -2,6 +2,13 @@ import setScenarioHasChanges from '../../scenarios/services/setScenarioHasChange
 import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
 import deleteTriggersBySlideRefs from '../../triggers/services/deleteTriggersBySlideRefs.js';
 import map from 'lodash/map.js';
+import flatMap from 'lodash/flatMap.js';
+import uniq from 'lodash/uniq.js';
+import difference from 'lodash/difference.js';
+
+const getChildStemRefs = (stems) => uniq(flatMap(stems, (stem) => {
+  return map(stem.branchingOptions, (branchingOption) => String(branchingOption.stemRef));
+}));
 
 const deleteStemContents = async ({ stemRef, deletedAt, session }, context) => {
 
@@ -45,11 +52,31 @@ export default async (props, options, context) => {
 
     await deleteStemContents({ stemRef: stem.ref, deletedAt, session }, context);
 
-    let parentStemRefs = [stem.ref];
+    await models.Stem.updateMany(
+      { 'branchingOptions.stemRef': stem.ref },
+      { $pull: { branchingOptions: { stemRef: stem.ref } } }
+    ).session(session);
 
-    while (parentStemRefs.length > 0) {
+    await models.Stem.updateMany(
+      { defaultBranchingStemRef: stem.ref },
+      { defaultBranchingStemRef: null }
+    ).session(session);
 
-      const childStems = await models.Stem.find({ stemRef: { $in: parentStemRefs }, isDeleted: false }).session(session);
+    let childStemRefs = getChildStemRefs([stem]);
+
+    while (childStemRefs.length > 0) {
+
+      const linkingStems = await models.Stem.find({
+        'branchingOptions.stemRef': { $in: childStemRefs },
+        isDeleted: false
+      }).session(session);
+
+      const linkedStemRefs = getChildStemRefs(linkingStems);
+
+      const childStems = await models.Stem.find({
+        ref: { $in: difference(childStemRefs, linkedStemRefs) },
+        isDeleted: false
+      }).session(session);
 
       if (childStems.length === 0) break;
 
@@ -70,7 +97,7 @@ export default async (props, options, context) => {
         await deleteStemContents({ stemRef: childStem.ref, deletedAt, session }, context);
       }
 
-      parentStemRefs = map(childStems, 'ref');
+      childStemRefs = getChildStemRefs(childStems);
 
     }
   }).catch(err => {

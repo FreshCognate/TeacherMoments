@@ -18,9 +18,9 @@ const seed = (key, data) => {
 };
 
 const stems = [
-  { ref: 'stem-root', isRoot: true },
-  { ref: 'stem-nested', isRoot: false, slideRef: 'root-1', stemRef: 'stem-root' },
-  { ref: 'stem-tail', isRoot: false, slideRef: 'root-3', stemRef: 'stem-root' }
+  { ref: 'stem-root', isRoot: true, branchingOptions: [{ stemRef: 'stem-nested', conditions: [] }, { stemRef: 'stem-tail', conditions: [] }] },
+  { ref: 'stem-nested', isRoot: false },
+  { ref: 'stem-tail', isRoot: false }
 ];
 
 const slides = [

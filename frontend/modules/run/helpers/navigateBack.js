@@ -4,6 +4,8 @@ import findIndex from 'lodash/findIndex';
 import filter from 'lodash/filter';
 import getScenarioDetails from "./getScenarioDetails";
 import navigateTo from "./navigateTo";
+import getParentStemSlide from "./getParentStemSlide";
+import getActiveStemRef from "~/modules/stems/helpers/getActiveStemRef";
 
 export default async ({ router }) => {
 
@@ -11,10 +13,9 @@ export default async ({ router }) => {
 
   if (activeSlideRef === 'SUMMARY') {
     const slides = getCache('slides').data;
-    const rootStem = find(getCache('stems').data, { isRoot: true });
-    const rootSlides = filter(slides, { stemRef: rootStem.ref });
-    const maxSortOrder = Math.max(...rootSlides.map(s => s.sortOrder));
-    const prevSlide = find(rootSlides, { sortOrder: maxSortOrder });
+    const stemSlides = filter(slides, { stemRef: getActiveStemRef() });
+    const maxSortOrder = Math.max(...stemSlides.map(s => s.sortOrder));
+    const prevSlide = find(stemSlides, { sortOrder: maxSortOrder });
     if (prevSlide) {
       navigateTo({ slideRef: prevSlide.ref, router });
     }
@@ -30,8 +31,10 @@ export default async ({ router }) => {
         navigateTo({ slideRef: 'CONSENT', router });
         return;
       }
-      // If in nested stem - we should find the parent slide in the root stem
-      navigateTo({ slideRef: currentStem.slideRef, router });
+      const parentStemSlide = getParentStemSlide({ stem: currentStem });
+      if (parentStemSlide) {
+        navigateTo({ slideRef: parentStemSlide.ref, router });
+      }
       return;
     }
 

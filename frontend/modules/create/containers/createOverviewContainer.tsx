@@ -5,18 +5,19 @@ import { Stem } from '~/modules/stems/stems.types';
 import { Slide } from '~/modules/slides/slides.types';
 import { Scenario } from '~/modules/scenarios/scenarios.types';
 import find from 'lodash/find';
-import findIndex from 'lodash/findIndex';
-import filter from 'lodash/filter';
 import map from 'lodash/map';
 import each from 'lodash/each';
+import has from 'lodash/has';
+import keys from 'lodash/keys';
+import getChildStems from '~/modules/stems/helpers/getChildStems';
+import getActiveStemRef from '~/modules/stems/helpers/getActiveStemRef';
 import { OverviewSlide, OverviewStem, PositionedStem, Edge } from '../create.types';
 import WithRouter from '~/core/app/components/withRouter';
 import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
 
 type Props = {
   editor: {
-    data: { activeStemRef?: string };
-    set: (data: { activeStemRef: string }) => void;
+    set: (data: { stemPath: string[] }) => void;
   };
   scenario: { data: Scenario };
   stems: { data: Stem[] };
@@ -39,19 +40,11 @@ class CreateOverviewContainer extends Component<Props> {
 
     if (!rootStem) return null;
 
-    const buildStem = (stem: Stem): OverviewStem => {
-      const childStems = filter(this.props.stems.data, { stemRef: stem.ref });
+    const builtStemRefs = new Set<string>();
 
-      const positions: number[] = [];
-      let currentStem = stem;
-      let parentStem = find(this.props.stems.data, { ref: currentStem.stemRef });
-
-      while (parentStem) {
-        const siblingStems = filter(this.props.stems.data, { stemRef: parentStem.ref });
-        positions.unshift(findIndex(siblingStems, { _id: currentStem._id }) + 1);
-        currentStem = parentStem;
-        parentStem = find(this.props.stems.data, { ref: currentStem.stemRef });
-      }
+    const buildStem = (stem: Stem, positions: number[] = []): OverviewStem => {
+      builtStemRefs.add(stem.ref);
+      const childStems = getChildStems({ stem });
 
       const label = positions.length === 0
         ? 'A'
@@ -89,7 +82,7 @@ class CreateOverviewContainer extends Component<Props> {
 
       if (childStems.length === 0) {
         let isSelected = false;
-        if (activeSlideId === 'SUMMARY' && stem.ref === this.props.editor.data.activeStemRef) {
+        if (activeSlideId === 'SUMMARY' && stem.ref === getActiveStemRef()) {
           isSelected = true;
         }
         stemSlides.push({
@@ -102,6 +95,13 @@ class CreateOverviewContainer extends Component<Props> {
         });
       }
 
+      const builtChildStems: OverviewStem[] = [];
+
+      each(childStems, (childStem, index) => {
+        if (builtStemRefs.has(childStem.ref)) return;
+        builtChildStems.push(buildStem(childStem, [...positions, index + 1]));
+      });
+
       return {
         _id: stem._id,
         ref: stem.ref,
@@ -109,24 +109,77 @@ class CreateOverviewContainer extends Component<Props> {
         to: `/scenarios/${this.props.scenario.data._id}/create?slide=${firstSlide._id}`,
         label,
         slides: stemSlides,
-        stems: map(childStems, buildStem)
+        childStemRefs: map(childStems, 'ref'),
+        stems: builtChildStems
       };
     };
 
     return buildStem(rootStem);
   }
 
-  parseTree = (stem: PositionedStem, offsetX = 0): PositionedStem => {
+  getStemWidth = (stem: OverviewStem) => {
+    return (stem.slides.length * 32) + ((stem.slides.length - 1) * 12) + 8 + 8 + 4;
+  }
+
+  getStemsByRef = (stem: PositionedStem, stemsByRef: Record<string, PositionedStem> = {}) => {
+    stemsByRef[stem.ref] = stem;
+    each(stem.stems, (childStem) => this.getStemsByRef(childStem, stemsByRef));
+    return stemsByRef;
+  }
+
+  getOffsetsX = (stemsByRef: Record<string, PositionedStem>) => {
+    const parentStemRefsByRef: Record<string, string[]> = {};
+
+    each(stemsByRef, (stem) => {
+      each(stem.childStemRefs, (childStemRef) => {
+        parentStemRefsByRef[childStemRef] = [...(parentStemRefsByRef[childStemRef] || []), stem.ref];
+      });
+    });
+
+    const offsetsX: Record<string, number> = {};
+
+    const getOffsetX = (stemRef: string): number => {
+      if (has(offsetsX, stemRef)) return offsetsX[stemRef];
+      offsetsX[stemRef] = 0;
+      each(parentStemRefsByRef[stemRef], (parentStemRef) => {
+        const parentRight = getOffsetX(parentStemRef) + this.getStemWidth(stemsByRef[parentStemRef]);
+        offsetsX[stemRef] = Math.max(offsetsX[stemRef], parentRight + GAP_X);
+      });
+      return offsetsX[stemRef];
+    };
+
+    each(keys(stemsByRef), getOffsetX);
+
+    return offsetsX;
+  }
+
+  getEdges = (stemsByRef: Record<string, PositionedStem>): Edge[] => {
+    const edges: Edge[] = [];
+
+    each(stemsByRef, (stem) => {
+      each(stem.childStemRefs, (childStemRef) => {
+        const childStem = stemsByRef[childStemRef];
+        if (!childStem) return;
+        edges.push({
+          from: { x: stem.x + this.getStemWidth(stem), y: stem.y + STEM_HEIGHT / 2 },
+          to: { x: childStem.x, y: childStem.y + STEM_HEIGHT / 2 }
+        });
+      });
+    });
+
+    return edges;
+  }
+
+  parseTree = (stem: PositionedStem, offsetsX: Record<string, number>): PositionedStem => {
     const children = stem.stems || [];
 
-    const stemWidth = (stem.slides.length * 32) + ((stem.slides.length - 1) * 12) + 8 + 8 + 4
-    const childOffsetX = offsetX + stemWidth + GAP_X;
+    const stemWidth = this.getStemWidth(stem);
 
     for (const child of children) {
-      this.parseTree(child, childOffsetX);
+      this.parseTree(child, offsetsX);
     }
 
-    stem.x = offsetX;
+    stem.x = offsetsX[stem.ref];
 
     if (children.length === 0) {
       stem.y = this.nextY;
@@ -146,19 +199,12 @@ class CreateOverviewContainer extends Component<Props> {
       this.maxHeight = maxBottom;
     }
 
-    for (const child of children) {
-      this.edges.push({
-        from: { x: stem.x + stemWidth, y: stem.y + STEM_HEIGHT / 2 },
-        to: { x: child.x, y: child.y + STEM_HEIGHT / 2 }
-      })
-    }
-
     return stem;
 
   }
 
   onStemClicked = ({ stemRef }: { stemRef: string }) => {
-    this.props.editor.set({ activeStemRef: stemRef });
+    this.props.editor.set({ stemPath: [stemRef] });
   }
 
   render() {
@@ -171,7 +217,9 @@ class CreateOverviewContainer extends Component<Props> {
 
     if (!rootStem) return null;
 
-    const tree = this.parseTree(rootStem as PositionedStem, 0);
+    const stemsByRef = this.getStemsByRef(rootStem as PositionedStem);
+    const tree = this.parseTree(rootStem as PositionedStem, this.getOffsetsX(stemsByRef));
+    this.edges = this.getEdges(stemsByRef);
 
     return (
       <CreateOverview

@@ -67,4 +67,75 @@ describe('updateStemById', () => {
 
     expect(setHasChangesMock).not.toHaveBeenCalled();
   });
+
+  describe('branchingOptions', () => {
+    const condition = { _id: 'c1', prompts: [{ ref: 'block-1', options: ['a'] }] };
+
+    const mockFindById = (stem) => vi.fn().mockReturnValue({ lean: vi.fn().mockResolvedValue(stem) });
+
+    it('takes conditions from the form but keeps the stored children and their order', async () => {
+      const findById = mockFindById({
+        _id: 'st1',
+        branchingOptions: [
+          { _id: 'bo1', stemRef: 'child-1', conditions: [] },
+          { _id: 'bo2', stemRef: 'child-2', conditions: [] }
+        ]
+      });
+      const findByIdAndUpdate = vi.fn().mockResolvedValue({ _id: 'st1', scenario: 's1' });
+
+      await updateStemById(
+        {
+          stemId: 'st1',
+          update: {
+            branchingOptions: [
+              { _id: 'bo2', stemRef: 'child-2', conditions: [condition] },
+              { _id: 'stale', stemRef: 'deleted-child', conditions: [condition] }
+            ]
+          }
+        },
+        {},
+        { models: { Stem: { findById, findByIdAndUpdate } } }
+      );
+
+      expect(findByIdAndUpdate).toHaveBeenCalledWith('st1', {
+        branchingOptions: [
+          { _id: 'bo1', stemRef: 'child-1', conditions: [] },
+          { _id: 'bo2', stemRef: 'child-2', conditions: [condition] }
+        ]
+      }, { new: true });
+    });
+
+    it('keeps a stored child the form left out', async () => {
+      const findById = mockFindById({
+        _id: 'st1',
+        branchingOptions: [{ _id: 'bo1', stemRef: 'child-1', conditions: [condition] }]
+      });
+      const findByIdAndUpdate = vi.fn().mockResolvedValue({ _id: 'st1', scenario: 's1' });
+
+      await updateStemById(
+        { stemId: 'st1', update: { branchingOptions: [] } },
+        {},
+        { models: { Stem: { findById, findByIdAndUpdate } } }
+      );
+
+      expect(findByIdAndUpdate).toHaveBeenCalledWith('st1', {
+        branchingOptions: [{ _id: 'bo1', stemRef: 'child-1', conditions: [condition] }]
+      }, { new: true });
+    });
+
+    it('throws 404 when the stem does not exist', async () => {
+      const findById = mockFindById(null);
+      const findByIdAndUpdate = vi.fn();
+
+      await expect(
+        updateStemById(
+          { stemId: 'st1', update: { branchingOptions: [] } },
+          {},
+          { models: { Stem: { findById, findByIdAndUpdate } } }
+        )
+      ).rejects.toMatchObject({ statusCode: 404 });
+
+      expect(findByIdAndUpdate).not.toHaveBeenCalled();
+    });
+  });
 });

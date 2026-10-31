@@ -14,6 +14,12 @@ import deleteStemById from '../services/deleteStemById.js';
 
 const db = setupMongo();
 
+const linkTo = (stem) => ({ stemRef: stem.ref, conditions: [] });
+
+const isDeleted = async (Model, id) => (await Model.findById(id).lean()).isDeleted;
+
+const buildContext = () => ({ models: db.models, user: { _id: new mongoose.Types.ObjectId() }, connection: db.connection });
+
 describe('deleteStemById (in-memory mongo)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -59,10 +65,10 @@ describe('deleteStemById (in-memory mongo)', () => {
   it('cascades to descendant stems and their slides and blocks', async () => {
     const scenario = new mongoose.Types.ObjectId();
 
-    const stem = await db.models.Stem.create({ scenario, sortOrder: 0 });
-    const childStem = await db.models.Stem.create({ scenario, stemRef: stem.ref, sortOrder: 0 });
-    const grandchildStem = await db.models.Stem.create({ scenario, stemRef: childStem.ref, sortOrder: 0 });
-    const siblingStem = await db.models.Stem.create({ scenario, sortOrder: 1 });
+    const grandchildStem = await db.models.Stem.create({ scenario });
+    const childStem = await db.models.Stem.create({ scenario, branchingOptions: [linkTo(grandchildStem)] });
+    const stem = await db.models.Stem.create({ scenario, branchingOptions: [linkTo(childStem)] });
+    const siblingStem = await db.models.Stem.create({ scenario });
 
     const childSlide = await db.models.Slide.create({ scenario, stemRef: childStem.ref, sortOrder: 0 });
     const grandchildSlide = await db.models.Slide.create({ scenario, stemRef: grandchildStem.ref, sortOrder: 0 });
@@ -111,5 +117,69 @@ describe('deleteStemById (in-memory mongo)', () => {
 
     expect((await db.models.Trigger.findById(trigger._id).lean()).isDeleted).toBe(true);
     expect((await db.models.Trigger.findById(otherTrigger._id).lean()).isDeleted).toBe(false);
+  });
+
+  it('removes the stem from its parent branching options and clears it as the default', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+
+    const stem = await db.models.Stem.create({ scenario });
+    const siblingStem = await db.models.Stem.create({ scenario });
+    const parentStem = await db.models.Stem.create({
+      scenario,
+      isRoot: true,
+      branchingOptions: [linkTo(stem), linkTo(siblingStem)],
+      defaultBranchingStemRef: stem.ref
+    });
+
+    await deleteStemById({ stemId: stem._id }, {}, buildContext());
+
+    const updatedParentStem = await db.models.Stem.findById(parentStem._id).lean();
+
+    expect(updatedParentStem.branchingOptions.map((branchingOption) => String(branchingOption.stemRef))).toEqual([String(siblingStem.ref)]);
+    expect(updatedParentStem.defaultBranchingStemRef).toBeNull();
+  });
+
+  it('keeps a child stem that another live stem still branches to', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+
+    const sharedStem = await db.models.Stem.create({ scenario });
+    const sharedSlide = await db.models.Slide.create({ scenario, stemRef: sharedStem.ref, sortOrder: 0 });
+    const stem = await db.models.Stem.create({ scenario, branchingOptions: [linkTo(sharedStem)] });
+    const otherStem = await db.models.Stem.create({ scenario, branchingOptions: [linkTo(sharedStem)] });
+
+    await deleteStemById({ stemId: stem._id }, {}, buildContext());
+
+    expect(await isDeleted(db.models.Stem, stem._id)).toBe(true);
+    expect(await isDeleted(db.models.Stem, sharedStem._id)).toBe(false);
+    expect(await isDeleted(db.models.Slide, sharedSlide._id)).toBe(false);
+    expect(await isDeleted(db.models.Stem, otherStem._id)).toBe(false);
+  });
+
+  it('deletes a shared stem once every stem branching to it is deleted', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+
+    const sharedStem = await db.models.Stem.create({ scenario });
+    const firstBranchStem = await db.models.Stem.create({ scenario, branchingOptions: [linkTo(sharedStem)] });
+    const secondBranchStem = await db.models.Stem.create({ scenario, branchingOptions: [linkTo(sharedStem)] });
+    const stem = await db.models.Stem.create({ scenario, branchingOptions: [linkTo(firstBranchStem), linkTo(secondBranchStem)] });
+
+    await deleteStemById({ stemId: stem._id }, {}, buildContext());
+
+    expect(await isDeleted(db.models.Stem, firstBranchStem._id)).toBe(true);
+    expect(await isDeleted(db.models.Stem, secondBranchStem._id)).toBe(true);
+    expect(await isDeleted(db.models.Stem, sharedStem._id)).toBe(true);
+  });
+
+  it('deletes a stem linked both directly and through a deeper branch once both links are deleted', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+
+    const sharedStem = await db.models.Stem.create({ scenario });
+    const branchStem = await db.models.Stem.create({ scenario, branchingOptions: [linkTo(sharedStem)] });
+    const stem = await db.models.Stem.create({ scenario, branchingOptions: [linkTo(branchStem), linkTo(sharedStem)] });
+
+    await deleteStemById({ stemId: stem._id }, {}, buildContext());
+
+    expect(await isDeleted(db.models.Stem, branchStem._id)).toBe(true);
+    expect(await isDeleted(db.models.Stem, sharedStem._id)).toBe(true);
   });
 });

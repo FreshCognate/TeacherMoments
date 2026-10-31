@@ -47,7 +47,7 @@ export default (stem: Stem) => {
     });
 
     if (hasInvalidPrompt) {
-      const childStem = getStemByRef({ ref: branchingOption.elementRef });
+      const childStem = getStemByRef({ ref: branchingOption.stemRef });
       errors.push({ ...defaultError, message: `Stem "${childStem?.name}" has a condition without a valid answer selected` });
     }
   });
