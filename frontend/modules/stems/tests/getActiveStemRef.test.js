@@ -33,9 +33,21 @@ describe('getActiveStemRef', () => {
     expect(getActiveStemRef()).toBe('child-stem');
   });
 
-  it('prefers the activeStemRef set in the editor', () => {
-    seed('editor', { activeStemRef: 'root-stem' });
+  it('uses the stem of the active slide even when the editor stem path ends elsewhere', () => {
+    seed('editor', { stemPath: ['root-stem'] });
     getScenarioDetailsMock.mockReturnValue({ activeSlideId: 'slide-1' });
+    expect(getActiveStemRef()).toBe('child-stem');
+  });
+
+  it('uses the last stem in the editor stem path on SUMMARY', () => {
+    seed('editor', { stemPath: ['root-stem', 'child-stem'] });
+    getScenarioDetailsMock.mockReturnValue({ activeSlideId: 'SUMMARY' });
+    expect(getActiveStemRef()).toBe('child-stem');
+  });
+
+  it('falls back to the root stem on SUMMARY when the editor stem path is empty', () => {
+    seed('editor', { stemPath: [] });
+    getScenarioDetailsMock.mockReturnValue({ activeSlideId: 'SUMMARY' });
     expect(getActiveStemRef()).toBe('root-stem');
   });
 

@@ -28,7 +28,6 @@ import triggerSlideFeedback from '../helpers/triggerSlideFeedback';
 import getStemNavigationDetails from '~/modules/run/helpers/getStemNavigationDetails';
 import getStemByRef from '~/modules/stems/helpers/getStemByRef';
 import triggerStemBranching from '~/modules/stems/helpers/triggerStemBranching';
-import getRootStem from '~/modules/stems/helpers/getRootStem';
 
 interface SlidePlayerContainerProps {
   scenario: Scenario,
@@ -284,7 +283,7 @@ class SlidePlayerContainer extends Component<SlidePlayerContainerProps, SlidePla
           const run = getCache('run');
           run.set({}, { setType: 'replace' });
           navigateTo({ slideRef: 'CONSENT', router: this.props.router });
-          getCache('editor').set({ activeStemRef: getRootStem().ref, stemPath: [] });
+          getCache('editor').set({ stemPath: [] });
         } else {
           setScenarioToArchived().then(() => {
             window.location.href = window.location.pathname;

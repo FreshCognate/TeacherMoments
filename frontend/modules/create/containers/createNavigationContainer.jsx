@@ -6,7 +6,7 @@ import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
 import setEditingMode from '../helpers/setEditingMode';
 import find from 'lodash/find';
-import last from 'lodash/last';
+import nth from 'lodash/nth';
 import dropRight from 'lodash/dropRight';
 import getActiveStem from '~/modules/stems/helpers/getActiveStem';
 import getActiveStemRef from '~/modules/stems/helpers/getActiveStemRef';
@@ -18,22 +18,6 @@ class CreateNavigationContainer extends Component {
   state = {
     isCreating: false,
     deletingId: null
-  }
-
-  componentDidMount() {
-    this.ensureActiveStemRef();
-  }
-
-  componentDidUpdate() {
-    this.ensureActiveStemRef();
-  }
-
-  ensureActiveStemRef = () => {
-    if (this.props.editor.data.activeStemRef) return;
-    const derivedStemRef = getActiveStemRef();
-    if (derivedStemRef) {
-      this.props.editor.set({ activeStemRef: derivedStemRef });
-    }
   }
 
   onAddSlideClicked = () => {
@@ -64,8 +48,7 @@ class CreateNavigationContainer extends Component {
       const parentStemSlide = find(this.props.slides.data, { _id: parentStemSlideId });
       const stemPath = this.props.editor.data.stemPath || [];
       this.props.editor.set({
-        activeStemRef: parentStemSlide.stemRef,
-        stemPath: last(stemPath) === parentStemSlide.stemRef ? dropRight(stemPath) : []
+        stemPath: nth(stemPath, -2) === parentStemSlide.stemRef ? dropRight(stemPath) : [parentStemSlide.stemRef]
       });
     }
   }

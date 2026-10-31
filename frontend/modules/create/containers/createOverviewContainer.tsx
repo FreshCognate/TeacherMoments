@@ -10,14 +10,14 @@ import each from 'lodash/each';
 import has from 'lodash/has';
 import keys from 'lodash/keys';
 import getChildStems from '~/modules/stems/helpers/getChildStems';
+import getActiveStemRef from '~/modules/stems/helpers/getActiveStemRef';
 import { OverviewSlide, OverviewStem, PositionedStem, Edge } from '../create.types';
 import WithRouter from '~/core/app/components/withRouter';
 import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
 
 type Props = {
   editor: {
-    data: { activeStemRef?: string };
-    set: (data: { activeStemRef: string, stemPath: string[] }) => void;
+    set: (data: { stemPath: string[] }) => void;
   };
   scenario: { data: Scenario };
   stems: { data: Stem[] };
@@ -82,7 +82,7 @@ class CreateOverviewContainer extends Component<Props> {
 
       if (childStems.length === 0) {
         let isSelected = false;
-        if (activeSlideId === 'SUMMARY' && stem.ref === this.props.editor.data.activeStemRef) {
+        if (activeSlideId === 'SUMMARY' && stem.ref === getActiveStemRef()) {
           isSelected = true;
         }
         stemSlides.push({
@@ -204,7 +204,7 @@ class CreateOverviewContainer extends Component<Props> {
   }
 
   onStemClicked = ({ stemRef }: { stemRef: string }) => {
-    this.props.editor.set({ activeStemRef: stemRef, stemPath: [] });
+    this.props.editor.set({ stemPath: [stemRef] });
   }
 
   render() {

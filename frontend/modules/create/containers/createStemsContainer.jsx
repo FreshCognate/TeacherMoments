@@ -6,6 +6,7 @@ import handleRequestError from '~/core/app/helpers/handleRequestError';
 import addModal from '~/core/dialogs/helpers/addModal';
 import filter from 'lodash/filter';
 import find from 'lodash/find';
+import last from 'lodash/last';
 import WithRouter from '~/core/app/components/withRouter';
 import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
 import EditStemNavigationContainer from '~/modules/stems/containers/editStemNavigationContainer';
@@ -19,19 +20,14 @@ class CreateStemsContainer extends Component {
     deletingId: null
   }
 
-  getActiveStemRef = () => {
-    return this.props.editor.data.activeStemRef;
-  }
-
   getChildStems = () => {
-    const activeStemRef = this.getActiveStemRef();
-    if (!activeStemRef) return [];
     return getChildStems({ stem: getStemByRef({ ref: this.props.stemRef }) });
   }
 
   onStemClicked = (stemRef) => {
     const stemPath = this.props.editor.data.stemPath || [];
-    this.props.editor.set({ activeStemRef: stemRef, stemPath: [...stemPath, this.getActiveStemRef()] });
+    const currentStemPath = last(stemPath) === this.props.stemRef ? stemPath : [this.props.stemRef];
+    this.props.editor.set({ stemPath: [...currentStemPath, stemRef] });
     const stemSlides = filter(this.props.slides.data, { stemRef });
     if (stemSlides.length > 0) {
       const scenarioId = this.props.scenario.data._id;
@@ -113,7 +109,7 @@ class CreateStemsContainer extends Component {
 
     axios.post('/api/stems', {
       scenarioId,
-      parentStemRef: this.props.editor.data.activeStemRef,
+      parentStemRef: this.props.stemRef,
     }).then((response) => {
       const newStem = response.data.stem;
       Promise.all([
@@ -129,7 +125,7 @@ class CreateStemsContainer extends Component {
   }
 
   onEditNavigationClicked = () => {
-    const stem = getStemByRef({ ref: this.getActiveStemRef() })
+    const stem = getStemByRef({ ref: this.props.stemRef })
     addSidePanel({
       size: 'lg',
       icon: 'branching',
@@ -141,7 +137,7 @@ class CreateStemsContainer extends Component {
   render() {
     const { isCreating, deletingId } = this.state;
     const childStems = this.getChildStems();
-    const activeStemRef = this.getActiveStemRef();
+    const activeStemRef = this.props.stemRef;
     return (
       <CreateStems
         activeStemRef={activeStemRef}

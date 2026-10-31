@@ -1,4 +1,9 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+const { getActiveStemRefMock } = vi.hoisted(() => ({ getActiveStemRefMock: vi.fn() }));
+
+vi.mock('../helpers/getActiveStemRef', () => ({ default: () => getActiveStemRefMock() }));
+
 import getParentStemSlideId from '../helpers/getParentStemSlideId';
 import { createCache, resetCache } from '~/core/cache/helpers/cacheManager';
 
@@ -25,7 +30,8 @@ describe('getParentStemSlideId', () => {
   });
 
   it('returns the last slide of the parent stem', () => {
-    seed('editor', { activeStemRef: 'child-stem' });
+    getActiveStemRefMock.mockReturnValue('child-stem');
+    seed('editor', {});
     expect(getParentStemSlideId()).toBe('root-slide-2');
   });
 
@@ -39,7 +45,8 @@ describe('getParentStemSlideId', () => {
       { _id: 'first-slide-1', stemRef: 'first-stem' },
       { _id: 'second-slide-1', stemRef: 'second-stem' }
     ]);
-    seed('editor', { activeStemRef: 'shared-stem', stemPath: ['root-stem', 'second-stem'] });
+    getActiveStemRefMock.mockReturnValue('shared-stem');
+    seed('editor', { stemPath: ['root-stem', 'second-stem', 'shared-stem'] });
     expect(getParentStemSlideId()).toBe('second-slide-1');
   });
 
@@ -53,23 +60,27 @@ describe('getParentStemSlideId', () => {
       { _id: 'first-slide-1', stemRef: 'first-stem' },
       { _id: 'second-slide-1', stemRef: 'second-stem' }
     ]);
-    seed('editor', { activeStemRef: 'shared-stem', stemPath: ['unrelated-stem'] });
+    getActiveStemRefMock.mockReturnValue('shared-stem');
+    seed('editor', { stemPath: ['unrelated-stem', 'shared-stem'] });
     expect(getParentStemSlideId()).toBe('first-slide-1');
   });
 
   it('returns undefined when the parent stem has no slides', () => {
     seed('slides', [{ _id: 'child-slide-1', stemRef: 'child-stem' }]);
-    seed('editor', { activeStemRef: 'child-stem' });
+    getActiveStemRefMock.mockReturnValue('child-stem');
+    seed('editor', {});
     expect(getParentStemSlideId()).toBeUndefined();
   });
 
   it('returns undefined when the active stem has no parent', () => {
-    seed('editor', { activeStemRef: 'root-stem' });
+    getActiveStemRefMock.mockReturnValue('root-stem');
+    seed('editor', {});
     expect(getParentStemSlideId()).toBeUndefined();
   });
 
   it('returns undefined when there is no active stem', () => {
-    seed('editor', { activeStemRef: null });
+    getActiveStemRefMock.mockReturnValue(null);
+    seed('editor', {});
     expect(getParentStemSlideId()).toBeUndefined();
   });
 });

@@ -1,19 +1,20 @@
 import getCache from "~/core/cache/helpers/getCache";
 import find from 'lodash/find';
 import filter from 'lodash/filter';
-import last from 'lodash/last';
+import nth from 'lodash/nth';
 import getParentStems from "./getParentStems";
+import getActiveStemRef from "./getActiveStemRef";
 
 export default () => {
 
   const editor = getCache('editor');
-  const { activeStemRef, stemPath } = editor.data;
+  const { stemPath } = editor.data;
 
   const stems = getCache('stems');
-  const activeStem = find(stems.data, { ref: activeStemRef });
+  const activeStem = find(stems.data, { ref: getActiveStemRef() });
   if (activeStem) {
     const parentStems = getParentStems({ stem: activeStem });
-    const parentStem = find(parentStems, (stem) => stem.ref === last(stemPath)) || parentStems[0];
+    const parentStem = find(parentStems, (stem) => stem.ref === nth(stemPath, -2)) || parentStems[0];
     if (parentStem) {
       const slides = getCache('slides');
       const stemSlides = filter(slides.data, { stemRef: parentStem.ref });
