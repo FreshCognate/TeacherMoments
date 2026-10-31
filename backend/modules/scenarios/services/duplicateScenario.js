@@ -1,4 +1,6 @@
 import omit from 'lodash/omit.js';
+import map from 'lodash/map.js';
+import each from 'lodash/each.js';
 import duplicateSlides from '../../slides/services/duplicateSlides.js';
 import duplicateStems from '../../stems/services/duplicateStems.js';
 import duplicateTriggers from '../../triggers/services/duplicateTriggers.js';
@@ -57,9 +59,9 @@ export default async (props, options, context) => {
 
     for (const duplicatedStem of duplicatedStems) {
       const stemUpdate = {};
-      if (duplicatedStem.stemRef) {
-        const newStemRef = stemRefMap.get(duplicatedStem.stemRef.toString());
-        if (newStemRef) stemUpdate.stemRef = newStemRef;
+      if (duplicatedStem.defaultBranchingStemRef) {
+        const newDefaultBranchingStemRef = stemRefMap.get(String(duplicatedStem.defaultBranchingStemRef));
+        if (newDefaultBranchingStemRef) stemUpdate.defaultBranchingStemRef = newDefaultBranchingStemRef;
       }
       if (duplicatedStem.slideRef) {
         const newSlideRef = slideRefMap.get(duplicatedStem.slideRef.toString());
@@ -94,6 +96,41 @@ export default async (props, options, context) => {
       if (newRef) {
         await models.Block.updateOne({ _id: block._id }, { $set: { responseRef: newRef } }, { session });
       }
+    }
+
+    for (const duplicatedSlide of duplicatedSlides) {
+      if (!duplicatedSlide.feedbackItems.length) continue;
+
+      each(duplicatedSlide.feedbackItems, (feedbackItem) => {
+        each(feedbackItem.conditions, (condition) => {
+          each(condition.prompts, (prompt) => {
+            if (prompt.ref) {
+              prompt.ref = blockRefMap.get(prompt.ref.toString()) || prompt.ref;
+            }
+          });
+        });
+      });
+
+      await models.Slide.updateOne({ _id: duplicatedSlide._id }, { $set: { feedbackItems: duplicatedSlide.feedbackItems } }, { session });
+    }
+
+    for (const duplicatedStem of duplicatedStems) {
+      if (!duplicatedStem.branchingOptions.length) continue;
+
+      const branchingOptions = map(duplicatedStem.branchingOptions, (branchingOption) => {
+        const duplicatedBranchingOption = omit(branchingOption.toObject(), ['_id']);
+        duplicatedBranchingOption.stemRef = stemRefMap.get(String(branchingOption.stemRef)) || branchingOption.stemRef;
+        duplicatedBranchingOption.conditions = map(duplicatedBranchingOption.conditions, (condition) => ({
+          ...omit(condition, ['_id']),
+          prompts: map(condition.prompts, (prompt) => ({
+            ...omit(prompt, ['_id']),
+            ref: blockRefMap.get(String(prompt.ref)) || prompt.ref
+          }))
+        }));
+        return duplicatedBranchingOption;
+      });
+
+      await models.Stem.updateOne({ _id: duplicatedStem._id }, { $set: { branchingOptions } }, { session });
     }
 
     await duplicateTriggers({ scenarioId: existingScenario._id, newScenarioId: newScenario._id, slideRefMap, blockRefMap, stemRefMap }, { ...context, session });

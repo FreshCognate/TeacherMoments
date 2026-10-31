@@ -1,6 +1,5 @@
 import setScenarioHasChanges from "../../scenarios/services/setScenarioHasChanges.js";
 import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
-import deleteStemsBySlideRef from '../../stems/services/deleteStemsBySlideRef.js';
 import deleteTriggersBySlideRefs from '../../triggers/services/deleteTriggersBySlideRefs.js';
 
 export default async (props, options, context) => {
@@ -44,8 +43,6 @@ export default async (props, options, context) => {
     );
 
     await deleteTriggersBySlideRefs({ slideRefs: [slide.ref], deletedAt }, {}, { ...context, session });
-
-    await deleteStemsBySlideRef({ slideRef: slide.ref, deletedAt }, {}, { ...context, session });
 
   }).catch(err => {
     throw { message: err, statusCode: 500 };

@@ -16,7 +16,6 @@ vi.mock('../../scenarios/services/setScenarioHasChanges.js', () => ({
 }));
 
 import deleteSlideById from '../services/deleteSlideById.js';
-import getSlideOrderByStemTraversal from '../helpers/getSlideOrderByStemTraversal.js';
 
 const db = setupMongo();
 
@@ -126,56 +125,19 @@ describe('deleteSlideById (in-memory mongo)', () => {
     const remainingActiveBlocks = await Block.countDocuments({ slideRef: slide.ref, isDeleted: false });
     expect(remainingActiveBlocks).toBe(0);
   });
-  it('soft-deletes the stems branching off the slide, along with their slides and blocks', async () => {
+  it('leaves stems alone, including those branching from the slide\'s stem', async () => {
     const scenario = new mongoose.Types.ObjectId();
-    const rootStem = await Stem.create({ scenario, isRoot: true });
+    const childStem = await Stem.create({ scenario });
+    const rootStem = await Stem.create({ scenario, isRoot: true, branchingOptions: [{ stemRef: childStem.ref, conditions: [] }] });
 
-    const [parentSlide, siblingSlide] = await Slide.create([
-      { scenario, stemRef: rootStem.ref, sortOrder: 0 },
-      { scenario, stemRef: rootStem.ref, sortOrder: 1 }
-    ]);
+    const [slide] = await Slide.create([{ scenario, stemRef: rootStem.ref, sortOrder: 0 }]);
+    const [childSlide] = await Slide.create([{ scenario, stemRef: childStem.ref, sortOrder: 0 }]);
 
-    const branchStem = await Stem.create({ scenario, slideRef: parentSlide.ref, sortOrder: 0 });
-    const [branchSlide] = await Slide.create([{ scenario, stemRef: branchStem.ref, sortOrder: 0 }]);
-    const [branchBlock] = await Block.create([{ scenario, slideRef: branchSlide.ref }]);
+    await deleteSlideById({ slideId: slide._id }, {}, buildContext());
 
-    const untouchedStem = await Stem.create({ scenario, slideRef: siblingSlide.ref, sortOrder: 0 });
-    const [untouchedSlide] = await Slide.create([{ scenario, stemRef: untouchedStem.ref, sortOrder: 0 }]);
-
-    await deleteSlideById({ slideId: parentSlide._id }, {}, buildContext());
-
-    expect((await Stem.findById(branchStem._id).lean()).isDeleted).toBe(true);
-    expect((await Slide.findById(branchSlide._id).lean()).isDeleted).toBe(true);
-    expect((await Block.findById(branchBlock._id).lean()).isDeleted).toBe(true);
-
-    expect((await Stem.findById(untouchedStem._id).lean()).isDeleted).toBe(false);
-    expect((await Slide.findById(untouchedSlide._id).lean()).isDeleted).toBe(false);
     expect((await Stem.findById(rootStem._id).lean()).isDeleted).toBe(false);
-  });
-
-  it('cascades through nested stems so no slide is left unreachable', async () => {
-    const scenario = new mongoose.Types.ObjectId();
-    const rootStem = await Stem.create({ scenario, isRoot: true });
-
-    const [parentSlide] = await Slide.create([{ scenario, stemRef: rootStem.ref, sortOrder: 0 }]);
-
-    const branchStem = await Stem.create({ scenario, slideRef: parentSlide.ref, sortOrder: 0 });
-    const [branchSlide] = await Slide.create([{ scenario, stemRef: branchStem.ref, sortOrder: 0 }]);
-
-    const nestedStem = await Stem.create({ scenario, slideRef: branchSlide.ref, sortOrder: 0 });
-    const [nestedSlide] = await Slide.create([{ scenario, stemRef: nestedStem.ref, sortOrder: 0 }]);
-    const [nestedBlock] = await Block.create([{ scenario, slideRef: nestedSlide.ref }]);
-
-    await deleteSlideById({ slideId: parentSlide._id }, {}, buildContext());
-
-    expect((await Stem.findById(nestedStem._id).lean()).isDeleted).toBe(true);
-    expect((await Slide.findById(nestedSlide._id).lean()).isDeleted).toBe(true);
-    expect((await Block.findById(nestedBlock._id).lean()).isDeleted).toBe(true);
-
-    const liveSlides = await Slide.find({ scenario, isDeleted: false }).lean();
-    const liveStems = await Stem.find({ scenario, isDeleted: false }).lean();
-    const order = getSlideOrderByStemTraversal({ slides: liveSlides, stems: liveStems });
-    expect(order.size).toBe(liveSlides.length);
+    expect((await Stem.findById(childStem._id).lean()).isDeleted).toBe(false);
+    expect((await Slide.findById(childSlide._id).lean()).isDeleted).toBe(false);
   });
   it('soft-deletes the triggers belonging to the slide, leaving other slides\' triggers alone', async () => {
     const scenario = new mongoose.Types.ObjectId();
@@ -219,23 +181,21 @@ describe('deleteSlideById (in-memory mongo)', () => {
     const rootStem = await Stem.create({ scenario, isRoot: true });
 
     const [slide] = await Slide.create([{ scenario, stemRef: rootStem.ref, sortOrder: 0 }]);
-    const branchStem = await Stem.create({ scenario, slideRef: slide.ref, sortOrder: 0 });
     const [block] = await Block.create([{ scenario, slideRef: slide.ref }]);
     const trigger = await Trigger.create(buildTrigger(scenario, slide.ref));
 
-    const failingStemUpdate = vi
-      .spyOn(Stem, 'updateMany')
+    const failingTriggerUpdate = vi
+      .spyOn(Trigger, 'updateMany')
       .mockRejectedValueOnce(new Error('cascade blew up'));
 
     await expect(
       deleteSlideById({ slideId: slide._id }, {}, buildContext())
     ).rejects.toMatchObject({ statusCode: 500 });
 
-    failingStemUpdate.mockRestore();
+    failingTriggerUpdate.mockRestore();
 
     expect((await Slide.findById(slide._id).lean()).isDeleted).toBe(false);
     expect((await Block.findById(block._id).lean()).isDeleted).toBe(false);
     expect((await Trigger.findById(trigger._id).lean()).isDeleted).toBe(false);
-    expect((await Stem.findById(branchStem._id).lean()).isDeleted).toBe(false);
   });
 });
