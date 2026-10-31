@@ -14,6 +14,8 @@ import axios from 'axios';
 import getSelectedSlideSortOrder from '~/modules/stems/helpers/getSelectedSlideSortOrder';
 import find from 'lodash/find';
 import getChildStems from '~/modules/stems/helpers/getChildStems';
+import isLastSlideBeforeNavigation from '~/modules/stems/helpers/isLastSlideBeforeNavigation';
+import getAddLastSlideToStemDialog from '~/modules/stems/helpers/getAddLastSlideToStemDialog';
 
 type Props = {
   scenarioId: string;
@@ -94,6 +96,17 @@ class CreateNavigationStemContainer extends Component<Props, State> {
   }
 
   onDuplicateSlideClicked = (slideId: string) => {
+    if (!isLastSlideBeforeNavigation({ slideId })) {
+      return this.duplicateSlide(slideId);
+    }
+    addModal(getAddLastSlideToStemDialog('DUPLICATE'), (state: string, { type }: { type: string }) => {
+      if (state === 'ACTION' && type === 'CONFIRM') {
+        this.duplicateSlide(slideId);
+      }
+    });
+  }
+
+  duplicateSlide = (slideId: string) => {
     this.setState({ isDuplicating: true });
     const scenarioId = this.props.scenarioId;
     axios.post(`/api/slides`, {
