@@ -68,9 +68,17 @@ const CreateStems = ({
       </div>
       <div className="flex justify-between  p-1 pb-1">
         <Body body="Navigation" size="sm" className='opacity-60' />
-        {(childStems.length > 0) && (
-          <FlatButton icon="edit" onClick={onEditNavigationClicked} />
-        )}
+        <div className="flex items-center">
+          {(childStems.length > 0) && (
+            <span className="text-xs text-lm-5 dark:text-dm-5 font-medium flex items-center gap-x-2 group-hover:hidden">
+              <Icon icon="branching" size={12} />
+              {childStems.length}
+            </span>
+          )}
+          {(childStems.length > 0) && (
+            <FlatButton className="hidden group-hover:block" icon="edit" onClick={onEditNavigationClicked} />
+          )}
+        </div>
       </div>
     </div>
   );
