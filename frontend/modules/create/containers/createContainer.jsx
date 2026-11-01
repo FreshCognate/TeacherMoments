@@ -52,20 +52,12 @@ class CreateContainer extends Component {
           return sortSlides({ active, over });
         }
         addModal({
-          title: 'Move slide',
-          body: 'Placeholder text',
+          title: 'Ordering slides',
+          body: "The last slide is linked to branching stems, so slides can't be moved into or out of the last position. Delete the branching stems to reorder it.",
           actions: [{
-            type: 'CANCEL',
-            text: 'Cancel'
-          }, {
-            type: 'CONFIRM',
-            text: 'Move slide',
-            color: 'primary'
+            type: 'OK',
+            text: 'Ok'
           }]
-        }, (state, { type }) => {
-          if (state === 'ACTION' && type === 'CONFIRM') {
-            sortSlides({ active, over });
-          }
         });
       }
       return;
