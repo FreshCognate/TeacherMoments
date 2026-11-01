@@ -4,6 +4,8 @@ import sortSlides from '../helpers/sortSlides';
 import WithCache from '~/core/cache/containers/withCache';
 import WithRouter from '~/core/app/components/withRouter';
 import getCurrentStemSlides from '~/modules/stems/helpers/getCurrentStemSlides';
+import getIsSortingLastSlideBeforeNavigation from '~/modules/stems/helpers/getIsSortingLastSlideBeforeNavigation';
+import addModal from '~/core/dialogs/helpers/addModal';
 
 class CreateContainer extends Component {
 
@@ -42,7 +44,29 @@ class CreateContainer extends Component {
     if (activeType === 'SLIDES') {
       const { type: overType } = over?.data?.current || {};
       if (overType === 'SLIDES') {
-        sortSlides({ active, over });
+        const isSortingLastSlideBeforeNavigation = getIsSortingLastSlideBeforeNavigation({
+          sourceIndex: active.data.current.sortOrder,
+          destinationIndex: over.data.current.sortOrder
+        });
+        if (!isSortingLastSlideBeforeNavigation) {
+          return sortSlides({ active, over });
+        }
+        addModal({
+          title: 'Move slide',
+          body: 'Placeholder text',
+          actions: [{
+            type: 'CANCEL',
+            text: 'Cancel'
+          }, {
+            type: 'CONFIRM',
+            text: 'Move slide',
+            color: 'primary'
+          }]
+        }, (state, { type }) => {
+          if (state === 'ACTION' && type === 'CONFIRM') {
+            sortSlides({ active, over });
+          }
+        });
       }
       return;
     }
