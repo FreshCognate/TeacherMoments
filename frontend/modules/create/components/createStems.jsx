@@ -18,15 +18,10 @@ const CreateStems = ({
   onEditNavigationClicked
 }) => {
   return (
-    <div className={classnames("bg-lm-2 dark:bg-dm-2 rounded-lg p-1")}>
-      <div className="flex justify-between border-b border-b-lm-3 dark:border-b-dm-3 p-1 pb-2">
-        <Body body="Navigation" size="sm" className='opacity-60' />
-        {(childStems.length > 0) && (
-          <FlatButton icon="edit" onClick={onEditNavigationClicked} />
-        )}
-      </div>
+    <div className="bg-lm-2 dark:bg-dm-2 rounded-lg p-1 group">
+
       {(childStems.length > 0) && (
-        <div className="border-b border-b-lm-3 dark:border-b-dm-3 py-1">
+        <div className="border-b border-b-lm-3 dark:border-b-dm-3 py-1 hidden group-hover:block">
           {map(childStems, (stem) => {
             const isDeleting = stem._id === deletingId;
             const isSelected = stem.ref === activeStemRef;
@@ -34,7 +29,8 @@ const CreateStems = ({
               "bg-lm-2 dark:bg-dm-2 rounded-md h-8 border border-lm-2 dark:border-dm-2 flex items-center justify-between cursor-pointer hover:border-lm-4 dark:hover:border-dm-4 transition-colors",
               "px-2 h-8",
               { "outline outline-blue-500 outline-1 -outline-offset-2": isSelected },
-              { "opacity-50": isDeleting }
+              { "opacity-50": isDeleting },
+              { "opacity-0 group-hover:opacity-100 transition-opacity": !isDeleting }
             );
             return (
               <div
@@ -67,8 +63,22 @@ const CreateStems = ({
           })}
         </div>
       )}
-      <div className="p-1 pt-2">
+      <div className="p-1 pt-2 hidden group-hover:block">
         <FlatButton text="Create branching stem" size="sm" icon="create" onClick={onCreateStemClicked} />
+      </div>
+      <div className="flex justify-between  p-1 pb-1">
+        <Body body="Navigation" size="sm" className='opacity-60' />
+        <div className="flex items-center">
+          {(childStems.length > 0) && (
+            <span className="text-xs text-lm-5 dark:text-dm-5 font-medium flex items-center gap-x-2 group-hover:hidden">
+              <Icon icon="branching" size={12} />
+              {childStems.length}
+            </span>
+          )}
+          {(childStems.length > 0) && (
+            <FlatButton className="hidden group-hover:block" icon="edit" onClick={onEditNavigationClicked} />
+          )}
+        </div>
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ const CreateNavigationStaticSlide = ({
 }) => {
 
   const previewClassName = classnames(
-    "bg-lm-1 dark:bg-dm-2 rounded-md h-8 p-2 mb-4 flex items-center border border-lm-3 dark:border-dm-2 cursor-pointer hover:border-lm-5 dark:hover:border-dm-4 transition-colors",
+    "bg-lm-1 dark:bg-dm-2 rounded-md h-8 p-2 flex items-center border border-lm-3 dark:border-dm-2 cursor-pointer hover:border-lm-5 dark:hover:border-dm-4 transition-colors",
     {
       "outline outline-blue-500": isSelected
     }

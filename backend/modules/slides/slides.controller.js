@@ -21,12 +21,12 @@ export default {
 
   create: async function ({ body }, context) {
 
-    const { scenarioId, slideId, sortOrder, stemRef } = body;
+    const { scenarioId, slideId, sortOrder, stemRef, isLastSlideBeforeNavigation } = body;
 
     let slide;
 
     if (slideId) {
-      slide = await duplicateSlideInScenario({ scenario: scenarioId, slideId, stemRef }, context);
+      slide = await duplicateSlideInScenario({ scenario: scenarioId, slideId, stemRef, isLastSlideBeforeNavigation }, context);
     } else {
       slide = await createSlide({ scenario: scenarioId, sortOrder, stemRef }, {}, context);
     }

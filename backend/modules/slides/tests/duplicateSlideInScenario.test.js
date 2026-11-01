@@ -83,6 +83,28 @@ describe('duplicateSlideInScenario (in-memory mongo)', () => {
     expect(setHasChangesMock).toHaveBeenCalledWith({ scenarioId: scenario }, {}, expect.any(Object));
   });
 
+  it('places the clone before the source when it is the last slide before navigation', async () => {
+    const scenario = new mongoose.Types.ObjectId();
+    const stemRef = new mongoose.Types.ObjectId();
+
+    const [, source] = await Slide.create([
+      { scenario, stemRef, sortOrder: 0, name: 'First' },
+      { scenario, stemRef, sortOrder: 1, name: 'Source' }
+    ]);
+
+    const duplicated = await duplicateSlideInScenario(
+      { scenario, slideId: source._id, isLastSlideBeforeNavigation: true },
+      buildContext()
+    );
+
+    expect(duplicated.sortOrder).toBe(1);
+
+    const updatedSource = await Slide.findById(source._id).lean();
+    expect(updatedSource.sortOrder).toBe(2);
+
+    expect(await sortOrdersFor(scenario, stemRef)).toEqual([0, 1, 2]);
+  });
+
   it('only shifts siblings within the source slide\'s stem, leaving other stems untouched', async () => {
     const scenario = new mongoose.Types.ObjectId();
     const stemA = new mongoose.Types.ObjectId();

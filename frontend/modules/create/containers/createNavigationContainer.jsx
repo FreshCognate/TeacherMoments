@@ -12,6 +12,10 @@ import getActiveStem from '~/modules/stems/helpers/getActiveStem';
 import getActiveStemRef from '~/modules/stems/helpers/getActiveStemRef';
 import getNewSlideSortOrder from '~/modules/stems/helpers/getNewSlideSortOrder';
 import getParentStemSlideId from '~/modules/stems/helpers/getParentStemSlideId';
+import getAddLastSlideToStemDialog from '~/modules/stems/helpers/getAddLastSlideToStemDialog';
+import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
+import addModal from '~/core/dialogs/helpers/addModal';
+import getIsLastSlideBeforeNavigation from '~/modules/stems/helpers/getIsLastSlideBeforeNavigation';
 
 class CreateNavigationContainer extends Component {
 
@@ -21,11 +25,24 @@ class CreateNavigationContainer extends Component {
   }
 
   onAddSlideClicked = () => {
+    const { activeSlideId } = getScenarioDetails();
+    const isLastSlideBeforeNavigation = getIsLastSlideBeforeNavigation({ slideId: activeSlideId });
+    if (!isLastSlideBeforeNavigation) {
+      return this.addSlide(isLastSlideBeforeNavigation);
+    }
+    addModal(getAddLastSlideToStemDialog('ADD'), (state, { type }) => {
+      if (state === 'ACTION' && type === 'CONFIRM') {
+        this.addSlide(isLastSlideBeforeNavigation);
+      }
+    });
+  }
+
+  addSlide = (isLastSlideBeforeNavigation) => {
     this.setState({ isCreating: true });
     const scenarioId = this.props.scenario.data._id;
     axios.post(`/api/slides`, {
       scenarioId,
-      sortOrder: getNewSlideSortOrder(),
+      sortOrder: getNewSlideSortOrder(isLastSlideBeforeNavigation),
       stemRef: getActiveStemRef()
     }).then((response) => {
       const slideId = response.data.slide._id;
