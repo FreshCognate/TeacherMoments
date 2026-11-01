@@ -82,12 +82,12 @@ describe('slides.controller', () => {
       duplicateSlideInScenarioMock.mockResolvedValue({ _id: 'dupSlide' });
 
       const result = await controller.create(
-        { body: { scenarioId: 's1', slideId: 'srcSlide', stemRef: 'st1' } },
+        { body: { scenarioId: 's1', slideId: 'srcSlide', stemRef: 'st1', isLastSlideBeforeNavigation: true } },
         { ctx: 1 }
       );
 
       expect(duplicateSlideInScenarioMock).toHaveBeenCalledWith(
-        { scenario: 's1', slideId: 'srcSlide', stemRef: 'st1' },
+        { scenario: 's1', slideId: 'srcSlide', stemRef: 'st1', isLastSlideBeforeNavigation: true },
         { ctx: 1 }
       );
       expect(createSlideMock).not.toHaveBeenCalled();

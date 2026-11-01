@@ -4,7 +4,7 @@ import duplicateBlocks from '../../blocks/services/duplicateBlocks.js';
 import setScenarioHasChanges from '../../scenarios/services/setScenarioHasChanges.js';
 import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToScenario.js';
 
-export default async ({ scenario, parentId, slideId }, context) => {
+export default async ({ scenario, parentId, slideId, isLastSlideBeforeNavigation }, context) => {
 
   const { models, connection } = context;
 
@@ -16,7 +16,7 @@ export default async ({ scenario, parentId, slideId }, context) => {
 
   let duplicatedSlide;
 
-  const newSortOrder = existingSlide.sortOrder + 1;
+  const newSortOrder = isLastSlideBeforeNavigation ? existingSlide.sortOrder : existingSlide.sortOrder + 1;
 
   await connection.transaction(async (session) => {
 

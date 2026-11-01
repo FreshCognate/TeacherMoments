@@ -23,6 +23,7 @@ export default {
       slideId: Joi.string(),
       stemRef: Joi.string(),
       sortOrder: Joi.number(),
+      isLastSlideBeforeNavigation: Joi.boolean(),
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },

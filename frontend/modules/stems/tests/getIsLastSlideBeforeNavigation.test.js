@@ -16,9 +16,9 @@ vi.mock('~/modules/slides/helpers/getLastStemSlide', () => ({
   default: () => getLastStemSlideMock()
 }));
 
-import isLastSlideBeforeNavigation from '../helpers/isLastSlideBeforeNavigation';
+import getIsLastSlideBeforeNavigation from '../helpers/getIsLastSlideBeforeNavigation';
 
-describe('isLastSlideBeforeNavigation', () => {
+describe('getIsLastSlideBeforeNavigation', () => {
   beforeEach(() => {
     getActiveStemMock.mockReturnValue({ ref: 'stem-1' });
     getLastStemSlideMock.mockReturnValue({ _id: 'slide-3' });
@@ -26,22 +26,22 @@ describe('isLastSlideBeforeNavigation', () => {
 
   it('returns false when the active stem has no navigation', () => {
     getChildStemsMock.mockReturnValue([]);
-    expect(isLastSlideBeforeNavigation({ slideId: 'slide-3' })).toBe(false);
+    expect(getIsLastSlideBeforeNavigation({ slideId: 'slide-3' })).toBe(false);
   });
 
   it('returns true for the last slide when the active stem has navigation', () => {
     getChildStemsMock.mockReturnValue([{ ref: 'child-stem' }]);
-    expect(isLastSlideBeforeNavigation({ slideId: 'slide-3' })).toBe(true);
+    expect(getIsLastSlideBeforeNavigation({ slideId: 'slide-3' })).toBe(true);
   });
 
   it('returns false for a slide that is not last when the active stem has navigation', () => {
     getChildStemsMock.mockReturnValue([{ ref: 'child-stem' }]);
-    expect(isLastSlideBeforeNavigation({ slideId: 'slide-2' })).toBe(false);
+    expect(getIsLastSlideBeforeNavigation({ slideId: 'slide-2' })).toBe(false);
   });
 
   it('returns false when the stem has no slides', () => {
     getChildStemsMock.mockReturnValue([{ ref: 'child-stem' }]);
     getLastStemSlideMock.mockReturnValue(undefined);
-    expect(isLastSlideBeforeNavigation({ slideId: 'slide-3' })).toBe(false);
+    expect(getIsLastSlideBeforeNavigation({ slideId: 'slide-3' })).toBe(false);
   });
 });
