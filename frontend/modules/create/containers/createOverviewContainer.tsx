@@ -9,6 +9,7 @@ import map from 'lodash/map';
 import each from 'lodash/each';
 import has from 'lodash/has';
 import keys from 'lodash/keys';
+import includes from 'lodash/includes';
 import getChildStems from '~/modules/stems/helpers/getChildStems';
 import getActiveStemRef from '~/modules/stems/helpers/getActiveStemRef';
 import { OverviewSlide, OverviewStem, PositionedStem, Edge } from '../create.types';
@@ -17,7 +18,8 @@ import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
 
 type Props = {
   editor: {
-    set: (data: { stemPath: string[] }) => void;
+    set: (data: { stemPath?: string[], branchToStem?: string | null }) => void;
+    data: any;
   };
   scenario: { data: Scenario };
   stems: { data: Stem[] };
@@ -35,15 +37,36 @@ class CreateOverviewContainer extends Component<Props> {
   maxHeight = 0;
   edges: Edge[] = [];
 
+  setCanBeBranchedTo = (tree: OverviewStem, columnsByRef: Record<string, number>) => {
+    const { branchToStem } = this.props.editor.data;
+
+    if (!branchToStem || !has(columnsByRef, branchToStem)) return;
+
+    const branchToStemColumn = columnsByRef[branchToStem];
+    const branchFromStem = find(this.props.stems.data, { ref: branchToStem });
+    const branchToStemChildRefs = map(getChildStems({ stem: branchFromStem }), 'ref');
+
+    const setStemCanBeBranchedTo = (stem: OverviewStem) => {
+      const isInLaterColumn = columnsByRef[stem.ref] > branchToStemColumn;
+      const isAlreadyChild = includes(branchToStemChildRefs, stem.ref);
+      stem.canBeBranchedTo = isInLaterColumn && !isAlreadyChild;
+      each(stem.stems, setStemCanBeBranchedTo);
+    };
+
+    setStemCanBeBranchedTo(tree);
+  }
+
   getTree = (): OverviewStem | null => {
     const rootStem = find(this.props.stems.data, { isRoot: true });
 
     if (!rootStem) return null;
 
     const builtStemRefs = new Set<string>();
+    const columnsByRef: Record<string, number> = {};
 
     const buildStem = (stem: Stem, positions: number[] = []): OverviewStem => {
       builtStemRefs.add(stem.ref);
+      columnsByRef[stem.ref] = positions.length;
       const childStems = getChildStems({ stem });
 
       const label = positions.length === 0
@@ -110,11 +133,16 @@ class CreateOverviewContainer extends Component<Props> {
         label,
         slides: stemSlides,
         childStemRefs: map(childStems, 'ref'),
-        stems: builtChildStems
+        stems: builtChildStems,
+        canBeBranchedTo: false
       };
     };
 
-    return buildStem(rootStem);
+    const tree = buildStem(rootStem);
+
+    this.setCanBeBranchedTo(tree, columnsByRef);
+
+    return tree;
   }
 
   getStemWidth = (stem: OverviewStem) => {
@@ -207,6 +235,10 @@ class CreateOverviewContainer extends Component<Props> {
     this.props.editor.set({ stemPath: [stemRef] });
   }
 
+  onBranchToStemClicked = ({ stemRef }: { stemRef: string | null }) => {
+    this.props.editor.set({ branchToStem: stemRef });
+  }
+
   render() {
     this.maxWidth = 0;
     this.maxHeight = 0;
@@ -227,7 +259,9 @@ class CreateOverviewContainer extends Component<Props> {
         maxWidth={this.maxWidth}
         maxHeight={this.maxHeight}
         edges={this.edges}
+        branchToStem={this.props.editor.data.branchToStem}
         onStemClicked={this.onStemClicked}
+        onBranchToStemClicked={this.onBranchToStemClicked}
       />
     );
   }

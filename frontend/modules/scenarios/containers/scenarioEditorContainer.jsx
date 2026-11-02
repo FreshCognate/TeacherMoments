@@ -117,7 +117,8 @@ export default WithRouter(WithCache(ScenarioEditorContainer, {
     getInitialData: () => ({
       displayMode: 'EDITING',
       isOverviewVisible: false,
-      stemPath: []
+      stemPath: [],
+      branchToStem: null
     }),
     lifeTime: 0
   },

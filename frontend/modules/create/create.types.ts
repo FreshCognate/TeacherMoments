@@ -16,6 +16,7 @@ export type OverviewStem = {
   slides: OverviewSlide[];
   childStemRefs: string[];
   stems?: OverviewStem[];
+  canBeBranchedTo: boolean;
 };
 
 export type PositionedStem = Omit<OverviewStem, 'stems'> & {
