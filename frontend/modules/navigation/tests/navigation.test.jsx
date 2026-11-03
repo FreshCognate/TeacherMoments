@@ -139,13 +139,13 @@ describe('Navigation', () => {
         />
       );
       expect(screen.getAllByRole('link', { name: 'Dashboard' })).toHaveLength(2);
-      expect(screen.getAllByRole('button', { name: 'Logout' }).length).toBeGreaterThan(0);
+      expect(screen.getAllByRole('button', { name: 'Log out' }).length).toBeGreaterThan(0);
     });
 
     it('does not render the mobile menu panel when unauthenticated even if isMobileMenuOpen is true', () => {
       renderInRouter(<Navigation {...baseProps} isMobileMenuOpen={true} authentication={null} />);
       expect(screen.getAllByRole('link', { name: 'Dashboard' })).toHaveLength(1);
-      expect(screen.queryByRole('button', { name: 'Logout' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Log out' })).not.toBeInTheDocument();
     });
   });
 
@@ -164,7 +164,7 @@ describe('Navigation', () => {
         />
       );
 
-      const logoutButtons = screen.getAllByRole('button', { name: 'Logout' });
+      const logoutButtons = screen.getAllByRole('button', { name: 'Log out' });
       await user.click(logoutButtons[0]);
 
       expect(onMobileMenuToggle).toHaveBeenCalledTimes(1);
