@@ -14,7 +14,8 @@ type Props = {
   branchToStem: string | null;
   onStemClicked: ({ stemRef }: { stemRef: string }) => void;
   onBranchToStemClicked: ({ stemRef }: { stemRef: string | null }) => void
-};
+  onLinkToStemClicked: ({ stemRef }: { stemRef: string }) => void
+}
 
 const CreateOverview = ({
   tree,
@@ -23,7 +24,8 @@ const CreateOverview = ({
   edges,
   branchToStem,
   onStemClicked,
-  onBranchToStemClicked
+  onBranchToStemClicked,
+  onLinkToStemClicked
 }: Props) => {
   return (
     <div className="relative">
@@ -66,7 +68,7 @@ const CreateOverview = ({
               );
             })}
           </svg>
-          <CreateOverviewStem stem={tree} onStemClicked={onStemClicked} onBranchToStemClicked={onBranchToStemClicked} />
+          <CreateOverviewStem stem={tree} onStemClicked={onStemClicked} onBranchToStemClicked={onBranchToStemClicked} onLinkToStemClicked={onLinkToStemClicked} />
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import CreateOverview from '../components/createOverview';
 import WithCache from '~/core/cache/containers/withCache';
 import { Stem } from '~/modules/stems/stems.types';
@@ -15,6 +16,7 @@ import getActiveStemRef from '~/modules/stems/helpers/getActiveStemRef';
 import { OverviewSlide, OverviewStem, PositionedStem, Edge } from '../create.types';
 import WithRouter from '~/core/app/components/withRouter';
 import getScenarioDetails from '~/modules/run/helpers/getScenarioDetails';
+import handleRequestError from '~/core/app/helpers/handleRequestError';
 
 type Props = {
   editor: {
@@ -22,7 +24,7 @@ type Props = {
     data: any;
   };
   scenario: { data: Scenario };
-  stems: { data: Stem[] };
+  stems: { data: Stem[], fetch: () => Promise<any> };
   slides: { data: Slide[] };
 };
 
@@ -239,6 +241,21 @@ class CreateOverviewContainer extends Component<Props> {
     this.props.editor.set({ branchToStem: stemRef });
   }
 
+  onLinkToStemClicked = ({ stemRef }: { stemRef: string }) => {
+    const { branchToStem } = this.props.editor.data;
+    const branchFromStem = find(this.props.stems.data, { ref: branchToStem });
+
+    this.props.editor.set({ branchToStem: null });
+
+    if (!branchFromStem || find(branchFromStem.branchingOptions, { stemRef })) return;
+
+    axios.put(`/api/stems/${branchFromStem._id}`, {
+      branchingOptions: [...branchFromStem.branchingOptions, { stemRef, conditions: [] }]
+    }).then(() => {
+      this.props.stems.fetch();
+    }).catch(handleRequestError);
+  }
+
   render() {
     this.maxWidth = 0;
     this.maxHeight = 0;
@@ -262,6 +279,7 @@ class CreateOverviewContainer extends Component<Props> {
         branchToStem={this.props.editor.data.branchToStem}
         onStemClicked={this.onStemClicked}
         onBranchToStemClicked={this.onBranchToStemClicked}
+        onLinkToStemClicked={this.onLinkToStemClicked}
       />
     );
   }
