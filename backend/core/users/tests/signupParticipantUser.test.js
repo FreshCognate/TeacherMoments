@@ -37,7 +37,7 @@ describe('signupParticipantUser (in-memory mongo)', () => {
 
     await expect(
       signupParticipantUser({ username: 'sammy123', email: 'sam@example.com' }, {}, { models: db.models })
-    ).rejects.toMatchObject({ statusCode: 400, message: 'This user already exists. Try another username or email.' });
+    ).rejects.toMatchObject({ statusCode: 400, message: "That username or email is already taken. Try another one, or log in if it's yours." });
   });
 
   it('creates a PARTICIPANT user with an OTP (email lowercased) and sends the signup email', async () => {

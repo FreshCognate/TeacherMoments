@@ -24,8 +24,8 @@ const VerifyCodeDialog = ({
         schema={{
           code: {
             type: 'Text',
-            label: 'Verification Code',
-            help: 'Enter the verification code sent to your email',
+            label: '6-digit code',
+            help: "We've emailed you a 6-digit code. It can take a minute to arrive, so check your spam folder too.",
             shouldAutoFocus: true
           }
         }}
@@ -38,7 +38,7 @@ const VerifyCodeDialog = ({
         </div>
       )}
       <Button
-        text={isVerifying ? 'Verifying...' : 'Verify Code'}
+        text={isVerifying ? 'Verifying...' : 'Continue'}
         isDisabled={isVerifying || !model.code || model.code.length !== 6}
         onClick={onVerifyButtonClicked}
       />

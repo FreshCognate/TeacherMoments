@@ -84,7 +84,7 @@ describe('InviteContainer', () => {
       expect(addModalMock).toHaveBeenCalled();
     });
     const [config] = addModalMock.mock.calls[0];
-    expect(config.title).toBe('Login or create an account');
+    expect(config.title).toBe('Log in or create an account');
     expect(router.navigate).not.toHaveBeenCalled();
   });
 
@@ -97,7 +97,7 @@ describe('InviteContainer', () => {
     callback('ACTION', { type: 'LOGIN' });
 
     expect(addModalMock).toHaveBeenCalledTimes(2);
-    expect(addModalMock.mock.calls[1][0].title).toBe('Login');
+    expect(addModalMock.mock.calls[1][0].title).toBe('Log in');
   });
 
   it('opens the signup dialog when the user picks CREATE from the action modal', async () => {

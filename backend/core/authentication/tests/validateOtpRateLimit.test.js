@@ -47,7 +47,7 @@ describe('validateOtpRateLimit (in-memory mongo)', () => {
 
     await expect(validateOtpRateLimit(user, db.models)).rejects.toMatchObject({
       statusCode: 429,
-      message: 'Too many OTP requests. Account locked for 15 minutes.'
+      message: 'Too many codes asked for. Try again in 15 minutes.'
     });
 
     const stored = await db.models.User.findById(created._id).lean();
@@ -64,7 +64,7 @@ describe('validateOtpRateLimit (in-memory mongo)', () => {
     const user = { _id: 'u1', otpGeneratedAt: new Date(NOW - 10 * 1000) };
     await expect(validateOtpRateLimit(user, db.models)).rejects.toMatchObject({
       statusCode: 429,
-      message: 'Please wait 30 seconds before requesting another OTP.'
+      message: 'Please wait 30 seconds before asking for another code.'
     });
   });
 
