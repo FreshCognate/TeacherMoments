@@ -69,8 +69,6 @@ class CreateOverviewContainer extends Component<Props> {
 
     const { columnsByRef } = builtTree;
 
-    console.log("columnsByRef", columnsByRef)
-
     setCanBeBranchedTo({
       tree: builtTree.tree,
       stems: this.props.stems.data,
