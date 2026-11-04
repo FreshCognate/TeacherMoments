@@ -12,6 +12,7 @@ import has from 'lodash/has';
 import keys from 'lodash/keys';
 import includes from 'lodash/includes';
 import getChildStems from '~/modules/stems/helpers/getChildStems';
+import getStemHierarchy from '../helpers/getStemHierarchy';
 import getActiveStemRef from '~/modules/stems/helpers/getActiveStemRef';
 import { OverviewSlide, OverviewStem, PositionedStem, Edge } from '../create.types';
 import WithRouter from '~/core/app/components/withRouter';
@@ -64,11 +65,13 @@ class CreateOverviewContainer extends Component<Props> {
     if (!rootStem) return null;
 
     const builtStemRefs = new Set<string>();
-    const columnsByRef: Record<string, number> = {};
+    const { depthsByRef: columnsByRef, ownerRefsByRef } = getStemHierarchy({
+      stems: this.props.stems.data,
+      rootStem
+    });
 
     const buildStem = (stem: Stem, positions: number[] = []): OverviewStem => {
       builtStemRefs.add(stem.ref);
-      columnsByRef[stem.ref] = positions.length;
       const childStems = getChildStems({ stem });
 
       const label = positions.length === 0
@@ -122,9 +125,10 @@ class CreateOverviewContainer extends Component<Props> {
 
       const builtChildStems: OverviewStem[] = [];
 
-      each(childStems, (childStem, index) => {
+      each(childStems, (childStem) => {
         if (builtStemRefs.has(childStem.ref)) return;
-        builtChildStems.push(buildStem(childStem, [...positions, index + 1]));
+        if (ownerRefsByRef[childStem.ref] !== stem.ref) return;
+        builtChildStems.push(buildStem(childStem, [...positions, builtChildStems.length + 1]));
       });
 
       return {
