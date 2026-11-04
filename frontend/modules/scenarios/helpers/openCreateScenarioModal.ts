@@ -22,6 +22,7 @@ const openCreateScenarioModal = ({ router }: OpenCreateScenarioModalProps) => {
       accessType: {
         type: 'Toggle',
         label: 'Access type',
+        help: 'Private: only you and your collaborators.',
         options: [{
           value: 'PRIVATE',
           text: 'Private'
