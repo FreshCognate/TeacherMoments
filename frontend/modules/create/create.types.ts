@@ -34,3 +34,7 @@ export type Edge = {
   from: Point;
   to: Point;
 };
+
+export const OVERVIEW_GAP_X = 120;
+export const OVERVIEW_GAP_Y = 120;
+export const OVERVIEW_STEM_HEIGHT = 52;
