@@ -10,9 +10,11 @@ import map from 'lodash/map';
 import each from 'lodash/each';
 import has from 'lodash/has';
 import keys from 'lodash/keys';
+import values from 'lodash/values';
 import includes from 'lodash/includes';
 import getChildStems from '~/modules/stems/helpers/getChildStems';
 import getStemHierarchy from '../helpers/getStemHierarchy';
+import getStemLabels from '../helpers/getStemLabels';
 import getActiveStemRef from '~/modules/stems/helpers/getActiveStemRef';
 import { OverviewSlide, OverviewStem, PositionedStem, Edge } from '../create.types';
 import WithRouter from '~/core/app/components/withRouter';
@@ -39,6 +41,17 @@ class CreateOverviewContainer extends Component<Props> {
   maxWidth = 0;
   maxHeight = 0;
   edges: Edge[] = [];
+  columnsByRef: Record<string, number> = {};
+
+  setLabels = (stemsByRef: Record<string, PositionedStem>) => {
+    const labelsByRef = getStemLabels({
+      stems: values(stemsByRef),
+      columnsByRef: this.columnsByRef
+    });
+    each(stemsByRef, (stem) => {
+      stem.label = labelsByRef[stem.ref];
+    });
+  }
 
   setCanBeBranchedTo = (tree: OverviewStem, columnsByRef: Record<string, number>) => {
     const { branchToStem } = this.props.editor.data;
@@ -70,13 +83,12 @@ class CreateOverviewContainer extends Component<Props> {
       rootStem
     });
 
-    const buildStem = (stem: Stem, positions: number[] = []): OverviewStem => {
+    this.columnsByRef = columnsByRef;
+
+    const buildStem = (stem: Stem): OverviewStem => {
       builtStemRefs.add(stem.ref);
       const childStems = getChildStems({ stem });
 
-      const label = positions.length === 0
-        ? 'A'
-        : map(positions, (position, depth) => `${String.fromCharCode(66 + depth)}${position}`).join('-');
       const stemSlides: OverviewSlide[] = [];
 
       const { activeSlideId } = getScenarioDetails();
@@ -128,7 +140,7 @@ class CreateOverviewContainer extends Component<Props> {
       each(childStems, (childStem) => {
         if (builtStemRefs.has(childStem.ref)) return;
         if (ownerRefsByRef[childStem.ref] !== stem.ref) return;
-        builtChildStems.push(buildStem(childStem, [...positions, builtChildStems.length + 1]));
+        builtChildStems.push(buildStem(childStem));
       });
 
       return {
@@ -136,7 +148,7 @@ class CreateOverviewContainer extends Component<Props> {
         ref: stem.ref,
         name: stem.name,
         to: `/scenarios/${this.props.scenario.data._id}/create?slide=${firstSlide._id}`,
-        label,
+        label: '',
         slides: stemSlides,
         childStemRefs: map(childStems, 'ref'),
         stems: builtChildStems,
@@ -272,6 +284,7 @@ class CreateOverviewContainer extends Component<Props> {
 
     const stemsByRef = this.getStemsByRef(rootStem as PositionedStem);
     const tree = this.parseTree(rootStem as PositionedStem, this.getOffsetsX(stemsByRef));
+    this.setLabels(stemsByRef);
     this.edges = this.getEdges(stemsByRef);
 
     return (
