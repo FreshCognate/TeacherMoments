@@ -13,7 +13,7 @@ export default async ({ email }, context) => {
   }).select('+otpCode');
 
   if (!user) {
-    throw { message: 'User not found', statusCode: 404 };
+    throw { message: "We can't find an account with that email. Check it, or create an account.", statusCode: 404 };
   }
 
   await validateOtpRateLimit(user, models);

@@ -13,8 +13,8 @@ export default function openLoginModal() {
   }
 
   addModal({
-    title: 'Login or create an account',
-    body: 'Please choose one of the following options:',
+    title: 'Log in or create an account',
+    body: "There's no password: we email you a code each time you log in.",
     component: <LoginAndSignupDialogContainer />,
     hasCloseButton: true
   }, (state: string, payload: any) => {
@@ -22,7 +22,7 @@ export default function openLoginModal() {
       const { type } = payload;
       switch (type) {
         case 'LOGIN':
-          addModal({ title: 'Login', component: <LoginDialogContainer />, hasCloseButton: true }, () => { });
+          addModal({ title: 'Log in', component: <LoginDialogContainer />, hasCloseButton: true }, () => { });
           break;
         case 'CREATE':
           addModal({ title: 'Create an account', component: <SignupDialogContainer />, hasCloseButton: true }, () => { });

@@ -28,7 +28,7 @@ describe('requestOtp (in-memory mongo)', () => {
   it('throws 404 when no user matches the lowercased email', async () => {
     await expect(
       requestOtp({ email: 'unknown@example.com' }, { models: db.models })
-    ).rejects.toMatchObject({ statusCode: 404, message: 'User not found' });
+    ).rejects.toMatchObject({ statusCode: 404, message: "We can't find an account with that email. Check it, or create an account." });
   });
 
   it('refuses to generate an OTP when the rate limit validation fails', async () => {

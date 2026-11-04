@@ -35,12 +35,12 @@ export default async ({ email, otpCode }, context) => {
   }
 
   if (!user.otpCode || !user.otpGeneratedAt) {
-    throw { message: 'No OTP found. Please request a new one.', statusCode: 400 };
+    throw { message: "We don't have a code for you yet. Start again to get one.", statusCode: 400 };
   }
 
   const otpExpiryTime = new Date(user.otpGeneratedAt.getTime() + 10 * 60 * 1000);
   if (now > otpExpiryTime) {
-    throw { message: 'OTP has expired. Please request a new one.', statusCode: 400 };
+    throw { message: 'That code has expired. Start again to get a new one.', statusCode: 400 };
   }
 
   if (user.otpAttempts >= 5) {
@@ -52,7 +52,7 @@ export default async ({ email, otpCode }, context) => {
       otpCode: null
     });
     throw {
-      message: 'Too many failed attempts. Account locked for 15 minutes.',
+      message: 'Too many wrong codes. Try again in 15 minutes.',
       statusCode: 429
     };
   }
@@ -61,7 +61,7 @@ export default async ({ email, otpCode }, context) => {
     await models.User.findByIdAndUpdate(user._id, { $inc: { otpAttempts: 1 } });
     const attemptsRemaining = 5 - (user.otpAttempts + 1);
     throw {
-      message: `Invalid OTP. ${attemptsRemaining} attempt(s) remaining.`,
+      message: `That code doesn't match. ${attemptsRemaining} attempt(s) left.`,
       statusCode: 400
     };
   }
