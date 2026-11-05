@@ -39,7 +39,7 @@
     "blockType": "RESPONSE",
     "displayType": "VISUAL",
     "displayName": "Response",
-    "description": "Show a participant's earlier answer so they can reflect on it."
+    "description": "Show a participant's answer from an earlier slide so they can reflect on it."
   },
   {
     "blockType": "ACTIONS_PROMPT",
