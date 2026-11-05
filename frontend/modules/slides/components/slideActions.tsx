@@ -40,7 +40,7 @@ const SlideActions = ({
           <div className="flex justify-between">
             <div className="w-1/2">
               <Body
-                body={`You've added a prompt. Would you like to give the user feedback based upon their answer?`}
+                body={`Give participants feedback on their answer?`}
                 className="opacity-60" />
             </div>
             <div>
