@@ -98,7 +98,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
           <CollectionEmpty
             attributes={{
               title: 'No responses',
-              body: 'No responses available for this scenario'
+              body: 'Responses appear here once participants take this scenario.'
             }}
           />
         )}
