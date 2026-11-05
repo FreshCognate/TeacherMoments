@@ -49,7 +49,7 @@ describe('ShareScenario', () => {
       />
     );
     expect(
-      screen.getByText('This scenario has draft changes that have not been published.')
+      screen.getByText('Not published yet. Participants see only what you publish.')
     ).toBeInTheDocument();
   });
 
@@ -72,7 +72,7 @@ describe('ShareScenario', () => {
       />
     );
     expect(
-      screen.getByText('Scenarios cannot be published whilst there are issues')
+      screen.getByText("Fix the editor's issues to publish.")
     ).toBeInTheDocument();
   });
 

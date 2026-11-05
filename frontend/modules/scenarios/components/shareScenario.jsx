@@ -34,7 +34,7 @@ const ShareScenario = ({
         <div className="flex items-center">
           <div>
             {(!isPublishing && scenario.hasChanges) && (
-              <Body className="text-black/60 dark:text-white/60" body="This scenario has draft changes that have not been published." size="sm" />
+              <Body className="text-black/60 dark:text-white/60" body="Not published yet. Participants see only what you publish." size="sm" />
             )}
             {(!isPublishing && !scenario.hasChanges) && (
               <Body className="text-black/60 dark:text-white/60" body="All changes are published." size="sm" />
@@ -43,7 +43,7 @@ const ShareScenario = ({
               <Body className="text-black/60 dark:text-white/60" body="Publishing..." size="sm" />
             )}
             {(!isPublishing && scenario.hasChanges && !isScenarioValid) && (
-              <Body className="text-yellow-500 dark:text-yellow-200 text-xs" body="Scenarios cannot be published whilst there are issues" />
+              <Body className="text-yellow-500 dark:text-yellow-200 text-xs" body="Fix the editor's issues to publish." />
             )}
           </div>
           <Button
