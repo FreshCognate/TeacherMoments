@@ -16,6 +16,7 @@ class ScenarioCollaboratorsContainer extends Component {
     if (action === 'ADD_COLLABORATOR') {
       addModal({
         title: 'Add collaborators',
+        body: 'Collaborators can edit it with you.',
         isFullScreen: true,
         component: <AddCollaboratorsContainer />,
         model: { selectedCollaborators: [] },
