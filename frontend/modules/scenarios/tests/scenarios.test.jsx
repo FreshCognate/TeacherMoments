@@ -53,15 +53,30 @@ describe('Scenarios', () => {
   it('renders the empty state when there are no scenarios and the user is an editor', () => {
     renderInRouter(<Scenarios {...baseProps} isEditor={true} />);
     expect(
-      screen.getByText("You haven't created any Scenarios yet.")
+      screen.getByText('No scenarios yet.')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Use Create scenario to start.')
     ).toBeInTheDocument();
   });
 
-  it('does not render the empty state when the user is not an editor', () => {
+  it('tells a learner where their scenarios open instead', () => {
     renderInRouter(<Scenarios {...baseProps} />);
     expect(
-      screen.queryByText("You haven't created any Scenarios yet.")
+      screen.queryByText('No scenarios yet.')
     ).not.toBeInTheDocument();
+    expect(screen.getByText('Scenarios open from their links.')).toBeInTheDocument();
+    expect(
+      screen.getByText("Or from your cohort's page.")
+    ).toBeInTheDocument();
+  });
+
+  it('does not render the learner message while loading or when there are scenarios', () => {
+    const { unmount } = renderInRouter(<Scenarios {...baseProps} isLoading={true} />);
+    expect(screen.queryByText('Scenarios open from their links.')).not.toBeInTheDocument();
+    unmount();
+    renderInRouter(<Scenarios {...baseProps} scenarios={[scenario]} />);
+    expect(screen.queryByText('Scenarios open from their links.')).not.toBeInTheDocument();
   });
 
   it('renders a card and link per scenario when scenarios are present', () => {
@@ -95,7 +110,7 @@ describe('Scenarios', () => {
     expect(screen.getByText('2 collaborators')).toBeInTheDocument();
   });
 
-  it('fires onDuplicateScenarioClicked with the scenario id when the Copy button is clicked', async () => {
+  it('fires onDuplicateScenarioClicked with the scenario id when the Duplicate button is clicked', async () => {
     const user = userEvent.setup();
     const onDuplicateScenarioClicked = vi.fn();
 
@@ -106,7 +121,7 @@ describe('Scenarios', () => {
         onDuplicateScenarioClicked={onDuplicateScenarioClicked}
       />
     );
-    await user.click(screen.getByRole('button', { name: /Copy/ }));
+    await user.click(screen.getByRole('button', { name: /Duplicate/ }));
 
     expect(onDuplicateScenarioClicked).toHaveBeenCalledWith('scenario-1');
   });
