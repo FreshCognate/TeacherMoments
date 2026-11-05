@@ -98,11 +98,11 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
           }
         </span>
         <FlatButton
-          text="Summarize user"
+          text="Summarize participant"
           icon="ai"
           size="sm"
           className="font-normal text-xs"
-          ariaLabel="Summarize user"
+          ariaLabel="Summarize participant"
           onClick={() => onSummarizeUser(response)}
         />
       </div>
@@ -214,7 +214,7 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
 
               {/* Row 4: Values */}
               <div className={subLabelClass}>
-                Value
+                Answer
               </div>
               {map(slideGroups, (slideGroup) => {
                 if (slideGroup.promptResponses.length === 0) {
@@ -278,7 +278,7 @@ const AnalyticsResponsesItem: React.FC<AnalyticsResponsesItemProps> = ({
 
               {/* Row 6: Time (spanning slide width) */}
               <div className={subLabelClass}>
-                Time: {formatTimeSpent(response.totalTimeSpentMs)}
+                Total time: {formatTimeSpent(response.totalTimeSpentMs)}
               </div>
               {map(slideGroups, (slideGroup) => {
                 const colSpan = Math.max(1, slideGroup.promptResponses.length);
