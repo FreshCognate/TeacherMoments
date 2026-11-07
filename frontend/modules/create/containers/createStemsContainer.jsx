@@ -12,6 +12,8 @@ import addSidePanel from '~/core/dialogs/helpers/addSidePanel';
 import EditStemNavigationContainer from '~/modules/stems/containers/editStemNavigationContainer';
 import getStemByRef from '~/modules/stems/helpers/getStemByRef';
 import getChildStems from '~/modules/stems/helpers/getChildStems';
+import getParentStems from '~/modules/stems/helpers/getParentStems';
+import each from 'lodash/each';
 
 class CreateStemsContainer extends Component {
 
@@ -22,6 +24,14 @@ class CreateStemsContainer extends Component {
 
   getChildStems = () => {
     return getChildStems({ stem: getStemByRef({ ref: this.props.stemRef }) });
+  }
+
+  getHasMultipleParentsByRef = (childStems) => {
+    const hasMultipleParentsByRef = {};
+    each(childStems, (childStem) => {
+      hasMultipleParentsByRef[childStem.ref] = getParentStems({ stem: childStem }).length > 1;
+    });
+    return hasMultipleParentsByRef;
   }
 
   onStemClicked = (stemRef) => {
@@ -103,6 +113,14 @@ class CreateStemsContainer extends Component {
     });
   }
 
+  onUnlinkStemClicked = (stemId) => {
+    axios.put(`/api/stems/${stemId}`, {
+      unlinkParentStemRef: this.props.stemRef
+    }).then(() => {
+      this.props.stems.fetch();
+    }).catch(handleRequestError);
+  }
+
   onCreateStemClicked = () => {
     this.setState({ isCreating: true });
     const scenarioId = this.props.scenario.data._id;
@@ -142,10 +160,12 @@ class CreateStemsContainer extends Component {
       <CreateStems
         activeStemRef={activeStemRef}
         childStems={childStems}
+        hasMultipleParentsByRef={this.getHasMultipleParentsByRef(childStems)}
         isCreating={isCreating}
         deletingId={deletingId}
         onEditStemClicked={this.onEditStemClicked}
         onDeleteStemClicked={this.onDeleteStemClicked}
+        onUnlinkStemClicked={this.onUnlinkStemClicked}
         onStemClicked={this.onStemClicked}
         onCreateStemClicked={this.onCreateStemClicked}
         onEditNavigationClicked={this.onEditNavigationClicked}

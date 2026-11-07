@@ -44,7 +44,8 @@ export default {
           })
         }),
       }),
-      defaultBranchingStemRef: Joi.string().allow('')
+      defaultBranchingStemRef: Joi.string().allow(''),
+      unlinkParentStemRef: Joi.string()
     },
     middleware: [isAuthenticated, hasPermissions(['SUPER_ADMIN', 'ADMIN', 'FACILITATOR'])],
   },
