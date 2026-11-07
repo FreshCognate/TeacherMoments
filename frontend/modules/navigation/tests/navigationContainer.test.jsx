@@ -57,12 +57,12 @@ describe('NavigationContainer', () => {
     expect(disconnectSocketsMock).toHaveBeenCalledTimes(1);
   });
 
-  it('opens a Login dialog when login is clicked', () => {
+  it('opens a Log in dialog when login is clicked', () => {
     render(<NavigationContainer authentication={buildAuth()} />);
     capturedProps.onLoginClicked();
 
     expect(addModalMock).toHaveBeenCalledTimes(1);
-    expect(addModalMock.mock.calls[0][0].title).toBe('Login');
+    expect(addModalMock.mock.calls[0][0].title).toBe('Log in');
   });
 
   it('toggles the mobile menu state', () => {

@@ -6,6 +6,7 @@ class SignupVerifyContainer extends Component {
 
   componentDidMount(): void {
     addModal({
+      title: 'Check your email',
       component: <VerifyCodeDialogContainer />
     }, () => {
 

@@ -38,7 +38,7 @@ export default async (user, models) => {
       lockReason: 'TOO_MANY_REQUESTS'
     });
     throw {
-      message: 'Too many OTP requests. Account locked for 15 minutes.',
+      message: 'Too many codes asked for. Try again in 15 minutes.',
       statusCode: 429
     };
   }
@@ -47,7 +47,7 @@ export default async (user, models) => {
     const thirtySecondsAgo = new Date(now.getTime() - 30 * 1000);
     if (user.otpGeneratedAt > thirtySecondsAgo) {
       throw {
-        message: 'Please wait 30 seconds before requesting another OTP.',
+        message: 'Please wait 30 seconds before asking for another code.',
         statusCode: 429
       };
     }

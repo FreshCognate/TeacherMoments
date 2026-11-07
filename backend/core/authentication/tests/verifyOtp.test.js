@@ -46,21 +46,21 @@ describe('verifyOtp (in-memory mongo)', () => {
     await createUser({ otpCode: null });
     await expect(
       verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, { models: db.models, req: req() })
-    ).rejects.toMatchObject({ statusCode: 400, message: 'No OTP found. Please request a new one.' });
+    ).rejects.toMatchObject({ statusCode: 400, message: "We don't have a code for you yet. Start again to get one." });
   });
 
   it('throws 400 when the OTP has expired', async () => {
     await createUser({ otpGeneratedAt: new Date(NOW - 11 * 60 * 1000) });
     await expect(
       verifyOtp({ email: 'sam@example.com', otpCode: '123456' }, { models: db.models, req: req() })
-    ).rejects.toMatchObject({ statusCode: 400, message: 'OTP has expired. Please request a new one.' });
+    ).rejects.toMatchObject({ statusCode: 400, message: 'That code has expired. Start again to get a new one.' });
   });
 
   it('locks the user and clears the OTP after 5 attempts', async () => {
     const user = await createUser({ otpAttempts: 5 });
     await expect(
       verifyOtp({ email: 'sam@example.com', otpCode: '999999' }, { models: db.models, req: req() })
-    ).rejects.toMatchObject({ statusCode: 429, message: expect.stringContaining('Too many failed attempts') });
+    ).rejects.toMatchObject({ statusCode: 429, message: expect.stringContaining('Too many wrong codes') });
 
     const stored = await db.models.User.findById(user._id).select('+otpCode').lean();
     expect(stored.isLocked).toBe(true);
