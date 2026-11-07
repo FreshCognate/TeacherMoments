@@ -10,6 +10,7 @@ import Body from '~/uikit/content/components/body';
 const CreateStems = ({
   activeStemRef,
   childStems,
+  stemLabelsByRef,
   hasMultipleParentsByRef,
   deletingId,
   onEditStemClicked,
@@ -29,7 +30,7 @@ const CreateStems = ({
             const isSelected = stem.ref === activeStemRef;
             const className = classnames(
               "bg-lm-2 dark:bg-dm-2 rounded-md h-8 border border-lm-2 dark:border-dm-2 flex items-center justify-between cursor-pointer hover:border-lm-4 dark:hover:border-dm-4 transition-colors",
-              "px-2 h-8",
+              "pr-2 pl-1 h-8",
               { "outline outline-blue-500 outline-1 -outline-offset-2": isSelected },
               { "opacity-50": isDeleting },
               { "opacity-0 group-hover:opacity-100 transition-opacity": !isDeleting }
@@ -41,7 +42,7 @@ const CreateStems = ({
                 onClick={() => onStemClicked(stem.ref)}
               >
                 <span className="text-xs text-lm-5 dark:text-dm-5 font-medium flex items-center gap-x-2">
-                  <Icon icon="branching" size={12} />
+                  <Badge size="sm" text={stemLabelsByRef[stem.ref]} />
                   {stem.name}
                 </span>
 
