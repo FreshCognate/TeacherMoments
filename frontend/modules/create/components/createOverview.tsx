@@ -68,7 +68,7 @@ const CreateOverview = ({
               );
             })}
           </svg>
-          <CreateOverviewStem stem={tree} onStemClicked={onStemClicked} onBranchToStemClicked={onBranchToStemClicked} onLinkToStemClicked={onLinkToStemClicked} />
+          <CreateOverviewStem stem={tree} branchToStem={branchToStem} onStemClicked={onStemClicked} onBranchToStemClicked={onBranchToStemClicked} onLinkToStemClicked={onLinkToStemClicked} />
         </div>
       </div>
     </div>

@@ -8,19 +8,25 @@ import FlatButton from '~/uikit/buttons/components/flatButton';
 
 const CreateOverviewStem = ({
   stem,
+  branchToStem,
   onStemClicked,
   onBranchToStemClicked,
   onLinkToStemClicked
 }: {
   stem: PositionedStem;
+  branchToStem: string | null;
   onStemClicked: ({ stemRef }: { stemRef: string }) => void;
   onBranchToStemClicked: ({ stemRef }: { stemRef: string | null }) => void;
   onLinkToStemClicked: ({ stemRef }: { stemRef: string }) => void;
 }) => {
+  const isBranchToStem = stem._id === branchToStem;
   return (
     <>
       <div
-        className="absolute flex p-2 border-2 border-lm-3 dark:border-dm-2 bg-lm-1 dark:bg-dm-1 rounded-full gap-x-2 items-center transition-all group"
+        className={classnames("absolute flex p-2 gap-x-2 items-center group",
+          "border-2 border-lm-3 dark:border-dm-2 bg-lm-1 dark:bg-dm-1 rounded-full transition-all", {
+          "!border-blue-500": isBranchToStem
+        })}
         style={{ left: stem.x, top: stem.y }}
       >
         {(stem.canBeBranchedTo) && (
@@ -61,7 +67,7 @@ const CreateOverviewStem = ({
       </div>
       {map(stem.stems, (stem) => {
         return (
-          <CreateOverviewStem key={stem._id} stem={stem} onStemClicked={onStemClicked} onBranchToStemClicked={onBranchToStemClicked} onLinkToStemClicked={onLinkToStemClicked} />
+          <CreateOverviewStem key={stem._id} stem={stem} branchToStem={branchToStem} onStemClicked={onStemClicked} onBranchToStemClicked={onBranchToStemClicked} onLinkToStemClicked={onLinkToStemClicked} />
         )
       })}
     </>
