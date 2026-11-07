@@ -3,20 +3,31 @@ import map from 'lodash/map';
 import { PositionedStem } from '../create.types';
 import { Link } from 'react-router';
 import classnames from 'classnames';
+import Icon from '~/uikit/icons/components/icon';
+import FlatButton from '~/uikit/buttons/components/flatButton';
 
 const CreateOverviewStem = ({
   stem,
-  onStemClicked
+  onStemClicked,
+  onBranchToStemClicked,
+  onLinkToStemClicked
 }: {
   stem: PositionedStem;
   onStemClicked: ({ stemRef }: { stemRef: string }) => void;
+  onBranchToStemClicked: ({ stemRef }: { stemRef: string | null }) => void;
+  onLinkToStemClicked: ({ stemRef }: { stemRef: string }) => void;
 }) => {
   return (
     <>
       <div
-        className="absolute flex p-2 border-2 border-lm-3 dark:border-dm-2 rounded-full gap-x-2 items-center"
+        className="absolute flex p-2 border-2 border-lm-3 dark:border-dm-2 bg-lm-1 dark:bg-dm-1 rounded-full gap-x-2 items-center transition-all group"
         style={{ left: stem.x, top: stem.y }}
       >
+        {(stem.canBeBranchedTo) && (
+          <div className="absolute -left-6 border-2 border-lm-3 dark:border-dm-2 bg-lm-1 rounded-full p-1 dark:bg-dm-1">
+            <FlatButton icon="linkBranch" onClick={() => onLinkToStemClicked({ stemRef: stem.ref })} />
+          </div>
+        )}
         <div className="absolute -top-6 text-sm whitespace-nowrap">
           <Link to={stem.to} onClick={() => onStemClicked({ stemRef: stem.ref })}>
             {stem.name}
@@ -44,10 +55,13 @@ const CreateOverviewStem = ({
         <div className="absolute -bottom-6 text-sm whitespace-nowrap opacity-40">
           {stem.label}
         </div>
+        <div className="hidden group-hover:block">
+          <FlatButton icon="branchTo" onClick={() => onBranchToStemClicked({ stemRef: stem.ref })} />
+        </div>
       </div>
       {map(stem.stems, (stem) => {
         return (
-          <CreateOverviewStem key={stem._id} stem={stem} onStemClicked={onStemClicked} />
+          <CreateOverviewStem key={stem._id} stem={stem} onStemClicked={onStemClicked} onBranchToStemClicked={onBranchToStemClicked} onLinkToStemClicked={onLinkToStemClicked} />
         )
       })}
     </>

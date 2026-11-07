@@ -10,9 +10,11 @@ import Body from '~/uikit/content/components/body';
 const CreateStems = ({
   activeStemRef,
   childStems,
+  hasMultipleParentsByRef,
   deletingId,
   onEditStemClicked,
   onDeleteStemClicked,
+  onUnlinkStemClicked,
   onStemClicked,
   onCreateStemClicked,
   onEditNavigationClicked
@@ -52,10 +54,17 @@ const CreateStems = ({
                     onClick={(event) => { event.stopPropagation(); onEditStemClicked(stem); }}
                   />
                   <FlatButton
-                    icon="delete"
+                    icon={hasMultipleParentsByRef[stem.ref] ? 'unlinkBranch' : 'delete'}
                     size="sm"
                     isDisabled={isDeleting}
-                    onClick={(event) => { event.stopPropagation(); onDeleteStemClicked(stem._id); }}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      if (hasMultipleParentsByRef[stem.ref]) {
+                        onUnlinkStemClicked(stem._id);
+                      } else {
+                        onDeleteStemClicked(stem._id);
+                      }
+                    }}
                   />
                 </div>
               </div>

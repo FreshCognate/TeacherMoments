@@ -3,9 +3,11 @@ import checkHasAccessToScenario from '../../scenarios/helpers/checkHasAccessToSc
 import find from 'lodash/find.js';
 import map from 'lodash/map.js';
 import omit from 'lodash/omit.js';
+import filter from 'lodash/filter.js';
+import some from 'lodash/some.js';
 
-const mergeBranchingOptions = ({ currentBranchingOptions, incomingBranchingOptions }) => {
-  return map(currentBranchingOptions, (currentBranchingOption) => {
+const mergeBranchingOptions = ({ currentBranchingOptions, incomingBranchingOptions, liveStemRefs }) => {
+  const mergedBranchingOptions = map(currentBranchingOptions, (currentBranchingOption) => {
     const incomingBranchingOption = find(incomingBranchingOptions, (branchingOption) => {
       return String(branchingOption.stemRef) === String(currentBranchingOption.stemRef);
     });
@@ -17,6 +19,15 @@ const mergeBranchingOptions = ({ currentBranchingOptions, incomingBranchingOptio
       ...omit(incomingBranchingOption, ['_id', 'stemRef'])
     };
   });
+
+  const newBranchingOptions = filter(incomingBranchingOptions, (incomingBranchingOption) => {
+    const isStored = some(currentBranchingOptions, (currentBranchingOption) => {
+      return String(currentBranchingOption.stemRef) === String(incomingBranchingOption.stemRef);
+    });
+    return !isStored && liveStemRefs.has(String(incomingBranchingOption.stemRef));
+  });
+
+  return [...mergedBranchingOptions, ...map(newBranchingOptions, (branchingOption) => omit(branchingOption, ['_id']))];
 };
 
 export default async (props, options, context) => {
@@ -34,9 +45,16 @@ export default async (props, options, context) => {
 
     if (!currentStem) throw { message: 'This stem does not exist', statusCode: 404 };
 
+    const liveStems = await models.Stem.find({
+      scenario: currentStem.scenario,
+      ref: { $in: map(update.branchingOptions, 'stemRef') },
+      isDeleted: false
+    }, 'ref').lean();
+
     update.branchingOptions = mergeBranchingOptions({
       currentBranchingOptions: currentStem.branchingOptions,
-      incomingBranchingOptions: update.branchingOptions
+      incomingBranchingOptions: update.branchingOptions,
+      liveStemRefs: new Set(map(liveStems, (liveStem) => String(liveStem.ref)))
     });
   }
 

@@ -3,6 +3,7 @@ import getStemById from './services/getStemById.js';
 import createStem from './services/createStem.js';
 import updateStemById from './services/updateStemById.js';
 import deleteStemById from './services/deleteStemById.js';
+import unlinkParentStemByStemRef from './services/unlinkParentStemByStemRef.js';
 
 export default {
   all: async function ({ query }, context) {
@@ -32,8 +33,12 @@ export default {
   },
 
   update: async function ({ param, body }, context) {
-
-    const stem = await updateStemById({ stemId: param, update: body }, {}, context);
+    let stem;
+    if (body.unlinkParentStemRef) {
+      stem = await unlinkParentStemByStemRef({ stemId: param, parentStemRef: body.unlinkParentStemRef }, {}, context);
+    } else {
+      stem = await updateStemById({ stemId: param, update: body }, {}, context);
+    }
 
     return { stem };
 
