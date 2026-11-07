@@ -30,16 +30,45 @@ describe('setCanBeBranchedTo', () => {
     expect(firstChild.canBeBranchedTo).toBe(false);
   });
 
-  it('allows stems in later columns that are not already children', () => {
+  it('allows siblings and stems in later columns that are not already children', () => {
     const { tree, firstStem, secondStem, firstChild, secondChild } = buildOverview();
 
     setCanBeBranchedTo({ tree, stems, branchToStem: 'B1', columnsByRef });
 
     expect(tree.canBeBranchedTo).toBe(false);
     expect(firstStem.canBeBranchedTo).toBe(false);
-    expect(secondStem.canBeBranchedTo).toBe(false);
+    expect(secondStem.canBeBranchedTo).toBe(true);
     expect(firstChild.canBeBranchedTo).toBe(false);
     expect(secondChild.canBeBranchedTo).toBe(true);
+  });
+
+  it('allows stems in the same column that do not share a parent', () => {
+    const { tree, firstChild, secondChild } = buildOverview();
+
+    setCanBeBranchedTo({ tree, stems, branchToStem: 'C1', columnsByRef });
+
+    expect(firstChild.canBeBranchedTo).toBe(false);
+    expect(secondChild.canBeBranchedTo).toBe(true);
+  });
+
+  it('does not allow a sibling that is also an ancestor', () => {
+    const child = buildPositionedStem({ ref: 'C' });
+    const sibling = buildPositionedStem({ ref: 'B', stems: [child] });
+    const tree = buildPositionedStem({ ref: 'A', stems: [sibling] });
+    const ancestorStems = [
+      buildStem('A', ['B', 'C'], true),
+      buildStem('B', ['C']),
+      buildStem('C')
+    ];
+
+    setCanBeBranchedTo({
+      tree,
+      stems: ancestorStems,
+      branchToStem: 'C',
+      columnsByRef: { A: 0, B: 1, C: 2 }
+    });
+
+    expect(sibling.canBeBranchedTo).toBe(false);
   });
 
   it('does nothing when the branched from stem is not in the tree', () => {

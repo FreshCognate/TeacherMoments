@@ -57,10 +57,7 @@ export default ({ stems, rootStem }: { stems: Stem[], rootStem: Stem }): StemHie
         ownerRef = parentRef;
         return;
       }
-      const isDeeper = depthsByRef[parentRef] > depthsByRef[ownerRef];
-      const isSameDepth = depthsByRef[parentRef] === depthsByRef[ownerRef];
-      const isVisitedFirst = visitOrderByRef[parentRef] < visitOrderByRef[ownerRef];
-      if (isDeeper || (isSameDepth && isVisitedFirst)) ownerRef = parentRef;
+      if (visitOrderByRef[parentRef] < visitOrderByRef[ownerRef]) ownerRef = parentRef;
     });
     if (ownerRef) ownerRefsByRef[stemRef] = ownerRef;
   });

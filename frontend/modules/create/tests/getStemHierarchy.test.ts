@@ -20,7 +20,7 @@ describe('getStemHierarchy', () => {
     expect(ownerRefsByRef).toEqual({ B1: 'A', B2: 'A', C1: 'B1' });
   });
 
-  it('assigns a shared stem to its deepest parent even when a shallower parent is visited first', () => {
+  it('places a shared stem in the column after its deepest parent but under its first visited parent', () => {
     const rootStem = buildStem('A', ['B1', 'B2'], true);
     const stems = [
       rootStem,
@@ -37,7 +37,7 @@ describe('getStemHierarchy', () => {
     const { depthsByRef, ownerRefsByRef } = getStemHierarchy({ stems, rootStem });
 
     expect(depthsByRef.SHARED).toBe(3);
-    expect(ownerRefsByRef.SHARED).toBe('B2-C1');
+    expect(ownerRefsByRef.SHARED).toBe('B1');
   });
 
   it('assigns a shared stem to the first visited parent when parents are the same depth', () => {

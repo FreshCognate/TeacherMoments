@@ -21,9 +21,10 @@ export default ({ tree, stems, branchToStem, columnsByRef }: Options) => {
   const branchToStemChildRefs = map(branchFromStem?.branchingOptions, 'stemRef');
 
   const setStemCanBeBranchedTo = (stem: OverviewStem) => {
-    const isInLaterColumn = columnsByRef[stem.ref] > branchToStemColumn;
+    const isSelf = stem.ref === branchToStem;
+    const isInSameOrLaterColumn = columnsByRef[stem.ref] >= branchToStemColumn;
     const isAlreadyChild = includes(branchToStemChildRefs, stem.ref);
-    stem.canBeBranchedTo = isInLaterColumn && !isAlreadyChild;
+    stem.canBeBranchedTo = isInSameOrLaterColumn && !isSelf && !isAlreadyChild;
     each(stem.stems, setStemCanBeBranchedTo);
   };
 
