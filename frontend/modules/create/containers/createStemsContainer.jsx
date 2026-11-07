@@ -14,6 +14,7 @@ import getStemByRef from '~/modules/stems/helpers/getStemByRef';
 import getChildStems from '~/modules/stems/helpers/getChildStems';
 import getParentStems from '~/modules/stems/helpers/getParentStems';
 import each from 'lodash/each';
+import getStemLabelsByRef from '../helpers/getStemLabelsByRef';
 
 class CreateStemsContainer extends Component {
 
@@ -156,10 +157,16 @@ class CreateStemsContainer extends Component {
     const { isCreating, deletingId } = this.state;
     const childStems = this.getChildStems();
     const activeStemRef = this.props.stemRef;
+    const stemLabelsByRef = getStemLabelsByRef({
+      stems: this.props.stems.data,
+      slides: this.props.slides.data,
+      scenarioId: this.props.scenario.data._id
+    });
     return (
       <CreateStems
         activeStemRef={activeStemRef}
         childStems={childStems}
+        stemLabelsByRef={stemLabelsByRef}
         hasMultipleParentsByRef={this.getHasMultipleParentsByRef(childStems)}
         isCreating={isCreating}
         deletingId={deletingId}

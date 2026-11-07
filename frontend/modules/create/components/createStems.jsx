@@ -10,6 +10,7 @@ import Body from '~/uikit/content/components/body';
 const CreateStems = ({
   activeStemRef,
   childStems,
+  stemLabelsByRef,
   hasMultipleParentsByRef,
   deletingId,
   onEditStemClicked,
@@ -41,7 +42,7 @@ const CreateStems = ({
                 onClick={() => onStemClicked(stem.ref)}
               >
                 <span className="text-xs text-lm-5 dark:text-dm-5 font-medium flex items-center gap-x-2">
-                  <Icon icon="branching" size={12} />
+                  <Badge size="sm" text={stemLabelsByRef[stem.ref]} />
                   {stem.name}
                 </span>
 
