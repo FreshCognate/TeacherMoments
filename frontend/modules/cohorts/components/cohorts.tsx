@@ -70,24 +70,24 @@ const Cohorts = ({
           <Instructions
             title="Welcome to Cohort Management"
             instructions={[{
-              body: "In Teacher Moments, a Cohort is how you manage groups of learners. It acts as the bridge between your students and the scenarios they need to practice."
+              body: "In Teacher Moments, a cohort is how you manage groups of participants. It connects them to the scenarios they need to practice."
             }, {
               body: "To manage a class effectively, you will use three main features:",
             }, {
               title: "👥 Cohorts:",
-              body: "Think of these as your classes or sections. You create a cohort to group students together (e.g., 'Fall Semester 2026' or 'Workshop A')."
+              body: "Think of these as your classes or sections. You create a cohort to group participants together (e.g., 'Fall Semester 2026' or 'Workshop A')."
             }, {
               title: "📚 Scenarios:",
-              body: "Once a cohort is created, you add Scenarios to it. This grants the students in that group access to specific practice simulations."
+              body: "Once a cohort is created, you add scenarios to it. They appear on the cohort's page for everyone in the group."
             }, {
               title: "📊 View Responses:",
-              body: "As students complete scenarios, their data flows back here. You can monitor participation and review individual responses to track progress."
+              body: "As participants finish scenarios, their responses show up in the cohort. You can monitor participation and review individual responses to track progress."
             }]}
           />
           <CollectionEmpty
             attributes={{
-              title: "You haven't created any Cohorts yet.",
-              body: "Click 'Create Cohort' to organize your students into a class and start assigning work."
+              title: "You haven't created any cohorts yet.",
+              body: "Click Create cohort to organize your participants into a class and start assigning work."
             }}
           />
         </div>
