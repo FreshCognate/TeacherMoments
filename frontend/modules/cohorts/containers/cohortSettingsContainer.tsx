@@ -16,7 +16,7 @@ class CohortSettingsContainer extends Component<any> {
   onDeleteCohortClicked = () => {
     addModal({
       title: 'Delete cohort',
-      body: `Are you sure you would like to delete "${this.props.cohort.data.name}"?`,
+      body: `Delete "${this.props.cohort.data.name}"? It disappears from the Cohorts list for you and everyone in it.`,
       actions: [{
         type: 'CANCEL',
         text: 'Cancel'

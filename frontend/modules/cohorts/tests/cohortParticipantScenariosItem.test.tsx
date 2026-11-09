@@ -53,7 +53,7 @@ describe('CohortParticipantScenariosItem', () => {
   it('renders the not-started status badge when no run is provided', () => {
     render(<CohortParticipantScenariosItem {...baseProps} />);
     expect(
-      screen.getByText('This scenario has not been started')
+      screen.getByText("You haven't started this scenario")
     ).toBeInTheDocument();
   });
 
@@ -65,7 +65,7 @@ describe('CohortParticipantScenariosItem', () => {
       />
     );
     expect(
-      screen.getByText('This scenario has been completed')
+      screen.getByText("You've finished this scenario")
     ).toBeInTheDocument();
   });
 
@@ -78,7 +78,7 @@ describe('CohortParticipantScenariosItem', () => {
       />
     );
     expect(
-      screen.queryByText('5 / 10 users have completed this scenario')
+      screen.queryByText('5 of 10 participants have finished this scenario')
     ).not.toBeInTheDocument();
     expect(
       screen.queryByRole('button', { name: /View responses/ })
@@ -95,7 +95,7 @@ describe('CohortParticipantScenariosItem', () => {
       />
     );
     expect(
-      screen.getByText('5 / 10 users have completed this scenario')
+      screen.getByText('5 of 10 participants have finished this scenario')
     ).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /View responses/ })

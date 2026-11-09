@@ -35,7 +35,7 @@ const CohortBreadcrumb = ({
       )}
       {(routeId === 'users') && (
         <span className="text-black/60 dark:text-white/60">
-          Users
+          Participants
         </span>
       )}
       {(routeId === 'scenarios') && (
@@ -54,7 +54,7 @@ const CohortBreadcrumb = ({
             to={`/cohorts/${cohort._id}/users`}
             className="text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 transition-colors"
           >
-            Users
+            Participants
           </Link>
           <span className="text-black/60 dark:text-white/60">{` > `}</span>
           <span className="text-black/60 dark:text-white/60">
