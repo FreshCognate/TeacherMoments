@@ -44,7 +44,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
   getTitle = () => {
     const { viewType = 'byScenarioUsers', scenario, user } = this.props;
     if (viewType === 'byUserScenarios') {
-      return `User: ${getUserDisplayName(user)}`;
+      return `Participant: ${getUserDisplayName(user)}`;
     }
     return scenario?.name ? `Scenario: ${scenario.name}` : undefined;
   }
