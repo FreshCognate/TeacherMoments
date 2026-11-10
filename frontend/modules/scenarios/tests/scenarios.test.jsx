@@ -53,14 +53,17 @@ describe('Scenarios', () => {
   it('renders the empty state when there are no scenarios and the user is an editor', () => {
     renderInRouter(<Scenarios {...baseProps} isEditor={true} />);
     expect(
-      screen.getByText("You haven't created any Scenarios yet.")
+      screen.getByText('No scenarios yet.')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Use Create scenario to start.')
     ).toBeInTheDocument();
   });
 
   it('does not render the empty state when the user is not an editor', () => {
     renderInRouter(<Scenarios {...baseProps} />);
     expect(
-      screen.queryByText("You haven't created any Scenarios yet.")
+      screen.queryByText('No scenarios yet.')
     ).not.toBeInTheDocument();
   });
 
@@ -95,7 +98,7 @@ describe('Scenarios', () => {
     expect(screen.getByText('2 collaborators')).toBeInTheDocument();
   });
 
-  it('fires onDuplicateScenarioClicked with the scenario id when the Copy button is clicked', async () => {
+  it('fires onDuplicateScenarioClicked with the scenario id when the Duplicate button is clicked', async () => {
     const user = userEvent.setup();
     const onDuplicateScenarioClicked = vi.fn();
 
@@ -106,7 +109,7 @@ describe('Scenarios', () => {
         onDuplicateScenarioClicked={onDuplicateScenarioClicked}
       />
     );
-    await user.click(screen.getByRole('button', { name: /Copy/ }));
+    await user.click(screen.getByRole('button', { name: /Duplicate/ }));
 
     expect(onDuplicateScenarioClicked).toHaveBeenCalledWith('scenario-1');
   });
