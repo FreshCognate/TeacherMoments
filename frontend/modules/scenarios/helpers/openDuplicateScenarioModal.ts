@@ -14,7 +14,7 @@ interface OpenDuplicateScenarioModalProps {
 const openDuplicateScenarioModal = ({ scenarioId, router }: OpenDuplicateScenarioModalProps) => {
   addModal({
     title: 'Duplicate scenario',
-    body: 'Are you sure you want to duplicate this scenario?',
+    body: "You'll get your own copy to edit.",
     actions: [{
       type: 'CANCEL',
       text: 'Cancel'

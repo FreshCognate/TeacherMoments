@@ -66,8 +66,18 @@ const Scenarios = ({
           <div className="py-4">
             <CollectionEmpty
               attributes={{
-                title: "You haven't created any Scenarios yet.",
-                body: "Click 'Create Scenario' to start building your first Scenario."
+                title: 'No scenarios yet.',
+                body: 'Use Create scenario to start.'
+              }}
+            />
+          </div>
+        )}
+        {(scenarios.length === 0 && !isLoading && !isEditor) && (
+          <div className="py-4">
+            <CollectionEmpty
+              attributes={{
+                title: 'Scenarios open from their links.',
+                body: "Or from your cohort's page."
               }}
             />
           </div>
@@ -98,7 +108,7 @@ const Scenarios = ({
                     <div className="ml-auto">
                       <FlatButton
                         icon="copy"
-                        text="Copy"
+                        text="Duplicate"
                         onClick={() => onDuplicateScenarioClicked(scenario._id)}
                       />
                     </div>
