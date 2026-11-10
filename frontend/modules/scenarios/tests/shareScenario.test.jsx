@@ -25,6 +25,21 @@ describe('ShareScenario', () => {
     expect(screen.getByText('https://teachermoments.org/p/abc')).toBeInTheDocument();
   });
 
+  it('says who can use the link once the scenario is published', () => {
+    render(
+      <ShareScenario
+        {...baseProps}
+        scenario={{ isPublished: true, hasChanges: false }}
+      />
+    );
+    expect(screen.getByText('Anyone logged in can take it with this link.')).toBeInTheDocument();
+  });
+
+  it('does not say who can use the link before the scenario is published', () => {
+    render(<ShareScenario {...baseProps} />);
+    expect(screen.queryByText('Anyone logged in can take it with this link.')).not.toBeInTheDocument();
+  });
+
   it('does not render the copy link button when the scenario is unpublished', () => {
     render(<ShareScenario {...baseProps} />);
     expect(screen.queryByRole('button', { name: 'Copy link' })).not.toBeInTheDocument();
