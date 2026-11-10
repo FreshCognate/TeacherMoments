@@ -92,6 +92,16 @@ const Cohorts = ({
           />
         </div>
       )}
+      {(cohorts.length === 0 && !isLoading && !isEditor) && (
+        <div className="py-4">
+          <CollectionEmpty
+            attributes={{
+              title: "You haven't joined any cohorts yet.",
+              body: 'To join one, open the invite link your facilitator sends you.'
+            }}
+          />
+        </div>
+      )}
       {(cohorts.length > 0) && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-4">
           {map(cohorts, (cohort: Cohort) => {
