@@ -24,7 +24,7 @@ const SlideActions = ({
           <div className="flex justify-between">
             <div className="w-1/2">
               <Body
-                body={`You've got feedback turned on. You have ${slide.feedbackItems.length} feedback items setup.`}
+                body={`Feedback is on: ${slide.feedbackItems.length} ${slide.feedbackItems.length === 1 ? 'item' : 'items'}.`}
                 className="opacity-60 mb-4" />
               <FlatButton icon="edit" text="Edit feedback" onClick={onEditFeedbackClicked} />
             </div>
