@@ -47,8 +47,8 @@ const CohortScenariosList = ({
       {(scenarios?.length === 0) && (
         <div className="text-center py-8 px-6 rounded-xl bg-lm-2 dark:bg-dm-2">
           <div className="max-w-md mx-auto">
-            <Title title="No Scenarios have been added to this Cohort" size='xl' className="mb-4" />
-            <Body body="Search and find Scenarios in the list opposite and click 'Add' to add a Scenario to this Cohort." size='sm' className="text-white/50" />
+            <Title title="No scenarios in this cohort yet" size='xl' className="mb-4" />
+            <Body body="Find a scenario under Available scenarios and click Add." size='sm' className="text-white/50" />
           </div>
         </div>
       )}
