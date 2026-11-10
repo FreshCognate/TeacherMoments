@@ -17,6 +17,7 @@ interface AnalyticsProps {
   selectedSlideRef: string | null;
   isLoading: boolean;
   isSyncing?: boolean;
+  emptyBody?: string;
   searchValue?: string;
   currentPage?: number;
   totalPages?: number;
@@ -45,6 +46,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
   selectedSlideRef,
   isLoading,
   isSyncing,
+  emptyBody,
   searchValue,
   currentPage,
   totalPages,
@@ -98,7 +100,7 @@ const Analytics: React.FC<AnalyticsProps> = ({
           <CollectionEmpty
             attributes={{
               title: 'No responses',
-              body: 'No responses available for this scenario'
+              body: emptyBody || 'Responses appear here once participants take this scenario.'
             }}
           />
         )}

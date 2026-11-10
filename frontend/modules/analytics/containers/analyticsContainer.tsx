@@ -17,6 +17,7 @@ interface AnalyticsContainerProps {
   responses?: UserResponse[];
   isLoading: boolean;
   isSyncing?: boolean;
+  emptyBody?: string;
   searchValue?: string;
   currentPage?: number;
   totalPages?: number;
@@ -193,7 +194,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
 
     addModal({
       title: 'Summarize scenario',
-      body: 'This will generate a summary of all responses across the entire scenario.',
+      body: 'AI summarizes every response to this scenario.',
       actions: [
         { type: 'CANCEL', text: 'Cancel' },
         { type: 'CONTINUE', text: 'Continue', color: 'primary' }
@@ -230,8 +231,8 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     const scenarioName = isUserView ? response.scenario?.name : this.props.scenario?.name;
 
     addModal({
-      title: 'Summarize user',
-      body: 'This will generate a summary of this user\'s responses across the entire scenario.',
+      title: 'Summarize participant',
+      body: "AI summarizes this participant's responses.",
       actions: [
         { type: 'CANCEL', text: 'Cancel' },
         { type: 'CONTINUE', text: 'Continue', color: 'primary' }
@@ -241,7 +242,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         addSidePanel({
           size: 'lg',
           icon: 'ai',
-          title: 'User summary',
+          title: 'Participant summary',
           canTriggerOutsideClickClose: false,
           component: (
             <AnalyticsUserResponsesSummaryContainer
@@ -273,8 +274,8 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
     }
 
     addModal({
-      title: 'Summarize responses',
-      body: 'This will generate a summary of responses for this slide.',
+      title: 'Summarize slide',
+      body: "AI summarizes this slide's responses.",
       actions: [
         { type: 'CANCEL', text: 'Cancel' },
         { type: 'CONTINUE', text: 'Continue', color: 'primary' }
@@ -304,7 +305,8 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
       totalPages,
       onSearchValueChange,
       onPaginationClicked,
-      onExportClicked
+      onExportClicked,
+      emptyBody
     } = this.props;
 
     const { selectedResponse, selectedBlockResponseRef, selectedSlideRef } = this.state;
@@ -321,6 +323,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         selectedSlideRef={selectedSlideRef}
         isLoading={isLoading}
         isSyncing={isSyncing}
+        emptyBody={emptyBody}
         searchValue={searchValue}
         currentPage={currentPage}
         totalPages={totalPages}

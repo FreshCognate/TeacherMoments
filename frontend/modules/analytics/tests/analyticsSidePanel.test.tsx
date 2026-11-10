@@ -69,10 +69,10 @@ describe('AnalyticsSidePanel', () => {
       />
     );
 
-    await user.click(screen.getByRole('button', { name: 'Previous user' }));
+    await user.click(screen.getByRole('button', { name: 'Previous participant' }));
     expect(onUserNavigated).toHaveBeenCalledWith('up');
 
-    await user.click(screen.getByRole('button', { name: 'Next user' }));
+    await user.click(screen.getByRole('button', { name: 'Next participant' }));
     expect(onUserNavigated).toHaveBeenCalledWith('down');
   });
 
@@ -85,7 +85,7 @@ describe('AnalyticsSidePanel', () => {
         onUserNavigated={() => {}}
       />
     );
-    expect(screen.queryByRole('button', { name: 'Previous user' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Next user' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Previous participant' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Next participant' })).not.toBeInTheDocument();
   });
 });
