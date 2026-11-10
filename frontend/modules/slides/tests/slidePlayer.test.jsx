@@ -154,13 +154,13 @@ describe('SlidePlayer', () => {
   it('renders feedback items when present', () => {
     getSlideFeedbackResponsesMock.mockReturnValue(['Great answer!', 'Try again next time.']);
     render(<SlidePlayer {...baseProps} />);
-    expect(screen.getByText('Feedback Based on Your Response')).toBeInTheDocument();
+    expect(screen.getByText('Feedback on your response')).toBeInTheDocument();
   });
 
   it('does not render the feedback section when there are no feedback items', () => {
     getSlideFeedbackResponsesMock.mockReturnValue([]);
     render(<SlidePlayer {...baseProps} />);
-    expect(screen.queryByText('Feedback Based on Your Response')).not.toBeInTheDocument();
+    expect(screen.queryByText('Feedback on your response')).not.toBeInTheDocument();
   });
 
   it('renders a slide-status loader when getSlideStatus returns a string', () => {

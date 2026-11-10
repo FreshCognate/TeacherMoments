@@ -37,7 +37,7 @@ const Cohort = ({
                   text: 'Overview'
                 }, {
                   value: 'users',
-                  text: 'Users'
+                  text: 'Participants'
                 }, {
                   value: 'scenarios',
                   text: 'Scenarios'

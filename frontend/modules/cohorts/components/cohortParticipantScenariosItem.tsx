@@ -35,7 +35,7 @@ const CohortParticipantScenariosItem = ({
       <div className="flex flex-wrap gap-2">
         <Badge icon={icon} iconSize={16} text={text} />
         {(isCohortEditor && typeof completedCount === 'number' && typeof totalUsers === 'number') && (
-          <Badge icon="complete" iconSize={16} text={`${completedCount} / ${totalUsers} users have completed this scenario`} />
+          <Badge icon="complete" iconSize={16} text={`${completedCount} of ${totalUsers} participants have finished this scenario`} />
         )}
       </div>
       <div>
