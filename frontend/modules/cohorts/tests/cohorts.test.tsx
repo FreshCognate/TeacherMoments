@@ -62,8 +62,29 @@ describe('Cohorts', () => {
       screen.getByText('Welcome to Cohort Management')
     ).toBeInTheDocument();
     expect(
-      screen.getByText("You haven't created any Cohorts yet.")
+      screen.getByText("You haven't created any cohorts yet.")
     ).toBeInTheDocument();
+    expect(
+      screen.queryByText("You haven't joined any cohorts yet.")
+    ).not.toBeInTheDocument();
+  });
+
+  it('tells a learner with no cohorts how to join one', () => {
+    renderInRouter(<Cohorts {...baseProps} />);
+    expect(
+      screen.getByText("You haven't joined any cohorts yet.")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('To join one, open the invite link your facilitator sends you.')
+    ).toBeInTheDocument();
+  });
+
+  it("doesn't show the learner's message while loading or when there are cohorts", () => {
+    const { unmount } = renderInRouter(<Cohorts {...baseProps} isLoading={true} />);
+    expect(screen.queryByText("You haven't joined any cohorts yet.")).not.toBeInTheDocument();
+    unmount();
+    renderInRouter(<Cohorts {...baseProps} cohorts={[cohortAsViewer]} />);
+    expect(screen.queryByText("You haven't joined any cohorts yet.")).not.toBeInTheDocument();
   });
 
   it('does not render the welcome instructions when the user is not an editor', () => {
