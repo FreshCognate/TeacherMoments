@@ -60,11 +60,23 @@ describe('Scenarios', () => {
     ).toBeInTheDocument();
   });
 
-  it('does not render the empty state when the user is not an editor', () => {
+  it('tells a learner where their scenarios open instead', () => {
     renderInRouter(<Scenarios {...baseProps} />);
     expect(
       screen.queryByText('No scenarios yet.')
     ).not.toBeInTheDocument();
+    expect(screen.getByText('Scenarios open from their links.')).toBeInTheDocument();
+    expect(
+      screen.getByText("Or from your cohort's page.")
+    ).toBeInTheDocument();
+  });
+
+  it('does not render the learner message while loading or when there are scenarios', () => {
+    const { unmount } = renderInRouter(<Scenarios {...baseProps} isLoading={true} />);
+    expect(screen.queryByText('Scenarios open from their links.')).not.toBeInTheDocument();
+    unmount();
+    renderInRouter(<Scenarios {...baseProps} scenarios={[scenario]} />);
+    expect(screen.queryByText('Scenarios open from their links.')).not.toBeInTheDocument();
   });
 
   it('renders a card and link per scenario when scenarios are present', () => {
