@@ -44,9 +44,18 @@ const CohortBreadcrumb = ({
         </span>
       )}
       {(routeId === 'scenario') && (
-        <span className="text-black/60 dark:text-white/60">
-          Responses
-        </span>
+        <>
+          <Link
+            to={`/cohorts/${cohort._id}/scenarios`}
+            className="text-black/60 dark:text-white/60 hover:text-black/80 dark:hover:text-white/80 transition-colors"
+          >
+            Scenarios
+          </Link>
+          <span className="text-black/60 dark:text-white/60">{` > `}</span>
+          <span className="text-black/60 dark:text-white/60">
+            Responses
+          </span>
+        </>
       )}
       {(routeId === 'user') && (
         <>

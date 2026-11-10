@@ -75,6 +75,7 @@ class CohortParticipantScenariosContainer extends Component<CohortParticipantSce
     return (
       <CohortParticipantScenarios
         scenarios={data}
+        isLoading={status === 'loading' || status === 'unresolved'}
         runs={this.props.cohortParticipantRuns.data}
         scenarioCompletions={completionStats?.scenarioCompletions || []}
         totalUsers={completionStats?.totalUsers || 0}
