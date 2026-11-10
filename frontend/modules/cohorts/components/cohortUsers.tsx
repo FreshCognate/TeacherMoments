@@ -48,7 +48,7 @@ const CohortUsers = ({
       <div className="mb-4">
         <Title title="Invite link" className="mb-2" />
         <Body
-          body="To add users to this cohort, send them the Invite link below. Once they navigate to this invite link they will have the option to login or register via email."
+          body="To add participants, send them the invite link below. Once they log in or create an account, they join this cohort."
           className="mb-2 text-black/60 dark:text-white/60 text-sm max-w-lg"
         />
         {(activeInvite) && (
@@ -60,14 +60,14 @@ const CohortUsers = ({
           <Button text="Create an invite link" isDisabled={isCreatingInviteLink} onClick={onCreateInviteLinkClicked} />
         )}
       </div>
-      <Title title="Users in this Cohort" className="mb-2" />
+      <Title title="Participants in this cohort" className="mb-2" />
       <div>
         <Collection
           items={users}
           getItemActions={getItemActions}
           getItemAttributes={getItemAttributes}
           getEmptyAttributes={getEmptyAttributes}
-          searchPlaceholder="Search users..."
+          searchPlaceholder="Search participants..."
           searchValue={searchValue}
           currentPage={currentPage}
           totalPages={totalPages}

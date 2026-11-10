@@ -27,9 +27,9 @@ describe('CohortBreadcrumb', () => {
     expect(overviewLink).toHaveAttribute('href', '/cohorts/cohort-1/overview');
   });
 
-  it('renders the Users label on the users route', () => {
+  it('renders the Participants label on the users route', () => {
     renderInRouter(<CohortBreadcrumb cohort={cohort} routeId="users" />);
-    expect(screen.getByText('Users')).toBeInTheDocument();
+    expect(screen.getByText('Participants')).toBeInTheDocument();
   });
 
   it('renders the Scenarios label on the scenarios route', () => {
@@ -47,9 +47,9 @@ describe('CohortBreadcrumb', () => {
     expect(screen.getByText('Responses')).toBeInTheDocument();
   });
 
-  it('renders a Users link and the Responses label on the user route', () => {
+  it('renders a Participants link and the Responses label on the user route', () => {
     renderInRouter(<CohortBreadcrumb cohort={cohort} routeId="user" />);
-    const usersLink = screen.getByRole('link', { name: 'Users' });
+    const usersLink = screen.getByRole('link', { name: 'Participants' });
     expect(usersLink).toHaveAttribute('href', '/cohorts/cohort-1/users');
     expect(screen.getByText('Responses')).toBeInTheDocument();
   });

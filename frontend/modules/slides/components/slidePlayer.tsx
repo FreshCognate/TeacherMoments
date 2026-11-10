@@ -105,7 +105,7 @@ const SlidePlayer = ({
         )}
         {(slideFeedbackResponses && slideFeedbackResponses.length > 0) && (
           <div className="bg-blue-200 bg-opacity-30 border border-blue-200 p-2 rounded-md dark:text-gray-200 text-gray-800">
-            <Title title="Feedback Based on Your Response" size='lg' className="font-bold mb-2" />
+            <Title title="Feedback on your response" size='lg' className="font-bold mb-2" />
             {map(slideFeedbackResponses, (feedbackResponse, index) => {
               return (
                 <Body key={index} body={feedbackResponse} />
