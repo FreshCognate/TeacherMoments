@@ -72,6 +72,16 @@ const Scenarios = ({
             />
           </div>
         )}
+        {(scenarios.length === 0 && !isLoading && !isEditor) && (
+          <div className="py-4">
+            <CollectionEmpty
+              attributes={{
+                title: 'Scenarios open from their links.',
+                body: "Or from your cohort's page."
+              }}
+            />
+          </div>
+        )}
         {(scenarios.length > 0) && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-4">
             {map(scenarios, (scenario) => {
