@@ -56,7 +56,7 @@ const AnalyticsUserResponsesSummary: React.FC<AnalyticsUserResponsesSummaryProps
   return (
     <div className="p-4">
       <h1 className="text-xl font-semibold text-black/80 dark:text-white/80 mb-1">
-        User: {userName}
+        Participant: {userName}
       </h1>
       {scenarioName && (
         <p className="text-sm text-black/40 dark:text-white/40 mb-4">

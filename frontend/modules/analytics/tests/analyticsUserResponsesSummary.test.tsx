@@ -9,7 +9,7 @@ const summary = {
 };
 
 describe('AnalyticsUserResponsesSummary', () => {
-  it('renders the user header', () => {
+  it('renders the participant header', () => {
     render(
       <AnalyticsUserResponsesSummary
         userName="Alex"
@@ -17,7 +17,7 @@ describe('AnalyticsUserResponsesSummary', () => {
         isLoading={false}
       />
     );
-    expect(screen.getByText('User: Alex')).toBeInTheDocument();
+    expect(screen.getByText('Participant: Alex')).toBeInTheDocument();
   });
 
   it('renders the scenario subtitle when provided', () => {
