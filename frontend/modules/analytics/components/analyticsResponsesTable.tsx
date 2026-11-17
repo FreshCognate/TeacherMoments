@@ -223,11 +223,11 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
               >
                 {getUserDisplayName(response.user)}
                 <FlatButton
-                  text="Summarize user"
+                  text="Summarize participant"
                   icon="ai"
                   size="sm"
                   className="font-normal text-xs"
-                  ariaLabel="Summarize user"
+                  ariaLabel="Summarize participant"
                   onClick={() => onSummarizeUser(response)}
                 />
               </div>
@@ -235,13 +235,13 @@ const AnalyticsResponsesTable: React.FC<AnalyticsResponsesTableProps> = ({
               {/* Sub-row labels span all 3 sub-rows */}
               <div className="row-span-3 grid grid-rows-subgrid sticky left-[11.25rem] z-10">
                 <div className={subRowLabelClass}>
-                  Value
+                  Answer
                 </div>
                 <div className={subRowLabelClass}>
                   Feedback
                 </div>
                 <div className={subRowLabelClass}>
-                  Time: {formatTimeSpent(response.totalTimeSpentMs)}
+                  Total time: {formatTimeSpent(response.totalTimeSpentMs)}
                 </div>
               </div>
 

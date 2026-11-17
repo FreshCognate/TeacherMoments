@@ -45,7 +45,7 @@ const AnalyticsSidePanel: React.FC<AnalyticsSidePanelProps> = ({
             <CollectionEmpty
               attributes={{
                 title: 'No response selected',
-                body: 'Select a response to view it in the slide context'
+                body: 'Click a response to see it on its slide.'
               }}
             />
           </div>
@@ -58,8 +58,8 @@ const AnalyticsSidePanel: React.FC<AnalyticsSidePanelProps> = ({
             </div>
             {viewType === 'byScenarioUsers' && onUserNavigated && (
               <div className="flex items-center gap-1 mb-3">
-                <FlatButton icon="paginationUp" color="primary" isDisabled={isUserUpDisabled} ariaLabel="Previous user" onClick={() => onUserNavigated('up')} />
-                <FlatButton icon="paginationDown" color="primary" isDisabled={isUserDownDisabled} ariaLabel="Next user" onClick={() => onUserNavigated('down')} />
+                <FlatButton icon="paginationUp" color="primary" isDisabled={isUserUpDisabled} ariaLabel="Previous participant" onClick={() => onUserNavigated('up')} />
+                <FlatButton icon="paginationDown" color="primary" isDisabled={isUserDownDisabled} ariaLabel="Next participant" onClick={() => onUserNavigated('down')} />
               </div>
             )}
             {(viewType !== 'byScenarioUsers' || !onUserNavigated) && <div className="mb-3" />}
