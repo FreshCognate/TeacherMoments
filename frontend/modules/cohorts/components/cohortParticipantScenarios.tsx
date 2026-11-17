@@ -4,8 +4,6 @@ import map from 'lodash/map';
 import find from 'lodash/find';
 import CohortParticipantScenariosItem from './cohortParticipantScenariosItem';
 import CollectionEmpty from '~/uikit/collections/components/collectionEmpty';
-import canUserEditCohort from '~/modules/authentication/helpers/canUserEditCohort';
-import getCache from '~/core/cache/helpers/getCache';
 
 const CohortParticipantScenarios = ({
   scenarios,
@@ -13,6 +11,7 @@ const CohortParticipantScenarios = ({
   scenarioCompletions,
   totalUsers,
   isLoading,
+  isCohortEditor,
   onPlayScenarioClicked,
   onViewScenarioResponseClicked
 }: {
@@ -21,11 +20,11 @@ const CohortParticipantScenarios = ({
   scenarioCompletions: { scenarioId: string, completedCount: number }[],
   totalUsers: number,
   isLoading?: boolean,
+  isCohortEditor?: boolean,
   onPlayScenarioClicked: (scenarioId: string) => void,
   onViewScenarioResponseClicked: (scenarioId: string) => void
 }) => {
   if (!isLoading && (!scenarios || scenarios.length === 0)) {
-    const isCohortEditor = canUserEditCohort(getCache("cohort").data);
     return (
       <div className="py-4">
         <CollectionEmpty

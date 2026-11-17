@@ -9,6 +9,8 @@ import { Run } from '~/modules/run/runs.types';
 import addModal from '~/core/dialogs/helpers/addModal';
 import axios from 'axios';
 import handleRequestError from '~/core/app/helpers/handleRequestError';
+import canUserEditCohort from '~/modules/authentication/helpers/canUserEditCohort';
+import getCache from '~/core/cache/helpers/getCache';
 
 interface CohortParticipantScenariosProps {
   cohortParticipantScenarios: {
@@ -76,6 +78,7 @@ class CohortParticipantScenariosContainer extends Component<CohortParticipantSce
       <CohortParticipantScenarios
         scenarios={data}
         isLoading={status === 'loading' || status === 'unresolved'}
+        isCohortEditor={canUserEditCohort(getCache('cohort').data)}
         runs={this.props.cohortParticipantRuns.data}
         scenarioCompletions={completionStats?.scenarioCompletions || []}
         totalUsers={completionStats?.totalUsers || 0}
