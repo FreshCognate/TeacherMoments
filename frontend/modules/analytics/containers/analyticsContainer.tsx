@@ -17,6 +17,7 @@ interface AnalyticsContainerProps {
   responses?: UserResponse[];
   isLoading: boolean;
   isSyncing?: boolean;
+  emptyBody?: string;
   searchValue?: string;
   currentPage?: number;
   totalPages?: number;
@@ -304,7 +305,8 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
       totalPages,
       onSearchValueChange,
       onPaginationClicked,
-      onExportClicked
+      onExportClicked,
+      emptyBody
     } = this.props;
 
     const { selectedResponse, selectedBlockResponseRef, selectedSlideRef } = this.state;
@@ -321,6 +323,7 @@ class AnalyticsContainer extends Component<AnalyticsContainerProps, AnalyticsCon
         selectedSlideRef={selectedSlideRef}
         isLoading={isLoading}
         isSyncing={isSyncing}
+        emptyBody={emptyBody}
         searchValue={searchValue}
         currentPage={currentPage}
         totalPages={totalPages}

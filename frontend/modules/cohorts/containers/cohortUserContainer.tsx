@@ -55,6 +55,7 @@ class CohortUserContainer extends Component {
         onSearchValueChange={this.onSearchValueChange}
         onPaginationClicked={this.onPaginationClicked}
         onExportClicked={this.onExportClicked}
+        emptyBody={searchValue ? undefined : 'No scenarios in this cohort yet.'}
       />
     );
   }

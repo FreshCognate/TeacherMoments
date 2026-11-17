@@ -30,6 +30,7 @@ const UserHistory = ({
     <div className="pt-20 px-4">
       <AnalyticsContainer
         viewType="byUserScenarios"
+        emptyBody="Scenarios you take appear here."
         user={user}
         responses={responses}
         isLoading={isLoading}
