@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   isRouteErrorResponse,
+  Link,
   Links,
   Meta,
   Outlet,
@@ -134,14 +135,13 @@ export default function App(props: Route.ComponentProps) {
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "Oops!";
   let details = "An unexpected error occurred.";
+  let isNotFound = false;
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "Page not found" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
+    isNotFound = error.status === 404;
+    message = isNotFound ? "Page not found" : "Error";
+    details = error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
@@ -150,7 +150,11 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   return (
     <main className="pt-10 p-4 container mx-auto">
       <h1>{message}</h1>
-      <p>{details}</p>
+      {isNotFound ? (
+        <p>Check the address, or go to the <Link to="/" className="underline">home page</Link>.</p>
+      ) : (
+        <p>{details}</p>
+      )}
       {stack && (
         <pre className="w-full p-4 overflow-x-auto">
           <code>{stack}</code>
