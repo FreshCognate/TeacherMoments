@@ -115,7 +115,7 @@ const Navigation = ({
                       }}
                       className="block w-full text-left px-3 py-2 text-sm text-black/60 dark:text-white/60 hover:bg-lm-1 dark:hover:bg-dm-2 rounded-md transition-colors"
                     >
-                      Logout
+                      Log out
                     </button>
                   </div>
                 </Dropdown>
@@ -169,7 +169,7 @@ const Navigation = ({
                 }}
                 className="block w-full text-left px-3 py-2 text-sm text-black/60 dark:text-white/60 hover:bg-lm-1 dark:hover:bg-dm-2 rounded-md transition-colors"
               >
-                Logout
+                Log out
               </button>
             </div>
           </div>
