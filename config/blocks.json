@@ -3,7 +3,7 @@
     "blockType": "TEXT",
     "displayType": "VISUAL",
     "displayName": "Text",
-    "description": "Add instructions, narrative details, or formatted text to the scene."
+    "description": "Add instructions, narrative details, or formatted text to the slide."
   },
   {
     "blockType": "IMAGES",
@@ -33,13 +33,13 @@
     "blockType": "SUGGESTION",
     "displayType": "VISUAL",
     "displayName": "Suggestion",
-    "description": "Provide hints or guidance to help scaffold the learner's thinking."
+    "description": "Provide hints or guidance to help scaffold the participant's thinking."
   },
   {
     "blockType": "RESPONSE",
     "displayType": "VISUAL",
     "displayName": "Response",
-    "description": "Re-display a learner's answer from a previous slide for reflection."
+    "description": "Show a participant's answer from an earlier slide so they can reflect on it."
   },
   {
     "blockType": "ACTIONS_PROMPT",

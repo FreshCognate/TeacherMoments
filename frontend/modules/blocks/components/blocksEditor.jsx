@@ -60,7 +60,7 @@ const BlocksEditor = ({
                 </>
               )}
               <Title title="This slide has no blocks" className="text-black dark:text-white/80 mb-2" />
-              <Body body="Click Add block to create a new block for this slide" size="sm" className="text-black/60 dark:text-white/60" />
+              <Body body="Click Add block to add text, images, prompts or media to this slide." size="sm" className="text-black/60 dark:text-white/60" />
             </div>
           )}
         </div>
