@@ -22,6 +22,7 @@ const ShareScenario = ({
               <div className="bg-lm-1 dark:bg-dm-2 py-1 px-4 rounded-md">
                 {`${publishLink}`}
               </div>
+              <Body className="ml-2 text-black/60 dark:text-white/60" body="Anyone logged in can take it with this link." size="xs" />
               {(hasCopied) && (
                 <>
                   <Icon icon="copy" size={16} className="ml-2 mr-1 text-primary-regular/60 dark:text-primary-light/60" />
