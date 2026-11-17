@@ -20,7 +20,9 @@ export default [{
   },
   create: {
     body: {
-      name: Joi.string().when('cohortId', { is: Joi.string(), then: Joi.optional(), otherwise: Joi.required() }),
+      name: Joi.string()
+        .messages({ 'string.empty': 'Give the cohort a name.' })
+        .when('cohortId', { is: Joi.string(), then: Joi.optional(), otherwise: Joi.required() }),
       cohortId: Joi.string().optional(),
       tags: Joi.array().items(Joi.string())
     },
