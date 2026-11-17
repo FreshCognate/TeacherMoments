@@ -79,6 +79,13 @@ describe('Cohorts', () => {
     ).toBeInTheDocument();
   });
 
+  it('does not tell a learner they have no cohorts when a search finds none', () => {
+    renderInRouter(<Cohorts {...baseProps} searchValue="zzz" />);
+    expect(
+      screen.queryByText("You haven't joined any cohorts yet.")
+    ).not.toBeInTheDocument();
+  });
+
   it("doesn't show the learner's message while loading or when there are cohorts", () => {
     const { unmount } = renderInRouter(<Cohorts {...baseProps} isLoading={true} />);
     expect(screen.queryByText("You haven't joined any cohorts yet.")).not.toBeInTheDocument();

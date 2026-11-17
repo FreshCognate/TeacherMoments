@@ -92,7 +92,7 @@ const Cohorts = ({
           />
         </div>
       )}
-      {(cohorts.length === 0 && !isLoading && !isEditor) && (
+      {(cohorts.length === 0 && !isLoading && !isEditor && !searchValue) && (
         <div className="py-4">
           <CollectionEmpty
             attributes={{
