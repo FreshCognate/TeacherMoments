@@ -49,3 +49,23 @@ describe('CohortParticipantScenarios', () => {
     expect(screen.getByText('completed:none/10')).toBeInTheDocument();
   });
 });
+
+describe('CohortParticipantScenarios with no scenarios', () => {
+  it('tells a cohort editor to add scenarios on the Scenarios tab', () => {
+    render(<CohortParticipantScenarios {...baseProps} scenarios={[]} isLoading={false} isCohortEditor />);
+    expect(screen.getByText('No scenarios in this cohort yet.')).toBeInTheDocument();
+    expect(screen.getByText('Add some on the Scenarios tab.')).toBeInTheDocument();
+  });
+
+  it('tells a participant their facilitator will add scenarios', () => {
+    render(<CohortParticipantScenarios {...baseProps} scenarios={[]} isLoading={false} isCohortEditor={false} />);
+    expect(screen.getByText('No scenarios here yet.')).toBeInTheDocument();
+    expect(screen.getByText('Your facilitator will add them.')).toBeInTheDocument();
+  });
+
+  it('shows no message while the scenarios load', () => {
+    render(<CohortParticipantScenarios {...baseProps} scenarios={[]} isLoading />);
+    expect(screen.queryByText('No scenarios here yet.')).not.toBeInTheDocument();
+    expect(screen.queryByText('No scenarios in this cohort yet.')).not.toBeInTheDocument();
+  });
+});

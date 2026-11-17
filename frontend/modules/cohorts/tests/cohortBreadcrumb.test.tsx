@@ -42,8 +42,10 @@ describe('CohortBreadcrumb', () => {
     expect(screen.getByText('Settings')).toBeInTheDocument();
   });
 
-  it('renders the Responses label on the scenario route', () => {
+  it('renders a Scenarios link and the Responses label on the scenario route', () => {
     renderInRouter(<CohortBreadcrumb cohort={cohort} routeId="scenario" />);
+    const scenariosLink = screen.getByRole('link', { name: 'Scenarios' });
+    expect(scenariosLink).toHaveAttribute('href', '/cohorts/cohort-1/scenarios');
     expect(screen.getByText('Responses')).toBeInTheDocument();
   });
 
