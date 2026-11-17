@@ -47,8 +47,8 @@ class CohortUsersContainer extends Component<CohortUsersContainerProps> {
 
   getEmptyAttributes = () => {
     return {
-      title: 'No users in this cohort',
-      body: 'Share the invite link above to add users to this cohort.',
+      title: 'No participants yet',
+      body: 'Send the invite link above to add participants.',
     }
   }
 
@@ -98,8 +98,8 @@ class CohortUsersContainer extends Component<CohortUsersContainerProps> {
       const user = find(this.props.cohortUsers.data, { _id: itemId });
       const displayName = user ? getUserDisplayName(user) : 'this user';
       addModal({
-        title: 'Remove user',
-        body: `Are you sure you would like to remove ${displayName} from the cohort?`,
+        title: 'Remove participant',
+        body: `Remove ${displayName} from this cohort? Their responses aren't deleted, and they can rejoin with the invite link.`,
         actions: [{
           type: 'CANCEL',
           text: 'Cancel'

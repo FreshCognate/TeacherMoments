@@ -23,7 +23,7 @@ describe('CohortCompletionStats', () => {
       />
     );
     expect(
-      screen.getByText('3 / 10 users have completed all scenarios')
+      screen.getByText('3 of 10 participants have finished all scenarios')
     ).toBeInTheDocument();
   });
 });

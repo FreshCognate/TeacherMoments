@@ -40,7 +40,7 @@ describe('Cohort', () => {
   it('renders the navigation toggle when the user is an editor', () => {
     renderInRouter(<Cohort {...baseProps} isEditor={true} />);
     expect(screen.getByRole('button', { name: 'Overview' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Users' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Participants' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Scenarios' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Settings' })).toBeInTheDocument();
   });

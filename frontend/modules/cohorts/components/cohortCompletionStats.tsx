@@ -17,7 +17,7 @@ const CohortCompletionStats = ({
       <Badge
         icon="complete"
         iconSize={16}
-        text={`${cohortCompletionCount} / ${totalUsers} users have completed all scenarios`}
+        text={`${cohortCompletionCount} of ${totalUsers} participants have finished all scenarios`}
       />
     </div>
   );

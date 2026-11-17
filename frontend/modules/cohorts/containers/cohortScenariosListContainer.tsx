@@ -76,7 +76,7 @@ class CohortScenariosListContainer extends Component<CohortScenariosListContaine
     const scenarioName = scenario?.name || 'this scenario';
     addModal({
       title: 'Remove scenario',
-      body: `Are you sure you would like to remove ${scenarioName} from the cohort? This will not delete the scenario.`,
+      body: `Remove ${scenarioName} from this cohort? The scenario and its responses aren't deleted.`,
       actions: [{
         type: 'CANCEL',
         text: 'Cancel'

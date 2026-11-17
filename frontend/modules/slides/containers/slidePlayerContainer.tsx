@@ -300,8 +300,8 @@ class SlidePlayerContainer extends Component<SlidePlayerContainerProps, SlidePla
   onMenuActionClicked = (action: string) => {
     if (action === 'END_SCENARIO_RUN') {
       addModal({
-        title: 'End this scenario?',
-        body: 'Are you sure you want to end this scenario run?',
+        title: 'End this run?',
+        body: "You can't come back to this run, but you can start a new one later.",
         actions: [{
           type: 'NO',
           text: 'No'

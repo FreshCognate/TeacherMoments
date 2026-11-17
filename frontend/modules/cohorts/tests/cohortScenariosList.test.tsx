@@ -20,7 +20,7 @@ describe('CohortScenariosList', () => {
   it('renders the empty state when there are no scenarios', () => {
     render(<CohortScenariosList {...baseProps} scenarios={[]} />);
     expect(
-      screen.getByText('No Scenarios have been added to this Cohort')
+      screen.getByText('No scenarios in this cohort yet')
     ).toBeInTheDocument();
   });
 

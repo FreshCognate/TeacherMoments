@@ -1,15 +1,15 @@
 import { Run } from "~/modules/run/runs.types";
 
 export default (run: Run) => {
-  let text = 'This scenario has not been started';
+  let text = "You haven't started this scenario";
   let icon = 'notStarted';
   if (run) {
     if (run.isComplete) {
-      text = "This scenario has been completed";
+      text = "You've finished this scenario";
       icon = 'complete';
 
     } else {
-      text = "This scenario has been started";
+      text = "You've started this scenario";
       icon = "started";
     }
   }

@@ -31,7 +31,7 @@ describe('CohortUsers', () => {
   it('renders the section titles and intro copy', () => {
     render(<CohortUsers {...baseProps} />);
     expect(screen.getByText('Invite link')).toBeInTheDocument();
-    expect(screen.getByText('Users in this Cohort')).toBeInTheDocument();
+    expect(screen.getByText('Participants in this cohort')).toBeInTheDocument();
   });
 
   it('renders the Create invite link button when no active invite is present', () => {

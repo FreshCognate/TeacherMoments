@@ -49,9 +49,9 @@ class CohortScenariosContainer extends Component<CohortScenariosProps> {
   getAvailableScenariosEmptyAttributes = () => {
     return {
       title: 'No available scenarios',
-      body: 'You have no available scenarios to choose from. Want to create a new one?',
+      body: 'You have no published scenarios left to add. Want to create a new one?',
       action: { text: 'Create a scenario', action: 'CREATE_SCENARIO' },
-      help: "Looking for a scenario you've created? You need to make sure your scenario is published before it's available in a Cohort"
+      help: "Looking for a scenario you've created? You need to make sure your scenario is published before it's available in a cohort."
     }
   }
 

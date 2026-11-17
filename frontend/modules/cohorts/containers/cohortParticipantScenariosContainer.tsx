@@ -38,14 +38,14 @@ class CohortParticipantScenariosContainer extends Component<CohortParticipantSce
 
     if (run && run.isComplete) {
       addModal({
-        title: 'Scenario already completed',
-        body: 'You have already completed this scenario. Would you like to continue your existing session or start a new one?',
+        title: 'Scenario already finished',
+        body: "You've already finished this scenario. Continue your run, or start a new one?",
         actions: [{
           type: 'CONTINUE',
-          text: 'Continue session',
+          text: 'Continue your run',
         }, {
           type: 'NEW',
-          text: 'Start new session',
+          text: 'Start a new run',
           color: 'primary'
         }]
       }, (state: string, { type }: { type: string }) => {

@@ -11,7 +11,7 @@ const SummarySlide = ({
 }) => {
   return (
     <div>
-      <Title title={"Thanks for participating!"} className="text-xl mb-2" />
+      <Title title={"You've reached the end"} className="text-xl mb-2" />
       <Body body={getString({ model: scenario, field: 'summary' })} className="text-sm text-black text-opacity-60 dark:text-white dark:text-opacity-60" />
     </div>
   );

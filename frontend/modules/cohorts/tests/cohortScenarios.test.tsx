@@ -38,7 +38,7 @@ describe('CohortScenarios', () => {
 
   it('renders the section titles', () => {
     render(<CohortScenarios {...baseProps} />);
-    expect(screen.getByText('Scenarios in this Cohort')).toBeInTheDocument();
+    expect(screen.getByText('Scenarios in this cohort')).toBeInTheDocument();
     expect(screen.getByText('Available scenarios')).toBeInTheDocument();
   });
 

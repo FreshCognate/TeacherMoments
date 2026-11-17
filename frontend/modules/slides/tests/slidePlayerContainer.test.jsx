@@ -248,7 +248,7 @@ describe('SlidePlayerContainer', () => {
       render(<SlidePlayerContainer {...buildProps()} />);
       capturedProps.onMenuActionClicked('END_SCENARIO_RUN');
       expect(addModalMock).toHaveBeenCalled();
-      expect(addModalMock.mock.calls[0][0].title).toBe('End this scenario?');
+      expect(addModalMock.mock.calls[0][0].title).toBe('End this run?');
     });
 
     it('finishes the scenario and navigates when the user confirms YES', () => {
