@@ -62,7 +62,7 @@ describe('Cohorts', () => {
       screen.getByText('Welcome to Cohort Management')
     ).toBeInTheDocument();
     expect(
-      screen.getByText("You haven't created any Cohorts yet.")
+      screen.getByText("You haven't created any cohorts yet.")
     ).toBeInTheDocument();
   });
 
