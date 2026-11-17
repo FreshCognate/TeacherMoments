@@ -27,7 +27,7 @@ export default async (props, options, context) => {
   });
 
   if (isExistingUser) {
-    throw { message: 'This user already exists. Try another username or email.', statusCode: 400 };
+    throw { message: "That username or email is already taken. Try another one, or log in if it's yours.", statusCode: 400 };
   }
 
   const createdAt = new Date();

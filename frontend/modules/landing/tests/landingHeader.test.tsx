@@ -28,12 +28,12 @@ describe('LandingHeader', () => {
     expect(screen.getByRole('button', { name: 'Open menu' })).toHaveAttribute('aria-expanded', 'false');
   });
 
-  it('calls onAuthClicked when the desktop Sign in button is clicked', async () => {
+  it('calls onAuthClicked when the desktop Log in button is clicked', async () => {
     const user = userEvent.setup();
     const onAuthClicked = vi.fn();
     render(<LandingHeader onAuthClicked={onAuthClicked} />);
 
-    const signInButtons = screen.getAllByRole('button', { name: 'Sign in' });
+    const signInButtons = screen.getAllByRole('button', { name: 'Log in' });
     await user.click(signInButtons[0]);
 
     expect(onAuthClicked).toHaveBeenCalledTimes(1);
@@ -57,7 +57,7 @@ describe('LandingHeader', () => {
 
     await user.click(screen.getByRole('button', { name: 'Open menu' }));
 
-    const signInButtons = screen.getAllByRole('button', { name: 'Sign in' });
+    const signInButtons = screen.getAllByRole('button', { name: 'Log in' });
     await user.click(signInButtons[signInButtons.length - 1]);
 
     expect(onAuthClicked).toHaveBeenCalledTimes(1);

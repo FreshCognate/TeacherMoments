@@ -122,7 +122,7 @@ const Navigation = ({
               </div>
             )}
             {(!authentication) && (
-              <Button text="Login" onClick={onLoginClicked} />
+              <Button text="Log in" onClick={onLoginClicked} />
             )}
             {authentication && (
               <FlatButton

@@ -34,7 +34,7 @@ class SignupDialogContainer extends Component {
     if (username.length < 6) {
       hasErrorMessage = true;
       isSignupButtonDisabled = true;
-      errorMessage = 'Username must be atleast 6 characters';
+      errorMessage = 'Username must be at least 6 characters';
     }
     if (username.length === 0) {
       hasErrorMessage = true;

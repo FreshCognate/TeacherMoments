@@ -81,12 +81,12 @@ describe('Navigation', () => {
   });
 
   describe('login/user menu', () => {
-    it('renders a Login button when not authenticated', async () => {
+    it('renders a Log in button when not authenticated', async () => {
       const user = userEvent.setup();
       const onLoginClicked = vi.fn();
       renderInRouter(<Navigation {...baseProps} onLoginClicked={onLoginClicked} authentication={null} />);
 
-      await user.click(screen.getByRole('button', { name: 'Login' }));
+      await user.click(screen.getByRole('button', { name: 'Log in' }));
       expect(onLoginClicked).toHaveBeenCalledTimes(1);
     });
 
@@ -94,7 +94,7 @@ describe('Navigation', () => {
       renderInRouter(<Navigation {...baseProps} authentication={{ role: 'USER', firstName: 'Sam' }} />);
       expect(screen.getByTestId('user-dropdown')).toBeInTheDocument();
       expect(screen.getAllByText('Sam')[0]).toBeInTheDocument();
-      expect(screen.queryByRole('button', { name: 'Login' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Log in' })).not.toBeInTheDocument();
     });
   });
 

@@ -22,7 +22,7 @@ class NavigationContainer extends Component {
 
   onLoginClicked = () => {
     addModal({
-      title: 'Login',
+      title: 'Log in',
       component: <LoginDialogContainer />
     })
   }

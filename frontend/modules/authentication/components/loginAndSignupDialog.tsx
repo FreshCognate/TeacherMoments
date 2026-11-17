@@ -10,7 +10,7 @@ const LoginAndSignupDialog = ({
     <div className="p-4 flex flex-col gap-y-4">
       <div className="flex items-center">
         <div className="w-2/3 text-sm pr-4">
-          If you do not have an account, but wish to create one.
+          New to Teacher Moments?
         </div>
         <div className="w-1/3 flex justify-end items-center">
           <Button
@@ -22,11 +22,11 @@ const LoginAndSignupDialog = ({
       </div>
       <div className="flex items-center">
         <div className="w-2/3 text-sm pr-4">
-          If you already have an account.
+          Already have an account?
         </div>
         <div className="w-1/3 flex justify-end items-center">
           <Button
-            text="Login"
+            text="Log in"
             isFullWidth
             onClick={() => onProcessClicked("LOGIN")}
           />

@@ -25,12 +25,12 @@ const SignupDialog = ({
           username: {
             type: 'Username',
             label: 'Username',
-            help: 'Pick a unique username, this can also be your name without spaces.'
+            help: 'Facilitators see this name next to your answers. Keep the one we made up, or use your own: at least 6 letters, no spaces.'
           },
           email: {
             type: 'Text',
             label: 'Email',
-            help: 'Enter your email, this will be used for logging into the system.'
+            help: "You'll log in with this email. We send a code to it each time."
           }
         }}
         model={model}
@@ -39,7 +39,7 @@ const SignupDialog = ({
       <div className="py-4">
         <Alert text={alertText} type={alertType} />
       </div>
-      <Button text="Signup" isDisabled={isSignupButtonDisabled} onClick={onSignupButtonClicked} />
+      <Button text="Create account" isDisabled={isSignupButtonDisabled} onClick={onSignupButtonClicked} />
     </div>
   );
 };

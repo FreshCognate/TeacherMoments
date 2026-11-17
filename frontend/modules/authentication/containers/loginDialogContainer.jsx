@@ -27,6 +27,7 @@ class LoginDialogContainer extends Component {
       turnstileToken
     }).then(() => {
       addModal({
+        title: 'Check your email',
         component: <VerifyCodeDialogContainer verifyType="LOGIN" email={this.state.email} />
       }, () => {
 

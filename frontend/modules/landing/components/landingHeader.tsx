@@ -17,7 +17,7 @@ const LandingHeader = ({ onAuthClicked }: { onAuthClicked: () => void }) => {
         <nav className="hidden md:block">
           <ul className="flex items-center gap-4">
             <li>
-              <button onClick={onAuthClicked} className="text-[#174650] dark:text-[#e3efef] underline hover:opacity-80">Sign in</button>
+              <button onClick={onAuthClicked} className="text-[#174650] dark:text-[#e3efef] underline hover:opacity-80">Log in</button>
             </li>
             <li>
               <button onClick={onAuthClicked} className="bg-[#853d61] text-white px-5 py-2 rounded-full font-bold hover:bg-[#5c1a3b] transition-colors">Sign up</button>
@@ -43,7 +43,7 @@ const LandingHeader = ({ onAuthClicked }: { onAuthClicked: () => void }) => {
         <div className="md:hidden absolute top-full left-0 right-0 bg-[#f6f6ee] dark:bg-[#18181b] border-t border-[#174650]/10 dark:border-[#e3efef]/10 shadow-lg z-50">
           <ul className="flex flex-col items-center gap-4 py-6">
             <li>
-              <button onClick={() => { setMenuOpen(false); onAuthClicked(); }} className="text-[#174650] dark:text-[#e3efef] underline hover:opacity-80 text-lg">Sign in</button>
+              <button onClick={() => { setMenuOpen(false); onAuthClicked(); }} className="text-[#174650] dark:text-[#e3efef] underline hover:opacity-80 text-lg">Log in</button>
             </li>
             <li>
               <button onClick={() => { setMenuOpen(false); onAuthClicked(); }} className="bg-[#853d61] text-white px-8 py-3 rounded-full font-bold hover:bg-[#5c1a3b] transition-colors text-lg">Sign up</button>

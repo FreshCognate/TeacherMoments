@@ -70,7 +70,8 @@ const LoginDialog = ({
         schema={{
           email: {
             type: 'Text',
-            label: 'Email'
+            label: 'Email',
+            help: "We'll email you a 6-digit code to log in."
           }
         }}
         model={model}
@@ -87,7 +88,7 @@ const LoginDialog = ({
         </div>
       )}
       <Button
-        text="Login"
+        text="Email me a code"
         onClick={handleLogin}
         isDisabled={!turnstileToken}
       />
