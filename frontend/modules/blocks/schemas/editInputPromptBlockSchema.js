@@ -3,7 +3,7 @@ import buildLanguageSchema from "~/core/app/helpers/buildLanguageSchema";
 const placeholder = buildLanguageSchema('placeholder', {
   type: 'Text',
   label: 'Placeholder',
-  help: "Placeholder is only used when the user's device does not support audio or the input type is set to text."
+  help: 'Shown in the empty box when participants type their answer.'
 });
 
 const body = buildLanguageSchema('body', {
@@ -45,7 +45,7 @@ export default {
     name: {
       type: 'Text',
       label: 'Name',
-      help: 'An optional name to help identify this block in analytics.'
+      help: 'Optional. Shown in responses instead of "Block 1".'
     },
     isRequired: {
       type: 'Toggle',
@@ -74,7 +74,7 @@ export default {
     inputType: {
       type: 'Toggle',
       label: 'Input type',
-      help: 'Decide which input type the participant is presented with.',
+      help: 'How participants answer: audio or typing.',
       size: 'sm',
       options: [{
         value: 'AUDIO',
@@ -87,7 +87,7 @@ export default {
     inputTypeWarning: {
       type: 'Alert',
       alertType: 'info',
-      alertText: "A text element will display if the participant's browser does not support audio.",
+      alertText: "If a browser can't record audio, a text box shows instead.",
       conditions: [{
         type: 'modelValueIs',
         field: 'inputType',

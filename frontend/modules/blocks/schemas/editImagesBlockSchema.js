@@ -30,7 +30,7 @@ export default {
     name: {
       type: 'Text',
       label: 'Name',
-      help: 'An optional name to help identify this block in analytics.'
+      help: 'Optional. Shown in responses instead of "Block 1".'
     },
     imagesShape: {
       type: 'Toggle',

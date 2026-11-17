@@ -14,7 +14,7 @@ const body = buildLanguageSchema('body', {
 const optionText = buildLanguageSchema('text', {
   type: 'Text',
   label: 'Option text',
-  tooltip: 'This is the text that is displayed within an option for the user to select'
+  tooltip: 'What participants see.'
 });
 
 const feedbackText = buildLanguageSchema('feedback', {
@@ -51,8 +51,8 @@ export default {
         ...feedbackText,
         value: {
           type: 'Text',
-          label: 'Analytics value',
-          tooltip: "This value is also stored for analytics purposes. Use this if you want the analytics to show another value than the users selected value."
+          label: 'Recorded as',
+          tooltip: "What's saved when this option is picked. Branching checks it too."
         }
       }
     }
@@ -61,7 +61,7 @@ export default {
     name: {
       type: 'Text',
       label: 'Name',
-      help: 'An optional name to help identify this block in analytics.'
+      help: 'Optional. Shown in responses instead of "Block 1".'
     },
     isRequired: {
       type: 'Toggle',
@@ -76,7 +76,7 @@ export default {
     },
     isMultiSelect: {
       type: 'Toggle',
-      label: 'Mutliple options can be selected',
+      label: 'Multiple options can be selected',
       size: 'sm',
       options: [{
         value: false,
