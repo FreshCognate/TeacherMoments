@@ -9,7 +9,8 @@ interface CohortContainerProps {
   router: any,
   cohort: {
     data: CohortType,
-    status: 'loading' | 'unresolved' | 'syncing'
+    status: 'unresolved' | 'idle' | 'loading' | 'syncing' | 'error' | 'success',
+    response?: { status?: number }
   }
 }
 
@@ -24,13 +25,20 @@ class CohortContainer extends Component<CohortContainerProps> {
 
     const pathValue = this.props.router.matches[this.props.router.matches.length - 1].id;
 
-    const { data, status } = this.props.cohort;
+    const { data, status, response } = this.props.cohort;
+
+    const responseStatus = response?.status;
+    const hasLoadedCohort = data?._id === this.props.router.params.id;
+    const hasNoAccess = status === 'error'
+      && !hasLoadedCohort
+      && (responseStatus === 401 || responseStatus === 404);
 
     return (
       <Cohort
         cohort={data}
         pathValue={pathValue}
         isLoading={status === 'loading' || status === 'unresolved'}
+        hasNoAccess={hasNoAccess}
         isEditor={canUserEditCohort(data)}
         onToggleClicked={this.onToggleClicked}
       />
