@@ -1,9 +1,25 @@
 import React from 'react';
 import Title from '~/uikit/content/components/title';
 import Loading from '~/uikit/loaders/components/loading';
+import CollectionEmpty from '~/uikit/collections/components/collectionEmpty';
 
 const Invite = ({
+  isInviteNotFound
+}: {
+  isInviteNotFound: boolean
 }) => {
+  if (isInviteNotFound) {
+    return (
+      <div className="p-4">
+        <CollectionEmpty
+          attributes={{
+            title: "This invite link doesn't work.",
+            body: 'It may have been replaced by a newer link. Ask your facilitator for the current one.'
+          }}
+        />
+      </div>
+    );
+  }
   return (
     <div className="h-screen flex items-center justify-center">
       <div className="flex items-center">
