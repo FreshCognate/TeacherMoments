@@ -99,6 +99,7 @@ describe('InviteContainer', () => {
     axiosPostMock.mockReturnValue(new Promise(() => {}));
     render(<InviteContainer router={buildRouter()} />);
     expect(capturedProps.isInviteNotFound).toBe(false);
+    expect(capturedProps.isInviteCheckFailed).toBe(false);
   });
 
   it('says the invite link does not work when no cohort comes back', async () => {
@@ -108,6 +109,7 @@ describe('InviteContainer', () => {
     await waitFor(() => {
       expect(capturedProps.isInviteNotFound).toBe(true);
     });
+    expect(capturedProps.isInviteCheckFailed).toBe(false);
     expect(addModalMock).not.toHaveBeenCalled();
     expect(router.navigate).not.toHaveBeenCalled();
   });
@@ -163,5 +165,61 @@ describe('InviteContainer', () => {
       expect(handleRequestErrorMock).toHaveBeenCalledWith(error);
     });
     expect(capturedProps.isInviteNotFound).toBe(false);
+  });
+
+  it('says the invite could not be checked when the server answers an error', async () => {
+    const error = Object.assign(new Error('Request failed with status code 500'), {
+      response: { status: 500, data: { message: 'Server error' } }
+    });
+    axiosPostMock.mockRejectedValue(error);
+    const router = buildRouter();
+    render(<InviteContainer router={router} />);
+    await waitFor(() => {
+      expect(capturedProps.isInviteCheckFailed).toBe(true);
+    });
+    expect(handleRequestErrorMock).toHaveBeenCalledWith(error);
+    expect(capturedProps.isInviteNotFound).toBe(false);
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('says the same when the request never reaches the server', async () => {
+    axiosPostMock.mockRejectedValue(Object.assign(new Error('Network Error'), { response: undefined }));
+    render(<InviteContainer router={buildRouter()} />);
+    await waitFor(() => {
+      expect(capturedProps.isInviteCheckFailed).toBe(true);
+    });
+    expect(capturedProps.isInviteNotFound).toBe(false);
+    expect(addModalMock).not.toHaveBeenCalled();
+  });
+
+  it('says the same when the server answers with no message', async () => {
+    axiosPostMock.mockRejectedValue(Object.assign(new Error('Request failed with status code 502'), {
+      response: { status: 502 }
+    }));
+    render(<InviteContainer router={buildRouter()} />);
+    await waitFor(() => {
+      expect(capturedProps.isInviteCheckFailed).toBe(true);
+    });
+    expect(capturedProps.isInviteNotFound).toBe(false);
+  });
+
+  it('keeps the could-not-check message off when something fails after the check works', async () => {
+    const error = new Error('navigation failed');
+    axiosPostMock.mockResolvedValue({
+      data: { cohort: { _id: 'cohort-9' }, user: { _id: 'user-1' } }
+    });
+    const router = buildRouter({ navigate: vi.fn(() => { throw error; }) });
+    render(<InviteContainer router={router} />);
+    await waitFor(() => {
+      expect(handleRequestErrorMock).toHaveBeenCalledWith(error);
+    });
+    expect(capturedProps.isInviteCheckFailed).toBe(false);
+  });
+
+  it('keeps the could-not-check message off when the check works', async () => {
+    axiosPostMock.mockResolvedValue({ data: { cohort: { _id: 'cohort-9' } } });
+    render(<InviteContainer router={buildRouter()} />);
+    await waitFor(() => expect(addModalMock).toHaveBeenCalled());
+    expect(capturedProps.isInviteCheckFailed).toBe(false);
   });
 });

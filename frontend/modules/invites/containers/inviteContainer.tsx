@@ -15,12 +15,14 @@ export type InviteContainerProps = {
 
 interface InviteContainerState {
   isInviteNotFound: boolean;
+  isInviteCheckFailed: boolean;
 }
 
 class InviteContainer extends Component<InviteContainerProps, InviteContainerState> {
 
   state: InviteContainerState = {
-    isInviteNotFound: false
+    isInviteNotFound: false,
+    isInviteCheckFailed: false
   }
 
   componentDidMount(): void {
@@ -56,13 +58,19 @@ class InviteContainer extends Component<InviteContainerProps, InviteContainerSta
             }
           })
         }
+      }, (error) => {
+        this.setState({ isInviteCheckFailed: true });
+        return handleRequestError(error);
       }).catch(handleRequestError);
     }
   }
 
   render() {
     return (
-      <Invite isInviteNotFound={this.state.isInviteNotFound} />
+      <Invite
+        isInviteNotFound={this.state.isInviteNotFound}
+        isInviteCheckFailed={this.state.isInviteCheckFailed}
+      />
     );
   }
 };

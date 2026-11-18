@@ -4,9 +4,11 @@ import Loading from '~/uikit/loaders/components/loading';
 import CollectionEmpty from '~/uikit/collections/components/collectionEmpty';
 
 const Invite = ({
-  isInviteNotFound
+  isInviteNotFound,
+  isInviteCheckFailed
 }: {
-  isInviteNotFound: boolean
+  isInviteNotFound: boolean,
+  isInviteCheckFailed: boolean
 }) => {
   if (isInviteNotFound) {
     return (
@@ -15,6 +17,18 @@ const Invite = ({
           attributes={{
             title: "This invite link doesn't work.",
             body: 'It may have been replaced by a newer link. Ask your facilitator for the current one.'
+          }}
+        />
+      </div>
+    );
+  }
+  if (isInviteCheckFailed) {
+    return (
+      <div className="p-4">
+        <CollectionEmpty
+          attributes={{
+            title: "This invite link couldn't be checked.",
+            body: 'Reload this page to try again.'
           }}
         />
       </div>
