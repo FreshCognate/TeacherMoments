@@ -1,5 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router';
 import Collection from '~/uikit/collections/components/collection';
+import CollectionEmpty from '~/uikit/collections/components/collectionEmpty';
 import { User } from '../users.types';
 
 const Users = ({
@@ -9,6 +11,7 @@ const Users = ({
   totalPages,
   isLoading,
   isSyncing,
+  hasNoAccess,
   getItemAttributes,
   getItemActions,
   getEmptyAttributes,
@@ -22,6 +25,7 @@ const Users = ({
   totalPages: number,
   isLoading: boolean,
   isSyncing: boolean,
+  hasNoAccess: boolean,
   getItemAttributes: (item: User) => any,
   getItemActions: (item: User) => any,
   getEmptyAttributes: () => any,
@@ -29,6 +33,22 @@ const Users = ({
   onPaginationClicked: (direction: string) => void,
   onItemActionClicked: ({ itemId, action }: { itemId: string, action: string }) => void
 }) => {
+  if (hasNoAccess) {
+    return (
+      <div className="p-4">
+        <CollectionEmpty
+          attributes={{
+            title: 'This page is for admins.',
+            body: (
+              <>
+                Go to the <Link to="/" className="underline">dashboard</Link>.
+              </>
+            )
+          }}
+        />
+      </div>
+    );
+  }
   return (
     <div className="p-4">
       <Collection

@@ -138,11 +138,12 @@ class UsersContainer extends Component<UsersContainerProps> {
   }
 
   render() {
-    const { query, status, data } = this.props.users;
+    const { query, status, data, response } = this.props.users;
     const { searchValue, currentPage } = query;
     const totalPages = get(this.props, 'users.response.totalPages', 1);
     const isSyncing = status === 'syncing';
     const isLoading = status === 'loading' || status === 'unresolved';
+    const hasNoAccess = status === 'error' && response?.status === 401;
 
     return (
       <Users
@@ -152,6 +153,7 @@ class UsersContainer extends Component<UsersContainerProps> {
         totalPages={totalPages}
         isLoading={isLoading}
         isSyncing={isSyncing}
+        hasNoAccess={hasNoAccess}
         getItemAttributes={this.getItemAttributes}
         getItemActions={this.getItemActions}
         getEmptyAttributes={this.getEmptyAttributes}
