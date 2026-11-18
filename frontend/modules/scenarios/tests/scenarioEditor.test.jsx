@@ -19,6 +19,7 @@ const baseProps = {
   scenario: { _id: 'scenario-1', name: 'Onboarding' },
   pathValue: 'create',
   isLoading: false,
+  hasNoAccess: false,
   onToggleClicked: () => {}
 };
 
@@ -28,6 +29,21 @@ describe('ScenarioEditor', () => {
   it('renders a Loading spinner when isLoading is true', () => {
     const { container } = renderInRouter(<ScenarioEditor {...baseProps} isLoading={true} />);
     expect(container.querySelector('svg.animate-spin')).toBeInTheDocument();
+  });
+
+  it('tells someone who has no access that the scenario is not theirs to edit', () => {
+    renderInRouter(<ScenarioEditor {...baseProps} scenario={{}} hasNoAccess={true} />);
+    expect(screen.getByText("You don't have access to this scenario.")).toBeInTheDocument();
+    expect(
+      screen.getByText('Only its authors can edit it. To take it, use the link you were given.')
+    ).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Create' })).not.toBeInTheDocument();
+    expect(screen.queryByTestId('sync-stub')).not.toBeInTheDocument();
+  });
+
+  it('shows the no-access message even while the slides are still loading', () => {
+    renderInRouter(<ScenarioEditor {...baseProps} scenario={{}} isLoading={true} hasNoAccess={true} />);
+    expect(screen.getByText("You don't have access to this scenario.")).toBeInTheDocument();
   });
 
   it('renders the breadcrumb with a link to /scenarios and the scenario name', () => {

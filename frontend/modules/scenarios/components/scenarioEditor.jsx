@@ -3,6 +3,7 @@ import { Link, Outlet } from 'react-router';
 import NavigationToggle from '~/uikit/toggles/components/navigationToggle';
 import ScenarioSyncStatusContainer from '../containers/scenarioSyncStatusContainer';
 import Loading from '~/uikit/loaders/components/loading';
+import CollectionEmpty from '~/uikit/collections/components/collectionEmpty';
 import truncate from 'lodash/truncate';
 import ScenarioPublishStatusContainer from '../containers/scenarioPublishStatusContainer';
 import ScenarioValidationContainer from '../containers/scenarioValidationContainer';
@@ -11,8 +12,21 @@ const ScenarioEditor = ({
   scenario,
   pathValue,
   isLoading,
+  hasNoAccess,
   onToggleClicked
 }) => {
+  if (hasNoAccess) {
+    return (
+      <div className="p-4">
+        <CollectionEmpty
+          attributes={{
+            title: "You don't have access to this scenario.",
+            body: 'Only its authors can edit it. To take it, use the link you were given.'
+          }}
+        />
+      </div>
+    );
+  }
   if (isLoading) return <Loading />
   return (
     <div className="p-4">

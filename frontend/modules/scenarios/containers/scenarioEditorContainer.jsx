@@ -101,11 +101,18 @@ class ScenarioEditorContainer extends Component {
     const isScenarioLoading = scenario.status === 'loading' || scenario.status === 'unresolved';
     const isSlidesLoading = slides.status === 'loading' || slides.status === 'unresolved';
 
+    const responseStatus = scenario.response?.status;
+    const hasLoadedScenario = scenario.data?._id === router.params.id;
+    const hasNoAccess = scenario.status === 'error'
+      && !hasLoadedScenario
+      && (responseStatus === 401 || responseStatus === 404);
+
     return (
       <ScenarioEditor
         scenario={this.props.scenario.data}
         pathValue={pathValue}
         isLoading={isScenarioLoading || isSlidesLoading}
+        hasNoAccess={hasNoAccess}
         onToggleClicked={this.onToggleClicked}
       />
     );
