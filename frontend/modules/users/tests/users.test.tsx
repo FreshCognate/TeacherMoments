@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router';
 import Users from '../components/users';
 
 const baseProps = {
@@ -13,6 +14,7 @@ const baseProps = {
   totalPages: 1,
   isLoading: false,
   isSyncing: false,
+  hasNoAccess: false,
   getItemAttributes: (item: any) => ({
     id: item._id,
     name: `${item.firstName} ${item.lastName}`
@@ -34,6 +36,22 @@ describe('Users', () => {
   it('renders the empty state when there are no users', () => {
     render(<Users {...baseProps} users={[]} />);
     expect(screen.getByText('No users yet')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Search users...')).toBeInTheDocument();
+    expect(screen.getByText('1/1')).toBeInTheDocument();
+  });
+
+  it('tells someone who is not an admin that the page is for admins', () => {
+    render(
+      <MemoryRouter>
+        <Users {...baseProps} users={[]} hasNoAccess={true} />
+      </MemoryRouter>
+    );
+    expect(screen.getByRole('heading', { name: 'This page is for admins.' })).toBeInTheDocument();
+    expect(screen.getByText(/Go to the/)).toHaveTextContent('Go to the dashboard.');
+    expect(screen.getByRole('link', { name: 'dashboard' })).toHaveAttribute('href', '/');
+    expect(screen.queryByPlaceholderText('Search users...')).not.toBeInTheDocument();
+    expect(screen.queryByText('1/1')).not.toBeInTheDocument();
+    expect(screen.queryByText('No users yet')).not.toBeInTheDocument();
   });
 
   it('fires onSearchValueChange when typing in the search box', async () => {
