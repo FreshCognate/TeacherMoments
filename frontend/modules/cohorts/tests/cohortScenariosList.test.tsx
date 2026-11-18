@@ -24,6 +24,13 @@ describe('CohortScenariosList', () => {
     ).toBeInTheDocument();
   });
 
+  it('shows the empty state help line in readable text', () => {
+    render(<CohortScenariosList {...baseProps} scenarios={[]} />);
+    const helpLine = screen.getByText('Find a scenario under Available scenarios and click Add.');
+    expect(helpLine).toHaveClass('text-black/60', 'dark:text-white/60');
+    expect(helpLine).not.toHaveClass('text-white/50');
+  });
+
   it('does not render the Export button when there are no scenarios', () => {
     render(<CohortScenariosList {...baseProps} scenarios={[]} />);
     expect(

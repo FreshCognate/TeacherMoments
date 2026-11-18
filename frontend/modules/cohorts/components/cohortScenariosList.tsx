@@ -48,7 +48,11 @@ const CohortScenariosList = ({
         <div className="text-center py-8 px-6 rounded-xl bg-lm-2 dark:bg-dm-2">
           <div className="max-w-md mx-auto">
             <Title title="No scenarios in this cohort yet" size='xl' className="mb-4" />
-            <Body body="Find a scenario under Available scenarios and click Add." size='sm' className="text-white/50" />
+            <Body
+              body="Find a scenario under Available scenarios and click Add."
+              size='sm'
+              className="text-black/60 dark:text-white/60"
+            />
           </div>
         </div>
       )}
