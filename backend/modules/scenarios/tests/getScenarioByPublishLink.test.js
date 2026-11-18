@@ -21,21 +21,27 @@ describe('getScenarioByPublishLink (in-memory mongo)', () => {
     expect(String(result._id)).toBe(String(scenario._id));
   });
 
-  it('throws 404 with shouldRedirectToScenarios when no scenario matches', async () => {
-    await expect(
-      getScenarioByPublishLink({ publishLink: 'missing' }, {}, { models: db.models })
-    ).rejects.toMatchObject({ statusCode: 404, shouldRedirectToScenarios: true });
+  it('throws 404 without a redirect when no scenario matches', async () => {
+    const error = await getScenarioByPublishLink(
+      { publishLink: 'missing' }, {}, { models: db.models }
+    ).catch((caught) => caught);
+
+    expect(error).toMatchObject({ statusCode: 404, message: 'This scenario does not exist' });
+    expect(error).not.toHaveProperty('shouldRedirectToScenarios');
   });
 
-  it('throws 404 when the scenario exists but is not published', async () => {
+  it('throws 404 without a redirect when the scenario exists but is not published', async () => {
     await db.models.Published_Scenario.create({
       name: 'S',
       publishLink: 'happy-fox',
       isPublished: false
     });
 
-    await expect(
-      getScenarioByPublishLink({ publishLink: 'happy-fox' }, {}, { models: db.models })
-    ).rejects.toMatchObject({ statusCode: 404, shouldRedirectToScenarios: true });
+    const error = await getScenarioByPublishLink(
+      { publishLink: 'happy-fox' }, {}, { models: db.models }
+    ).catch((caught) => caught);
+
+    expect(error).toMatchObject({ statusCode: 404, message: 'This scenario is not published' });
+    expect(error).not.toHaveProperty('shouldRedirectToScenarios');
   });
 });
