@@ -5,8 +5,12 @@ vi.mock('~/core/app/components/withRouter', () => ({
   default: (Component: any) => Component
 }));
 
+let capturedProps: any = null;
 vi.mock('../components/invite', () => ({
-  default: () => <div data-testid="invite-stub" />
+  default: (props: any) => {
+    capturedProps = props;
+    return <div data-testid="invite-stub" />;
+  }
 }));
 
 const axiosPostMock = vi.fn();
@@ -49,6 +53,7 @@ describe('InviteContainer', () => {
     axiosPostMock.mockReset();
     handleRequestErrorMock.mockReset();
     addModalMock.mockReset();
+    capturedProps = null;
   });
 
   it('posts the inviteId from the route params to /api/invites', () => {
@@ -74,10 +79,11 @@ describe('InviteContainer', () => {
       expect(router.navigate).toHaveBeenCalledWith('/cohorts/cohort-9/overview');
     });
     expect(addModalMock).not.toHaveBeenCalled();
+    expect(capturedProps.isInviteNotFound).toBe(false);
   });
 
-  it('opens the login-and-signup modal when the response is missing cohort or user', async () => {
-    axiosPostMock.mockResolvedValue({ data: { cohort: null, user: null } });
+  it('opens the login-and-signup modal for a valid invite when no one is logged in', async () => {
+    axiosPostMock.mockResolvedValue({ data: { cohort: { _id: 'cohort-9' } } });
     const router = buildRouter();
     render(<InviteContainer router={router} />);
     await waitFor(() => {
@@ -86,10 +92,37 @@ describe('InviteContainer', () => {
     const [config] = addModalMock.mock.calls[0];
     expect(config.title).toBe('Log in or create an account');
     expect(router.navigate).not.toHaveBeenCalled();
+    expect(capturedProps.isInviteNotFound).toBe(false);
+  });
+
+  it('shows the checking state while the invite is checked', () => {
+    axiosPostMock.mockReturnValue(new Promise(() => {}));
+    render(<InviteContainer router={buildRouter()} />);
+    expect(capturedProps.isInviteNotFound).toBe(false);
+  });
+
+  it('says the invite link does not work when no cohort comes back', async () => {
+    axiosPostMock.mockResolvedValue({ data: {} });
+    const router = buildRouter();
+    render(<InviteContainer router={router} />);
+    await waitFor(() => {
+      expect(capturedProps.isInviteNotFound).toBe(true);
+    });
+    expect(addModalMock).not.toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('says the same when the response names no cohort and no user', async () => {
+    axiosPostMock.mockResolvedValue({ data: { cohort: null, user: null } });
+    render(<InviteContainer router={buildRouter()} />);
+    await waitFor(() => {
+      expect(capturedProps.isInviteNotFound).toBe(true);
+    });
+    expect(addModalMock).not.toHaveBeenCalled();
   });
 
   it('opens the login dialog when the user picks LOGIN from the action modal', async () => {
-    axiosPostMock.mockResolvedValue({ data: {} });
+    axiosPostMock.mockResolvedValue({ data: { cohort: { _id: 'cohort-9' } } });
     render(<InviteContainer router={buildRouter()} />);
     await waitFor(() => expect(addModalMock).toHaveBeenCalled());
 
@@ -101,7 +134,7 @@ describe('InviteContainer', () => {
   });
 
   it('opens the signup dialog when the user picks CREATE from the action modal', async () => {
-    axiosPostMock.mockResolvedValue({ data: {} });
+    axiosPostMock.mockResolvedValue({ data: { cohort: { _id: 'cohort-9' } } });
     render(<InviteContainer router={buildRouter()} />);
     await waitFor(() => expect(addModalMock).toHaveBeenCalled());
 
@@ -113,7 +146,7 @@ describe('InviteContainer', () => {
   });
 
   it('ignores non-ACTION callback states', async () => {
-    axiosPostMock.mockResolvedValue({ data: {} });
+    axiosPostMock.mockResolvedValue({ data: { cohort: { _id: 'cohort-9' } } });
     render(<InviteContainer router={buildRouter()} />);
     await waitFor(() => expect(addModalMock).toHaveBeenCalled());
 
@@ -129,5 +162,6 @@ describe('InviteContainer', () => {
     await waitFor(() => {
       expect(handleRequestErrorMock).toHaveBeenCalledWith(error);
     });
+    expect(capturedProps.isInviteNotFound).toBe(false);
   });
 });

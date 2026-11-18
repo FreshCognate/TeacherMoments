@@ -13,7 +13,15 @@ export type InviteContainerProps = {
   router: any,
 }
 
-class InviteContainer extends Component<InviteContainerProps> {
+interface InviteContainerState {
+  isInviteNotFound: boolean;
+}
+
+class InviteContainer extends Component<InviteContainerProps, InviteContainerState> {
+
+  state: InviteContainerState = {
+    isInviteNotFound: false
+  }
 
   componentDidMount(): void {
     const { params } = this.props.router;
@@ -25,6 +33,8 @@ class InviteContainer extends Component<InviteContainerProps> {
 
         if (cohort && user) {
           this.props.router.navigate(`/cohorts/${cohort._id}/overview`);
+        } else if (!cohort) {
+          this.setState({ isInviteNotFound: true });
         } else {
 
           addModal({
@@ -52,7 +62,7 @@ class InviteContainer extends Component<InviteContainerProps> {
 
   render() {
     return (
-      <Invite />
+      <Invite isInviteNotFound={this.state.isInviteNotFound} />
     );
   }
 };
