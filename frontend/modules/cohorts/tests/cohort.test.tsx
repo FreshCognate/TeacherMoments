@@ -13,6 +13,7 @@ const baseProps = {
   cohort: { _id: 'cohort-1', name: 'Spring Cohort' } as any,
   pathValue: 'overview',
   isLoading: false,
+  hasNoAccess: false,
   isEditor: false,
   onToggleClicked: () => {}
 };
@@ -24,6 +25,16 @@ describe('Cohort', () => {
   it('renders a Loading spinner when isLoading is true', () => {
     const { container } = renderInRouter(<Cohort {...baseProps} isLoading={true} />);
     expect(container.querySelector('svg.animate-spin')).toBeInTheDocument();
+  });
+
+  it('tells someone who has no access that the cohort is not theirs to open', () => {
+    renderInRouter(<Cohort {...baseProps} cohort={undefined as any} hasNoAccess={true} />);
+    expect(screen.getByText("You don't have access to this cohort.")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Ask the person who runs it for access, or go to/)
+    ).toHaveTextContent('Ask the person who runs it for access, or go to your cohorts.');
+    expect(screen.getByRole('link', { name: 'your cohorts' })).toHaveAttribute('href', '/cohorts');
+    expect(screen.queryByTestId('breadcrumb-stub')).not.toBeInTheDocument();
   });
 
   it('renders the breadcrumb', () => {

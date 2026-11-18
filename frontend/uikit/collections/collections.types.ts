@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export interface CollectionAction {
   action: string,
   text: string,
@@ -26,7 +28,7 @@ export interface CollectionEmptyAction {
 
 export interface CollectionEmptyAttributes {
   title: string,
-  body: string,
+  body: ReactNode,
   action?: CollectionEmptyAction,
   help?: string,
 }

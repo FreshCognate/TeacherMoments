@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router';
 import Loading from '~/uikit/loaders/components/loading';
+import CollectionEmpty from '~/uikit/collections/components/collectionEmpty';
 import truncate from 'lodash/truncate';
 import NavigationToggle from '~/uikit/toggles/components/navigationToggle';
 import { Cohort as CohortType } from '../cohorts.types';
@@ -10,15 +11,33 @@ const Cohort = ({
   cohort,
   pathValue,
   isLoading,
+  hasNoAccess,
   isEditor,
   onToggleClicked
 }: {
   cohort: CohortType,
   pathValue: string,
   isLoading: boolean,
+  hasNoAccess: boolean,
   isEditor: boolean,
   onToggleClicked: (pathValue: string | number) => void
 }) => {
+  if (hasNoAccess) {
+    return (
+      <div className="p-4">
+        <CollectionEmpty
+          attributes={{
+            title: "You don't have access to this cohort.",
+            body: (
+              <>
+                Ask the person who runs it for access, or go to <Link to="/cohorts" className="underline">your cohorts</Link>.
+              </>
+            )
+          }}
+        />
+      </div>
+    );
+  }
   if (isLoading) return <Loading />
   return (
     <div className="p-4">
