@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PlayScenarioContainer from './playScenarioContainer';
+import PlayScenarioNotFound from '../components/playScenarioNotFound';
 import WithRouter from '~/core/app/components/withRouter';
 import WithCache from '~/core/cache/containers/withCache';
 import getCache from '~/core/cache/helpers/getCache';
@@ -10,6 +11,9 @@ import find from 'lodash/find';
 class PlayScenarioLoaderContainer extends Component {
   render() {
     const { scenario, slides, blocks, stems, run } = this.props;
+    if (scenario.status === 'error' && scenario.response?.status === 404) {
+      return <PlayScenarioNotFound />;
+    }
     if (scenario.data && slides.data && blocks.data && stems.data && run.data) {
       return (
         <PlayScenarioContainer />

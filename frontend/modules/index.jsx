@@ -34,11 +34,5 @@ axios.interceptors.response.use(function (response) {
       return;
     }
   }
-  if ((data.statusCode === 401 || data.statusCode === 404) && data.shouldRedirectToScenarios) {
-    if (typeof window !== 'undefined') {
-      window.location = `/scenarios`;
-      return;
-    }
-  }
   return Promise.reject(error);
 });
