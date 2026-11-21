@@ -157,6 +157,19 @@ class SlidePlayerContainer extends Component<SlidePlayerContainerProps, SlidePla
             text: isSubmitting ? 'Submitting' : 'Submit',
             isDisabled: (hasRequiredPrompts && !isAbleToCompleteSlide) || isSubmitting
           }
+        } else if (hasChildStems && isSubmitted && activeSlide?.hasFeedback) {
+          secondaryAction = {
+            action: 'BACK',
+            text: 'Back',
+            isActive: true,
+            isDisabled: isSubmitting
+          }
+          primaryAction = {
+            action: 'NEXT',
+            color: 'primary',
+            text: 'Next',
+            isDisabled: isSubmitting
+          }
         } else {
           secondaryAction = {
             action: 'BACK',
@@ -188,12 +201,23 @@ class SlidePlayerContainer extends Component<SlidePlayerContainerProps, SlidePla
     return navigateBack({ router: this.props.router });
   }
 
-  onNextSlideClicked = () => {
-    setSlideToComplete({ slideRef: this.props.activeSlide!.ref });
+  onNextSlideClicked = async () => {
+    const { activeSlide } = this.props;
+    setSlideToComplete({ slideRef: activeSlide!.ref });
     const stage = ensureCurrentStage();
     if (stage.navigateToSlide) {
       return navigateTo({ slideRef: stage.navigateToSlide, router: this.props.router });
     }
+
+    const { hasChildStems, isLastSlideInStem } = getStemNavigationDetails();
+    if (activeSlide?.hasFeedback && hasChildStems && isLastSlideInStem) {
+      this.setState({ isSubmitting: true });
+      const stem = getStemByRef({ ref: activeSlide.stemRef });
+      await triggerStemBranching({ stem, slide: activeSlide as Slide, router: this.props.router });
+      this.setState({ isSubmitting: false });
+      return;
+    }
+
     return navigateToNextSlide({ router: this.props.router });
   }
 
@@ -206,7 +230,7 @@ class SlidePlayerContainer extends Component<SlidePlayerContainerProps, SlidePla
     }
 
     const { hasChildStems, isLastSlideInStem } = getStemNavigationDetails();
-    if (this.props.activeSlide && hasChildStems && isLastSlideInStem) {
+    if (this.props.activeSlide && !this.props.activeSlide.hasFeedback && hasChildStems && isLastSlideInStem) {
       setShouldStopNavigation(true);
       const stem = getStemByRef({ ref: this.props.activeSlide.stemRef });
       await triggerStemBranching({ stem, slide: this.props.activeSlide as Slide, router: this.props.router });
