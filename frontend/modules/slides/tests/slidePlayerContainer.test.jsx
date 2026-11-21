@@ -30,6 +30,9 @@ const getCohortFromSearchParamsMock = vi.fn();
 const addModalMock = vi.fn();
 const getCacheMock = vi.fn();
 const getRootStemMock = vi.fn();
+const triggerSlideFeedbackMock = vi.fn();
+const triggerStemBranchingMock = vi.fn();
+const getStemByRefMock = vi.fn();
 
 vi.mock('~/modules/run/helpers/updateRun', () => ({ default: (args) => updateRunMock(args) }));
 vi.mock('~/modules/run/helpers/navigateTo', () => ({ default: (args) => navigateToMock(args) }));
@@ -52,6 +55,9 @@ vi.mock('~/modules/stems/helpers/getRootStem', () => ({ default: () => getRootSt
 vi.mock('~/core/dialogs/helpers/addModal', () => ({ default: (config, callback) => addModalMock(config, callback) }));
 vi.mock('~/core/cache/helpers/getCache', () => ({ default: (key) => getCacheMock(key) }));
 vi.mock('~/modules/slides/helpers/getActiveSlideStems', () => ({ default: (args) => getActiveSlideStemsMock(args) }));
+vi.mock('../helpers/triggerSlideFeedback', () => ({ default: (args) => triggerSlideFeedbackMock(args) }));
+vi.mock('~/modules/stems/helpers/triggerStemBranching', () => ({ default: (args) => triggerStemBranchingMock(args) }));
+vi.mock('~/modules/stems/helpers/getStemByRef', () => ({ default: (args) => getStemByRefMock(args) }));
 
 let capturedProps = null;
 vi.mock('../components/slidePlayer', () => ({
@@ -240,6 +246,57 @@ describe('SlidePlayerContainer', () => {
       expect(getCacheMock).toHaveBeenCalledWith('run');
       expect(setMock).toHaveBeenCalledWith({}, { setType: 'replace' });
       expect(navigateToMock).toHaveBeenCalledWith(expect.objectContaining({ slideRef: 'CONSENT' }));
+    });
+  });
+
+  describe('feedback slide at the end of a branching stem', () => {
+    const feedbackSlide = { ref: 'slide-1', stemRef: 'stem-1', slideType: 'STEP', hasFeedback: true };
+
+    beforeEach(() => {
+      getNextSlideMock.mockReturnValue(undefined);
+      getStemNavigationDetailsMock.mockReturnValue({ hasChildStems: true, isLastSlideInStem: true });
+      getStemByRefMock.mockReturnValue({ ref: 'stem-1' });
+      triggerSlideFeedbackMock.mockResolvedValue();
+      triggerStemBranchingMock.mockResolvedValue();
+    });
+
+    it('triggers feedback but not branching on submit, and does not navigate', async () => {
+      ensureCurrentStageMock.mockReturnValue({ shouldStopNavigation: true });
+      render(<SlidePlayerContainer {...buildProps({ activeSlide: feedbackSlide })} />);
+
+      await act(() => capturedProps.onActionClicked('SUBMIT'));
+
+      expect(triggerSlideFeedbackMock).toHaveBeenCalledWith({ slide: feedbackSlide });
+      expect(triggerStemBranchingMock).not.toHaveBeenCalled();
+      expect(navigateToNextSlideMock).not.toHaveBeenCalled();
+    });
+
+    it('shows NEXT instead of Finish once submitted', () => {
+      setNavigationDetails({ hasPrompts: true, isSubmitted: true });
+      render(<SlidePlayerContainer {...buildProps({ activeSlide: feedbackSlide })} />);
+
+      expect(capturedProps.primaryAction.action).toBe('NEXT');
+      expect(capturedProps.secondaryAction.action).toBe('BACK');
+    });
+
+    it('triggers branching when NEXT is clicked', async () => {
+      const router = { navigate: vi.fn(), params: {} };
+      render(<SlidePlayerContainer {...buildProps({ activeSlide: feedbackSlide, router })} />);
+
+      await act(async () => capturedProps.onActionClicked('NEXT'));
+
+      expect(triggerStemBranchingMock).toHaveBeenCalledWith({ stem: { ref: 'stem-1' }, slide: feedbackSlide, router });
+      expect(navigateToNextSlideMock).not.toHaveBeenCalled();
+    });
+
+    it('navigates straight to the stored branch slide when one is already set', () => {
+      ensureCurrentStageMock.mockReturnValue({ navigateToSlide: 'branch-slide' });
+      render(<SlidePlayerContainer {...buildProps({ activeSlide: feedbackSlide })} />);
+
+      capturedProps.onActionClicked('NEXT');
+
+      expect(navigateToMock).toHaveBeenCalledWith(expect.objectContaining({ slideRef: 'branch-slide' }));
+      expect(triggerStemBranchingMock).not.toHaveBeenCalled();
     });
   });
 
